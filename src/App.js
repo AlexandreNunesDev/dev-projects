@@ -1,4 +1,5 @@
 import React from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Switch, Route, withRouter } from 'react-router-dom';
 
 import CadastroEtapa from './Screens/CadastroEtapa';
