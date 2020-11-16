@@ -133,11 +133,10 @@ class MenuBar extends React.Component {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/Home">Home</Nav.Link>
-  
               <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
               <Nav.Link href="/RegistroAnalise">Registro de Analise</Nav.Link>
               <Nav.Link href="/OrdensDeCorrecao">Ordens de Correção</Nav.Link>
-              <Nav.Link href='/Omp' >OMP</Nav.Link>
+              <Nav.Link href='/Omp'>Omp</Nav.Link>
               <Nav.Link href="/TarefasDeManutencao" >Tarefas de Manutenção</Nav.Link>
               <Nav.Link href="/IndicadorDeAnalise">Indicador de Analises</Nav.Link>
               
