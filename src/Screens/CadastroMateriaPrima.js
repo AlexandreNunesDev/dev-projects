@@ -11,7 +11,7 @@ class CadastroMateriaPrima extends React.Component {
 
     constructor(props){
         super(props)
-        this.precoText = React.createRef()
+    
         this.state = {
             materiaPrima : {},
             isNotEditable: true,
@@ -148,7 +148,7 @@ render() {
             <Form.Row>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <Form.Label>Preco: </Form.Label>
-                <Form.Control type="text" placeholder={"R$ 0,00"} ref={this.precoText} value={this.state.preco} onChange={this.precoController}/>
+                <Form.Control type="text" placeholder={"R$ 0,00"} value={this.state.preco} onChange={this.precoController}/>
             </Form.Group>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <Form.Label>Fator Titulométrico: </Form.Label>

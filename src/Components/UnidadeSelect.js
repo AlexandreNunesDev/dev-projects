@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import {Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -19,23 +19,25 @@ const UnidadeSelect = (props) =>{
     
     
 
-
-   
-        if(props.type === "diasemana"){
-            setOptions(diasemana)
-        }
-        if(props.type === "meses") {
-            setOptions(meses)
-        } 
-        if(props.type === "parametros") {
-            setOptions(parametros)
-        }
-        if(props.type === "adicao") {
-            setOptions(adicao)
-        }
-        if(props.type === "frequenciaAnalise"){
-            setOptions(frequenciaAnalise)
-        }
+    
+        useEffect(() => {
+            if(props.type === "diasemana"){
+                setOptions(diasemana)
+            }
+            if(props.type === "meses") {
+                setOptions(meses)
+            } 
+            if(props.type === "parametros") {
+                setOptions(parametros)
+            }
+            if(props.type === "adicao") {
+                setOptions(adicao)
+            }
+            if(props.type === "frequenciaAnalise"){
+                setOptions(frequenciaAnalise)
+            }
+        }, [])
+        
     
     
     return ( 
@@ -45,7 +47,7 @@ const UnidadeSelect = (props) =>{
             <Form.Control as="select"  onChange={(event) => {props.onChange(event.target.value)}}>
             <option unselectable="on" >-- {props.default} --</option>
             {options && options.map((option,index) => {
-                if(option === props.value) {
+                if(option == props.value) {
                     return <option key={index} selected={true} value={option}>{option}</option>
                 }else {
                     return <option key={index} value={option}>{option}</option>

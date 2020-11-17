@@ -65,12 +65,10 @@ class MenuBar extends React.Component {
        
             <Navbar bg="light" expand="lg">
               <Navbar.Brand href="/home">S.C.Q</Navbar.Brand>
-              
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
-                <Nav>
-                  <Nav.Link href="/Home">Home</Nav.Link>
-
+                <Nav className="mr-auto">
+                  <Nav.Link  href="/Home">Home</Nav.Link>
                   <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
                   <Nav.Link href="/RegistroAnalise">Registro de Analise</Nav.Link>
                   <Nav.Link href="/OrdensDeCorrecao">Ordens de Correção</Nav.Link>
