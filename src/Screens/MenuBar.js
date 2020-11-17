@@ -68,7 +68,7 @@ class MenuBar extends React.Component {
               
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="d-flex">
+                <Nav>
                   <Nav.Link href="/Home">Home</Nav.Link>
 
                   <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
