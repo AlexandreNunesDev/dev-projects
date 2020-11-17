@@ -3,7 +3,8 @@ import { getToken } from "../Services/auth"
 
 
 const http = axios.create({
-    baseURL: "http://localhost:8080"
+    baseURL: "https://scq-api.herokuapp.com/"
+    
 })
 
 http.interceptors.request.use(async config => {
