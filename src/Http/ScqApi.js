@@ -278,7 +278,7 @@ const ScqApi = {
 
     },
     Auth: (loginForm) => {   
-        return http.post("http://localhost:8080/auth",loginForm).then(res => res.data)
+        return http.post(loginForm).then(res => res.data)
     },
 
     Register: (loginForm) => {
