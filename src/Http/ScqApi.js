@@ -3,7 +3,7 @@ import { getToken } from "../Services/auth"
 
 
 const http = axios.create({
-    baseURL: "https://scqapi-env-1.eba-yk7mty23.us-east-2.elasticbeanstalk.com:5000"
+    baseURL: "https://scqapi-env-1.eba-yk7mty23.us-east-2.elasticbeanstalk.com:5000/"
     
 })
 
@@ -19,13 +19,13 @@ http.interceptors.request.use(async config => {
 
 const ScqApi = {
     ListaProcessos: () => {
-        return http.get("/processos").then(res => res.data)
+        return http.get("processos").then(res => res.data)
     },
     ListaEtapas: () => {
-        return http.get("/etapas").then(console.log("deu certo"))
+        return http.get("etapas").then(console.log("deu certo"))
     },
     ListaTrocas: () => {
-        return http.get("/trocas").then(res => res.data)
+        return http.get("trocas").then(res => res.data)
 
     },
     LoadAnaliseChart: (dataInicial, dataFinal, parametroId) => {
@@ -36,10 +36,10 @@ const ScqApi = {
         return http.get("parametros").then(res => res.data)
     },
     ListaMateriaPrimas: () => {
-        return http.get("/materiaPrimas").then(res => res.data)
+        return http.get("materiaPrimas").then(res => res.data)
     },
     ListaNotificacoes: () => {
-        return http.get("/notificacoes").then(res => res.data)
+        return http.get("notificacoes").then(res => res.data)
     },
     CriarProcesso: (processo) => {
         return http.post("processo", processo).then(res => res.data)
@@ -278,7 +278,7 @@ const ScqApi = {
 
     },
     Auth: (loginForm) => {   
-        return http.post("/auth",loginForm).then(res => res.data)
+        return http.post("auth",loginForm).then(res => res.data)
     },
 
     Register: (loginForm) => {
