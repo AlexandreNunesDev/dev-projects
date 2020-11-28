@@ -3,7 +3,7 @@ import { getToken } from "../Services/auth"
 
 
 const http = axios.create({
-    baseURL: "https://scqapi-env.eba-mimitjgq.sa-east-1.elasticbeanstalk.com/"
+    baseURL: "https://rest.scqapi.com/"
     
 })
 
