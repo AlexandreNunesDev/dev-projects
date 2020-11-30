@@ -3,7 +3,7 @@ import { getToken } from "../Services/auth"
 
 
 const http = axios.create({
-    baseURL: "https://rest.scqapi.com/"
+    baseURL: "https://scqapi.com/"
     
 })
 
