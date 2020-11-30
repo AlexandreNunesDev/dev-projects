@@ -1,6 +1,6 @@
 import React, { Component} from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Spinner, Container, Form } from "react-bootstrap";
 import MenuBar from "./MenuBar";
 import ScqApi from "../Http/ScqApi";
 
@@ -153,16 +153,22 @@ class OrdensDeCorreção extends Component {
                 <header>
                     <MenuBar></MenuBar>
                 </header>
-               
-                    <Table>
-                        <TableHead></TableHead>
-                        <tbody>
-                        <TableBody openCorrecaoConfirm={(ocpToConfirm) => this.setState({ocp : ocpToConfirm, showCorrecaoConfirm : true}) }  ocps={this.state.ocps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp}></TableBody>
-                        </tbody>
-                    </Table>
-                    {this.state.ocp && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({show : false})} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocp.statusCorrecao} ocpId={this.state.ocp.id} correcaoConfirm={(isOcp,ocpId) => this.correcaoConfirm(isOcp,ocpId,this.state.ocp.isAdicao)} correcaoType={this.state.ocp.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
-                    <CredentialConfirm details={this.state.details}  show={this.state.show} closeCredentialConfirm={() => this.setState({show : false})}  ></CredentialConfirm>
-            </>
+                	{
+                       this.state.loading ? <Container><Spinner animation="grow" /> 
+                       <Form.Label>Aguarde , gerando OCP</Form.Label></Container>
+                       :
+                       <>
+                       <Table>
+                       <TableHead></TableHead>
+                       <tbody>
+                       <TableBody openCorrecaoConfirm={(ocpToConfirm) => this.setState({ocp : ocpToConfirm, showCorrecaoConfirm : true}) }  ocps={this.state.ocps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp}></TableBody>
+                       </tbody>
+                   </Table>
+                   {this.state.ocp && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({show : false})} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocp.statusCorrecao} ocpId={this.state.ocp.id} correcaoConfirm={(isOcp,ocpId) => this.correcaoConfirm(isOcp,ocpId,this.state.ocp.isAdicao)} correcaoType={this.state.ocp.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
+                   <CredentialConfirm details={this.state.details}  show={this.state.show} closeCredentialConfirm={() => this.setState({show : false})}  ></CredentialConfirm>
+                    </>
+                    }
+                    </> 
 
         )
     }
