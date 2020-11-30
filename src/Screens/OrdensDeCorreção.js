@@ -157,7 +157,7 @@ class OrdensDeCorreção extends Component {
                     <Table>
                         <TableHead></TableHead>
                         <tbody>
-                        <TableBody openCorrecaoConfirm={(ocpToConfirm) => this.setState({ocp : ocpToConfirm, showCorrecaoConfirm : true}) }  ocps={this.state.ocps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp}></TableBody>
+                        <TableBody openCorrecaoConfirm={(ocpToConfirm) => this.setState({ocp : ocpToConfirm, show : true}) }  ocps={this.state.ocps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp}></TableBody>
                         </tbody>
                     </Table>
                     {this.state.ocp && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({show : false})} show={this.state.show} statusCorrecao={this.state.ocp.statusCorrecao} ocpId={this.state.ocp.id} correcaoConfirm={(isOcp,ocpId) => this.correcaoConfirm(isOcp,ocpId,this.state.ocp.isAdicao)} correcaoType={this.state.ocp.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
