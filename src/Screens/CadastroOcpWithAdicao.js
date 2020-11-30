@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Container, Col, Button } from 'react-bootstrap';
+import { Form, Container, Col, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import { useHistory, withRouter } from 'react-router-dom';
@@ -75,6 +75,7 @@ const CadastroDeOcp = (props) => {
     const [etapa, setEtapa] = useState()
     const [correcaoArray , setCorrecaoArray] = useState([])
     const [adicaoMenu, setAdicaoMenu] = useState()
+    const [loading, setLoading] = useState(false)
     let unidade = ""
 
 
@@ -159,65 +160,73 @@ const CadastroDeOcp = (props) => {
             <header>
                 <MenuBar></MenuBar>
             </header>
-
-            <Container style={{ marginTop: 20 }}>
-                <h1>Cadastro de Ordem de Correção</h1>
-                <Form style={{ marginTop: 20 }}>
-                    {parametro &&
-                        <Form.Row>
-                            {etapa &&
-                                <Form.Group xs={3} as={Col}>
-                                    <Form.Label>Etapa : {etapa.nome}</Form.Label>
-                                </Form.Group>
-                            }
-                            <Form.Group xs={3} as={Col} >
-                                <Form.Label>Parametro : {`${parametro.nome}`}</Form.Label>
-                            </Form.Group>
-
-                            <Form.Group xs={2} as={Col}>
-                                <Form.Label>Faixa Mininima : {`${parametro.pMin} ${unidade}`}</Form.Label>
-                            </Form.Group>
-                            <Form.Group xs={2} as={Col} >
-                                <Form.Label>Faixa Máxima : {`${parametro.pMax} ${unidade}`}</Form.Label>
-                            </Form.Group>
-                            <Form.Group xs={2} as={Col} >
-                                <Form.Label style={{ color: analise.status === "fofe" ? 'red' : 'black' }}>Resultado: {`${analise.resultado} ${unidade}`}</Form.Label>
-                            </Form.Group>
-
-                        </Form.Row>
-                    }
-                      {adicaoMenu && adicaoMenu}
-                        
-                    <Form.Row>
-                        <Form.Group as={Col}>
-                            <Form.Label>Responsavel: </Form.Label>
-                            <Form.Control type="text" onChange={(event) => setResponsavel(event.target.value)}></Form.Control>
-                        </Form.Group>
+            {
                 
-                    <Form.Group as={Col}>
-                        <Form.Label>Observação: </Form.Label>
-                        <Form.Control type="text" placeholder={"Ex: Add. Cx. Misutra"} onChange={(event) => setObservacao(event.target.value)}></Form.Control>
-                    </Form.Group>
-                    </Form.Row>
-                  
-                    <Form.Row>
-                        <Form.Group >
-                            <Button style={{ margin: 2 }} onClick={() => {
-                                redirectAnalise(history, analise)
-                                redirectAnalise(history)
-                            }}>
-                                Cancelar
-                    </Button>
-                            <Button style={{ margin: 2 }} type="reset" onClick={() => {
-                                saveOcp(analise, mpQtds, responsavel, observacao, history)
-
-                            }}>
-                                Salvar
-                    </Button>
+                    loading ? <Container><Spinner animation="grow" /> 
+                    <Form.Label>Aguarde , gerando OCP</Form.Label></Container>
+                    :
+                    <Container style={{ marginTop: 20 }}>
+                    <h1>Cadastro de Ordem de Correção</h1>
+                    <Form style={{ marginTop: 20 }}>
+                        {parametro &&
+                            <Form.Row>
+                                {etapa &&
+                                    <Form.Group xs={3} as={Col}>
+                                        <Form.Label>Etapa : {etapa.nome}</Form.Label>
+                                    </Form.Group>
+                                }
+                                <Form.Group xs={3} as={Col} >
+                                    <Form.Label>Parametro : {`${parametro.nome}`}</Form.Label>
+                                </Form.Group>
+    
+                                <Form.Group xs={2} as={Col}>
+                                    <Form.Label>Faixa Mininima : {`${parametro.pMin} ${unidade}`}</Form.Label>
+                                </Form.Group>
+                                <Form.Group xs={2} as={Col} >
+                                    <Form.Label>Faixa Máxima : {`${parametro.pMax} ${unidade}`}</Form.Label>
+                                </Form.Group>
+                                <Form.Group xs={2} as={Col} >
+                                    <Form.Label style={{ color: analise.status === "fofe" ? 'red' : 'black' }}>Resultado: {`${analise.resultado} ${unidade}`}</Form.Label>
+                                </Form.Group>
+    
+                            </Form.Row>
+                        }
+                          {adicaoMenu && adicaoMenu}
+                            
+                        <Form.Row>
+                            <Form.Group as={Col}>
+                                <Form.Label>Responsavel: </Form.Label>
+                                <Form.Control type="text" onChange={(event) => setResponsavel(event.target.value)}></Form.Control>
+                            </Form.Group>
+                    
+                        <Form.Group as={Col}>
+                            <Form.Label>Observação: </Form.Label>
+                            <Form.Control type="text" placeholder={"Ex: Add. Cx. Misutra"} onChange={(event) => setObservacao(event.target.value)}></Form.Control>
                         </Form.Group>
-                    </Form.Row>
-                </Form>
-            </Container>
+                        </Form.Row>
+                      
+                        <Form.Row>
+                            <Form.Group >
+                                <Button style={{ margin: 2 }} onClick={() => {
+                                    redirectAnalise(history, analise)
+                                    redirectAnalise(history)
+                                }}>
+                                    Cancelar
+                        </Button>
+                                <Button style={{ margin: 2 }} type="reset" onClick={() => {
+                                   
+                                    saveOcp(analise, mpQtds, responsavel, observacao, history)
+                                    setLoading(true)
+    
+                                }}>
+                                    Salvar
+                        </Button>
+                            </Form.Group>
+                        </Form.Row>
+                    </Form>
+                </Container>
+            }
+           
 
         </>
     )

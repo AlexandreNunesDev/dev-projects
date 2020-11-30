@@ -153,11 +153,8 @@ class OrdensDeCorreção extends Component {
                 <header>
                     <MenuBar></MenuBar>
                 </header>
-                	{
-                       this.state.loading ? <Container><Spinner animation="grow" /> 
-                       <Form.Label>Aguarde , gerando OCP</Form.Label></Container>
-                       :
-                       <>
+                	
+                 
                        <Table>
                        <TableHead></TableHead>
                        <tbody>
@@ -167,8 +164,8 @@ class OrdensDeCorreção extends Component {
                    {this.state.ocp && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({show : false})} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocp.statusCorrecao} ocpId={this.state.ocp.id} correcaoConfirm={(isOcp,ocpId) => this.correcaoConfirm(isOcp,ocpId,this.state.ocp.isAdicao)} correcaoType={this.state.ocp.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
                    <CredentialConfirm details={this.state.details}  show={this.state.show} closeCredentialConfirm={() => this.setState({show : false})}  ></CredentialConfirm>
                     </>
-                    }
-                    </> 
+                    
+             
 
         )
     }
