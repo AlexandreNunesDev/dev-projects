@@ -6,8 +6,8 @@ const ConfirmMailPage = () => {
     return ( 
         <>
         <Container>
-            <h2>Confirme sua conta</h2>
-            <Form.Label>Verifique seu mail por scq.supporte@cationbrasil.com para confirmar sua conta</Form.Label>
+            <h2>Confirmacao de Compra</h2>
+            <Form.Label>Aguarde por em breve sua conta sera verificada</Form.Label>
         </Container>
         </>
 

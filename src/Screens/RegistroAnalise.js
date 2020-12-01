@@ -194,8 +194,8 @@ class RegistroDeAnalise extends React.Component {
         const { id } = this.state.analise
         const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId : this.state.ocpId }
        
-            ScqApi.EditarAnalise(analise)
-            this.props.history.push("/OrdensDeCorrecao")
+            ScqApi.EditarAnalise(analise).then(() => this.props.history.push("/OrdensDeCorrecao"))
+            
        
            
 

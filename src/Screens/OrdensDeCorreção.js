@@ -117,12 +117,12 @@ class OrdensDeCorreção extends Component {
         
         if(isOcp){
             if(isAdicao){
-                ScqApi.AdicaoCorrigir(ocpId)
-                window.location.reload()
+                ScqApi.AdicaoCorrigir(ocpId).then(()=> window.location.reload())
+               
    
             } else {
-                ScqApi.AcaoCorrigir(ocpId)
-                window.location.reload()
+                ScqApi.AcaoCorrigir(ocpId).then(()=> window.location.reload())
+
             }
             
             
@@ -138,7 +138,7 @@ class OrdensDeCorreção extends Component {
 
 
     aprovarOcp = () => {
-        ScqApi.AprovarOcp(this.state.ocp.id)
+        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(this.setState({show : false},() => window.location.reload()))
     }
 
 
@@ -158,10 +158,10 @@ class OrdensDeCorreção extends Component {
                        <Table>
                        <TableHead></TableHead>
                        <tbody>
-                       <TableBody openCredentialsConfirm={(ocpToAprove) => this.setState({ocpToAprove : ocpToAprove , details : this.getAproveDetails(ocpToAprove)},()=> this.setState({show : true}))}  openCorrecaoConfirm={(ocpToConfirm) => this.setState({ocp : ocpToConfirm, showCorrecaoConfirm : true}) }  ocps={this.state.ocps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp}></TableBody>
+                       <TableBody openCredentialsConfirm={(ocpToAprove) => this.setState({ocpToAprove : ocpToAprove , details : this.getAproveDetails(ocpToAprove)},()=> this.setState({show : true}))}  openCorrecaoConfirm={(ocpToConfirm) => this.setState({ocpToConfirm : ocpToConfirm, showCorrecaoConfirm : true}) }  ocps={this.state.ocps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp}></TableBody>
                        </tbody>
                    </Table>
-                   {this.state.ocp && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({show : false})} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocp.statusCorrecao} ocpId={this.state.ocp.id} correcaoConfirm={(isOcp,ocpId) => this.correcaoConfirm(isOcp,ocpId,this.state.ocp.isAdicao)} correcaoType={this.state.ocp.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
+                   {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({show : false})} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocpId={this.state.ocpToConfirm.id} correcaoConfirm={(isOcp,ocpId) => this.correcaoConfirm(isOcp,ocpId,this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
                    <CredentialConfirm details={this.state.details} aproveOcp={() => this.aprovarOcp() } show={this.state.show} closeCredentialConfirm={() => this.setState({show : false})}  ></CredentialConfirm>
                     </>
                     
