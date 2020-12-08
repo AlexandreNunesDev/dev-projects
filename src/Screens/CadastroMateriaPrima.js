@@ -3,9 +3,10 @@ import { Button, Form , Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
-
+import NumberFormat from 'react-number-format';
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
+import {capitalize} from '../Services/stringUtils'
 
 class CadastroMateriaPrima extends React.Component {
 
@@ -45,11 +46,9 @@ class CadastroMateriaPrima extends React.Component {
             fatorTitulometrico=1
         }
         const materiaPrima = {nome,fornecedor,fatorTitulometrico,preco,unidade}
-            ScqApi.CriarMateriaPrima(materiaPrima)
+            ScqApi.CriarMateriaPrima(materiaPrima).then(res => this.responseHandler(res))
             this.cleanState()
-            toastManager.add(`Materia Prima ${materiaPrima.nome} criada com sucesso`, {
-                appearance: 'success', autoDismiss: true
-              })
+            
       
        
 
@@ -97,9 +96,12 @@ class CadastroMateriaPrima extends React.Component {
     }
 
     precoController = (event) => {
+
+        let valor = String(event.target.value)
+
         this.setState({
-            preco : event.target.value
-        })
+            preco : valor
+        },() =>console.log( this.state.preco))
     }
 
   
@@ -121,6 +123,24 @@ class CadastroMateriaPrima extends React.Component {
         }
     }
 
+
+    responseHandler = (response) => {
+        const { toastManager } = this.props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Materia Prima ${response.nome} criado`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
+
+       
+       
+        
+    }
    
 
 render() {
@@ -148,11 +168,11 @@ render() {
             <Form.Row>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <Form.Label>Preco: </Form.Label>
-                <Form.Control type="text" placeholder={"R$ 0,00"} value={this.state.preco} onChange={this.precoController}/>
+                <NumberFormat placeholder={"R$ 0.00"} customInput={Form.Control} allowedDecimalSeparators={["."]}  value={this.state.preco} onChange={this.precoController}/>
             </Form.Group>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <Form.Label>Fator Titulométrico: </Form.Label>
-                <Form.Control type="text" placeholder="Fator Titulometrico" value={this.state.fatorTitulometrico} onChange={this.fatorController} />
+                <NumberFormat placeholder={"R$ 0.00"} customInput={Form.Control} allowedDecimalSeparators={["."]}   value={this.state.fatorTitulometrico} onChange={this.fatorController}/>
             </Form.Group>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <UnidadeSelect default={"Escolha uma Unidade"} type={"adicao"} title={"Unidade Mp"} onChange={(unidade) => this.setState({unidade : unidade}) }></UnidadeSelect>

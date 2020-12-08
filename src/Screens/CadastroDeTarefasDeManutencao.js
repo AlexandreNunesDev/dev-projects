@@ -1,7 +1,7 @@
 import React, {useState, useEffect } from 'react'
 import { Button, Form, Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import {capitalize,subId} from '../Services/stringUtils'
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
@@ -26,6 +26,24 @@ const CadastroDeTarefasDeManutencao = (props) => {
         
     }, []
     )
+
+    const responseHandler = (response) => {
+        const { toastManager } = props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Troca etapa ${response.etapaNome} criado`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
+
+       
+       
+        
+    }
 
         return (
             <>
@@ -72,11 +90,8 @@ const CadastroDeTarefasDeManutencao = (props) => {
                         }} >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
                             const tarefaManutencao = {nome,processoId,codigoDoDocumento,dataExecutada: dataExecutada,escala ,frequencia : repetirAcada}
-                            ScqApi.CriarTarefaManutencao(tarefaManutencao)
-                            props.toastManager.add(`Tarefa cadastrada com sucesso`, {
-                                appearance: 'success', autoDismiss: true
-                            })
-                
+                            ScqApi.CriarTarefaManutencao(tarefaManutencao).then(res => responseHandler(res))
+                     
                         }} >Salvar</Button>
                     </Form.Group>
                 </Form>

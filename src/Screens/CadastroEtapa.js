@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import GenericSelect from '../Components/GenericSelect';
-
+import {capitalize} from '../Services/stringUtils'
 import { withToastManager } from 'react-toast-notifications';
 import MontagemComposition from '../Components/MontagemComposition';
 import { getToken } from '../Services/auth';
@@ -45,6 +45,19 @@ class CadastroEtapa extends React.Component {
         })
     }
 
+    responseHandler = (response) => {
+        const { toastManager } = this.props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Etapa ${response.nome} criada`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
+    }
     selectedLinhaListner = (processoId) => {
         this.setState({ processoId: processoId })
     }
@@ -65,7 +78,7 @@ class CadastroEtapa extends React.Component {
             const etapa = { processoId: processoId, nome, posicao, volume: this.state.volume }
        
             ScqApi.CriarEtapa(etapa).then(res => {
-                this.notifyEtapaCriation(toastManager,res)
+                this.responseHandler(res)
                 const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
                 ScqApi.CriarMontagem(composes).then(res => this.cleanState())
             })
@@ -93,7 +106,7 @@ class CadastroEtapa extends React.Component {
             processo: {},
             nome: '',
             posicao: '',
-            volume: 0,
+            volume: null,
             montagemComposes: []
         }, () => console.log(this.state))
         if (deleteMessage != null) {

@@ -35,10 +35,6 @@ const EditarEtapa = (props) => {
     }
 
     const submitForm = () => {
-
-    
-
-
             const replacedEtapa = { id: etapa.id, processoId: processoId, nome : nome, posicao : posicao,volume : volume }
    
             ScqApi.EditarEtapa(replacedEtapa).then(res => {
@@ -52,13 +48,14 @@ const EditarEtapa = (props) => {
           
 
          
-            toastManager.add(`Etapa ${etapa.nome} criada com sucesso`, {
+            toastManager.add(`Etapa ${etapa.nome} editada com sucesso`, {
                 appearance: 'success', autoDismiss: true
             })
 
   
     }
 
+   
     useEffect(() => {
         ScqApi.ListaProcessos().then(res => setProcessos(res))
         ScqApi.ListaMateriaPrimas().then(res => setMps(res))
@@ -75,11 +72,7 @@ const EditarEtapa = (props) => {
         }))
     }
 
-    useEffect(() => {
-        console.log(montagemComposes)
-        console.log(removedCompose)
-        console.log(processoId)
-    },[montagemComposes,removedCompose,processoId])
+
 
     useEffect(() => {
         if(etapa) {

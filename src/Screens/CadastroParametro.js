@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import GenericSelect from '../Components/GenericSelect';
 import SelectEditable from '../Components/SelectEditable'
-
+import {capitalize} from '../Services/stringUtils'
 import ScqApi from '../Http/ScqApi';
 import FormulaBuilder from '../Components/FormulaBuilder';
 
@@ -44,6 +44,25 @@ class CadastroParametro extends React.Component {
                 processos: res
             })
         })
+    }
+
+
+    responseHandler = (response) => {
+        const { toastManager } = this.props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Parametro ${response.nome} criado`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
+
+       
+       
+        
     }
 
     selectedLinhaListner = (linhaId) => {
@@ -105,11 +124,8 @@ class CadastroParametro extends React.Component {
         const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT }
 
         if (this.state.isNotEditable) {
-            ScqApi.CriarParametro(parametro).then(res => this.salvarFrequenciaAnalise(res.id))
+            ScqApi.CriarParametro(parametro).then(res => {this.responseHandler(res); this.salvarFrequenciaAnalise(res.id)})
 
-            toastManager.add(`Parametro ${parametro.nome} criada com sucesso`, {
-                appearance: 'success', autoDismiss: true
-            })
         }
     }
 

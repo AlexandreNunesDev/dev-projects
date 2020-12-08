@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import {capitalize,subId} from '../Services/stringUtils'
 import ScqApi from '../Http/ScqApi';
 import { Button, Form, Container, Col } from 'react-bootstrap'
 import { withToastManager } from 'react-toast-notifications'
@@ -9,15 +9,7 @@ import GenericSelect from '../Components/GenericSelect';
 
 
 
-const salvarTroca = (dataPlanejada, frequencia, diaSemana, etapaId, escala,toastManager) => {
-    const troca = { id: null, dataPlanejada, frequencia, diaSemana, etapaId, escala }
 
-    ScqApi.CriarTroca(troca)
-
-    toastManager.add(`Troca cadastrada com sucesso`, {
-        appearance: 'success', autoDismiss: true
-    })
-}
 
 
 const CadastroTroca = (props) => {
@@ -37,6 +29,32 @@ const CadastroTroca = (props) => {
         
     }, []
     )
+
+    const salvarTroca = () => {
+        const troca = { id: null, dataPlanejada, frequencia, etapaId, escala }
+    
+        ScqApi.CriarTroca(troca).then(res => responseHandler(res))
+    
+     
+    }
+
+    const responseHandler = (response) => {
+        const { toastManager } = props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Troca etapa ${response.etapaNome} criado`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
+
+       
+       
+        
+    }
 
 
     
@@ -92,7 +110,7 @@ const CadastroTroca = (props) => {
                             props.history.push("/EditarTroca")
                         }}>Editar</Button>
 
-                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca(dataPlanejada, frequencia, etapaId, escala, props.toastManager)} >Salvar</Button>
+                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca()} >Salvar</Button>
                     </Form.Group>
 
                 </Form>

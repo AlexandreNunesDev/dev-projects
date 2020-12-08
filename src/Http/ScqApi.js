@@ -1,13 +1,26 @@
 import axios from "axios"
+
+
 import { getToken } from "../Services/auth"
 
 
 const http = axios.create({
-    baseURL: "https://scqapi.com/"
+     baseURL:  "http://localhost:8080/" //"https://scqapi.com/"
     
 })
 
-http.interceptors.request.use(async config => {
+const respInter = http.interceptors.response.use(function (response) {
+    
+    return response.data;
+  }, function (error) {
+    if(error.response){
+        const errorObj = {error : true, data : error.response.data}
+        return errorObj
+    }
+   
+  });
+
+const reqInter = http.interceptors.request.use(async config => {
     const token = getToken();
  
     if (token!=null) {
@@ -17,281 +30,285 @@ http.interceptors.request.use(async config => {
 });
 
 
+
 const ScqApi = {
+
+    
     ListaProcessos: () => {
-        return http.get("processos").then(res => res.data)
+        return http.get("processos")
     },
     ListaEtapas: () => {
-        return http.get("etapas").then(console.log("deu certo"))
+        return http.get("etapas")
     },
     ListaTrocas: () => {
-        return http.get("trocas").then(res => res.data)
+        return http.get("trocas")
 
     },
     LoadAnaliseChart: (dataInicial, dataFinal, parametroId) => {
-        return http.get("analise/" + dataInicial + "/" + dataFinal + "/" + parametroId).then(res => res.data)
+        return http.get("analise/" + dataInicial + "/" + dataFinal + "/" + parametroId)
 
     },
     ListaParametros: () => {
-        return http.get("parametros").then(res => res.data)
+        return http.get("parametros")
     },
     ListaMateriaPrimas: () => {
-        return http.get("materiaPrimas").then(res => res.data)
+        return http.get("materiaPrimas")
     },
     ListaNotificacoes: () => {
-        return http.get("notificacoes").then(res => res.data)
+        return http.get("notificacoes")
     },
     CriarProcesso: (processo) => {
-        return http.post("processo", processo).then(res => res.data)
+        return http.post("processo", processo)
 
     },
     CriarFrequenciaAnalise: (frequencia) => {
-        return http.post("frequencia", frequencia).then(res => res.data)
+        return http.post("frequencia", frequencia)
     },
     CriarTroca: (troca) => {
-        return http.post("troca", troca).then(res => res.data)
+        return http.post("troca", troca)
     },
     CriarTarefaManutencao: (tarefa) => {
-        return http.post("tarefa", tarefa).then(res => res.data)
+        return http.post("tarefa", tarefa)
 
     },
     EditarProcesso: (processo) => {
-        return http.put("processo/" + processo.id, processo).then(res => res.data)
+        return http.put("processo/" + processo.id, processo)
 
     },
     EditarEtapa: (etapa) => {
-        return http.put("etapa/" + etapa.id, etapa).then(res => res.data)
+        return http.put("etapa/" + etapa.id, etapa)
 
     },
     EditarParametro: (parametro) => {
-        return http.put("parametro/" + parametro.id, parametro).then(res => res.data)
+        return http.put("parametro/" + parametro.id, parametro)
 
     },
     EditarNotificacao: (id) => {
-        return http.put("notificacao/" + id,).then(res => res.data)
+        return http.put("notificacao/" + id,)
 
     },
     EditarMateriaPrima: (materiaPrima) => {
-        return http.put("materiaPrima/" + materiaPrima.id, materiaPrima).then(res => res.data)
+        return http.put("materiaPrima/" + materiaPrima.id, materiaPrima)
 
     },
     EditarAnalise: (analise) => {
-        return http.put("analise/" + analise.id, analise).then(res => res.data)
+        return http.put("analise/" + analise.id, analise)
 
     },
     EditarFrequenciaAnalise: (frequencia) => {
-        return http.put("frequencia/update/" + frequencia.id).then(res => res.data)
+        return http.put("frequencia/update/" + frequencia.id)
 
     },
     DeleteProcesso: (processoId) => {
-        return http.delete("processo/" + processoId.id).then(res => res.data)
+        return http.delete("processo/" + processoId.id)
 
     },
     DeleteEtapa: (etapaId) => {
-        return http.delete("etapa/" + etapaId.id).then(res => res.data)
+        return http.delete("etapa/" + etapaId.id)
 
     },
     DeleteParametro: (parametroId) => {
-        return http.delete("parametro/" + parametroId.id).then(res => res.data)
+        return http.delete("parametro/" + parametroId.id)
 
     },
     DeleteOcp: (ocpId) => {
-        return http.delete("parametro/" + ocpId).then(res => res.data)
+        return http.delete("parametro/" + ocpId)
 
     },
     DeleteOmp: (ompId) => {
-        return http.delete("omp/" + ompId).then(res => res.data)
+        return http.delete("omp/" + ompId)
 
     },
     CriarEtapa: (etapa) => {
-        return http.post("etapa", etapa).then(res => res.data)
+        return http.post("etapa", etapa)
 
     },
     CriarParametro: (parametro) => {
-        return http.post("parametro", parametro).then(res => res.data)
+        return http.post("parametro", parametro)
 
     },
     CriarMateriaPrima: (materiaPrima) => {
-        return http.post("materiaPrima", materiaPrima).then(res => res.data)
+        return http.post("materiaPrima", materiaPrima)
 
     },
     CriarAnalise: (analise) => {
-        return http.post("analise", analise).then(res => res.data)
+        return http.post("analise", analise)
 
     },
     CriarMontagem: (montagem) => {
-        return http.post("montagem", montagem).then(res => res.data)
+        return http.post("montagem", montagem)
 
     },
     CriarAdicao: (adicao) => {
-        return http.post("adicao", adicao).then(res => res.data)
+        return http.post("adicao", adicao)
 
     },
     CriarAcao: (acao) => {
-        return http.post("acao", acao).then(res => res.data)
+        return http.post("acao", acao)
 
     },
     CriarOcp: (ocp) => {
-        return http.post("ocp", ocp).then(res => res.data)
-
+        return http.post("ocp", ocp)
     },
     ListaEtapasByProcesso: (processoId) => {
-        return http.get("etapas/" + processoId).then(res => res.data)
+        return http.get("etapas/" + processoId)
 
     },
     ListaTarefasDeManutencao: () => {
-        return http.get("tarefas").then(res => res.data)
+        return http.get("tarefas")
 
     },
     ListaTarefasByProcesso: (processoId) => {
-        return http.get("tarefa/find/" + processoId).then(res => res.data)
+        return http.get("tarefa/find/" + processoId)
 
     },
     ListaParametrosByEtapa: (etapaId) => {
-        return http.get("parametros/" + etapaId).then(res => res.data)
+        return http.get("parametros/" + etapaId)
 
     },
     ListaOcps: () => {
-        return http.get("ocpsList").then(res => res.data)
+        return http.get("ocpsList")
 
     },
     FindParametro: (parametroId) => {
-        return http.get("parametro/" + parametroId).then(res => res.data)
+        return http.get("parametro/" + parametroId)
 
     },
     FindAnalise: (analiseId) => {
-        return http.get("analise/" + analiseId).then(res => res.data)
+        return http.get("analise/" + analiseId)
 
     },
     FindTroca: (etapaId) => {
-        return http.get("troca/find/" + etapaId).then(res => res.data)
+        return http.get("troca/find/" + etapaId)
 
     },
     EditarTroca: (troca) => {
-        return http.put("troca/edit/" + troca.id).then(res => res.data)
+        return http.put("troca/edit/" + troca.id)
 
     },
     FindaTarefasByProcesso: (processoId) => {
-        return http.get("tarefa/find/" + processoId.id).then(res => res.data)
+        return http.get("tarefa/find/" + processoId.id)
 
     },
     FindTarefa: (tarefaId) => {
-        return http.get("tarefa/" + tarefaId).then(res => res.data)
+        return http.get("tarefa/" + tarefaId)
 
     },
 
     EditarTarefaDeManutencao: (tarefa) => {
-        return http.put("tarefa/update/" + tarefa.id, tarefa).then(res => res.data)
+        return http.put("tarefa/update/" + tarefa.id, tarefa)
 
     },
     AprovarOcp: (ocpId) => {
-        return http.put("ocp/aprovar/" + ocpId).then(res => res.data)
+        return http.put("ocp/aprovar/" + ocpId)
 
     },
 
 
     LoadReanalise: (analiseId) => {
-        return http.get("reanalise/" + analiseId).then(res => res.data)
+        return http.get("reanalise/" + analiseId)
 
     },
     LoadOmps: () => {
-        return http.get("omps").then(res => res.data)
+        return http.get("omps")
 
     },
     FindProcesso: (processoId) => {
-        return http.get("processo/" + processoId).then(res => res.data)
+        return http.get("processo/" + processoId)
 
     },
     FindEtapa: (etapaId) => {
-        return http.get("etapa/" + etapaId).then(res => res.data)
+        return http.get("etapa/" + etapaId)
 
     },
     FindMateriaPrima: (materiaPrimaId) => {
-        return http.get("materiaPrima/" + materiaPrimaId).then(res => res.data)
+        return http.get("materiaPrima/" + materiaPrimaId)
 
     },
     FindMateriaPrimaByEtapaId: (etapaId) => {
-        return http.get("materiaPrimaByEtapa/" + etapaId).then(res => res.data)
+        return http.get("materiaPrimaByEtapa/" + etapaId)
 
     },
     DeleteAnalise: (analiseId) => {
-        return http.delete("analise/" + analiseId).then(res => res.data)
+        return http.delete("analise/" + analiseId)
 
     },
     DeleteMateriaPrima: (materiaPrimaId) => {
-        return http.delete("materiaPrima/" + materiaPrimaId).then(res => res.data)
+        return http.delete("materiaPrima/" + materiaPrimaId)
 
     },
     DeleteMontagemCompose: (removedMontagemComposes) => {
-        return http.delete("montagem", removedMontagemComposes).then(res => res.data)
+        return http.delete("montagem", removedMontagemComposes)
 
     },
     DeleteTroca: (trocaId) => {
-        return http.delete("delete/troca/" + trocaId).then(res => res.data)
+        return http.delete("delete/troca/" + trocaId)
 
     },
     Calcular: (formula, viragem) => {
         const encodedUrl = encodeURI("calculadora?formula=" + formula + "&viragem=" + viragem)
-        return http.get(encodedUrl).then(res => res.data)
+        return http.get(encodedUrl)
 
     },
     AdicaoCorrigir: (ocpId) => {
-        return http.put("adicao/corrigir/" + ocpId).then(res => res.data)
+        return http.put("adicao/corrigir/" + ocpId)
 
     },
     AcaoCorrigir: (ocpId) => {
-        return http.put("acao/corrigir/" + ocpId).then(res => res.data)
+        return http.put("acao/corrigir/" + ocpId)
 
     },
     LoadFullOmpDetails: (omp) => {
-        return http.get("omps/" + omp.id).then(res => res.data)
+        return http.get("omps/" + omp.id)
 
     },
     LoadOmpHistorico: (omp) => {
-        return http.get("omps/historico/" + omp.id).then(res => res.data)
-
+        return http.get("omps/historico/" + omp.id)
     },
     FindMontagemByEtapaId: (etapaId) => {
-        return http.get("montagens/" + etapaId).then(res => res.data)
+        return http.get("montagens/" + etapaId)
 
     },
 
 
     GerarOmp: (ompForm) => {
-        return http.post("generateOmp", ompForm).then(res => res.data)
+        return http.post("generateOmp", ompForm)
 
     },
     GerarOmpTarefas: (ompForm) => {
-        return http.post("generateOmpTarefas", ompForm).then(res => res.data)
+        return http.post("generateOmpTarefas", ompForm)
 
     },
     FinalizarOmp: (omp) => {
-        return http.post("omp/finalizar", omp).then(res => res.data)
+        return http.post("omp/finalizar", omp)
 
     },
     GenerateOmp: () => {
-        return http.post("Cromo Duro.docx").then(res => res.data)
+        return http.post("Cromo Duro.docx")
     },
 
     searchMateriaPrimaName: (searchString) => {
-        return http.get("materiaPrima/search/" + searchString).then(res => res.data)
+        return http.get("materiaPrima/search/" + searchString)
 
     },
     Auth: (loginForm) => {   
-        return http.post("auth",loginForm).then(res => res.data)
+        return http.post("auth",loginForm)
     },
 
     Register: (loginForm) => {
         
-        return http.post("user/registration", loginForm).then(res => res.data)
+        return http.post("user/registration", loginForm)
 
     },
     DownloadOcp : (fileName) => {
+        http.interceptors.response.eject(respInter);
        return http.get("downloadOcp/" + fileName, { responseType: 'arraybuffer' }).then((response) => { return new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });});
     },
     DownloadOmp : (fileName) => {
+        http.interceptors.response.eject(respInter);
         return http.get("download/"+fileName, { responseType: 'arraybuffer' }).then((response) => { return new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });})
-      }
+    }
+
 
 }
 

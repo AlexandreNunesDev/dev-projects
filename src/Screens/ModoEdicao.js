@@ -5,7 +5,7 @@ import {Col, Row, Button} from 'react-bootstrap'
 import GenericSelect from '../Components/GenericSelect'
 import ScqApi from '../Http/ScqApi'
 
-import CredentialConfirm from '../Components/CredentialConfirm'
+import DeleteConfirm from '../Components/DeleteConfirm'
 
 
     const deleteSelection = (processo,etapa,parametro,materiaPrima,troca,type, onDelete) => {
@@ -230,8 +230,8 @@ const ModoEdicao = (props) => {
             
             </Row>
             
-            <CredentialConfirm show={showConfirm} deleteSelection={() => { deleteSelection(processo,etapa,parametro,materiaPrima,troca,props.type, props.onDelete); setShowConfirm(!showConfirm)
-            }} details={confirmationDetails} confirmCancel={() => setShowConfirm(false)} ></CredentialConfirm>
+            <DeleteConfirm show={showConfirm} deleteSelection={() => { deleteSelection(processo,etapa,parametro,materiaPrima,troca,props.type, props.onDelete); setShowConfirm(!showConfirm)
+            }} details={confirmationDetails} confirmCancel={() => setShowConfirm(false)} ></DeleteConfirm>
         </>
     )
 

@@ -11,9 +11,10 @@ import { withToastManager } from "react-toast-notifications"
 const Login = (props) => {
 
     const [estado] = useState()
-    const [mail, setMail] = useState()
-    const [password, setPassword] = useState()
-    
+    const [usuario, setUsuario] = useState()
+    const [senha, setSenha] = useState()
+    const {toastManager} = props
+
     const history = useHistory()
 
   
@@ -27,7 +28,8 @@ const Login = (props) => {
     }, [estado])
 
     const authenticationHandler = (res) => {
-        const {toastManager} = props
+       
+
         if(res.token){
             login(res)
             history.push("/Home")
@@ -51,14 +53,14 @@ const Login = (props) => {
                         <Form>
                             <Form.Group  controlId="formBasicEmail">
                                 <Form.Label>Usuario</Form.Label>
-                                <Form.Control type="email" placeholder="Entre com seu usuario" onChange={(event) => setMail(event.target.value)} />
+                                <Form.Control type="email" placeholder="Entre com seu usuario" onChange={(event) => setUsuario(event.target.value)} />
 
 
                             </Form.Group>
 
-                            <Form.Group controlId="formBasicPassword">
+                            <Form.Group id="password">
                                 <Form.Label>Senha</Form.Label>
-                                <Form.Control type="password" placeholder="entre com sua senha" onChange={(event) => setPassword(event.target.value)} />
+                                <Form.Control type="password" placeholder="entre com sua senha" onChange={(event) => setSenha(event.target.value)} />
                             </Form.Group>
                            
                          
@@ -71,9 +73,8 @@ const Login = (props) => {
                              {!isAuthenticated() ? 
 
                             <Button style={{ margin: 5 }} variant="primary" onClick={() => {
-                                const loginForm = { mail, password }
-                                ScqApi.Auth(loginForm).then(res =>  authenticationHandler(res))
-                            }}>
+                                const loginForm = { usuario, senha }
+                                ScqApi.Auth(loginForm).then(res => authenticationHandler(res))}}>
                                 Entrar
                              </Button>
                             :

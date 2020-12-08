@@ -5,6 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
+import {capitalize} from '../Services/stringUtils'
+
+
 
 class CadastroProcesso extends Component {
 
@@ -31,6 +34,24 @@ class CadastroProcesso extends Component {
         }
     }
 
+    responseHandler = (response) => {
+        const { toastManager } = this.props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Processo ${response.nome} criado`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
+
+       
+       
+        
+    }
+
     enterEditMode = () => {
         this.props.history.push("/EditarProcesso")
     }
@@ -44,10 +65,8 @@ class CadastroProcesso extends Component {
 
         const {toastManager} = this.props
             const processo = { id: null, nome: this.state.nome }
-            ScqApi.CriarProcesso(processo)
-            toastManager.add(`${this.state.nome} criada com sucesso`, {
-                appearance: 'success', autoDismiss: true
-              }) 
+            ScqApi.CriarProcesso(processo).then(response => this.responseHandler(response) )
+           
             this.cleanState()
         
 
@@ -73,7 +92,7 @@ class CadastroProcesso extends Component {
                       
                         <Form onSubmit={this.handleSubmit}>
                             <Form.Group controlId="processoLinhaNome">
-                                <Form.Label>Processo: </Form.Label>
+                                <Form.Label>Nome: </Form.Label>
                                 <Form.Control value={this.state.nome} type="text" placeholder="Entre o nome do Processo" onChange={this.handleChange} />
                             </Form.Group>
                             <Form.Group>
@@ -91,4 +110,4 @@ class CadastroProcesso extends Component {
 
 }
 
-export default withToastManager(CadastroProcesso)
+export default  withToastManager(CadastroProcesso)

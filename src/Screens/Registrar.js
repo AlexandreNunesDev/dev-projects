@@ -15,8 +15,19 @@ const Registrar = (props) => {
     const [password, setPassword] = useState()
     const [passwordConfirm, setPasswordConfirm] = useState()
     const history = useHistory()
+    const {toastManager} = props
 
-    
+    const resgistrationResolver = (data) => {
+        if(data === "message"){
+            toastManager.add( "Usuario ja cadastrado", {
+                appearance: 'warning', autoDismiss: 1000, onDismiss : ()=> {
+                    history.push("/Login")
+                }
+                    })
+        } else {
+            history.push("/confirmYourMail")
+        }
+    }
 
     useEffect(() => {
         if (estado) {
@@ -52,7 +63,9 @@ const Registrar = (props) => {
                                 const {toastManager} = props
                                 if(passwordConfirm===password){
                                     const loginForm = { mail, password }
-                                    ScqApi.Register(loginForm).then(res => history.push(res))
+                                    ScqApi.Register(loginForm).then(res => {
+                                        resgistrationResolver(res);
+                                        })
                                 } else {
                                     toastManager.add(`Senhas não coincidem`, {
                                         appearance: 'error', autoDismiss: true

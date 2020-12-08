@@ -8,6 +8,7 @@ export const getUserRole = () => localStorage.getItem(USER_ROLE);
 export const getUserName = () => localStorage.getItem(USER_NAME);
 export const isUserEnable = () => localStorage.getItem(USER_ENABLE);
 export const login = user => {
+  
   localStorage.setItem(TOKEN_INFO, user.token);
   localStorage.setItem(USER_ROLE,user.userRole)
   localStorage.setItem(USER_NAME,user.userName)

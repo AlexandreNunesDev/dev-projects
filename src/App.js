@@ -48,29 +48,7 @@ class App extends React.Component {
   }
 
 
-  loginUser = (logedUser) => {
   
-  
-    const { toastManager } = this.props
-    
-    this.setState({user: logedUser})
-
-    let jwtToken = logedUser.token
-   
-  
-    if(jwtToken!==null){
-      this.props.history.push("/Home")
-    } else {
-      toastManager.add(`Usuario não encontrado`, {
-        appearance: 'error', autoDismiss: true
-    })
-    }
-    
-  }
-
-  logOutUser = () => {
-    this.setState({user: {}});
-  }
  
 
   
