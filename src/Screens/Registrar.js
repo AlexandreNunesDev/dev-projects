@@ -10,7 +10,7 @@ import { withToastManager } from "react-toast-notifications"
 
 const Registrar = (props) => {
 
-    const [estado, setEstado] = useState()
+    const [estado] = useState()
     const [mail, setMail] = useState()
     const [password, setPassword] = useState()
     const [passwordConfirm, setPasswordConfirm] = useState()

@@ -9,6 +9,7 @@ const SelectEditable = (props) => {
     const [options] = useState(props.ops)
     const textRef = useRef()
     const selectRef = useRef()
+    const {getValue} = props
  
     
 
@@ -23,9 +24,12 @@ const SelectEditable = (props) => {
     }, [inputType])
 
     useEffect(() => {
-        props.getValue(value)
         
-    }, [value])
+        async function update () {
+            getValue(value)
+        }
+        update()
+    },[value,getValue])
 
          if(inputType==="text") {
              return(
@@ -38,7 +42,7 @@ const SelectEditable = (props) => {
             <Form.Control ref={selectRef} as={"select"} value={value} onDoubleClick={(event) => setInputType("text")} onChange={(event) =>  {setValue(event.target.value)}} onBlur={() => setInputType("select")} >
               <option unselectable="on">-- {props.default} --</option>
                     {options && options.map((op,index) =>{
-                        if(op == props.value) {
+                        if(op === props.value) {
                             return  <option selected={true} value={op} key={index}>{op}</option>
                         } else {
                             return <option  value={op} key={index}>{op}</option>}})

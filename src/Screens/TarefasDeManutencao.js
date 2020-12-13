@@ -8,6 +8,7 @@ import ScqApi from "../Http/ScqApi";
 
 import { withToastManager } from "react-toast-notifications";
 import GenericSelect from "../Components/GenericSelect";
+import GenericDropDown from "../Components/GenericDropDown";
 
 
 const TableHead = () => {
@@ -76,7 +77,9 @@ class TarefasDeManutencao extends React.Component {
             processos: [],
             tarefas: [],
             filteredTarefas: [],
-            tarefaChoosedId: [],
+            tarefaChoosed: [],
+            makedTarefasId : [],
+            filterType : []
 
 
         }
@@ -86,23 +89,35 @@ class TarefasDeManutencao extends React.Component {
         ScqApi.ListaProcessos().then(res => this.setState({ processos: res }))
     }
 
+
+    
     addTarefaIdToList = (checked, id) => {
 
         if (checked) {
 
-
+            const addedArray = this.state.filteredTarefas.filter((value) => {
+                return Number(value.id) === Number(id)
+            })
             this.setState({
-                tarefaChoosedId: this.state.tarefaChoosedId.concat(id)
-            }, () => console.log(this.state.tarefaChoosedId))
+                   tarefaChoosed: this.state.tarefaChoosed.concat(addedArray),
+                   makedTarefasId : this.state.makedTarefasId.concat(addedArray[0].id)
+            },() => {console.log(this.state.tarefaChoosed); console.log(this.state.makedTarefasId)})
 
         } else {
 
-            const removedArray = this.state.tarefaChoosedId.filter((value) => {
+            const removedArray = this.state.tarefaChoosed.filter((value) => {
+
+                return Number(value.id) !== Number(id)
+            })
+
+            const removedIdArray = this.state.makedTarefasId.filter((value) => {
+                
                 return Number(value) !== Number(id)
             })
             this.setState({
-                tarefaChoosedId: removedArray
-            }, () => console.log(this.state.tarefaChoosedId))
+                tarefaChoosed: removedArray,
+                makedTarefasId : removedIdArray
+            })
         }
 
     }
@@ -118,7 +133,11 @@ class TarefasDeManutencao extends React.Component {
         })
     }
 
+    pushWithSelectedTarefas = () => {
 
+        this.props.history.push("/CadastroOmp",{tarefasChecked : true,tarefas:this.state.tarefaChoosed, markedIds :  this.state.makedTarefasId})
+
+    }
 
 
 
@@ -134,19 +153,36 @@ class TarefasDeManutencao extends React.Component {
                 <Container>
                     <Form.Row style={{padding : 10}}>
                         <Col >
-                            <GenericSelect noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.loadTarefas(processoId)} ops={this.state.processos}  ></GenericSelect>
+                            <GenericSelect noLabel={true} title={"Processo"}   returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.loadTarefas(processoId)} ops={this.state.processos}  ></GenericSelect>
                         </Col>
                         <Col>
                            
-                            <Form.Control placeholder="filtrar por..." onChange={(event) => this.setState({
+                            <Form.Control placeholder="buscar por nome..." onChange={(event) => this.setState({
                                 filteredTarefas: this.state.tarefas.filter((tarefa) => {
+
+                                    if(this.state.filterType==="Nome"){
                                         return String(tarefa.nome).includes(event.target.value)
+                                    }
+                                    if(this.state.filterType==="Status"){
+                                        return String(tarefa.status).includes(event.target.value)
+                                    }
+                                    if(this.state.filterType==="Data"){
+                                        return String(tarefa.dataPlanejada).includes(event.target.value)
+                                    }
+                                   else{
+                                       return ''
+                                   }
+                                      
                                 })
                             })}></Form.Control>
                         </Col>
+                        
+                        <Col md="auto" >
+                            <GenericDropDown display={"Tipo"}   itens={["Nome","Status","Data"]} onChoose={(item) => this.setState({filterType : item})} style={{margin : 10}}>Filtrar </GenericDropDown>
+                       </Col>
                         <Col>
                             <Button onClick={() => {
-                               this.props.history.push("/CadastroOmp",this.state.tarefas)
+                               this.pushWithSelectedTarefas()
                             }} >Gerar OMP</Button>
                         </Col>
                     </Form.Row>
@@ -155,7 +191,7 @@ class TarefasDeManutencao extends React.Component {
                 <Table className="table table-hover">
                     <TableHead></TableHead>
                     <tbody>
-                        <TableBody setTarefaToList={this.addTarefaIdToList} tarefas={this.state.filteredTarefas} markedTarefa={this.state.tarefaChoosedId} ></TableBody>
+                        <TableBody setTarefaToList={this.addTarefaIdToList} tarefas={this.state.filteredTarefas} markedTarefa={this.state.makedTarefasId} ></TableBody>
                     </tbody>
                 </Table>
 

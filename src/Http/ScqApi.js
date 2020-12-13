@@ -5,7 +5,7 @@ import { getToken } from "../Services/auth"
 
 
 const http = axios.create({
-     baseURL:  "http://localhost:8080/" //"https://scqapi.com/"
+     baseURL:  "https://scqapi.com/"
     
 })
 
@@ -20,7 +20,7 @@ const respInter = http.interceptors.response.use(function (response) {
    
   });
 
-const reqInter = http.interceptors.request.use(async config => {
+http.interceptors.request.use(async config => {
     const token = getToken();
  
     if (token!=null) {
@@ -76,7 +76,7 @@ const ScqApi = {
 
     },
     EditarEtapa: (etapa) => {
-        return http.put("etapa/" + etapa.id, etapa)
+        return http.put("/etapa/update/" + etapa.id, etapa)
 
     },
     EditarParametro: (parametro) => {
@@ -238,7 +238,7 @@ const ScqApi = {
 
     },
     DeleteMontagemCompose: (removedMontagemComposes) => {
-        return http.delete("montagem", removedMontagemComposes)
+        return http.put("montagem", removedMontagemComposes)
 
     },
     DeleteTroca: (trocaId) => {
@@ -307,7 +307,8 @@ const ScqApi = {
     DownloadOmp : (fileName) => {
         http.interceptors.response.eject(respInter);
         return http.get("download/"+fileName, { responseType: 'arraybuffer' }).then((response) => { return new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });})
-    }
+    },
+    
 
 
 }

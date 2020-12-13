@@ -20,7 +20,7 @@ const CadastroTroca = (props) => {
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
     const [processos, setProcessos] = useState()
-    const [escala, setEscala] = useState()
+    const [unidade, setUnidade] = useState()
    
 
 
@@ -31,7 +31,7 @@ const CadastroTroca = (props) => {
     )
 
     const salvarTroca = () => {
-        const troca = { id: null, dataPlanejada, frequencia, etapaId, escala }
+        const troca = { id: null, dataPlanejada, frequencia, etapaId, unidade: unidade }
     
         ScqApi.CriarTroca(troca).then(res => responseHandler(res))
     
@@ -100,7 +100,7 @@ const CadastroTroca = (props) => {
                             <Form.Control type="number" value={frequencia} onChange={event => setFrequencia(event.target.value)} />
                         </Col>
                         <Col sm>
-                            <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => setEscala(escala)} />
+                            <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a unidade de Tempo"} onChange={unidade => setUnidade(unidade)} />
                         </Col>
                     </Form.Row>
 

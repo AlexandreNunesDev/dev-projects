@@ -30,8 +30,10 @@ import Omp from './Screens/Omp';
 import TarefasDeManutencao from './Screens/TarefasDeManutencao';
 import Login from './Screens/Login';
 import ConfirmMailPage from './Screens/ConfirmYourMail';
-import { getUserRole,} from './Services/auth';
+import { getUserRole, isAuthenticated, isTokenExpired, logout} from './Services/auth';
 import Registrar from './Screens/Registrar';
+import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
+
 
 
 class App extends React.Component {
@@ -48,10 +50,19 @@ class App extends React.Component {
   }
 
 
-  
- 
+ componentDidMount()  {
 
-  
+   if(isAuthenticated()){
+    if(isTokenExpired()){
+      logout()
+      if(this.props.location.pathname!== "/VoceFoiDesconectado"){
+        this.props.history.push("/VoceFoiDesconectado")
+      } 
+     
+    }
+   }
+ 
+ }  
 
  
   render() {
@@ -61,6 +72,7 @@ class App extends React.Component {
       return (
         <Switch>
         <Route path='/' exact={true} component={Home} />
+        <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
         <Route path='/Home' exact={true} component={Home} />
         <Route path='/Login' exact={true} component={Login} />
         <Route path='/Registrar' exact={true} component={Registrar} />
@@ -99,6 +111,7 @@ class App extends React.Component {
       return (
         <Switch>
         <Route path='/' exact={true} component={Home} />
+        <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
         <Route path='/Home' exact={true} component={Home} />
         <Route path='/Login' exact={true} component={Login} />
         <Route path='/Registrar' exact={true} component={Registrar} />
@@ -122,6 +135,7 @@ class App extends React.Component {
       return (
       <>
       <Route path='/' exact={true} component={Home} />
+      <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
       <Route path='/Home' exact={true} component={Home} />
       <Route path='/Login' exact={true} component={Login} />
       <Route path='/Registrar' exact={true} component={Registrar} />

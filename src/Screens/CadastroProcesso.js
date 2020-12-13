@@ -5,20 +5,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
-import {capitalize} from '../Services/stringUtils'
+import {capitalize,subId} from '../Services/stringUtils'
 
 
 
 class CadastroProcesso extends Component {
 
     constructor(props) {
+        
+          
         super(props)
         this.state =  {
             isNotEditable : true,
             processo : null,
-            nome : ''
+            nome : '',
+            
         }
     }
+
+    
 
     cleanState = (deleteMessage) => {
         const { toastManager } = this.props;
@@ -38,7 +43,7 @@ class CadastroProcesso extends Component {
         const { toastManager } = this.props;
         if(response.error){
             response.data.forEach(erro => {
-                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
                     appearance: 'error', autoDismiss: true
                   })});
         } else {
@@ -63,7 +68,7 @@ class CadastroProcesso extends Component {
 
     submitForm = () => {
 
-        const {toastManager} = this.props
+
             const processo = { id: null, nome: this.state.nome }
             ScqApi.CriarProcesso(processo).then(response => this.responseHandler(response) )
            
@@ -88,8 +93,7 @@ class CadastroProcesso extends Component {
                 </header>
                     <Container style={{ marginTop: 20 }}>
                         <h1>Cadastro de Processo</h1>
-                       
-                      
+                    
                         <Form onSubmit={this.handleSubmit}>
                             <Form.Group controlId="processoLinhaNome">
                                 <Form.Label>Nome: </Form.Label>

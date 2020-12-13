@@ -101,7 +101,7 @@ const VerOmp = (props) => {
             setTarefas(res.tarefas)
             setDataRealizada(res.data)
         })
-    },[])
+    })
 
 
 

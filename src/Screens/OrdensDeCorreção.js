@@ -1,6 +1,6 @@
 import React, { Component} from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button, Spinner, Container, Form } from "react-bootstrap";
+import { Table, Button} from "react-bootstrap";
 import MenuBar from "./MenuBar";
 import ScqApi from "../Http/ScqApi";
 

@@ -6,7 +6,7 @@ import MenuBar from '../Screens/MenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
 import { useHistory } from 'react-router-dom';
-
+import {capitalize,subId} from '../Services/stringUtils'
 
 const EditarProcesso = (props) => {
 
@@ -22,17 +22,23 @@ const EditarProcesso = (props) => {
 
 
     const submitForm = (event) => {
-        
-        
-            
-            const replaceProcesso = { id: id, nome: nome }
-            ScqApi.EditarProcesso(replaceProcesso).then(() =>  setEdited(!edited))
-            toastManager.add(`${nome} editada com sucesso`, {
-                appearance: 'info', autoDismiss: true
-              })
-             
-            
+        const replaceProcesso = { id: id, nome: nome }
+        ScqApi.EditarProcesso(replaceProcesso).then(res =>  responseHandler(res))
+         
+    }
 
+    const responseHandler = (response) => {
+        const { toastManager } = props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Processo ${response.nome} editado com sucesso`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
     }
 
   

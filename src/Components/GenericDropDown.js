@@ -7,7 +7,7 @@ const GenericDropDown = (props) => {
 
     return (
     <Dropdown>
-        <Dropdown.Toggle style={{margin : 10}} variant="success" id="dropdown-linha">
+        <Dropdown.Toggle style={{margin : props.margin}} variant="success" id="dropdown-linha">
             {toggleView}
         </Dropdown.Toggle>
         <Dropdown.Menu id='linhaDropDownItens'>

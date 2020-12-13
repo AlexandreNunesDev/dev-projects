@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import GenericSelect from '../Components/GenericSelect';
-import {capitalize} from '../Services/stringUtils'
+import {capitalize,subId} from '../Services/stringUtils'
 import { withToastManager } from 'react-toast-notifications';
 import MontagemComposition from '../Components/MontagemComposition';
 import { getToken } from '../Services/auth';
@@ -49,7 +49,7 @@ class CadastroEtapa extends React.Component {
         const { toastManager } = this.props;
         if(response.error){
             response.data.forEach(erro => {
-                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
                     appearance: 'error', autoDismiss: true
                   })});
         } else {
@@ -145,7 +145,7 @@ class CadastroEtapa extends React.Component {
                             </Col>
                             <Col>
                                 <Form.Group controlId="nomeEtapaForm">
-                                    <Form.Label>Nome Etapa: </Form.Label>
+                                    <Form.Label>Nome: </Form.Label>
                                     <Form.Control type="text" placeholder="Nome da Etapa" value={this.state.nome} onChange={this.handleChangeEtapaNome} />
                                 </Form.Group>
                             </Col>

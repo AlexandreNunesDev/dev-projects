@@ -6,7 +6,7 @@ import ScqApi from '../Http/ScqApi';
 import NumberFormat from 'react-number-format';
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
-import {capitalize} from '../Services/stringUtils'
+import {capitalize,subId} from '../Services/stringUtils'
 
 class CadastroMateriaPrima extends React.Component {
 
@@ -128,7 +128,7 @@ class CadastroMateriaPrima extends React.Component {
         const { toastManager } = this.props;
         if(response.error){
             response.data.forEach(erro => {
-                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
                     appearance: 'error', autoDismiss: true
                   })});
         } else {
@@ -172,7 +172,7 @@ render() {
             </Form.Group>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <Form.Label>Fator Titulométrico: </Form.Label>
-                <NumberFormat placeholder={"R$ 0.00"} customInput={Form.Control} allowedDecimalSeparators={["."]}   value={this.state.fatorTitulometrico} onChange={this.fatorController}/>
+                <NumberFormat placeholder={"0.00"} customInput={Form.Control} allowedDecimalSeparators={["."]}   value={this.state.fatorTitulometrico} onChange={this.fatorController}/>
             </Form.Group>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <UnidadeSelect default={"Escolha uma Unidade"} type={"adicao"} title={"Unidade Mp"} onChange={(unidade) => this.setState({unidade : unidade}) }></UnidadeSelect>

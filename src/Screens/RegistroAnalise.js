@@ -9,7 +9,7 @@ import CheckOutAnalise from '../Components/CheckoutAnalise';
 import { withToastManager } from 'react-toast-notifications';
 
 import TitulaForm from './TitulaForm';
-
+import {capitalize,subId} from '../Services/stringUtils'
 
 
 
@@ -159,7 +159,24 @@ class RegistroDeAnalise extends React.Component {
         }
     }
 
+    responseHandler = (response) => {
+        
+        const { toastManager } = this.props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Analise processo ${response.id} criada`, {
+                appearance: 'success', autoDismiss: true
+              })
+        }
 
+       
+       
+        
+    }
 
 
 
@@ -167,14 +184,12 @@ class RegistroDeAnalise extends React.Component {
         if (this.state.analise) {
             this.salvarReanalise()
         } else {
-            const { toastManager } = this.props
+  
             const { analista, resultado, status } = this.state
             const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: null }
            
                 ScqApi.CriarAnalise(analise).then(res => {
-                    toastManager.add(`Analise ${res.id} salva com sucesso`, {
-                        appearance: 'success',
-                    })
+                    this.responseHandler(res)
                 })
                
 

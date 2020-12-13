@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect, useState } from 'react'
-import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
+import { Button, Col, Container, Form, Row, Spinner, Table } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import ScqApi from '../Http/ScqApi'
 import MenuBar from './MenuBar'
@@ -10,7 +10,7 @@ import fileSaver from "file-saver"
 
 
 
-const TableHeadTarefas = () => {
+const TableHeadTarefas = (props) => {
     return (
 
         <thead >
@@ -18,30 +18,41 @@ const TableHeadTarefas = () => {
                 <th>Id</th>
                 <th>Nome</th>
                 <th>Código Instrução</th>
+                <th>Data Planejada</th>
                 <th>Status</th>
-                <th>Ação</th>
+                {!props.tarefasChecked &&<th>Ação</th>}
             </tr>
         </thead>
 
     )
 }
 
-const TableBodyTarefas = props => {
-    const tarefaTd = props.tarefas?.map((tarefa, index) => {
-        return (
+const FormatDate = (data) => {
+    const dataTokens = String(data).split("-");
+    return dataTokens[2] + "-" + dataTokens[1] + "-" + dataTokens[0]
 
-            <tr style={{ textAlign: "center" }} key={tarefa.id}>
-                <td className="align-middle">{tarefa.id}</td>
-                <td className="align-middle">{tarefa.nome}</td>
-                <td className="align-middle">{tarefa.codigo}</td>
-                <td className="align-middle"><Form.Label style={{color : tarefa.pendente ? 'red' : 'green', fontWeight : 'bolder'}} >
-                    {tarefa.pendente ? "Pendente": 'Em dia'}</Form.Label></td>
-                <td className="align-middle" >
-                    <Form.Check.Input onChange={(event) => props.choosedTarefaClick(event.target.checked,tarefa.id)} type="checkbox" />
-                    <Form.Check.Label>Executar ?</Form.Check.Label>
-            </td>
-            </tr>
-        )
+}
+
+const TableBodyTarefas = props => {
+    
+    const tarefaTd = props.tarefas?.map((tarefa, index) => {
+        let data = String(tarefa.dataPlanejada).substr(0, 10)
+
+                return (
+                    <tr style={{ textAlign: "center" }} key={tarefa.id}>
+                        <td className="align-middle">{tarefa.id}</td>
+                        <td className="align-middle">{tarefa.nome}</td>
+                        <td className="align-middle">{tarefa.codigo}</td>
+                        <td className="align-middle">{`${FormatDate(data)}`}</td>
+                        <td className="align-middle"><Form.Label style={{color : tarefa.pendente ? 'red' : 'green', fontWeight : 'bolder'}} >
+                            {tarefa.pendente ? "Pendente": 'Em dia'}</Form.Label></td>
+                        {!props.tarefasChecked && <td className="align-middle" >
+                            <Form.Check.Input  onChange={(event) => props.choosedTarefaClick(event.target.checked,tarefa.id)} type="checkbox" />
+                            <Form.Check.Label>Executar ?</Form.Check.Label>
+                        </td>}
+                    </tr>
+                )
+          
     })
 
     return tarefaTd
@@ -96,15 +107,16 @@ const CadastroOmp = (props) => {
     const location = useLocation()
     const [trocas] = useState(location.state.trocas || [])
     const [emitidoPor , setEmitidoPor] = useState()
-    const [tarefas , setTarefas] = useState(location.state.tarefas || [])
-    const [tarefasChoosedId , setTarefasChoosedId] = useState([])
+    const [tarefas, setTarefas] = useState(location.state.tarefas || [])
+    const [tarefasChoosedId , setTarefasChoosedId] = useState(location.state.markedIds || [])
+    const [downloading, setDownloading] = useState(false)
     
 
     const downloadOmp = (fileName) => {
-     ScqApi.DownloadOmp(fileName).then(file => fileSaver.saveAs(file, fileName)).then(() => props.history.push("/OrdensDeManutencao"));
+     ScqApi.DownloadOmp(fileName).then(file => fileSaver.saveAs(file, fileName)).then(() => setDownloading(false)).then(props.history.push("/OrdensDeManutencao")) ;
       }
 
-   const setTrocaToList = (checked,id) => {
+   const setTarefaToList = (checked,id) => {
        
         if(checked){
             
@@ -120,22 +132,24 @@ const CadastroOmp = (props) => {
        
     }
 
+
     useEffect(()=>{
-        console.log(tarefasChoosedId)
-    },[tarefasChoosedId])
+        ScqApi.ListaTarefasByProcesso(trocas[0].processoId).then(res => setTarefas(res))
+    },[trocas])
 
-
-    useEffect(() => {
-        ScqApi.ListaTarefasDeManutencao().then(res => setTarefas(res))
-    },[])
+    
 
 
     return (
         <>
             <MenuBar></MenuBar>
-          
+            {
+               downloading ? <Container><Spinner animation="grow" /> 
+                    <Form.Label>Aguarde , gerando OMP</Form.Label>
+                </Container> 
+                :
+                <Container style={{ marginTop: 20 }}>
 
-            <Container style={{ marginTop: 20 }}>
                 <Row>
                 {trocas.length !== 0 ?<h2>{`Ordem de Manutençao de Processo - ${trocas[0]?.processoNome}`}</h2> :
                 <h2>Ordem de Manutençao de Processo</h2>} 
@@ -172,12 +186,12 @@ const CadastroOmp = (props) => {
 
                  {  tarefas && 
                  <Fragment>
-                 <h4>Escolha as Tarefas de Manutencao</h4>
+                 <h4>{`${location.state.tarefasChecked ? '' : 'Escolha as '}Tarefas de Manutencao`}</h4>
                  <Table>
 
                  
-                <TableHeadTarefas></TableHeadTarefas>
-                <TableBodyTarefas choosedTarefaClick={setTrocaToList} tarefas={tarefas}></TableBodyTarefas>
+                <TableHeadTarefas tarefasChecked={location.state.tarefasChecked} ></TableHeadTarefas>
+                <TableBodyTarefas tarefasChecked={location.state.tarefasChecked} choosedTarefaClick={setTarefaToList} tarefas={tarefas}></TableBodyTarefas>
                 </Table>
                 </Fragment>
                 }
@@ -197,6 +211,7 @@ const CadastroOmp = (props) => {
                             ScqApi.GerarOmpTarefas(omp).then(fileName => downloadOmp(fileName))
                         } else {
                             const omp = {processoId : trocas[0]?.processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
+                            setDownloading(true)
                             ScqApi.GerarOmp(omp).then(fileName => downloadOmp(fileName) )
                         }
                         
@@ -205,6 +220,10 @@ const CadastroOmp = (props) => {
                 }>Gerar Documento</Button>
 
             </Container>
+
+            }
+
+            
         </>
     )
 

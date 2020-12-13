@@ -5,7 +5,7 @@ import ModoEdicao from '../Screens/ModoEdicao'
 import MenuBar from '../Screens/MenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications';
-
+import {capitalize,subId} from '../Services/stringUtils'
 import GenericSelect from '../Components/GenericSelect';
 import EditarMontagemComposition from './EditarMontagemComposition';
 import { useHistory } from 'react-router-dom';
@@ -34,23 +34,40 @@ const EditarEtapa = (props) => {
         setMontagemComposes(montagemComposes.concat(montagemCompose))
     }
 
+    const responseHandler = (response) => {
+        const { toastManager } = props;
+        if(response.error){
+            response.data.forEach(erro => {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
+                    appearance: 'error', autoDismiss: true
+                  })});
+        } else {
+            toastManager.add(`Etapa ${response.nome} editada com sucesso`, {
+                appearance: 'success', autoDismiss: true, onDismiss : () => window.location.reload()
+              })
+        }
+    }
+
     const submitForm = () => {
             const replacedEtapa = { id: etapa.id, processoId: processoId, nome : nome, posicao : posicao,volume : volume }
    
             ScqApi.EditarEtapa(replacedEtapa).then(res => {
+                responseHandler(res)
                 const composes = montagemComposes.map((montagemCompose) => { return { id : montagemCompose.id ,quantidade: montagemCompose.quantidade, mpId: montagemCompose.mpId, etapaId: etapa.id} })
-                ScqApi.CriarMontagem(composes)
+                if(montagemComposes.length!==0) {
+                    ScqApi.CriarMontagem(composes)
+                } 
             })
 
             if(removedCompose){
-                ScqApi.DeleteMontagemCompose(removedCompose)
+
+                let idsMcs = removedCompose.map(mc => {return mc.id})
+               
+                ScqApi.DeleteMontagemCompose(idsMcs)
             }
           
 
-         
-            toastManager.add(`Etapa ${etapa.nome} editada com sucesso`, {
-                appearance: 'success', autoDismiss: true
-            })
+        
 
   
     }
@@ -62,14 +79,21 @@ const EditarEtapa = (props) => {
        
     },[])
 
+    useEffect(() => {
+       console.log(montagemComposes)
+       console.log(removedCompose)
+       
+    },[montagemComposes,removedCompose])
+
 
     const removerMontagemCompose = (indexToRemove) =>{
         setRemovedCompose(montagemComposes.filter((value,index) => {
             return index === indexToRemove
         }))
         setMontagemComposes(montagemComposes.filter((value,index) => {
-            return index!==indexToRemove
+            return index !== indexToRemove
         }))
+        
     }
 
 

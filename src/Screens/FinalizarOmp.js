@@ -106,7 +106,7 @@ const FinalizarOmp = (props) => {
             setTrocas(res.trocas)
             setTarefas(res.tarefas)
         })
-    },[])
+    })
 
     useEffect(() => {
         console.log(tarefasIdChecked)

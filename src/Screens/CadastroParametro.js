@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import GenericSelect from '../Components/GenericSelect';
 import SelectEditable from '../Components/SelectEditable'
-import {capitalize} from '../Services/stringUtils'
+import {capitalize,subId} from '../Services/stringUtils'
 import ScqApi from '../Http/ScqApi';
 import FormulaBuilder from '../Components/FormulaBuilder';
 
@@ -51,7 +51,7 @@ class CadastroParametro extends React.Component {
         const { toastManager } = this.props;
         if(response.error){
             response.data.forEach(erro => {
-                toastManager.add(`${capitalize(erro.field)} : ${erro.error}`, {
+                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
                     appearance: 'error', autoDismiss: true
                   })});
         } else {
@@ -119,7 +119,7 @@ class CadastroParametro extends React.Component {
     }
 
     salvarParametro = () => {
-        const { toastManager } = this.props
+   
         const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT } = this.state
         const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT }
 

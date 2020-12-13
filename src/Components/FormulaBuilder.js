@@ -55,6 +55,9 @@ class FormulaBuilder extends Component {
       onViragemClick = () => {
         this.formulaInsert('[V]')
       }
+      onPowClick = () =>{
+        this.formulaInsert('^')
+      }
 
       formulaInsert = (charToInsert) => {
         this.formulaTextRef.current.value = insert(this.formulaTextRef.current.value,this.formulaTextRef.current.selectionStart,charToInsert)
@@ -65,7 +68,7 @@ class FormulaBuilder extends Component {
     
 
 
-      onLinhaChoosen = (linhaId) => {
+      onProcessoChoosen = (linhaId) => {
         ScqApi.ListaEtapasByProcesso(linhaId).then(res => {
           this.setState({
             etapas : res
@@ -99,7 +102,7 @@ class FormulaBuilder extends Component {
     
     return (
       <>
-        <Button variant="primary" onClick={this.handleShow}>
+        <Button variant="primary" onClick={() => this.handleShow()}>
           Abrir Editor de Formula
         </Button>
   
@@ -114,14 +117,16 @@ class FormulaBuilder extends Component {
                     <Form.Control ref={this.formulaTextRef} type="text"  onChange={this.onFormulaChange}/>
                 </Form.Group>
               
-                <FormulaKeyboard processos={this.props.processos} etapas={this.props.etapas} parametros={this.state.parametros} meteriasPrima={this.state.materiasPrima}
+                <FormulaKeyboard processos={this.props.processos} etapas={this.state.etapas} parametros={this.state.parametros} meteriasPrima={this.state.materiasPrima}
                 onDeleteClick={this.onDeleteClick}
-                onProcessoChoosen={this.onLinhaChoosen}
+                onProcessoChoosen={this.onProcessoChoosen}
                 onEtapaChoosen={this.onEtapaChoosen}
                 onParametroChoosen={this.onParametroChoosen}
                 onMateriaPrimaChoosen={this.onMateriaPrimaChoosen}
                 onPlusClick={this.onPlusClick} onMinusClick={this.onMinusClick} onAddClick={this.onAddClick} 
-                onDivideClick={this.onDivideClick} onViragemClick={this.onViragemClick}></FormulaKeyboard>
+                onDivideClick={this.onDivideClick} onViragemClick={this.onViragemClick}
+                onPowClick={this.onPowClick} 
+                ></FormulaKeyboard>
             
             </Form>
           </Modal.Body>

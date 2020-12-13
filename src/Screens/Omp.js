@@ -199,7 +199,8 @@ class Omp extends React.Component {
                             <Button hidden={!this.state.markAllHide} style={{margin : 10}} onClick={()=> {this.unmarkAll(); this.setState({trocasChoosedId : [],markAllHide : false})}}>Desmarcar Todos</Button>
                        </Col>
                        <Col>
-                            <Form.Control placeholder="filtrar por..." style={{margin : 10}} onChange={(event) => this.setState({filteredTroca : this.state.trocas.filter((troca) => {
+                            <Form.Control placeholder="filtrar por..." style={{margin : 10}} onChange={(event) => this.setState({
+                                filteredTroca : this.state.trocas.filter((troca) => {
                                if(this.state.filterType==="Processo"){
                                    return String(troca.processoNome).includes(event.target.value)
                                }
@@ -212,7 +213,7 @@ class Omp extends React.Component {
                             }) }></Form.Control>
                        </Col>
                        <Col md="auto">
-                            <GenericDropDown display={"Tipo"}  itens={["Processo","Etapa"]} onChoose={(item) => this.setState({filterType : item})} style={{margin : 10}}>Filtrar </GenericDropDown>
+                            <GenericDropDown display={"Tipo"} margin={10}  itens={["Processo","Etapa"]} onChoose={(item) => this.setState({filterType : item})} style={{margin : 10}}>Filtrar </GenericDropDown>
                        </Col>
                        <Col md="auto"> 
                             <Button style={{margin : 10}} onClick={()=> this.props.history.push("/OrdensDeManutencao")}>Ver Ordens</Button>

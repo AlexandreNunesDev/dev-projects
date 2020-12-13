@@ -20,10 +20,8 @@ const EditarMontagemComposition = (props) => {
         <>
             <h4>Composicao de Montagem</h4>
             <Row>
-                <Col>
-                    <Form.Control ref={quantidadeRef} type={'number'} placeholder={"Quantidade"} onChange={event => setQuantidade(event.target.value)} ></Form.Control>
-                </Col>
-
+              
+                
                 <Col>
                     <GenericSelect returnType={"id"} noLabel={true} default={"Selecione uma Matéria Prima"} ops={props.ops} onChange={(mpId) => {
                         const materiaPrimaChoosen = props.ops.filter(materiaPrima => {
@@ -31,6 +29,10 @@ const EditarMontagemComposition = (props) => {
                         })
                         setMp(materiaPrimaChoosen[0])
                     }}></GenericSelect>
+                </Col>
+
+                <Col>
+                    <Form.Control ref={quantidadeRef} type={'number'} placeholder={"Quantidade"} onChange={event => setQuantidade(event.target.value)} ></Form.Control>
                 </Col>
 
                 <Col>

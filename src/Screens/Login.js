@@ -85,7 +85,7 @@ const Login = (props) => {
                              </Button>
                             }
                             <Form.Group controlId="formBasicCheckbox">
-                                <Link>esqueceu a senha?</Link>
+                               
                             </Form.Group>
                         </Form>
                     </Container>
