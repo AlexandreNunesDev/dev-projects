@@ -56,6 +56,9 @@ const MontagemComposition = (props) => {
                         <th>
                             <Form.Label style={{ fontWeight: 'bold' }}>Nome</Form.Label>
                         </th>
+                        <th>
+                            <Form.Label style={{ fontWeight: 'bold' }}>Açao</Form.Label>
+                        </th>
                     </tr>
                 </thead>
                 {props.montagemComposes.map((mc, index) => {
@@ -75,6 +78,9 @@ const MontagemComposition = (props) => {
                                 </td>
                                 <td>                                
                                     <Form.Label>{mc.mp.nome}</Form.Label>
+                                </td>
+                                <td>                                
+                                    <Button onClick={() => props.removeMontagemCompose(index)}>remover</Button>
                                 </td>
                                 
                             </tr>

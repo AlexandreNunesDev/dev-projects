@@ -4,10 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import GenericSelect from '../Components/GenericSelect';
-import {capitalize,subId} from '../Services/stringUtils'
+
 import { withToastManager } from 'react-toast-notifications';
 import MontagemComposition from '../Components/MontagemComposition';
 import { getToken } from '../Services/auth';
+import { responseHandler } from '../Services/responseHandler';
 
 
 class CadastroEtapa extends React.Component {
@@ -45,19 +46,7 @@ class CadastroEtapa extends React.Component {
         })
     }
 
-    responseHandler = (response) => {
-        const { toastManager } = this.props;
-        if(response.error){
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Etapa ${response.nome} criada`, {
-                appearance: 'success', autoDismiss: true
-              })
-        }
-    }
+   
     selectedLinhaListner = (processoId) => {
         this.setState({ processoId: processoId })
     }
@@ -72,13 +61,13 @@ class CadastroEtapa extends React.Component {
 
     submitForm = () => {
 
-        const { toastManager } = this.props
+        
 
             const { processoId, nome, posicao } = this.state
             const etapa = { processoId: processoId, nome, posicao, volume: this.state.volume }
        
             ScqApi.CriarEtapa(etapa).then(res => {
-                this.responseHandler(res)
+                responseHandler(res, this.props)
                 const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
                 ScqApi.CriarMontagem(composes).then(res => this.cleanState())
             })
@@ -123,6 +112,14 @@ class CadastroEtapa extends React.Component {
         })
     }
 
+    removeMontagemCompose = (ind) => {
+        this.setState({
+            montagemComposes : this.state.montagemComposes.filter((mc,index)=>{
+                return index !== ind
+            })
+        })
+    }
+
     enterEditMode = () => {
         this.props.history.push("/EditarEtapa")
     }
@@ -164,7 +161,7 @@ class CadastroEtapa extends React.Component {
                                 </Col>
                             </Form.Row>
                         </Form.Group>
-                        <MontagemComposition montagemComposes={this.state.montagemComposes} setMontagemComposes={(montagemCompose) => this.setMontagemComposes(montagemCompose)} ops={this.state.mps}></MontagemComposition>
+                        <MontagemComposition montagemComposes={this.state.montagemComposes} removeMontagemCompose={this.removeMontagemCompose} setMontagemComposes={(montagemCompose) => this.setMontagemComposes(montagemCompose)} ops={this.state.mps}></MontagemComposition>
 
                         <Form.Group>
                             <Button style={{ margin: 2 }} variant="primary" onClick={this.enterEditMode}>Editar</Button>

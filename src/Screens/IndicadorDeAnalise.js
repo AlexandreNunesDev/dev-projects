@@ -135,7 +135,7 @@ class IndicadorDeAnalise extends Component {
                                 <Form.Group as={Col}>
                                     <Form.Label>Data Inicial</Form.Label>
                                     <Form.Control
-                                        type="datetime-local"
+                                        type="date"
                                         defaultValue={this.state.dataInicial}
                                         onChange={event => { this.setState({ dataInicial: event.target.value }); console.log(this.state.dataInicial) }}>
 
@@ -144,7 +144,7 @@ class IndicadorDeAnalise extends Component {
                                 <Form.Group as={Col}>
                                     <Form.Label>Data Final</Form.Label>
                                     <Form.Control
-                                        type="datetime-local"
+                                        type="date"
                                         defaultValue={this.state.dataFinal}
                                         onChange={event => { this.setState({ dataFinal: event.target.value }); console.log(this.state.dataFinal) }}>
 

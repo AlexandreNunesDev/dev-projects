@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import GenericSelect from '../Components/GenericSelect';
 import SelectEditable from '../Components/SelectEditable'
-import {capitalize,subId} from '../Services/stringUtils'
+import {responseHandler} from '../Services/responseHandler'
 import ScqApi from '../Http/ScqApi';
 import FormulaBuilder from '../Components/FormulaBuilder';
 
@@ -47,24 +47,9 @@ class CadastroParametro extends React.Component {
     }
 
 
-    responseHandler = (response) => {
-        const { toastManager } = this.props;
-        if(response.error){
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Parametro ${response.nome} criado`, {
-                appearance: 'success', autoDismiss: true
-              })
-        }
+    
 
-       
-       
-        
-    }
-
+    
     selectedLinhaListner = (linhaId) => {
         this.setState({ linhaId: linhaId }, function () {
 
@@ -112,19 +97,15 @@ class CadastroParametro extends React.Component {
         this.loadEtapasFromLinha(parametro.linha.id)
     }
 
-    salvarFrequenciaAnalise = (parametroId) => {
-        const { frequenciaAnalise, escalaTempo } = this.state
-        const frequencia = { parametroId: parametroId, escala: escalaTempo, frequencia: frequenciaAnalise }
-        ScqApi.CriarFrequenciaAnalise(frequencia).then(res => this.cleanState())
-    }
+   
 
     salvarParametro = () => {
    
-        const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT } = this.state
-        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT }
+        const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT,frequenciaAnalise, escalaTempo } = this.state
+        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT , escala : escalaTempo , frequencia : frequenciaAnalise}
 
         if (this.state.isNotEditable) {
-            ScqApi.CriarParametro(parametro).then(res => {this.responseHandler(res); this.salvarFrequenciaAnalise(res.id)})
+            ScqApi.CriarParametro(parametro).then(res => {responseHandler (res,this.props);})
 
         }
     }

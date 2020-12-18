@@ -29,7 +29,7 @@ const SelectEditable = (props) => {
             getValue(value)
         }
         update()
-    },[value,getValue])
+    },[value])
 
          if(inputType==="text") {
              return(

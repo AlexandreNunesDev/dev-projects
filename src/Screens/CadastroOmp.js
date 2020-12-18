@@ -113,7 +113,7 @@ const CadastroOmp = (props) => {
     
 
     const downloadOmp = (fileName) => {
-     ScqApi.DownloadOmp(fileName).then(file => fileSaver.saveAs(file, fileName)).then(() => setDownloading(false)).then(props.history.push("/OrdensDeManutencao")) ;
+     ScqApi.DownloadOmp(fileName).then(file => fileSaver.saveAs(file, fileName)).then(() => setDownloading(false)).then(() => !downloading && props.history.push("/OrdensDeManutencao")) ;
       }
 
    const setTarefaToList = (checked,id) => {

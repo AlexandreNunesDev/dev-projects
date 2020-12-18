@@ -5,7 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
-import {capitalize,subId} from '../Services/stringUtils'
+import { responseHandler } from '../Services/responseHandler';
+
 
 
 
@@ -39,23 +40,6 @@ class CadastroProcesso extends Component {
         }
     }
 
-    responseHandler = (response) => {
-        const { toastManager } = this.props;
-        if(response.error){
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Processo ${response.nome} criado`, {
-                appearance: 'success', autoDismiss: true
-              })
-        }
-
-       
-       
-        
-    }
 
     enterEditMode = () => {
         this.props.history.push("/EditarProcesso")
@@ -70,7 +54,7 @@ class CadastroProcesso extends Component {
 
 
             const processo = { id: null, nome: this.state.nome }
-            ScqApi.CriarProcesso(processo).then(response => this.responseHandler(response) )
+            ScqApi.CriarProcesso(processo).then(response => responseHandler(response,this.props) )
            
             this.cleanState()
         

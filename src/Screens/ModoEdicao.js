@@ -68,7 +68,7 @@ const ModoEdicao = (props) => {
     const [materiaPrima , setMateriaPrimaObj] = useState(null)
 
     const [tarefas , setTarefas] = useState(null)
-  
+    const [tarefa, setTarefa] = useState(null)
     
     const [troca , setTroca] = useState(null)
 
@@ -81,6 +81,8 @@ const ModoEdicao = (props) => {
     const loadEditableProcesso = async (processoId) => {
         const processoResponse = await ScqApi.FindProcesso(processoId)
         setProcessoObj(processoResponse)
+        setProcesso(processoId)
+       
         return processoResponse
     }
 
@@ -111,9 +113,9 @@ const ModoEdicao = (props) => {
         return trocaResponse
     }
 
-    const loadEditableTarefa = async () => {
-        const tarefa = await ScqApi.FindTarefa(processoId)
-      
+    const loadEditableTarefa = async (tarefaId) => {
+        const tarefa = await ScqApi.FindTarefa(tarefaId)
+        setTarefa(tarefa)
         return tarefa
     }
 
@@ -199,7 +201,7 @@ const ModoEdicao = (props) => {
                {tarefas!=null && props.type ==="tarefa" && <GenericSelect returnType={"id"} title={"Tarefa de Manutenção"} default={"Escolha uma Tarefa"} ops={tarefas} onChange={(id) => {
              
                     if(props.type=== "tarefa") {
-                    loadEditableTarefa().then( res => props.getSelectedTarefa(res))}
+                    loadEditableTarefa(id).then( res => props.getSelectedTarefa(res))}
                     else {
                     loadEditableTarefa()
                     }}}>
@@ -221,6 +223,8 @@ const ModoEdicao = (props) => {
                         case 'materiaPrima' : setConfirmDetails(materiasPrima ?  `Voce deseja deletar Materia prima ${materiasPrima?.nome}` : "Escolha uma Materia Prima" )
                             break;
                         case 'troca' : setConfirmDetails(troca ?  `Voce deseja deletar Troca da etapa ${troca?.etapaNome}` : "Escolha uma troca" )
+                            break;
+                        case 'tarefa' : setConfirmDetails(tarefa ?  `Voce deseja deletar Tarefa ${troca?.etapaNome}` : "Escolha uma troca" )
                             break;
                          default : return 'nada foi selecionado';
                           

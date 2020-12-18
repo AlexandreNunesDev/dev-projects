@@ -15,7 +15,7 @@ const CadastroDeTarefasDeManutencao = (props) => {
     const [nome, setNome] = useState()
     const [dataExecutada, setDataExecutada] = useState(new Date())
     const [repetirAcada, setRepetirAcada] = useState()
-    const [unidade , setUnidade] = useState()
+    const [escala , setEscala] = useState()
     const [codigoDoDocumento , setCodigo] = useState()
    
     const [processos, setProcessos] = useState()
@@ -76,7 +76,7 @@ const CadastroDeTarefasDeManutencao = (props) => {
                             <Form.Control type="number" value={repetirAcada} onChange={event => {setRepetirAcada(event.target.value)}} />
                         </Col>
                         <Col sm>
-                            <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a unidade de tempo"} onChange={unidade => {setUnidade(unidade)}} />
+                            <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a unidade de tempo"} onChange={unidade => {setEscala(unidade)}} />
                         </Col>
                         <Col sm >
                             <Form.Label>Codigo da Instrução: </Form.Label>
@@ -89,7 +89,7 @@ const CadastroDeTarefasDeManutencao = (props) => {
                             props.history.push("/EditarTarefa")
                         }} >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
-                            const tarefaManutencao = {nome,processoId,codigoDoDocumento,dataExecutada: dataExecutada,unidade: unidade ,frequencia : repetirAcada}
+                            const tarefaManutencao = {nome,processoId,codigoDoDocumento,dataExecutada: dataExecutada,escala: escala ,frequencia : repetirAcada}
                             ScqApi.CriarTarefaManutencao(tarefaManutencao).then(res => responseHandler(res))
                      
                         }} >Salvar</Button>

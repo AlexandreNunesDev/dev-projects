@@ -31,7 +31,7 @@ const CadastroTroca = (props) => {
     )
 
     const salvarTroca = () => {
-        const troca = { id: null, dataPlanejada, frequencia, etapaId, unidade: unidade }
+        const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade }
     
         ScqApi.CriarTroca(troca).then(res => responseHandler(res))
     
@@ -41,6 +41,7 @@ const CadastroTroca = (props) => {
     const responseHandler = (response) => {
         const { toastManager } = props;
         if(response.error){
+           
             response.data.forEach(erro => {
                 toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
                     appearance: 'error', autoDismiss: true

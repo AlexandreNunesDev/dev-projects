@@ -92,7 +92,7 @@ const EditarParametro = (props) => {
         setEtapaId(null)
         setUnidade(null)
     }
-    },[edited,parametro])
+    },[edited])
 
 
 

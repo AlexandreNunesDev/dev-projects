@@ -22,14 +22,16 @@ class FormulaBuilder extends Component {
       }
     }
 
+
+
       componentDidUpdate(prevProps) {
-        if(prevProps.etapaId!==''){
+        if(prevProps.etapaId!==this.props.etapaId){
           ScqApi.FindMateriaPrimaByEtapaId(this.props.etapaId).then(res => this.setState({
             materiasPrima : res
           }))
         }
         
-      }
+      } 
 
       handleClose = () => this.setState({show : false})
       handleShow = () => this.setState({formula : '',show : true})

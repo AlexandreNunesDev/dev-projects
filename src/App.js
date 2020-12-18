@@ -33,6 +33,7 @@ import ConfirmMailPage from './Screens/ConfirmYourMail';
 import { getUserRole, isAuthenticated, isTokenExpired, logout} from './Services/auth';
 import Registrar from './Screens/Registrar';
 import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
+import AlgoDeuErrado from './Screens/algoDeuErrado';
 
 
 
@@ -101,6 +102,7 @@ class App extends React.Component {
         <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
         <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
         <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
+        <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
 
       </Switch>
 

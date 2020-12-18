@@ -6,8 +6,8 @@ const ConfirmMailPage = () => {
     return ( 
         <>
         <Container>
-            <h2>Confirmacao de Compra</h2>
-            <Form.Label>Aguarde por em breve sua conta sera verificada</Form.Label>
+            <h2>Confirmacao de Conta</h2>
+            <Form.Label>Vá para seu mail e confirme sua conta</Form.Label>
         </Container>
         </>
 

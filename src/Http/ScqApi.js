@@ -2,10 +2,10 @@ import axios from "axios"
 
 
 import { getToken } from "../Services/auth"
-
+import { statusResponseHandler } from "../Services/statusService";
 
 const http = axios.create({
-     baseURL:  "https://scqapi.com/"
+     baseURL:  "http://localhost:8080/" //"https://scqapi.com/"
     
 })
 
@@ -14,6 +14,7 @@ const respInter = http.interceptors.response.use(function (response) {
     return response.data;
   }, function (error) {
     if(error.response){
+       statusResponseHandler(error.response.status, error.response.data)
         const errorObj = {error : true, data : error.response.data}
         return errorObj
     }
@@ -96,19 +97,19 @@ const ScqApi = {
 
     },
     EditarFrequenciaAnalise: (frequencia) => {
-        return http.put("frequencia/update/" + frequencia.id)
+        return http.put("frequencia/update/" + frequencia)
 
     },
     DeleteProcesso: (processoId) => {
-        return http.delete("processo/" + processoId.id)
+        return http.delete("processo/" + processoId)
 
     },
     DeleteEtapa: (etapaId) => {
-        return http.delete("etapa/" + etapaId.id)
+        return http.delete("etapa/" + etapaId)
 
     },
     DeleteParametro: (parametroId) => {
-        return http.delete("parametro/" + parametroId.id)
+        return http.delete("parametro/" + parametroId)
 
     },
     DeleteOcp: (ocpId) => {
@@ -187,7 +188,7 @@ const ScqApi = {
 
     },
     FindaTarefasByProcesso: (processoId) => {
-        return http.get("tarefa/find/" + processoId.id)
+        return http.get("tarefa/find/" + processoId)
 
     },
     FindTarefa: (tarefaId) => {

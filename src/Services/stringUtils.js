@@ -3,7 +3,7 @@ export const capitalize = (s) => {
     return s.charAt(0).toUpperCase() + s.slice(1)
   };
 
-  export const subId = (s) => {
+export const subId = (s) => {
     
     return s.replace("Id", "");
   };

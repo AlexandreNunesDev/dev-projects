@@ -141,7 +141,15 @@ const CadastroDeOcp = (props) => {
                  etapa.proportionMps.forEach((proportion)=> {
                     let pair = String(proportion).split(":")
                     if(String(mp.id) === String(pair[0])){
-                        let pairCorreMp = `${mp.id}:${Math.round(correcaoTotal * pair[1]  * 100) /100 }`
+                        let pairCorreMp;
+                        if(Number(pair[1]===1.0)){
+                            let nominal = (parametro.pMax + parametro.pMin) / 2
+                            let valorCorrecao = (etapa.volume * (nominal - analise.resultado))/1000
+                            pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
+                        } else {
+                            pairCorreMp = `${mp.id}:${Math.round(correcaoTotal * pair[1]  * 100) /100 }`
+                        }
+                        
                         tempCorrecaoArray = tempCorrecaoArray.concat(pairCorreMp)
                          setCorrecaoArray(tempCorrecaoArray)
                     }
