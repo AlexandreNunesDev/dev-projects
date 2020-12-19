@@ -134,7 +134,7 @@ const CadastroOmp = (props) => {
 
 
     useEffect(()=>{
-        ScqApi.ListaTarefasByProcesso(trocas[0].processoId).then(res => setTarefas(res))
+        ScqApi.ListaTarefasByProcesso(trocas[0]?.processoId || tarefas[0].processoId).then(res => setTarefas(res))
     },[trocas])
 
     
