@@ -5,7 +5,7 @@ import { getToken } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
 
 const http = axios.create({
-     baseURL:  "http://localhost:8080/" //"https://scqapi.com/"
+     baseURL:  "https://scqapi.com/"
     
 })
 
