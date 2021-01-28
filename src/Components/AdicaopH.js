@@ -17,7 +17,7 @@ const AdicaopH = (props) => {
     useEffect(()=>{
             ScqApi.ListaMateriaPrimas().then(response => setMateriasPrima(response))
            
-    })
+    },[])
 
     useEffect(() => {
         materiasPrima && setMateriasPrimaOptions(materiasPrima.map((mp) => {

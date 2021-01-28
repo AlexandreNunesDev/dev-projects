@@ -1,10 +1,9 @@
 import React, {Fragment, useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Row, Spinner, Table } from 'react-bootstrap'
-import { useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import ScqApi from '../Http/ScqApi'
-import MenuBar from './MenuBar'
 
-import fileSaver from "file-saver"
+import { withMenuBar } from '../Hocs/withMenuBar'
 
 
 
@@ -109,12 +108,9 @@ const CadastroOmp = (props) => {
     const [emitidoPor , setEmitidoPor] = useState()
     const [tarefas, setTarefas] = useState(location.state.tarefas || [])
     const [tarefasChoosedId , setTarefasChoosedId] = useState(location.state.markedIds || [])
-    const [downloading, setDownloading] = useState(false)
+    const history = useHistory()
     
 
-    const downloadOmp = (fileName) => {
-     ScqApi.DownloadOmp(fileName).then(file => fileSaver.saveAs(file, fileName)).then(() => setDownloading(false)).then(() => !downloading && props.history.push("/OrdensDeManutencao")) ;
-      }
 
    const setTarefaToList = (checked,id) => {
        
@@ -142,12 +138,9 @@ const CadastroOmp = (props) => {
 
     return (
         <>
-            <MenuBar></MenuBar>
-            {
-               downloading ? <Container><Spinner animation="grow" /> 
-                    <Form.Label>Aguarde , gerando OMP</Form.Label>
-                </Container> 
-                :
+        
+            
+            
                 <Container style={{ marginTop: 20 }}>
 
                 <Row>
@@ -208,11 +201,10 @@ const CadastroOmp = (props) => {
                         
                         if(trocas.length ===0){
                             const omp = {processoId : tarefas[0].processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
-                            ScqApi.GerarOmpTarefas(omp).then(fileName => downloadOmp(fileName))
+                            ScqApi.GerarOmpTarefas(omp)
                         } else {
                             const omp = {processoId : trocas[0]?.processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
-                            setDownloading(true)
-                            ScqApi.GerarOmp(omp).then(fileName => downloadOmp(fileName) )
+                            ScqApi.GerarOmp(omp).then(history.push("/OrdensDeManutencao"))
                         }
                         
                         
@@ -221,7 +213,7 @@ const CadastroOmp = (props) => {
 
             </Container>
 
-            }
+            
 
             
         </>
@@ -230,4 +222,4 @@ const CadastroOmp = (props) => {
 
 }
 
-export default CadastroOmp
+export default withMenuBar(CadastroOmp)

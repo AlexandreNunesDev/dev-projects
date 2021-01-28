@@ -5,7 +5,7 @@ import { withMenuBar } from '../Hocs/withMenuBar';
 import Home from './Home';
 
 
-const AlgoDeuErrado = (props) => {
+const ServidorError = (props) => {
 
     const [redirect , setRedirect] = useState(true)
 
@@ -16,7 +16,7 @@ const AlgoDeuErrado = (props) => {
   
         redirect ?
             <Container>
-                <h2>Algo deu Errado!</h2>
+                <h2>Problema com o servidor , tente novamente mais tarde</h2>
             </Container> 
         :
             <Redirect to={Home} ></Redirect>
@@ -25,4 +25,4 @@ const AlgoDeuErrado = (props) => {
     )
 }
 
-export default withMenuBar(AlgoDeuErrado)
+export default withMenuBar(ServidorError)

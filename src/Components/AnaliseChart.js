@@ -32,8 +32,7 @@ const AnaliseChart = (props) => {
           resultados.push(data)
           i = i + 1;
       }
-      console.log(props.data)
-      console.log(resultados)
+ 
   
     
     setEntries(resultados)

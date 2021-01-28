@@ -2,9 +2,8 @@ import React, { useState, useEffect, Fragment } from 'react'
 import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
 import { useHistory} from 'react-router-dom'
 import ScqApi from '../Http/ScqApi'
-import MenuBar from './MenuBar'
-
 import { withToastManager } from 'react-toast-notifications'
+import { withMenuBar } from '../Hocs/withMenuBar'
 
 const TableHeadTarefas = () => {
     return (
@@ -106,7 +105,7 @@ const FinalizarOmp = (props) => {
             setTrocas(res.trocas)
             setTarefas(res.tarefas)
         })
-    })
+    },[])
 
     useEffect(() => {
         console.log(tarefasIdChecked)
@@ -147,7 +146,7 @@ const FinalizarOmp = (props) => {
 
     return (
         <>
-            <MenuBar></MenuBar>
+     
 
 
             <Container style={{ marginTop: 20 }}>
@@ -198,4 +197,4 @@ const FinalizarOmp = (props) => {
     )
 }
 
-export default withToastManager(FinalizarOmp)
+export default withToastManager(withMenuBar(FinalizarOmp))

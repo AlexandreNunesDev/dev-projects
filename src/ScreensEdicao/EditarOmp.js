@@ -1,10 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
-import { useLocation } from 'react-router-dom'
+import { Col, Container, Form, Row, Table } from 'react-bootstrap'
+import {withMenuBar} from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi'
-import MenuBar from './MenuBar'
-import axios from "axios";
-import fileSaver from "file-saver"
+
+
 import { withToastManager } from 'react-toast-notifications'
 
 const TableHeadTarefas = () => {
@@ -107,7 +106,7 @@ const EditarOmp = (props) => {
 
     return (
         <>
-            <MenuBar></MenuBar>
+
 
 
             <Container style={{ marginTop: 20 }}>
@@ -149,4 +148,4 @@ const EditarOmp = (props) => {
     )
 }
 
-export default withToastManager(EditarOmp)
+export default withToastManager(withMenuBar(EditarOmp))

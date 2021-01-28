@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from '../Screens/MenuBar';
 import GenericSelect from '../Components/GenericSelect';
 import SelectEditable from '../Components/SelectEditable'
-
 import ScqApi from '../Http/ScqApi';
 import FormulaBuilder from '../Components/FormulaBuilder';
-import ModoEdicao from '../Screens/ModoEdicao';
+import ModoEdicao from '../Components/ModoEdicao'
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import { useHistory } from 'react-router-dom';
+import {withMenuBar} from '../Hocs/withMenuBar';
+
 
 const EditarParametro = (props) => {
 
@@ -99,10 +99,9 @@ const EditarParametro = (props) => {
     
     const onSaveClick = () => {
 
-        const newFrequencia = {id : frequenciaId, parametroId : parametro.id, escala : escalaTempo , frequencia : frequenciaAnalise }
-        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT }
+        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise}
 
-        ScqApi.EditarParametro(editedParametro).then(() => ScqApi.EditarFrequenciaAnalise(newFrequencia))
+        ScqApi.EditarParametro(editedParametro)
         
         toastManager.add(`Parametro: ${editedParametro.nome} editado com sucesso`, {appearance: 'success', autoDismiss: true ,autoDismissTimeout: 3000, onDismiss : () => {history.push("/CadastroParametro")}})
         setEdited(!edited)
@@ -111,9 +110,7 @@ const EditarParametro = (props) => {
 
     return (
         <>
-            <header>
-                <MenuBar></MenuBar>
-            </header>
+     
 
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar de Parametro</h1>
@@ -204,4 +201,4 @@ const EditarParametro = (props) => {
     )
 }
 
-export default withToastManager(EditarParametro)
+export default withToastManager(withMenuBar(EditarParametro))

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ModoEdicao from '../Screens/ModoEdicao'
-import MenuBar from '../Screens/MenuBar';
+import ModoEdicao from '../Components/ModoEdicao'
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications';
 import {capitalize,subId} from '../Services/stringUtils'
 import GenericSelect from '../Components/GenericSelect';
 import EditarMontagemComposition from './EditarMontagemComposition';
 import { useHistory } from 'react-router-dom';
+import {withMenuBar} from '../Hocs/withMenuBar';
 
 
 const EditarEtapa = (props) => {
@@ -125,10 +125,7 @@ const EditarEtapa = (props) => {
         return (
             <>
 
-                <header>
-                    <MenuBar></MenuBar>
-                </header>
-
+                
                 <Container style={{ marginTop: 20 }}>
                     <h1>Editar Etapa</h1>
                     <Form>
@@ -178,4 +175,4 @@ const EditarEtapa = (props) => {
 
 }
 
-export default withToastManager(EditarEtapa)
+export default withToastManager(withMenuBar(EditarEtapa))

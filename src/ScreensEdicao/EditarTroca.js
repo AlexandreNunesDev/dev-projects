@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-
+import {withMenuBar} from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
 import { Button, Form, Container, Col } from 'react-bootstrap'
 import { withToastManager } from 'react-toast-notifications'
-import MenuBar from '../Screens/MenuBar'
 import UnidadeSelect from '../Components/UnidadeSelect'
 import GenericSelect from '../Components/GenericSelect';
-import ModoEdicao from '../Screens/ModoEdicao';
+import ModoEdicao from '../Components/ModoEdicao'
 
 
 
@@ -65,9 +64,7 @@ const EditarTroca = (props) => {
 
     return (
         <>
-            <header>
-                <MenuBar ></MenuBar>
-            </header>
+          
 
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar Troca</h1>
@@ -100,7 +97,7 @@ const EditarTroca = (props) => {
                     <Form.Group >
 
                         
-                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca({id : troca.id, frequencia : frequencia, escala : escalaFrequencia, etapaId: troca.etapaId}, props.toastManager)} >Salvar</Button>
+                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca({id : troca.id, frequencia : frequencia, escala : escalaFrequencia, etapaId: troca.etapaId, dataPlanejada : troca.dataPlanejada}, props.toastManager)} >Salvar</Button>
                     </Form.Group>
 
                 </Form>
@@ -112,4 +109,4 @@ const EditarTroca = (props) => {
 
 }
 
-export default withToastManager(EditarTroca)
+export default withToastManager(withMenuBar(EditarTroca))

@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
 
 import { withToastManager } from 'react-toast-notifications';
-import { getUserName, getUserRole, isAuthenticated } from '../Services/auth';
+import { getUserName, getUserRole, isAuthenticated,getToken, isTokenExpired } from '../Services/auth';
 
 
 
@@ -31,12 +31,14 @@ class MenuBar extends React.Component {
   }
 
   componentDidMount() {
-
-    ScqApi.ListaNotificacoes().then(res => {
-      this.setState({
-        notifications: this.state.notifications.concat(res)
+    if(isAuthenticated){
+      ScqApi.ListaNotificacoes().then(res => {
+        this.setState({
+          notifications: this.state.notifications.concat(res)
+        })
       })
-    })
+    } 
+    
   }
 
   resolveNotificacao = (notificacao) => {

@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from './MenuBar';
-
 import { withRouter } from 'react-router-dom';
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 class Home extends React.Component {
 
@@ -13,11 +12,9 @@ class Home extends React.Component {
     render() {
   
                return (
-                    <Fragment>
-                        <header>
-                            <MenuBar></MenuBar>
-                        </header>
-                    </Fragment>
+                <Fragment>
+
+                </Fragment>
                             
                 )
      
@@ -28,4 +25,4 @@ class Home extends React.Component {
 
 }
 
-export default withRouter(Home)
+export default withRouter(withMenuBar(Home))

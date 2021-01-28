@@ -10,12 +10,15 @@
     "axios": "^0.20.0",
     "bootstrap": "^4.5.0",
     "file-saver": "^2.0.2",
+    "install": "^0.13.0",
+    "npm": "^6.14.11",
     "react": "^16.13.1",
     "react-bootstrap": "^1.2.2",
     "react-bootstrap-typeahead": "^5.1.1",
     "react-chart": "^0.0.1",
     "react-dom": "^16.13.1",
     "react-editable-select": "^1.0.0",
+    "react-icons": "^4.1.0",
     "react-number-format": "^4.4.1",
     "react-popup": "^0.10.0",
     "react-router-dom": "^5.2.0",
@@ -23,7 +26,8 @@
     "react-toast-notifications": "^2.4.0",
     "recharts": "^1.8.5",
     "underscore.string": "^3.3.5",
-    "use-dynamic-refs": "^1.0.0"
+    "use-dynamic-refs": "^1.0.0",
+    "validator": "^13.5.2"
   },
   "scripts": {
     "start": "react-scripts start",

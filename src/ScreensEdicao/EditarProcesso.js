@@ -1,8 +1,8 @@
 import React, { Fragment,useState, useEffect } from 'react'
 import { Button, Form, Container} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ModoEdicao from '../Screens/ModoEdicao'
-import MenuBar from '../Screens/MenuBar';
+import ModoEdicao from '../Components/ModoEdicao'
+import {withMenuBar} from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
 import { useHistory } from 'react-router-dom';
@@ -67,9 +67,7 @@ const EditarProcesso = (props) => {
             <Fragment>
                 
                 
-                <header>
-                    <MenuBar></MenuBar>
-                </header>
+           
                     <Container style={{ marginTop: 20 }}>
                         <h1>Editar Processo</h1>
                        
@@ -97,4 +95,4 @@ const EditarProcesso = (props) => {
 
 }
 
-export default withToastManager(EditarProcesso)
+export default withToastManager(withMenuBar(EditarProcesso))

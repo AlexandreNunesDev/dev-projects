@@ -1,15 +1,14 @@
 import React from 'react'
 import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from './MenuBar';
 import GenericSelect from '../Components/GenericSelect';
 import SelectEditable from '../Components/SelectEditable'
-import {responseHandler} from '../Services/responseHandler'
+import { responseHandler } from '../Services/responseHandler'
 import ScqApi from '../Http/ScqApi';
 import FormulaBuilder from '../Components/FormulaBuilder';
-
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 class CadastroParametro extends React.Component {
 
@@ -37,7 +36,7 @@ class CadastroParametro extends React.Component {
         this.titulaConfirm = this.titulaConfirm.bind(this)
     }
 
-   
+
     componentDidMount = () => {
         ScqApi.ListaProcessos().then(res => {
             this.setState({
@@ -47,9 +46,9 @@ class CadastroParametro extends React.Component {
     }
 
 
-    
 
-    
+
+
     selectedLinhaListner = (linhaId) => {
         this.setState({ linhaId: linhaId }, function () {
 
@@ -71,7 +70,7 @@ class CadastroParametro extends React.Component {
 
 
     escalaTempoController = (escala) => {
-        this.setState({ escalaTempo: escala },()=>console.log(this.state.nome))
+        this.setState({ escalaTempo: escala }, () => console.log(this.state.nome))
     }
     frequenciaAnalise = (event) => {
         this.setState({ frequenciaAnalise: event.target.value })
@@ -97,15 +96,15 @@ class CadastroParametro extends React.Component {
         this.loadEtapasFromLinha(parametro.linha.id)
     }
 
-   
+
 
     salvarParametro = () => {
-   
-        const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT,frequenciaAnalise, escalaTempo } = this.state
-        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT , escala : escalaTempo , frequencia : frequenciaAnalise}
+
+        const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT, frequenciaAnalise, escalaTempo } = this.state
+        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise }
 
         if (this.state.isNotEditable) {
-            ScqApi.CriarParametro(parametro).then(res => {responseHandler (res,this.props);})
+            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro"); })
 
         }
     }
@@ -117,8 +116,8 @@ class CadastroParametro extends React.Component {
     }
 
     enterEditMode = () => {
-     let history = this.props.history
-     history.push("/EditarParametro")
+        let history = this.props.history
+        history.push("/EditarParametro")
     }
 
     cleanState = (deleteMessage) => {
@@ -152,30 +151,26 @@ class CadastroParametro extends React.Component {
     render() {
         return (
             <>
-                <header>
-                    <MenuBar></MenuBar>
-                </header>
-
                 <Container style={{ marginTop: 20 }}>
                     <h1>Cadastro de Parametro</h1>
                     <Form onSubmit={this.onSubmitHandler}>
                         <Form.Row>
                             <Col>
-                            <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={this.state.processos} onChange={this.selectedLinhaListner} selection={this.state.parametro?.linha?.id}></GenericSelect>
+                                <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={this.state.processos} onChange={this.selectedLinhaListner} selection={this.state.parametro?.linha?.id}></GenericSelect>
                             </Col>
                             <Col>
-                            <GenericSelect title={"Etapa"} returnType={"id"} default={"Escolha uma Etapa"} ops={this.state.etapas} onChange={this.selectedEtapaListner} selection={this.state.parametro?.etapa?.id}></GenericSelect>
+                                <GenericSelect title={"Etapa"} returnType={"id"} default={"Escolha uma Etapa"} ops={this.state.etapas} onChange={this.selectedEtapaListner} selection={this.state.parametro?.etapa?.id}></GenericSelect>
                             </Col>
                         </Form.Row>
-                       
-                        
-                        
+
+
+
                         <Form.Row>
 
                             <Form.Group as={Col} controlId="nomeParametroForm">
                                 <Form.Label>Nome do Parametro: </Form.Label>
-                               
-                                <SelectEditable getValue={(nome) => nome && this.setState({nome : nome},  () => { console.log(this.state.nome)})} default={"Clique 2x para digitar"} ops={["Concentracao","pH","Temperatura","Condutividade","Corrente","Tensão"]}></SelectEditable>
+
+                                <SelectEditable getValue={(nome) => nome && this.setState({ nome: nome }, () => { console.log(this.state.nome) })} default={"Clique 2x para digitar"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão"]}></SelectEditable>
                             </Form.Group>
                             <Col sm={3} >
                                 <UnidadeSelect title={"Escolha um unidade"} type={"parametros"} default={"Escolha um unidade"} onChange={unidade => { this.setState({ unidade: unidade }); console.log(unidade) }}></UnidadeSelect>
@@ -248,4 +243,4 @@ class CadastroParametro extends React.Component {
 
 }
 
-export default withToastManager(CadastroParametro)
+export default withToastManager(withMenuBar(CadastroParametro))

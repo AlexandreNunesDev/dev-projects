@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Form } from 'react-bootstrap';
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 
 const ConfirmMailPage = () => {
@@ -14,4 +15,4 @@ const ConfirmMailPage = () => {
     )
 }
 
-export default ConfirmMailPage
+export default withMenuBar(ConfirmMailPage)

@@ -1,15 +1,13 @@
 import React from 'react'
 import {  Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from './MenuBar';
 import GenericSelect from '../Components/GenericSelect';
-
 import ScqApi from '../Http/ScqApi';
 import CheckOutAnalise from '../Components/CheckoutAnalise';
 import { withToastManager } from 'react-toast-notifications';
-
 import TitulaForm from './TitulaForm';
 import {capitalize,subId} from '../Services/stringUtils'
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 
 
@@ -239,9 +237,7 @@ class RegistroDeAnalise extends React.Component {
     render() {
         return (
             <>
-                <header>
-                    <MenuBar></MenuBar>
-                </header>
+    
 
                 <Container style={{ marginTop: 20 }}>
                     <h1>Registro de Analise</h1>
@@ -287,4 +283,4 @@ class RegistroDeAnalise extends React.Component {
 
 }
 
-export default withToastManager(RegistroDeAnalise)
+export default withToastManager(withMenuBar(RegistroDeAnalise))

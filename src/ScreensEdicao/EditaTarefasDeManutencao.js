@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import MenuBar from '../Screens/MenuBar';
+import {withMenuBar} from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
 import { withToastManager } from 'react-toast-notifications'
 import UnidadeSelect from '../Components/UnidadeSelect';
 import GenericSelect from '../Components/GenericSelect';
-import ModoEdicao from '../Screens/ModoEdicao';
+import ModoEdicao from '../Components/ModoEdicao'
 
 const EditarTarefaDeManutencao = (props) => {
 
@@ -44,9 +43,7 @@ const EditarTarefaDeManutencao = (props) => {
 
     return (
         <>
-            <header>
-                <MenuBar ></MenuBar>
-            </header>
+    
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar Tarefa de Manutencao</h1>
                 <Form>
@@ -104,4 +101,4 @@ const EditarTarefaDeManutencao = (props) => {
         </>
     )
 }
-export default withToastManager(EditarTarefaDeManutencao)
+export default withToastManager(withMenuBar(EditarTarefaDeManutencao))

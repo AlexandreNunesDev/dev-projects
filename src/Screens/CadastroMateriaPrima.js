@@ -1,12 +1,12 @@
 import React  from 'react'
 import { Button, Form , Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import NumberFormat from 'react-number-format';
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import {capitalize,subId} from '../Services/stringUtils'
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 class CadastroMateriaPrima extends React.Component {
 
@@ -146,10 +146,6 @@ class CadastroMateriaPrima extends React.Component {
 render() {
     return (
     <>
-    <header>
-        <MenuBar></MenuBar>
-    </header>
-
     <Container style = {{marginTop : 20}}>
     <h1>Cadastro de Matéria Prima</h1>
         <Form>
@@ -194,4 +190,4 @@ render() {
 
 }
 
-export default withToastManager(CadastroMateriaPrima)
+export default withToastManager(withMenuBar(CadastroMateriaPrima))

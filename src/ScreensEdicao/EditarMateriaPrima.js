@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from '../Screens/MenuBar';
+import {withMenuBar} from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
-import ModoEdicao from '../Screens/ModoEdicao';
+import ModoEdicao from '../Components/ModoEdicao'
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 
@@ -47,9 +47,7 @@ const EditarMateriaPrima = (props) => {
 
     return (
         <>
-            <header>
-                <MenuBar></MenuBar>
-            </header>
+    
 
             <Container style={{ marginTop: 20 }}>
                 <h1>Cadastro de Matéria Prima</h1>
@@ -98,4 +96,4 @@ const EditarMateriaPrima = (props) => {
 
 }
 
-export default withToastManager(EditarMateriaPrima)
+export default withToastManager(withMenuBar(EditarMateriaPrima))

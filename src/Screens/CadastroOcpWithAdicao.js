@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Container, Col, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from './MenuBar';
 import { useHistory, withRouter } from 'react-router-dom';
-
 import ScqApi from '../Http/ScqApi';
-
-import fileSaver from "file-saver"
 import AdicaoComposition from '../Components/AdicaoComposition';
 import AdicaopH from '../Components/AdicaopH';
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 
 
@@ -20,47 +17,11 @@ const redirectAnalise = (history, analise) => {
     history.push("/RegistroAnalise", analise)
 }
 
-const downloadOcp = (fileName,history) => {
-    ScqApi.DownloadOcp(fileName).then(file => fileSaver.saveAs(file,fileName)).then(() => redirectOcps(history))
-    
-    
-}
-
 
 const saveOcp = (analise, mpQtds, responsavel, observacao, history) => {
-    if(analise.ocpId){
-        ScqApi.EditarAnalise(analise).then(res => {
-            const newOcp = { id: analise.ocpId, responsavel: responsavel, observacao: observacao, statusCorrecao: false, statusocp: false, analiseId: res.id }
-            ScqApi.CriarOcp(newOcp).then(ocp => {
-                let newAdicoes = []
-                
-                        mpQtds.forEach((pairMpQtd)=>{
-                        let token = pairMpQtd.split(":")
-                        newAdicoes = newAdicoes.concat({ id: null, quantidade: token[1], materiaPrimaId: token[0], ordemId: ocp.id,unidade :token[2] })
-                    })
-                    ScqApi.CriarAdicao(newAdicoes).then(res => downloadOcp(res,history) )
-                })
-               
-               
-            })
-    } else {
-        ScqApi.CriarAnalise(analise).then(res => {
-            const newOcp = { id: null, responsavel: responsavel, observacao: observacao, statusCorrecao: false, statusocp: false, analiseId: res.id }
-            ScqApi.CriarOcp(newOcp).then(ocp => {
-                let newAdicoes = []
- 
-                        mpQtds.forEach((pairMpQtd)=>{
-                        let token = pairMpQtd.split(":")
-                        newAdicoes = newAdicoes.concat({ id: null, quantidade: token[1], materiaPrimaId: token[0], ordemId: ocp.id,unidade :token[2] })
-                    })
-                    ScqApi.CriarAdicao(newAdicoes).then(res => downloadOcp(res,history) )
-                })
-               
-               
-            })
-    }
-   
 
+        const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,mpQtds : mpQtds}
+        ScqApi.CriarAnaliseComOcp(fullAnaliseForm,"adicao").then(() => redirectOcps(history))
 }
 
 const CadastroDeOcp = (props) => {
@@ -106,12 +67,12 @@ const CadastroDeOcp = (props) => {
    useEffect(() => {
     if(parametro){
         if(String(parametro.unidade)==="pH"){
-            setAdicaoMenu(<AdicaopH materiasPrima={materiasPrima} setMpQtd={saveMpQtd}></AdicaopH>)
+            setAdicaoMenu(<AdicaopH setMpQtd={saveMpQtd}></AdicaopH>)
         } else {
-            setAdicaoMenu(<AdicaoComposition mps={materiasPrima} setMpQtd={saveMpQtd} correcaoArray={correcaoArray}></AdicaoComposition>)
+            setAdicaoMenu(<AdicaoComposition unidadeParametro={parametro.unidade} mps={materiasPrima} setMpQtd={saveMpQtd} correcaoArray={correcaoArray}></AdicaoComposition>)
         }
     }
-   },[correcaoArray])
+   },[correcaoArray,parametro])
 
 
     const saveMpQtd = (quantidade,mpId,unidade,index) => {
@@ -126,6 +87,7 @@ const CadastroDeOcp = (props) => {
     const calcularCorrecaoArray = () => {
         let tempCorrecaoArray = []
         let correcaoTotal = 0
+        
         materiasPrima && materiasPrima.forEach((mp => {
             if(String(parametro.formula).includes(mp.fatorTitulometrico)){
                 let nominal = (parametro.pMax + parametro.pMin) / 2
@@ -144,7 +106,9 @@ const CadastroDeOcp = (props) => {
                         let pairCorreMp;
                         if(Number(pair[1]===1.0)){
                             let nominal = (parametro.pMax + parametro.pMin) / 2
+                            
                             let valorCorrecao = (etapa.volume * (nominal - analise.resultado))/1000
+
                             pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
                         } else {
                             pairCorreMp = `${mp.id}:${Math.round(correcaoTotal * pair[1]  * 100) /100 }`
@@ -165,9 +129,7 @@ const CadastroDeOcp = (props) => {
 
     return (
         <>
-            <header>
-                <MenuBar></MenuBar>
-            </header>
+        
             {
                 
                     loading ? <Container><Spinner animation="grow" /> 
@@ -224,7 +186,7 @@ const CadastroDeOcp = (props) => {
                                 <Button style={{ margin: 2 }} type="reset" onClick={() => {
                                    
                                     saveOcp(analise, mpQtds, responsavel, observacao, history)
-                                    setLoading(true)
+                                    
     
                                 }}>
                                     Salvar
@@ -244,4 +206,4 @@ const CadastroDeOcp = (props) => {
 
 
 
-export default withRouter(CadastroDeOcp)
+export default withRouter(withMenuBar(CadastroDeOcp))

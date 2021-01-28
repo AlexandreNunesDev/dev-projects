@@ -15,7 +15,7 @@ import CadastroProcesso from './Screens/CadastroProcesso';
 import CadastroTroca from './Screens/CadastroTroca';
 import CadastroDeTarefasDeManutencao from './Screens/CadastroDeTarefasDeManutencao';
 
-
+import CadastroDeOcpLivre from './Screens/CadastroOcpWithAdicaoLivre'
 import CadastroOmp from './Screens/CadastroOmp';
 import OrdensDeManutencao from './Screens/OrdensDeManutencao';
 import FinalizarOmp from './Screens/FinalizarOmp';
@@ -34,6 +34,7 @@ import { getUserRole, isAuthenticated, isTokenExpired, logout} from './Services/
 import Registrar from './Screens/Registrar';
 import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
 import AlgoDeuErrado from './Screens/algoDeuErrado';
+import ServidorError from './Screens/ServidorError';
 
 
 
@@ -86,6 +87,7 @@ class App extends React.Component {
         <Route path='/CadastroParametro' exact={true} component={CadastroParametro} />
         <Route path='/CadastroMateriaPrima' exact={true} component={CadastroMateriaPrima} />
         <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao} />
+        <Route path='/CadastroOcpAdicaoLivre' exact={true} component={CadastroDeOcpLivre} />
         <Route path='/CadastroOcpAcao' exact={true} component={CadastroDeOcpAcao} />
         <Route path='/CadastroTroca'   exact={true} component={CadastroTroca} />
         <Route path='/CadastroTarefasDeManutencao'  exact={true} component={CadastroDeTarefasDeManutencao} />
@@ -103,6 +105,7 @@ class App extends React.Component {
         <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
         <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
         <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
+        <Route path='/ServidorError' exact={true} component={ServidorError} />
 
       </Switch>
 
@@ -127,7 +130,7 @@ class App extends React.Component {
         <Route path='/VerOmp' exact={true} component={VerOmp} />
         <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
         <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
-
+        <Route path='/ServidorError' exact={true} component={ServidorError} />
       </Switch>
 
 
@@ -142,7 +145,7 @@ class App extends React.Component {
       <Route path='/Login' exact={true} component={Login} />
       <Route path='/Registrar' exact={true} component={Registrar} />
       <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
-
+      <Route path='/ServidorError' exact={true} component={ServidorError} />
       </>)
     }
 

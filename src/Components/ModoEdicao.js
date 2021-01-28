@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 
 
 import {Col, Row, Button} from 'react-bootstrap'
-import GenericSelect from '../Components/GenericSelect'
+import GenericSelect from './GenericSelect'
 import ScqApi from '../Http/ScqApi'
 
-import DeleteConfirm from '../Components/DeleteConfirm'
+import DeleteConfirm from './DeleteConfirm'
 
 
     const deleteSelection = (processo,etapa,parametro,materiaPrima,troca,type, onDelete) => {

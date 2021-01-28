@@ -25,11 +25,11 @@ class FormulaBuilder extends Component {
 
 
       componentDidUpdate(prevProps) {
-        if(prevProps.etapaId!==this.props.etapaId){
-          ScqApi.FindMateriaPrimaByEtapaId(this.props.etapaId).then(res => this.setState({
+
+          this.props.etapaId && this.state.materiasPrima.length==0 && ScqApi.FindMateriaPrimaByEtapaId(this.props.etapaId).then(res => this.setState({
             materiasPrima : res
           }))
-        }
+        
         
       } 
 

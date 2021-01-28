@@ -1,10 +1,10 @@
 import { Button, Container, Form } from "react-bootstrap"
 import React, { useEffect, useState } from 'react'
-
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import ScqApi from "../Http/ScqApi"
 import { isAuthenticated, login, logout } from "../Services/auth"
 import { withToastManager } from "react-toast-notifications"
+import { withMenuBar } from "../Hocs/withMenuBar"
 
 
 
@@ -29,19 +29,22 @@ const Login = (props) => {
 
     const authenticationHandler = (res) => {
        
-
-        if(res.token){
-            login(res)
-            history.push("/Home")
-        } else if(res.userName) {
-            toastManager.add( "Confirme sua conta para acessar", {
-                appearance: 'warning', autoDismiss: true
-        })
-        } else {
-            toastManager.add( "Usuario Inexistente", {
-                appearance: 'error', autoDismiss: true
-        })
-        }
+   
+            if(res.token){
+                login(res)
+                history.push("/Home")
+            } else if(res.userName) {
+                toastManager.add( "Confirme sua conta para acessar", {
+                    appearance: 'warning', autoDismiss: true
+            })
+            } else {
+                toastManager.add( "Usuario Inexistente", {
+                    appearance: 'error', autoDismiss: true
+            })
+            }
+        
+        
+       
     }
     
 
@@ -74,7 +77,7 @@ const Login = (props) => {
 
                             <Button style={{ margin: 5 }} variant="primary" onClick={() => {
                                 const loginForm = { usuario, senha }
-                                ScqApi.Auth(loginForm).then(res => authenticationHandler(res))}}>
+                                ScqApi.Auth(loginForm).then(res => authenticationHandler(res)).catch(error=>history.push("/ServidorError"))}}>
                                 Entrar
                              </Button>
                             :

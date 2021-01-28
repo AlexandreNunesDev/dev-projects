@@ -1,11 +1,11 @@
 import axios from "axios"
 
 
-import { getToken } from "../Services/auth"
+import { getToken, logout } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
 
 const http = axios.create({
-     baseURL:  "https://scqapi.com/"
+     baseURL:  "http://localhost:8080/" //"https://scqapi.com/"
     
 })
 
@@ -13,6 +13,7 @@ const respInter = http.interceptors.response.use(function (response) {
     
     return response.data;
   }, function (error) {
+   
     if(error.response){
        statusResponseHandler(error.response.status, error.response.data)
         const errorObj = {error : true, data : error.response.data}
@@ -27,6 +28,7 @@ http.interceptors.request.use(async config => {
     if (token!=null) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+    
     return config;
 });
 
@@ -132,8 +134,13 @@ const ScqApi = {
         return http.post("materiaPrima", materiaPrima)
 
     },
+    
     CriarAnalise: (analise) => {
         return http.post("analise", analise)
+
+    },
+    CriarAnaliseComOcp: (analise,type) => {
+        return http.post("analiseComOcp/"+type, analise)
 
     },
     CriarMontagem: (montagem) => {
@@ -184,7 +191,7 @@ const ScqApi = {
 
     },
     EditarTroca: (troca) => {
-        return http.put("troca/edit/" + troca.id)
+        return http.put("troca/edit/" + troca.id,troca)
 
     },
     FindaTarefasByProcesso: (processoId) => {
@@ -273,7 +280,7 @@ const ScqApi = {
 
 
     GerarOmp: (ompForm) => {
-        return http.post("generateOmp", ompForm)
+        return http.post("omp", ompForm)
 
     },
     GerarOmpTarefas: (ompForm) => {
@@ -301,13 +308,14 @@ const ScqApi = {
         return http.post("user/registration", loginForm)
 
     },
-    DownloadOcp : (fileName) => {
+
+    DownloadOcp : (ocpId) => {
         http.interceptors.response.eject(respInter);
-       return http.get("downloadOcp/" + fileName, { responseType: 'arraybuffer' }).then((response) => { return new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });});
+        return http.get("downloadOcp/" + ocpId, { responseType: 'arraybuffer' }).then((response) => { return response});
     },
-    DownloadOmp : (fileName) => {
+    DownloadOmp : (omp) => {
         http.interceptors.response.eject(respInter);
-        return http.get("download/"+fileName, { responseType: 'arraybuffer' }).then((response) => { return new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });})
+        return http.get("downloadOmp/"+omp.type+"/"+omp.id, { responseType: 'arraybuffer' }).then((response) => { return response})
     },
     
 

@@ -1,10 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Col, Container, Form, Row, Table } from 'react-bootstrap'
-
 import ScqApi from '../Http/ScqApi'
-import MenuBar from './MenuBar'
-
 import { withToastManager } from 'react-toast-notifications'
+import { withMenuBar } from '../Hocs/withMenuBar'
 
 const TableHeadTarefas = () => {
     return (
@@ -101,13 +99,13 @@ const VerOmp = (props) => {
             setTarefas(res.tarefas)
             setDataRealizada(res.data)
         })
-    })
+    },[])
 
 
 
     return (
         <>
-            <MenuBar></MenuBar>
+
 
 
             <Container style={{ marginTop: 20 }}>
@@ -115,6 +113,7 @@ const VerOmp = (props) => {
                     <h2>Ordem de Manutencao Finalizada</h2>
 
                 </Row>
+                
                 <Form.Row style={{ marginTop: 10 }}>
                     
                     <Col md={4}>
@@ -144,4 +143,4 @@ const VerOmp = (props) => {
     )
 }
 
-export default withToastManager(VerOmp)
+export default withToastManager(withMenuBar(VerOmp))

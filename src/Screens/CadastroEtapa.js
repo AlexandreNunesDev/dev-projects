@@ -1,14 +1,13 @@
 import React from 'react'
 import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import GenericSelect from '../Components/GenericSelect';
-
 import { withToastManager } from 'react-toast-notifications';
 import MontagemComposition from '../Components/MontagemComposition';
 import { getToken } from '../Services/auth';
 import { responseHandler } from '../Services/responseHandler';
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 
 class CadastroEtapa extends React.Component {
@@ -18,7 +17,7 @@ class CadastroEtapa extends React.Component {
         super(props)
         this.volumeRef = React.createRef()
         this.state = {
-         
+
             processos: [],
             processoId: '',
             nome: '',
@@ -46,7 +45,7 @@ class CadastroEtapa extends React.Component {
         })
     }
 
-   
+
     selectedLinhaListner = (processoId) => {
         this.setState({ processoId: processoId })
     }
@@ -61,32 +60,27 @@ class CadastroEtapa extends React.Component {
 
     submitForm = () => {
 
-        
-
-            const { processoId, nome, posicao } = this.state
-            const etapa = { processoId: processoId, nome, posicao, volume: this.state.volume }
-       
-            ScqApi.CriarEtapa(etapa).then(res => {
-                responseHandler(res, this.props)
-                const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
-                ScqApi.CriarMontagem(composes).then(res => this.cleanState())
-            })
-         
-           
-
-  
-    }
 
 
-    notifyEtapaCriation = (toastManager,newEtapa) => {
-        toastManager.add(`Etapa ${newEtapa.nome} criada com sucesso`, {
-            appearance: 'success', autoDismiss: true
+        const { processoId, nome, posicao } = this.state
+        const etapa = { processoId: processoId, nome, posicao, volume: this.state.volume }
+
+        ScqApi.CriarEtapa(etapa).then(res => {
+            responseHandler(res, this.props,"Etapa")
+            const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
+            ScqApi.CriarMontagem(composes).then(res => this.cleanState())
         })
+
+
+
+
     }
 
 
+    
 
-   
+
+
     cleanState = (deleteMessage) => {
         const { toastManager } = this.props;
         this.setState({
@@ -114,7 +108,7 @@ class CadastroEtapa extends React.Component {
 
     removeMontagemCompose = (ind) => {
         this.setState({
-            montagemComposes : this.state.montagemComposes.filter((mc,index)=>{
+            montagemComposes: this.state.montagemComposes.filter((mc, index) => {
                 return index !== ind
             })
         })
@@ -127,18 +121,13 @@ class CadastroEtapa extends React.Component {
     render() {
         return (
             <>
-
-                <header>
-                    <MenuBar></MenuBar>
-                </header>
-
                 <Container style={{ marginTop: 20 }}>
                     <h1>Cadastro de Etapa</h1>
                     <Form>
-                        
+
                         <Form.Row>
                             <Col>
-                                <GenericSelect title={"Processo"} returnType={"id"}  default={"Escolha um Processo"} onChange={this.selectedLinhaListner} ops={this.state.processos} isNotEditable={this.state.isNotEditable} selection={this.state.etapa.processoId}></GenericSelect>
+                                <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={this.selectedLinhaListner} ops={this.state.processos} isNotEditable={this.state.isNotEditable} selection={this.state.etapa.processoId}></GenericSelect>
                             </Col>
                             <Col>
                                 <Form.Group controlId="nomeEtapaForm">
@@ -177,4 +166,4 @@ class CadastroEtapa extends React.Component {
 
 }
 
-export default withToastManager(CadastroEtapa)
+export default withToastManager(withMenuBar(CadastroEtapa))

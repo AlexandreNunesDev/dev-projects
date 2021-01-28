@@ -21,7 +21,7 @@ const AdicaoComposition = (props) => {
                         </th>
                     </tr>
                 </thead>
-                {props.mps.map((mp, index) => {
+                {props.mps?.map((mp, index) => {
                     const correcaoArray = props.correcaoArray
                     let actualPair = []
                     let actualCorrection = 0;
@@ -38,7 +38,7 @@ const AdicaoComposition = (props) => {
                                     <Form.Label>{mp.nome}</Form.Label>
                                 </td>
                                 <td md={'auto'}>
-                                    <Form.Control type="text" placeholder={`Correcao Surgerida ${actualCorrection} ${mp.unidade}`} onChange={event => props.setMpQtd(event.target.value,mp.id,mp.unidade,index)}></Form.Control>
+                                    <Form.Control type="text" placeholder={`Correcao Surgerida ${props.unidadeParametro == "%" ? actualCorrection*10 : actualCorrection} ${mp.unidade}`} onChange={event => props.setMpQtd(event.target.value,mp.id,mp.unidade,index)}></Form.Control>
                                 </td>
                             </tr>
                         </tbody>

@@ -1,14 +1,11 @@
 import React from "react"
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Button, Container, Col, Form } from "react-bootstrap";
-import MenuBar from "./MenuBar";
 import ScqApi from "../Http/ScqApi";
-
-
 import { withToastManager } from "react-toast-notifications";
 import GenericSelect from "../Components/GenericSelect";
 import GenericDropDown from "../Components/GenericDropDown";
+import { withMenuBar } from "../Hocs/withMenuBar";
 
 
 const TableHead = () => {
@@ -147,9 +144,7 @@ class TarefasDeManutencao extends React.Component {
     render() {
         return (
             <>
-                <header>
-                    <MenuBar></MenuBar>
-                </header>
+    
                 <Container>
                     <Form.Row style={{padding : 10}}>
                         <Col >
@@ -204,4 +199,4 @@ class TarefasDeManutencao extends React.Component {
 
 }
 
-export default withToastManager(TarefasDeManutencao)
+export default withToastManager(withMenuBar(TarefasDeManutencao))

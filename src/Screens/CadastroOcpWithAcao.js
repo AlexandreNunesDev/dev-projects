@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Container, Col, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from './MenuBar';
 import { useHistory, withRouter } from 'react-router-dom';
-
 import ScqApi from '../Http/ScqApi';
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 
 
@@ -20,15 +19,8 @@ const redirectAnalise = (history, analise) => {
 
 
 const saveOcp = (analise, acao, prazo, responsavel, observacao, history) => {
-    ScqApi.CriarAnalise(analise).then(res => {
-        const newOcp = { id: null, responsavel: responsavel, observacao: observacao, statusCorrecao: false, statusocp: false, analiseId: res.id }
-        ScqApi.CriarOcp(newOcp).then(ocp => {
-            const newAcao = { id: null, acao, prazo, ocpId: ocp.id }
-            ScqApi.CriarAcao(newAcao).then(res => redirectOcps(history))
-        })
-    })
-
-
+    const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
+    ScqApi.CriarAnaliseComOcp(fullAnaliseForm,"acao").then(() => redirectOcps(history))
 }
 
 const CadastroDeOcp = (props) => {
@@ -61,9 +53,6 @@ const CadastroDeOcp = (props) => {
 
     return (
         <>
-            <header>
-                <MenuBar></MenuBar>
-            </header>
              {
              loading ? <Container><Spinner animation="grow" /> 
              <Form.Label>Aguarde , gerando OCP</Form.Label></Container>
@@ -101,7 +90,7 @@ const CadastroDeOcp = (props) => {
                      </Col>
                      <Col >
                          <Form.Label>Acao: </Form.Label>
-                         <Form.Control type="text" placeholder={"Porque o problema ocorreu"} onChange={(event) => setAcao(event.target.value)}></Form.Control>
+                         <Form.Control type="text" placeholder={"O que sera feito para resolver"} onChange={(event) => setAcao(event.target.value)}></Form.Control>
 
                      </Col>
 
@@ -119,7 +108,7 @@ const CadastroDeOcp = (props) => {
                      </Col>
                      <Col >
                          <Form.Label>Responsavel: </Form.Label>
-                         <Form.Control type="text" placeholder={"Código da Ordem de serviço"} onChange={event => setResponsavel(event.target.value)}></Form.Control>
+                         <Form.Control type="text" placeholder={"Responsavel pela ação"} onChange={event => setResponsavel(event.target.value)}></Form.Control>
                      </Col>
 
                  </Form.Row>
@@ -132,9 +121,8 @@ const CadastroDeOcp = (props) => {
                              Cancelar
                                          </Button>
                          <Button style={{ margin: 2 }} type="reset" onClick={() => {
-                             
                              saveOcp(analise, acao, prazo, responsavel,observacao, history)
-                             setLoading(true)
+                 
                          }}>
                              Salvar
                                      </Button>
@@ -153,4 +141,4 @@ const CadastroDeOcp = (props) => {
 
 
 
-export default withRouter(CadastroDeOcp)
+export default withRouter(withMenuBar(CadastroDeOcp))

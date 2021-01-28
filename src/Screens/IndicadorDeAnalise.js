@@ -1,11 +1,10 @@
 import React, { Component, Fragment } from "react"
 import { Form, Button, Col, Container, Row } from "react-bootstrap"
 import GenericSelect from "../Components/GenericSelect"
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MenuBar from "./MenuBar";
 import ScqApi from "../Http/ScqApi";
 import AnaliseChart from "../Components/AnaliseChart";
+import { withMenuBar } from "../Hocs/withMenuBar";
 
 
 class IndicadorDeAnalise extends Component {
@@ -76,9 +75,7 @@ class IndicadorDeAnalise extends Component {
     render() {
         return (
             <Fragment>
-                <header>
-                    <MenuBar></MenuBar>
-                </header>
+          
                 <body>
                     <Container style={{ marginTop: 20 }}>
                         <Form>
@@ -158,9 +155,9 @@ class IndicadorDeAnalise extends Component {
                         </Form>
                     </Container>
                     <Container ref={this.containerChartRef}>
-                        <Form.Row>
+                        
                          {this.state.analiseChartData && <AnaliseChart containerRef={this.containerChartRef} data={this.state.analiseChartData}></AnaliseChart>}
-                        </Form.Row>
+                   
                 
                     </Container>
                   
@@ -171,4 +168,4 @@ class IndicadorDeAnalise extends Component {
 
 }
 
-export default IndicadorDeAnalise
+export default withMenuBar(IndicadorDeAnalise)

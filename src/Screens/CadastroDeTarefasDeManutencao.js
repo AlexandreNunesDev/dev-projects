@@ -2,11 +2,11 @@ import React, {useState, useEffect } from 'react'
 import { Button, Form, Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {capitalize,subId} from '../Services/stringUtils'
-import MenuBar from './MenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
 import UnidadeSelect from '../Components/UnidadeSelect';
 import GenericSelect from '../Components/GenericSelect';
+import { withMenuBar } from '../Hocs/withMenuBar';
 
 const CadastroDeTarefasDeManutencao = (props) => {
 
@@ -47,9 +47,7 @@ const CadastroDeTarefasDeManutencao = (props) => {
 
         return (
             <>
-            <header>
-                <MenuBar ></MenuBar>
-            </header>
+         
             <Container style={{ marginTop: 20 }}>
                 <h1>Cadastro de Tarefas de Manutencao</h1>
                 <Form>
@@ -100,4 +98,4 @@ const CadastroDeTarefasDeManutencao = (props) => {
         </>
         )
     }
-export default withToastManager(CadastroDeTarefasDeManutencao)
+export default withToastManager(withMenuBar(CadastroDeTarefasDeManutencao))
