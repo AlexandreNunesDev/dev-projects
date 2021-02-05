@@ -14,7 +14,7 @@ const UnidadeSelect = (props) =>{
     const diasemana = ["Segunda","Terça","Quarta","Quinta","Sexta","Sabado","Domingo"]
     const frequenciaAnalise = ["Minuto","Hora","Dia","Mes"]
     const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
-    const parametros = ["g/l","%","ml/l","C°","uS","um","HV","pH"]
+    const parametros = ["g/l","%","ml/l","C°","uS","um","HV","pH","V","A"]
     const adicao = ["Kg","Lts","ml","gr"]
     
     
