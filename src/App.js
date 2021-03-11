@@ -35,6 +35,8 @@ import Registrar from './Screens/Registrar';
 import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
 import AlgoDeuErrado from './Screens/algoDeuErrado';
 import ServidorError from './Screens/ServidorError';
+import EditarOcpAdicao from './ScreensEdicao/EditarOcpAdicao';
+import EditarOcpAcao from './ScreensEdicao/EditarOcpAcao';
 
 
 
@@ -102,6 +104,8 @@ class App extends React.Component {
         <Route path='/EditarTroca' exact={true} component={EditarTroca} />
         <Route path='/EditarTarefa' exact={true} component={EditaTarefasDeManutencao} />
         <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
+        <Route path='/EditarOcpAdicao' exact={true} component={EditarOcpAdicao} />
+        <Route path='/EditarOcpAcao' exact={true} component={EditarOcpAcao} />
         <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
         <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
         <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
@@ -124,7 +128,13 @@ class App extends React.Component {
         <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
         <Route path='/OMP' exact={true} component={Omp} />
         <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
+        <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao} />
+        <Route path='/CadastroOcpAdicaoLivre' exact={true} component={CadastroDeOcpLivre} />
+        <Route path='/CadastroOcpAcao' exact={true} component={CadastroDeOcpAcao} />
         <Route path='/CadastroOmp'   exact={true} component={CadastroOmp} />
+        <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
+        <Route path='/EditarOcpAdicao' exact={true} component={EditarOcpAdicao} />
+        <Route path='/EditarOcpAcao' exact={true} component={EditarOcpAcao} />
         <Route path='/OrdensDeManutencao' exact={true} component={OrdensDeManutencao} />
         <Route path='/FinalizarOmp' exact={true} component={FinalizarOmp} />
         <Route path='/VerOmp' exact={true} component={VerOmp} />

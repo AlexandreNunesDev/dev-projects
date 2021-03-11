@@ -20,7 +20,7 @@ const redirectAnalise = (history, analise) => {
 
 const saveOcp = (analise, acao, prazo, responsavel, observacao, history) => {
     const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
-    ScqApi.CriarAnaliseComOcp(fullAnaliseForm,"acao").then(() => redirectOcps(history))
+    ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm).then(() => redirectOcps(history))
 }
 
 const CadastroDeOcp = (props) => {

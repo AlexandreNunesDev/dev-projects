@@ -1,8 +1,8 @@
 import React from 'react'
-import { Navbar, Nav, NavDropdown, Badge, Button, Dropdown, Card, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Badge, Button, Dropdown, Card, NavItem,Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
-
+import scqlogo from '../logoscq.png';
 import { withToastManager } from 'react-toast-notifications';
 import { getUserName, getUserRole, isAuthenticated,getToken, isTokenExpired } from '../Services/auth';
 
@@ -66,7 +66,9 @@ class MenuBar extends React.Component {
         <>
        
             <Navbar bg="light" expand="lg">
-              <Navbar.Brand href="/home">S.C.Q</Navbar.Brand>
+              {/* <Navbar.Brand href="/home"  >S.C.Q</Navbar.Brand> */}
+              <Image height={50} width={80} src={scqlogo} rounded  />
+             
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">

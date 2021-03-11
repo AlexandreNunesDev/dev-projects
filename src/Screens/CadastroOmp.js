@@ -107,10 +107,23 @@ const CadastroOmp = (props) => {
     const [trocas] = useState(location.state.trocas || [])
     const [emitidoPor , setEmitidoPor] = useState()
     const [tarefas, setTarefas] = useState(location.state.tarefas || [])
-    const [tarefasChoosedId , setTarefasChoosedId] = useState(location.state.markedIds || [])
+    const [tarefasChoosedId , setTarefasChoosedId] = useState()
     const history = useHistory()
     
 
+        useEffect(() => {
+        
+                generateTarefasChoosedIdarray()
+         
+           
+        },[])
+
+    const generateTarefasChoosedIdarray = () =>{
+        let markedTarefas = tarefas.map((value) => {
+            return value.id
+        })
+        setTarefasChoosedId(markedTarefas)
+    }
 
    const setTarefaToList = (checked,id) => {
        
@@ -130,7 +143,10 @@ const CadastroOmp = (props) => {
 
 
     useEffect(()=>{
-        ScqApi.ListaTarefasByProcesso(trocas[0]?.processoId || tarefas[0].processoId).then(res => setTarefas(res))
+        if(trocas.length !== 0){
+            ScqApi.ListaTarefasByProcesso(trocas[0]?.processoId || tarefas[0].processoId).then(res => setTarefas(res))
+        }
+    
     },[trocas])
 
     
@@ -201,7 +217,7 @@ const CadastroOmp = (props) => {
                         
                         if(trocas.length ===0){
                             const omp = {processoId : tarefas[0].processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
-                            ScqApi.GerarOmpTarefas(omp)
+                            ScqApi.GerarOmp(omp).then(history.push("/OrdensDeManutencao"))
                         } else {
                             const omp = {processoId : trocas[0]?.processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
                             ScqApi.GerarOmp(omp).then(history.push("/OrdensDeManutencao"))

@@ -8,7 +8,7 @@ import ScqApi from '../Http/ScqApi'
 import DeleteConfirm from './DeleteConfirm'
 
 
-    const deleteSelection = (processo,etapa,parametro,materiaPrima,troca,type, onDelete) => {
+    const deleteSelection = (processo,etapa,parametro,materiaPrima,troca,tarefa,type,onDelete) => {
     if((processo != null) && (etapa == null) && (parametro == null) && (type === "processo")){
         return ScqApi.DeleteProcesso(processo.id).then(msg => onDelete(msg))
 
@@ -30,6 +30,11 @@ import DeleteConfirm from './DeleteConfirm'
         return ScqApi.DeleteTroca(troca.id).then(msg => onDelete(msg))
         
     }
+
+    /*if((tarefa != null) && type==="tarefa") {
+        return ScqApi.DeleteTarefa(troca.id).then(msg => onDelete(msg))
+        
+    }*/
    
 }
 
@@ -234,7 +239,7 @@ const ModoEdicao = (props) => {
             
             </Row>
             
-            <DeleteConfirm show={showConfirm} deleteSelection={() => { deleteSelection(processo,etapa,parametro,materiaPrima,troca,props.type, props.onDelete); setShowConfirm(!showConfirm)
+            <DeleteConfirm show={showConfirm} deleteSelection={() => { deleteSelection(processo,etapa,parametro,materiaPrima,troca,tarefa,props.type, props.onDelete); setShowConfirm(!showConfirm)
             }} details={confirmationDetails} confirmCancel={() => setShowConfirm(false)} ></DeleteConfirm>
         </>
     )

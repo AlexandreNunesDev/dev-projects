@@ -5,7 +5,7 @@ import { getToken, logout } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
 
 const http = axios.create({
-     baseURL:  "https://scqapi.com/"
+     baseURL:  "http://localhost:8080/" //"https://scqapi.com/"
     
 })
 
@@ -115,11 +115,19 @@ const ScqApi = {
 
     },
     DeleteOcp: (ocpId) => {
-        return http.delete("parametro/" + ocpId)
+        return http.delete("ocp/" + ocpId)
 
     },
     DeleteOmp: (ompId) => {
         return http.delete("omp/" + ompId)
+
+    },
+    DeleteAnalise: (analiseId) => {
+        return http.delete("analise/" + analiseId)
+
+    },
+    UpdataAnaliseData: (analiseId,data) => {
+        return http.put("analise/"+data+"/"+ analiseId)
 
     },
     CriarEtapa: (etapa) => {
@@ -139,8 +147,13 @@ const ScqApi = {
         return http.post("analise", analise)
 
     },
-    CriarAnaliseComOcp: (analise,type) => {
-        return http.post("analiseComOcp/"+type, analise)
+    CriarAnaliseComOcpAdicao: (analise) => {
+        return http.post("analiseComOcpAdicao", analise)
+
+    },
+
+    CriarAnaliseComOcpAcao: (analise) => {
+        return http.post("analiseComOcpAcao", analise)
 
     },
     CriarMontagem: (montagem) => {
@@ -194,6 +207,16 @@ const ScqApi = {
         return http.put("troca/edit/" + troca.id,troca)
 
     },
+
+    EditarOcpAdicao: (ocp) => {
+        return http.put("/ocp/editarAdicao/" + ocp.id,ocp)
+
+    },
+
+    EditarOcpAcao: (ocp) => {
+        return http.put("/ocp/editarAcao/" + ocp.id,ocp)
+
+    },
     FindaTarefasByProcesso: (processoId) => {
         return http.get("tarefa/find/" + processoId)
 
@@ -241,6 +264,10 @@ const ScqApi = {
         return http.delete("analise/" + analiseId)
 
     },
+    DeleteOcp: (ocpId) => {
+        return http.delete("ocp/" + ocpId)
+
+    },
     DeleteMateriaPrima: (materiaPrimaId) => {
         return http.delete("materiaPrima/" + materiaPrimaId)
 
@@ -283,10 +310,7 @@ const ScqApi = {
         return http.post("omp", ompForm)
 
     },
-    GerarOmpTarefas: (ompForm) => {
-        return http.post("generateOmpTarefas", ompForm)
 
-    },
     FinalizarOmp: (omp) => {
         return http.post("omp/finalizar", omp)
 

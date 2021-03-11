@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Container, Col, Button, Spinner } from 'react-bootstrap';
+import { Form, Container, Col, Button,} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
-import AdicaoComposition from '../Components/AdicaoComposition';
-import AdicaopH from '../Components/AdicaopH';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import GenericSelect from '../Components/GenericSelect'
 import AdicaoFree from '../Components/AdicaoFree';
@@ -16,37 +14,39 @@ import { withToastManager } from 'react-toast-notifications';
 
 const CadastroDeOcpLivre = (props) => {
     let history = useHistory();
+    let analise = props.location.state
     const [parametros, setParametros] = useState([])
-    const [parametro, setParametro] = useState()
-   
+    const [parametro, setParametro] = useState(props.location.state?.parametroId || null)
+    
     const [materiasPrima, setMateriasPrima] = useState()
     const [mpQtds, setMpQtd] = useState([])
     const [responsavel, setResponsavel] = useState('')
     const [observacao, setObservacao] = useState('')
-    const [etapa, setEtapa] = useState()
+    const [etapa, setEtapa] = useState(props.location.state?.etapaId || null)
     const [etapas,setEtapas] = useState([])
-    const [processo,setProcesso] = useState()
+    const [processo,setProcesso] = useState(props.location.state?.processoId || null)
     const [processos,setProcessos] = useState([])
     const [mpNomes , setMpNome] = useState([])
 
     let unidade = ""
 
     const saveOcp = () => {
-        ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro}).then((res) => responseHandler(res,props,"Ordem de Correcao"))
-    }
+        if(analise){
+            ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro ,analiseId : analise.id}).then((res) => responseHandler(res,props,"OrdemDeCorrecao"))
+        }
+            ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro,analiseId: null}).then((res) => responseHandler(res,props,"OrdemDeCorrecao"))
+        }
 
     useEffect(() => {
-      ScqApi.ListaProcessos().then(res => setProcessos(res))
-
+        ScqApi.ListaProcessos().then(res => setProcessos(res))
     }, [])
 
     useEffect(() => {
-        processo && ScqApi.ListaEtapasByProcesso(processo).then(res => setEtapas(res))
-        
+        processo  && ScqApi.ListaEtapasByProcesso(processo).then(res => setEtapas(res))
       }, [processo])
 
     useEffect(() => {
-       etapa && ScqApi.ListaParametrosByEtapa(etapa).then(res => setParametros(res))
+        etapa && ScqApi.ListaParametrosByEtapa(etapa).then(res => setParametros(res))
     }, [etapa])
 
    
@@ -85,13 +85,13 @@ const CadastroDeOcpLivre = (props) => {
                     
                     <Form.Row>
                             <Col>
-                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={setProcesso} selection={processo?.id}></GenericSelect>
+                                <GenericSelect selection={processo} displayType={"nome"} returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={setProcesso}></GenericSelect>
                             </Col>
                             <Col>
-                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={setEtapa} selection={etapa?.id} ></GenericSelect>
+                                <GenericSelect selection={etapa} displayType={"nome"} returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={setEtapa}  ></GenericSelect>
                             </Col>
                             <Col>
-                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"} ops={parametros} onChange={setParametro} selection={parametro?.id} ></GenericSelect>
+                                <GenericSelect selection={parametro} displayType={"nome"} returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"} ops={parametros} onChange={setParametro} ></GenericSelect>
                             </Col>
                         </Form.Row>
                         <AdicaoFree setMpQtd={saveMpQtd} removeMpQtd={removeMpQtd} mpNomes={mpNomes} mpQtds={mpQtds} mpsOptions={materiasPrima}></AdicaoFree>

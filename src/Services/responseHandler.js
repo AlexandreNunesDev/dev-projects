@@ -1,7 +1,7 @@
-import { BsArrowClockwise, BsReverseBackspaceReverse } from 'react-icons/bs';
-import {capitalize,subId} from '../Services/stringUtils'
 
-export const responseHandler = (response, props, type) => {
+import {capitalize} from '../Services/stringUtils'
+
+export const responseHandler = (response, props, type, callBack,history) => {
     const { toastManager } = props;
     
     if(response.error){
@@ -11,10 +11,13 @@ export const responseHandler = (response, props, type) => {
             toastManager.add(`${(capitalize(transformField(erro.field)))} : ${erro.error}`, {
                 appearance: 'error', autoDismiss: true, onDismiss : () => window.location.reload()
               })});
+              return false;
     } else {
+         
         toastManager.add(buildMsg(type,response), {
-            appearance: 'success', autoDismiss: true , onDismiss : () => window.location.reload()
+            appearance: 'success', autoDismiss: true , onDismiss : () =>callBack ? callBack(history) : window.location.reload()
           })
+          return true
     }
 }
 
@@ -27,28 +30,28 @@ const transformField = field => {
 
     let retorno
 
-    if(field=="mpQtds") {
+    if(field==="mpQtds") {
         retorno = "Adicoes"
     }
-    if(field=="processoId") {
+    if(field==="processoId") {
         retorno = "Processo"
     }
-    if(field=="etapaId") {
+    if(field==="etapaId") {
         retorno = "Etapa"
     }
-    if(field=="pMax") {
+    if(field==="pMax") {
         retorno = "Máximo Especificado"
     }
-    if(field=="pMin") {
+    if(field==="pMin") {
         retorno = "Mínimo Especificado"
     }
-    if(field=="pMaxT") {
+    if(field==="pMaxT") {
         retorno = "Máximo Trabalho"
     }
-    if(field=="pMinT") {
+    if(field==="pMinT") {
         retorno = "Mínimo Trabalho"
     }
-    if(retorno == null) {
+    if(retorno === null) {
         return field
     } else {
         return retorno
@@ -69,9 +72,11 @@ const buildMsg = (type,response,msgType) => {
         case "MateriaPrima" :
             return `${type} ${response.nome} criado com sucesso`
         case "OrdemDeCorrecao" :
-            return `${type} da ${response.etapa.nome} criado com sucesso`
+            return `${type} criado com sucesso`
         case "OrdemDeManutencao" :
             return `${type} da ${response.nome} criado com sucesso`
+        case "DeleteAnalise" :
+            return `Analise deletada com sucesso`
         
     }
 }

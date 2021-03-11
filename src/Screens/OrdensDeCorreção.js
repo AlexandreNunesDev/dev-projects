@@ -16,7 +16,8 @@ const TableHead = () => {
         <thead >
             <tr>
                 <th style={{ textAlign: "center" }}>Id</th>
-                <th style={{ textAlign: "center" }}>Download</th>
+                <th colSpan={2} style={{ textAlign: "center" }}>Açoes</th>
+                
                 <th style={{ textAlign: "center" }}>Processo</th>
                 <th style={{ textAlign: "center" }}>Etapa</th>
                 <th style={{ textAlign: "center" }}>Parametro</th>
@@ -42,7 +43,8 @@ const TableBody = (props) => {
 
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
                 <th className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>
-                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.linhaNome}</td>
+                <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>
+                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>
@@ -50,7 +52,7 @@ const TableBody = (props) => {
                 <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>
                 <td><Button disabled={ocp.statusCorrecao} style={{ backgroundColor: ocp.statusCorrecao ? '#42f59e' : 'GRAY', borderColor: ocp.statusCorrecao ? '#42f59e' : 'GRAY', alignmentBaseline: "center" }} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button></td>
                 <td><Button disabled={!ocp.analiseStatus} style={{ backgroundColor: ocp.analiseStatus ? 'GRAY' : '#42f59e', borderColor: ocp.analiseStatus ? 'GRAY' : '#42f59e' }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button></td>
-                <td><Button style={{ backgroundColor: ocp.ocpStatus ? '#42f59e' : 'GRAY', borderColor: ocp.ocpStatus ? '#42f59e' : 'GRAY' }} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button></td>
+                <td><Button disabled={ocp.statusOCP} style={{ backgroundColor: ocp.statusOCP ? '#42f59e' : 'GRAY'  , borderColor: ocp.statusOCP ? '#42f59e' : 'GRAY'  }} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button></td>
             </tr>
         )
     })
@@ -121,9 +123,6 @@ class OrdensDeCorreção extends Component {
 
 
     correcaoConfirm = (isOcp, ocpId, isAdicao) => {
-
-
-
         if (isOcp) {
             if (isAdicao) {
                 ScqApi.AdicaoCorrigir(ocpId).then(() => window.location.reload())
@@ -148,6 +147,15 @@ class OrdensDeCorreção extends Component {
 
     aprovarOcp = () => {
         ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(this.setState({ show: false }, () => window.location.reload()))
+    }
+
+    editOcp = (ocp) => {
+        if(ocp.isAdicao){
+            this.props.history.push("/EditarOcpAdicao", ocp)
+        } else {
+            this.props.history.push("/EditarOcpAcao", ocp)
+        }
+      
     }
 
 
@@ -191,7 +199,7 @@ class OrdensDeCorreção extends Component {
                 <Table>
                     <TableHead></TableHead>
             
-                    <TableBody openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
+                    <TableBody  editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
                    
                 </Table>
 

@@ -54,7 +54,7 @@ const TableBody = props => {
                 </td>
                 <td className="align-middle" >
 
-                    <Form.Check.Input checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
+                    <Form.Check.Input checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca.id )} type="checkbox" />
                     <Form.Check.Label>Trocar ?</Form.Check.Label>
 
 
@@ -100,13 +100,13 @@ class Omp extends React.Component {
 
 
                 this.setState((prevState) => ({
-                    trocasChoosedId: [...prevState.trocasChoosedId, ...[clickeTroca.id]]
-                }));
+                    trocasChoosedId: [...prevState.trocasChoosedId, ...[clickeTroca]]
+                }), () => console.log(this.state.trocasChoosedId));
     
             } else {
     
                 const removedArray = this.state.trocasChoosedId.filter((value) => {
-                    return Number(value) !== Number(clickeTroca.id)
+                    return Number(value) !== Number(clickeTroca)
                 })
                 this.setState({
                     trocasChoosedId: removedArray
@@ -178,6 +178,9 @@ class Omp extends React.Component {
     }
 
     markAll = () => {
+        this.setState({
+            trocasChoosedId : []
+        })
         this.state.trocas.forEach(troca => {
             this.addTrocaIdToChoosedIdList(true, troca.id)
         })
