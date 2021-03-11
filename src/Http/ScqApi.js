@@ -3,9 +3,9 @@ import axios from "axios"
 
 import { getToken, logout } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
-//"https://scqapi.com/"
+//"http://localhost:8080/
 const http = axios.create({
-     baseURL: "http://localhost:8080/"
+     baseURL:  "https://scqapi.com/"
     
 })
 
