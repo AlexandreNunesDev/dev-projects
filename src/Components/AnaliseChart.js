@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 
 import { LineChart, XAxis, CartesianGrid, Line, YAxis,ReferenceLine ,Tooltip} from 'recharts'
@@ -35,8 +36,8 @@ const AnaliseChart = (props) => {
       let i = 0;
       for (const resultado of Object.entries(props.data.resultados)) {
           let dataTime = resultado[0].split("T")
-          
-          let data = {"id" : props.data.analisesId[i], "Analista" : props.data.analistas[i],"Data" : `${dataTime[0]} - ${dataTime[1]}`, "Resultado" : resultado[1], "unidade" : props.data.unidade,
+          let dataFormatada = moment(dataTime[0]).format("DD-MM-yy")
+          let data = {"id" : props.data.analisesId[i], "Analista" : props.data.analistas[i],"Data" : `${dataFormatada} - ${dataTime[1]}`, "Resultado" : resultado[1], "unidade" : props.data.unidade,
            "defaultData" : resultado[0], "processoId": props.data.processoId, "etapaId": props.data.etapaId,
            "parametroId": props.data.parametroId }
           resultados.push(data)
