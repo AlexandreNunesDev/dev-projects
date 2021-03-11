@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from "../Http/ScqApi";
 import AnaliseChart from "../Components/AnaliseChart";
 import { withMenuBar } from "../Hocs/withMenuBar";
+import { formatIsoDate } from "../Services/stringUtils";
 
 
 class IndicadorDeAnalise extends Component {
@@ -134,7 +135,7 @@ class IndicadorDeAnalise extends Component {
                                     <Form.Control
                                         type="datetime-local"
                                         defaultValue={this.state.dataInicial}
-                                        onChange={event => { this.setState({ dataInicial: event.target.value },() => console.log(this.state.dataInicial));  }}>
+                                        onChange={event => { this.setState({ dataInicial: formatIsoDate(event.target.value) },() => console.log(this.state.dataInicial));  }}>
 
                                     </Form.Control>
                                 </Form.Group>
@@ -143,7 +144,7 @@ class IndicadorDeAnalise extends Component {
                                     <Form.Control
                                         type="datetime-local"
                                         defaultValue={this.state.dataFinal}
-                                        onChange={event => { this.setState({ dataFinal: event.target.value },() => console.log(this.state.dataFinal));  }}>
+                                        onChange={event => { this.setState({ dataFinal: formatIsoDate(event.target.value) },() => console.log(this.state.dataFinal));  }}>
 
                                     </Form.Control>
                                 </Form.Group>

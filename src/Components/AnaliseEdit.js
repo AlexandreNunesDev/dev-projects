@@ -1,9 +1,11 @@
+import moment from 'moment';
 import React, { useState } from 'react'
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { useHistory, withRouter } from 'react-router-dom';
 import { withToastManager } from 'react-toast-notifications';
 import ScqApi from '../Http/ScqApi';
 import { responseHandler } from '../Services/responseHandler';
+import { formatIsoDate } from '../Services/stringUtils';
 import CredentialConfirm from './CredentialConfirm';
 
 
@@ -48,7 +50,10 @@ const AnaliseEdit = (props) => {
                 <Form.Control
                   type="datetime-local"
                   defaultValue={props?.analise?.defaultData}
-                  onChange={event => { setDataPlanejada(event.target.value); console.log(dataPlanejada) }}>
+                  onChange={event => {
+                    let data = new Date(event.target.value);
+                    setDataPlanejada(formatIsoDate)
+                   }}>
                 </Form.Control>
                 </Col>
             </Row>
