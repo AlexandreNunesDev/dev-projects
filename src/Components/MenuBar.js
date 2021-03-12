@@ -1,10 +1,11 @@
 import React from 'react'
-import { Navbar, Nav, NavDropdown, Badge, Button, Dropdown, Card, NavItem, Image, ButtonGroup, Col, Form } from 'react-bootstrap';
+import {Modal, Navbar, Nav, NavDropdown, Badge, Button, Dropdown, Card, NavItem, Image, ButtonGroup, Col, Form, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
 import scqlogo from '../logoscq.png';
 import { withToastManager } from 'react-toast-notifications';
 import { getUserName, getUserRole, isAuthenticated, getToken, isTokenExpired } from '../Services/auth';
+
 
 
 
@@ -15,7 +16,8 @@ class MenuBar extends React.Component {
     super(props)
     this.state = {
       notifications: [],
-      user: {}
+      user: {},
+      show : false
     }
   }
 
@@ -95,16 +97,23 @@ class MenuBar extends React.Component {
             </Navbar.Collapse>
             <NavItem style={{ marginRight: 20 }}>Usuario: {getUserName()}</NavItem>
   
-            <Dropdown >
+        
 
-              <Dropdown.Toggle>Notificacoes <Badge variant="light">{this.state.notifications.length}</Badge></Dropdown.Toggle>
-              <Dropdown.Menu style={{
-    right: 0,
-    left: "auto"
-}} >                 {this.state.notifications.map((notificacao) => {
+              <Button onClick={() => this.setState((prevState, props) => ({
+  show : true
+}))}  >Notificacoes <Badge variant="light">{this.state.notifications.length}</Badge></Button>
+                <Modal show={this.state.show} onHide={() => this.setState({show : false})}>
+                  <Modal.Body>
+
+                  
+
+               
+                 {this.state.notifications.map((notificacao) => {
                   let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
                   return (
-                    <Dropdown.Item size="sm" key={notificacao.id}>
+                   <Row>
+
+                 
                       <Card  >
                         <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
                         <Card.Body>
@@ -113,14 +122,15 @@ class MenuBar extends React.Component {
                           </Card.Text>
                         </Card.Body>
                       </Card>
-                    </Dropdown.Item>
+                      </Row>
+  
                   )
                 })}
+                </Modal.Body>
+                 </Modal>
 
-              </Dropdown.Menu>
 
-            </Dropdown>
-        
+
 
           </Navbar>
 
