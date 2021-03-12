@@ -75,6 +75,8 @@ const buildMsg = (type,response,msgType) => {
             return `${type} criado com sucesso`
         case "OrdemDeManutencao" :
             return `${type} da ${response.nome} criado com sucesso`
+        case "Analise" : 
+            return `${type} ${response.id} criada com sucesso`
         case "DeleteAnalise" :
             return `Analise deletada com sucesso`
         

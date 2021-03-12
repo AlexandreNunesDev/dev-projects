@@ -8,6 +8,7 @@ import { withToastManager } from 'react-toast-notifications';
 import TitulaForm from './TitulaForm';
 import {capitalize,subId} from '../Services/stringUtils'
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { responseHandler } from '../Services/responseHandler';
 
 
 
@@ -167,7 +168,7 @@ class RegistroDeAnalise extends React.Component {
                   })});
         } else {
             toastManager.add(`Analise processo ${response.id} criada`, {
-                appearance: 'success', autoDismiss: true
+                appearance: 'success', autoDismiss: true 
               })
         }
 
@@ -187,7 +188,7 @@ class RegistroDeAnalise extends React.Component {
             const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: null }
            
                 ScqApi.CriarAnalise(analise).then(res => {
-                    this.responseHandler(res)
+                    responseHandler(res,this.props,"Analise")
                 })
                
 
