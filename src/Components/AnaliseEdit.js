@@ -52,7 +52,7 @@ const AnaliseEdit = (props) => {
                   defaultValue={props?.analise?.defaultData}
                   onChange={event => {
                     let data = new Date(event.target.value);
-                    setDataPlanejada(formatIsoDate)
+                    setDataPlanejada(formatIsoDate(data))
                    }}>
                 </Form.Control>
                 </Col>
@@ -71,7 +71,7 @@ const AnaliseEdit = (props) => {
           <Button onClick={() => props.history.push("/CadastroOcpAdicaoLivre",props.analise)}>
             Gerar Ocp
           </Button>
-          <Button onClick={() => ScqApi.UpdataAnaliseData(props.analise.id,dataPlanejada)}>
+          <Button onClick={() => {ScqApi.UpdataAnaliseData(props.analise.id,dataPlanejada);props.handleClose()}}>
             Salvar
             </Button>
         </Modal.Footer>

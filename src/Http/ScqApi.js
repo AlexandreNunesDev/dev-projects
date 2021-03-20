@@ -3,9 +3,9 @@ import axios from "axios"
 
 import { getToken, logout } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
-//""http://localhost:8080/""
+// "http://localhost:8080/" 
 const http = axios.create({
-     baseURL:  "https://scqapi.com/"
+     baseURL: "https://scqapi.com/"
     
 })
 
@@ -258,14 +258,6 @@ const ScqApi = {
     },
     FindMateriaPrimaByEtapaId: (etapaId) => {
         return http.get("materiaPrimaByEtapa/" + etapaId)
-
-    },
-    DeleteAnalise: (analiseId) => {
-        return http.delete("analise/" + analiseId)
-
-    },
-    DeleteOcp: (ocpId) => {
-        return http.delete("ocp/" + ocpId)
 
     },
     DeleteMateriaPrima: (materiaPrimaId) => {
