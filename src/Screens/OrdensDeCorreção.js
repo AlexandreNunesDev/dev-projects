@@ -8,6 +8,10 @@ import { withToastManager } from "react-toast-notifications";
 import { downloadOcp } from "../Services/documentsDownload";
 import { withMenuBar } from "../Hocs/withMenuBar";
 import GenericDropDown from "../Components/GenericDropDown";
+import { BsDot } from "react-icons/bs";
+
+
+
 
 
 const TableHead = () => {
@@ -24,11 +28,48 @@ const TableHead = () => {
                 <th style={{ textAlign: "center" }}>Faixa mínima</th>
                 <th style={{ textAlign: "center" }}>Faixa máxima</th>
                 <th style={{ textAlign: "center" }}>Resultado</th>
-                <th colSpan="3" style={{ textAlign: "center" }}>Status</th>
+                <th style={{ textAlign: "center" }}>Status</th>
             </tr>
         </thead>
 
     )
+}
+
+
+const buildStatusButton = (ocp,props) => {
+
+    if(!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
+        return <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={ocp.statusCorrecao} style={{alignmentBaseline: "center" }} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button></td>
+    } else if(ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
+        return <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.analiseStatus} style={{alignmentBaseline: "center"  }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button></td>
+    } else if (ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP){
+       return  <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={ocp.statusOCP} style={{alignmentBaseline: "center"}} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button></td>
+    } else {
+        return <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={true} style={{ backgroundColor: 'GRAY'  , borderColor: 'GRAY' , alignmentBaseline: "center" }}>Encerrada</Button></td>
+    }
+    
+}
+
+const buildAdicaoDetails = (adicoesDto) => {
+    return adicoesDto.map(adicao => {
+        
+        return(
+                  <Form.Row key={adicao.nomeMp}>
+                    <Form.Label style={{ textAlign: "center" }}><BsDot size={36} ></BsDot>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</Form.Label>
+                  </Form.Row>)
+           
+      });
+  }
+
+  const buildAcaoDetails = (ocp) => {
+
+        
+    return(
+              <Form.Row>
+                <Form.Label style={{ textAlign: "center" }}><BsDot size={36} ></BsDot>{`${ocp.acao} prazo ${ocp.prazo}`}</Form.Label>
+              </Form.Row>)
+       
+ 
 }
 
 const TableBody = (props) => {
@@ -42,17 +83,16 @@ const TableBody = (props) => {
             <tr key={ocp.id}>
 
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                <th className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>
+                <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>
                 <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
-                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
+                <td className="align-middle" style={{ textAlign: "center"}}>{ocp.etapaNome}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>
-                <td><Button disabled={ocp.statusCorrecao} style={{ backgroundColor: ocp.statusCorrecao ? '#42f59e' : 'GRAY', borderColor: ocp.statusCorrecao ? '#42f59e' : 'GRAY', alignmentBaseline: "center" }} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button></td>
-                <td><Button disabled={!ocp.analiseStatus} style={{ backgroundColor: ocp.analiseStatus ? 'GRAY' : '#42f59e', borderColor: ocp.analiseStatus ? 'GRAY' : '#42f59e' }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button></td>
-                <td><Button disabled={ocp.statusOCP} style={{ backgroundColor: ocp.statusOCP ? '#42f59e' : 'GRAY'  , borderColor: ocp.statusOCP ? '#42f59e' : 'GRAY'  }} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button></td>
+                <td className="align-middle" >{ocp.adicoesDto.length == 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
+                {buildStatusButton(ocp,props)}
             </tr>
         )
     })
@@ -159,12 +199,30 @@ class OrdensDeCorreção extends Component {
     }
 
 
+    
+
+    adjustTableHeight = () => {
+       var table =  document.getElementById("ocpTable")
+       var rows = table.rows;
+       var mostHeight = 0;
+       for (var i = 0; i < rows.length; i++) {
+        var rowTextHeight = rows[i].style.height
+        if(rowTextHeight > mostHeight){
+            mostHeight = rowTextHeight;
+        } 
+    }
+    return mostHeight;
+    }
+
+
 
 
 
 
 
     render() {
+
+        
         return (
             <>
                 <Container >
@@ -196,10 +254,10 @@ class OrdensDeCorreção extends Component {
                     </Row>
                 </Container>
 
-                <Table>
+                <Table id={"ocpTable"}>
                     <TableHead></TableHead>
             
-                    <TableBody  editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
+                    <TableBody   editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
                    
                 </Table>
 
