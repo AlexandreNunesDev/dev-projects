@@ -5,9 +5,11 @@ import { LineChart, XAxis, CartesianGrid, Line, YAxis,ReferenceLine ,Tooltip} fr
 import AnaliseEdit from './AnaliseEdit';
 
 const CustomTooltip = ({ active, payload }) => {
-    const analise = payload[0]?.payload
+    
+    const analise = payload == null ? null : payload[0]?.payload
    
-    if (active) {
+
+    if (active && payload!= null) {
       return (
         <div  style={{backgroundColor : "white" ,opacity : 0.65 }} className="custom-tooltip">
           <p className="label">{`Id: ${analise.id}`}</p>
