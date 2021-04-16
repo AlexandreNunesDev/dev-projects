@@ -19,12 +19,12 @@ class IndicadorDeAnalise extends Component {
             dataFinal: null,
             processos: [],
             etapas: [],
-            processoId: '',
-            etapaId: '',
-            parametroId: '',
-            analiseChartData: [],
-            fullProcessoAnaliseChartData: [],
-            fullEtapaAnaliseChartData: [],
+            processoId: null,
+            etapaId: null,
+            parametroId: null,
+            analiseChartData: null,
+            fullProcessoAnaliseChartData: null,
+            fullEtapaAnaliseChartData: null,
             personalizarIntervalo: false
 
         }
@@ -35,6 +35,7 @@ class IndicadorDeAnalise extends Component {
         ScqApi.ListaProcessos().then(res => {
             this.setState({
                 processos: res
+
 
             })
         })
@@ -117,9 +118,11 @@ class IndicadorDeAnalise extends Component {
                             <Row className="d-flex" >
                                 <Col>
                                     <GenericSelect default={"Selecione um Processo"} returnType={"id"} title={"Processo"} showType={"nome"} ops={this.state.processos} onChange={(idProcesso) => {
+                                        
                                         ScqApi.ListaEtapasByProcesso(idProcesso).then(res => {
                                             this.setState({
-                                                etapas: res
+                                                etapas: res,
+                                                processoId : idProcesso
                                             })
                                         })
                                     }}></GenericSelect>
@@ -128,7 +131,8 @@ class IndicadorDeAnalise extends Component {
                                     <GenericSelect default={"Selecione uma Etapa"} returnType={"id"} title={"Etapa"} ops={this.state.etapas} onChange={(idEtapa) => {
                                         ScqApi.ListaParametrosByEtapa(idEtapa).then(res => {
                                             this.setState({
-                                                parametros: res
+                                                parametros: res,
+                                                etapaId : idEtapa
                                             })
                                         })
                                     }}></GenericSelect> 
