@@ -51,6 +51,17 @@ const ScqApi = {
         return http.get("analise/" + dataInicial + "/" + dataFinal + "/" + parametroId)
 
     },
+
+    LoadFullProcessoChart: (dataInicial, dataFinal, parametroId) => {
+        return http.get("fullProcessoAnalises/" + dataInicial + "/" + dataFinal + "/" + parametroId)
+
+    },
+    LoadFullEtapaChart: (dataInicial, dataFinal, parametroId) => {
+        return http.get("fullEtapaAnalises/" + dataInicial + "/" + dataFinal + "/" + parametroId)
+
+    },
+
+   
     ListaParametros: () => {
         return http.get("parametros")
     },

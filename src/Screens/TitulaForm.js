@@ -1,5 +1,6 @@
 import ScqApi from "../Http/ScqApi"
 import React from 'react'
+import NumberFormat from "react-number-format"
 
 const { Form, Button, Col } = require("react-bootstrap")
 
@@ -41,7 +42,7 @@ class TitulaForm extends React.Component {
         return (
             <Form.Row>
                 <Form.Group as={Col} >
-                    <Form.Control type="text" ref={this.refText} onChange={(event) => this.setState({viragem : event.target.value})} />
+                    <Form.Control type="text" ref={this.refText} placeholder={"0.00"}  allowedDecimalSeparators={["."]} onChange={(event) => this.setState({viragem : event.target.value})} />
                 </Form.Group>
                 <Form.Group as={Col} >
                     <Button variant="primary" hidden={this.state?.isHidden} onClick={() => { this.calcular()}}>Calcular</Button>

@@ -14,8 +14,8 @@ import { responseHandler } from '../Services/responseHandler';
 
 const valueForm = (props) => {
     return (
-        <Form.Group as={Col} >
-            <Form.Control type="text" placeholder={"Valor"} onChange={(event) => props.onChange(event.target.value)} />
+        <Form.Group as={Col}>
+            <Form.Control type="text"  placeholder={"0.00"} allowedDecimalSeparators={["."]}  onChange={(event) => props.onChange(event.target.value)} />
         </Form.Group>
     )
 }

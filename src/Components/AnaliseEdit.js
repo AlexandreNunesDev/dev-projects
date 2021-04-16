@@ -1,10 +1,7 @@
-import moment from 'moment';
 import React, { useState } from 'react'
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { useHistory, withRouter } from 'react-router-dom';
-import { withToastManager } from 'react-toast-notifications';
 import ScqApi from '../Http/ScqApi';
-import { responseHandler } from '../Services/responseHandler';
 import { formatIsoDate } from '../Services/stringUtils';
 import CredentialConfirm from './CredentialConfirm';
 

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import { Form, Container, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useHistory, withRouter } from 'react-router-dom';
+import {  withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 
 import { withMenuBar } from '../Hocs/withMenuBar';

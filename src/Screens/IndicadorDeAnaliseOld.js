@@ -12,8 +12,8 @@ class IndicadorDeAnalise extends Component {
 
     constructor(props) {
         super(props)
-        this.containerChartRef = React.createRef()
-
+         this.containerChartRef = React.createRef()
+        
         this.state = {
             dataInicial: null,
             dataFinal: null,
@@ -22,10 +22,8 @@ class IndicadorDeAnalise extends Component {
             processoId: '',
             etapaId: '',
             parametroId: '',
-            analiseChartData: [],
-            fullProcessoAnaliseChartData: [],
-            fullEtapaAnaliseChartData: [],
-            personalizarIntervalo: false
+            analiseChartData : null,
+            personalizarIntervalo : false
 
         }
 
@@ -40,77 +38,45 @@ class IndicadorDeAnalise extends Component {
         })
     }
 
-
-    getFullEtapaAnaliseChart = () => {
-        return this.state.fullEtapaAnaliseChartData.map(etapaChart => <AnaliseChart containerRef={this.containerChartRef} data={etapaChart}></AnaliseChart> )
-    }
-
-    getFullProcessoAnaliseChart = () => {
-        return this.state.fullProcessoAnaliseChartData.map(processoChart => <AnaliseChart containerRef={this.containerChartRef} data={processoChart}></AnaliseChart> )
-    }
-
     formatDate = (date) => {
         return new Date(date.toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0]
     }
 
     loadChart = () => {
-        if (this.state.processoId != null && this.state.etapaId == null && this.state.parametroId == null) {
-            ScqApi.LoadFullProcessoChart(this.state.dataInicial, this.state.dataFinal, this.state.processoId).then(res => {
-                this.setState({
-                    fullProcessoAnaliseChartData: res
-                })
-
-            })
-        }
-
-        if (this.state.processoId != null && this.state.etapaId != null && this.state.parametroId == null) {
-            ScqApi.LoadFullEtapaChart(this.state.dataInicial, this.state.dataFinal, this.state.etapaId).then(res => {
-                this.setState({
-                    fullEtapaAnaliseChartData: res
-                })
-
-            })
-        }
-
-        if (this.state.processoId != null && this.state.etapaId != null && this.state.parametroId != null) {
-            ScqApi.LoadAnaliseChart(this.state.dataInicial, this.state.dataFinal, this.state.parametroId).then(res => {
-                this.setState({
-                    analiseChartData: res
-                })
-
-            })
-        }
-
-
-
+        ScqApi.LoadAnaliseChart(this.state.dataInicial,this.state.dataFinal,this.state.parametroId).then(res => {
+         this.setState({
+             analiseChartData : res
+         })
+          
+        })
     }
 
     loadInterval = (intervalType) => {
         let dataAtual = new Date().getTime()
-
+    
         switch (intervalType) {
-
-            case 'semanal': this.getLastDate(86400000 * 7, dataAtual)
+           
+            case 'semanal': this.getLastDate(86400000*7,dataAtual)
                 break;
-            case 'mensal': this.getLastDate(86400000 * 30, dataAtual)
+            case 'mensal' : this.getLastDate(86400000*30,dataAtual)
                 break;
-            case 'trimestral': this.getLastDate(86400000 * 90, dataAtual)
+            case 'trimestral' : this.getLastDate(86400000*90,dataAtual)
                 break;
-            case 'anual': this.getLastDate(86400000 * 365, dataAtual)
+            case 'anual' : this.getLastDate(86400000*365,dataAtual)
                 break;
-            default: return 'nada foi selecionado';
-
+             default : return 'nada foi selecionado';
+              
         }
     }
 
-    getLastDate = (time, timeAtual) => {
-        this.setState({ dataInicial: this.formatDate(new Date(timeAtual - time)), dataFinal: this.formatDate(new Date()) }, () => console.log(this.state.dataInicial, this.state.dataFinal))
+    getLastDate = (time,timeAtual) =>{
+        this.setState({dataInicial : this.formatDate(new Date(timeAtual-time)), dataFinal : this.formatDate(new Date())}, () => console.log(this.state.dataInicial, this.state.dataFinal))
     }
 
     render() {
         return (
             <Fragment>
-
+          
                 <body>
                     <Container style={{ marginTop: 20 }}>
                         <Form>
@@ -131,7 +97,7 @@ class IndicadorDeAnalise extends Component {
                                                 parametros: res
                                             })
                                         })
-                                    }}></GenericSelect> 
+                                    }}></GenericSelect>
                                 </Col>
                                 <Col>
                                     <GenericSelect returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"} ops={this.state.parametros} onChange={(parametroId) => this.setState({ parametroId: parametroId })} selection={this.state.parametro?.id} ></GenericSelect>
@@ -141,35 +107,35 @@ class IndicadorDeAnalise extends Component {
 
                             </Row>
                             <Form.Row>
-
+                              
                                 <Col>
-                                    <Button style={{ backgroundColor: this.state.hightLight === 2 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("semanal"); this.setState({ hightLight: 2 }) }}>7 dias</Button>
+                                    <Button style={{backgroundColor : this.state.hightLight === 2 ? "BLUE" : "GRAY"}} onClick={() => {this.loadInterval("semanal"); this.setState({hightLight : 2})}}>7 dias</Button>
                                 </Col>
                                 <Col>
-                                    <Button style={{ backgroundColor: this.state.hightLight === 3 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("mensal"); this.setState({ hightLight: 3 }) }}> 30 dias</Button>
+                                    <Button style={{backgroundColor : this.state.hightLight === 3 ? "BLUE" : "GRAY"}} onClick={() => {this.loadInterval("mensal"); this.setState({hightLight : 3})}}> 30 dias</Button>
                                 </Col>
                                 <Col>
-                                    <Button style={{ backgroundColor: this.state.hightLight === 4 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("trimestral"); this.setState({ hightLight: 4 }) }}>90 dias</Button>
+                                    <Button style={{backgroundColor : this.state.hightLight === 4 ? "BLUE" : "GRAY"}} onClick={() => {this.loadInterval("trimestral"); this.setState({hightLight : 4})}}>90 dias</Button>
                                 </Col>
                                 <Col>
-                                    <Button style={{ backgroundColor: this.state.hightLight === 5 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("anual"); this.setState({ hightLight: 5 }) }}>Anual</Button>
+                                    <Button style={{backgroundColor : this.state.hightLight === 5 ? "BLUE" : "GRAY"}} onClick={() =>{ this.loadInterval("anual"); this.setState({hightLight : 5})}}>Anual</Button>
                                 </Col>
                                 <Col>
-                                    <Form.Group style={{ marginTop: 5 }}>
-                                        <Form.Check.Input type="checkbox" onChange={(event) => this.setState({ personalizarIntervalo: event.target.checked }, () => console.log(this.state.personalizarIntervalo))} />
-                                        <Form.Check.Label>Intervalo Personalizado</Form.Check.Label>
-                                    </Form.Group>
-
+                                <Form.Group style={{marginTop : 5}}>
+                                    <Form.Check.Input  type="checkbox" onChange={(event) => this.setState({personalizarIntervalo : event.target.checked },() => console.log(this.state.personalizarIntervalo))} />
+                                    <Form.Check.Label>Intervalo Personalizado</Form.Check.Label>    
+                                </Form.Group>
+                                   
                                 </Col>
                             </Form.Row>
-
-                            <Form.Row hidden={!this.state.personalizarIntervalo} style={{ marginTop: 10 }}>
+                            
+                            <Form.Row hidden={!this.state.personalizarIntervalo} style={{marginTop : 10}}>
                                 <Form.Group as={Col}>
                                     <Form.Label>Data Inicial</Form.Label>
                                     <Form.Control
                                         type="datetime-local"
                                         defaultValue={this.state.dataInicial}
-                                        onChange={event => { this.setState({ dataInicial: formatIsoDate(event.target.value) }, () => console.log(this.state.dataInicial)); }}>
+                                        onChange={event => { this.setState({ dataInicial: formatIsoDate(event.target.value) },() => console.log(this.state.dataInicial));  }}>
 
                                     </Form.Control>
                                 </Form.Group>
@@ -178,7 +144,7 @@ class IndicadorDeAnalise extends Component {
                                     <Form.Control
                                         type="datetime-local"
                                         defaultValue={this.state.dataFinal}
-                                        onChange={event => { this.setState({ dataFinal: formatIsoDate(event.target.value) }, () => console.log(this.state.dataFinal)); }}>
+                                        onChange={event => { this.setState({ dataFinal: formatIsoDate(event.target.value) },() => console.log(this.state.dataFinal));  }}>
 
                                     </Form.Control>
                                 </Form.Group>
@@ -190,11 +156,12 @@ class IndicadorDeAnalise extends Component {
                         </Form>
                     </Container>
                     <Container ref={this.containerChartRef}>
-                        {this.state.fullProcessoAnaliseChartData && this.getFullProcessoAnaliseChart()}
-                        {this.state.fullEtapaAnaliseChartData && this.getFullEtapaAnaliseChart()}
-                        {this.state.analiseChartData && <AnaliseChart containerRef={this.containerChartRef} data={this.state.analiseChartData}></AnaliseChart>}
+                        
+                         {this.state.analiseChartData && <AnaliseChart containerRef={this.containerChartRef} data={this.state.analiseChartData}></AnaliseChart>}
+                   
+                
                     </Container>
-
+                  
                 </body>
             </Fragment>
         )

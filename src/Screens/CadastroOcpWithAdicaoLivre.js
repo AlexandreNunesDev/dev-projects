@@ -13,7 +13,7 @@ import { withToastManager } from 'react-toast-notifications';
 
 
 const CadastroDeOcpLivre = (props) => {
-    let history = useHistory();
+  
     let analise = props.location.state
     const [parametros, setParametros] = useState([])
     const [parametro, setParametro] = useState(props.location.state?.parametroId || null)
