@@ -23,8 +23,11 @@ const TableHead = (props) => {
                 {!isMobile  && <th colSpan={2} style={{ textAlign: "center" }}>Açoes</th>}
                 
                 <th style={{ textAlign: "center" }}>Processo</th>
-                <th style={{ textAlign: "center" }}>Etapa</th>
-                <th style={{ textAlign: "center" }}>Parametro</th>
+                {
+                    !isMobile ? <> <th style={{ textAlign: "center" }}>Etapa</th>
+                    <th style={{ textAlign: "center" }}>Parametro</th>  </> :   <th style={{ textAlign: "center" }}>Etapa/Param.</th> 
+                }
+               
                 {!isMobile &&  <th style={{ textAlign: "center" }}>Faixa mínima</th>}
                 {!isMobile && <th style={{ textAlign: "center" }}>Faixa máxima</th>}
                 {!isMobile && <th style={{ textAlign: "center" }}>Resultado</th>}
