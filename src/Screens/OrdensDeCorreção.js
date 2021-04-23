@@ -87,8 +87,12 @@ const TableBody = (props) => {
                 {!isMobile  && <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
                 {!isMobile  && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>}
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
-                <td className="align-middle" style={{ textAlign: "center"}}>{ocp.etapaNome}</td>
-                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td>
+                {
+                    !isMobile ? <> <td className="align-middle" style={{ textAlign: "center"}}>{ocp.etapaNome}</td>
+                    <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td> </>
+                    : <td className="align-middle" style={{ textAlign: "center"}}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>
+                }
+               
                 {!isMobile  && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
                 {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
                 {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
