@@ -9,7 +9,7 @@ import { downloadOcp } from "../Services/documentsDownload";
 import { withMenuBar } from "../Hocs/withMenuBar";
 import GenericDropDown from "../Components/GenericDropDown";
 import { BsDot } from "react-icons/bs";
-
+import {isMobile} from 'react-device-detect';
 
 
 
@@ -20,14 +20,14 @@ const TableHead = (props) => {
         <thead >
             <tr>
                 <th style={{ textAlign: "center" }}>Id</th>
-                {!props.isMobile && <th colSpan={2} style={{ textAlign: "center" }}>Açoes</th>}
+                {!isMobile  && <th colSpan={2} style={{ textAlign: "center" }}>Açoes</th>}
                 
                 <th style={{ textAlign: "center" }}>Processo</th>
                 <th style={{ textAlign: "center" }}>Etapa</th>
                 <th style={{ textAlign: "center" }}>Parametro</th>
-                {!props.isMobile &&  <th style={{ textAlign: "center" }}>Faixa mínima</th>}
-                {!props.isMobile && <th style={{ textAlign: "center" }}>Faixa máxima</th>}
-                {!props.isMobile && <th style={{ textAlign: "center" }}>Resultado</th>}
+                {!isMobile &&  <th style={{ textAlign: "center" }}>Faixa mínima</th>}
+                {!isMobile && <th style={{ textAlign: "center" }}>Faixa máxima</th>}
+                {!isMobile && <th style={{ textAlign: "center" }}>Resultado</th>}
                 <th style={{ textAlign: "center" }}>Correção</th>
                 <th style={{ textAlign: "center" }}>Status</th>
             </tr>
@@ -84,14 +84,14 @@ const TableBody = (props) => {
             <tr key={ocp.id}>
 
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                {!props.isMobile && <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
-                {!props.isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>}
+                {!isMobile  && <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
+                {!isMobile  && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>}
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                 <td className="align-middle" style={{ textAlign: "center"}}>{ocp.etapaNome}</td>
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td>
-                {!props.isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
-                {!props.isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
-                {!props.isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
+                {!isMobile  && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
+                {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
+                {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
                 <td className="align-middle"  >{ocp.adicoesDto.length == 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
                 {buildStatusButton(ocp,props)}
             </tr>
@@ -118,7 +118,7 @@ class OrdensDeCorreção extends Component {
             toastManager: toastManager,
             show: false,
             details: '',
-            mobileWidht : 620
+          
         }
     }
 
@@ -126,9 +126,7 @@ class OrdensDeCorreção extends Component {
 
     componentDidMount() {
         this.lodadOcps()
-        window.addEventListener('resize' ,() => this.setState({
-            widht : window.innerWidth
-        }))
+      
     }
 
     lodadOcps = () => {
@@ -311,8 +309,8 @@ class OrdensDeCorreção extends Component {
                 </Container>
 
                 <Table id={"ocpTable"}>
-                    <TableHead  isMobile={this.state.widht < this.state.mobileWidht}></TableHead>
-                    <TableBody isMobile={this.state.widht < this.state.mobileWidht}  editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
+                    <TableHead ></TableHead>
+                    <TableBody  editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
                 </Table>
 
                 {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({ showCorrecaoConfirm: false })} show={this.state.showCorrecaoConfirm}  statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocp={this.state.ocpToConfirm} correcaoConfirm={(isOcp, ocpId) => this.correcaoConfirm(isOcp, ocpId, this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
