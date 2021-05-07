@@ -11,6 +11,7 @@ import GenericDropDown from "../Components/GenericDropDown";
 import { BsDot } from "react-icons/bs";
 import {isMobile} from 'react-device-detect';
 import { Fragment } from "react";
+import { Checkbox, FormGroup } from "@material-ui/core";
 
 
 
@@ -95,14 +96,19 @@ const TableBody = (props) => {
 
     let firstDateLineCounter = 0
     let firstDate = new Date(props.ocps[0]?.prazo)
+
+    //Pega a data damprimeira OCP da lista de OCPS enviadas pelo servidor
     let refDate = new Date(props.ocps[0]?.prazo)
 
     let ocpTd = props.ocps.map((ocp, index) => {
-     
-            let actualDate = new Date(ocp.prazo)
+
+        //Pega data da ocp da atual iteraçao do Map e compara com a data da primeira OCP da lista de OCPS
+        let actualDate = new Date(ocp.prazo)
 
         if(isSameDate(actualDate, refDate)) {
+
             isSameDate(actualDate, firstDate) && firstDateLineCounter++
+
             refDate = actualDate
             return (
                 
@@ -163,7 +169,7 @@ const TableBody = (props) => {
 
     return (
             <>
-             {firstDateLineCounter > 1 && <tr >
+             {firstDateLineCounter > 0 && <tr >
                 <td className="align-middle" style={{ textAlign: "center" }} colSpan={11}>{firstDate.toLocaleDateString("pt-br")}</td>
              </tr>}
              {ocpTd}
@@ -188,6 +194,7 @@ class OrdensDeCorreção extends Component {
             toastManager: toastManager,
             show: false,
             details: '',
+            showEncerradas : false
           
         }
     }
@@ -206,8 +213,9 @@ class OrdensDeCorreção extends Component {
                 filteredOcps : res,
                 ocpConfirm: {},
                 filterType : '',
+                
                
-            })
+            },() => this.filterEncerradas())
         })
     }
 
@@ -287,6 +295,14 @@ class OrdensDeCorreção extends Component {
     }
 
 
+    filterEncerradas = () => this.setState({
+        showEncerradas : !this.state.showEncerradas,
+       
+    },this.setState({filteredOcps: this.state.ocps.filter((ocp)=> {
+        if( this.state.showEncerradas && ocp.statusOCP){
+            return true;
+        }
+    })}))
 
 
 
@@ -298,7 +314,7 @@ class OrdensDeCorreção extends Component {
         return (
             <>
                 <Container >
-                    <Row className="justify-content-md-center">
+                    <Row className="align-items-center">
                         <Col md="auto">
                             <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/CadastroOcpAdicaoLivre")} >Gerar OCP</Button>
                         </Col>
@@ -370,6 +386,16 @@ class OrdensDeCorreção extends Component {
 
                     }></Form.Control>
                         </Col>
+                   
+                        <Col md="auto"  className="text-center text-md-right"  >
+                       
+    
+                        <Form.Check checked={!this.state.showEncerradas}  label={"Encerradas?"} onClick={() => this.filterEncerradas()} ></Form.Check>
+                        
+                      
+                        </Col>
+             
+                        
                         <Col md="auto">
                             <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa","Parametro","Status"]} onChoose={(item) => this.setState({ filterType: item})} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
@@ -379,7 +405,7 @@ class OrdensDeCorreção extends Component {
 
                 <Table id={"ocpTable"}>
                     <TableHead ></TableHead>
-                    <TableBody  editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
+                    <TableBody showEncerradas={this.state.showEncerradas} editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
                 </Table>
 
                 {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({ showCorrecaoConfirm: false })} show={this.state.showCorrecaoConfirm}  statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocp={this.state.ocpToConfirm} correcaoConfirm={(isOcp, ocpId) => this.correcaoConfirm(isOcp, ocpId, this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
