@@ -10,6 +10,7 @@ import { withMenuBar } from "../Hocs/withMenuBar";
 import GenericDropDown from "../Components/GenericDropDown";
 import { BsDot } from "react-icons/bs";
 import {isMobile} from 'react-device-detect';
+import { Fragment } from "react";
 
 
 
@@ -76,16 +77,63 @@ const buildAdicaoDetails = (adicoesDto) => {
  
 }
 
+
+
+
+const  isSameDate = (actualDate, refDate) => {
+    if((actualDate.getDay() === refDate.getDay()) 
+    && (actualDate.getMonth() === refDate.getMonth()) 
+    && (actualDate.getFullYear() === refDate.getFullYear())) {      
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 const TableBody = (props) => {
 
-
+    let firstDateLineCounter = 0
+    let firstDate = new Date(props.ocps[0]?.prazo)
+    let refDate = new Date(props.ocps[0]?.prazo)
 
     let ocpTd = props.ocps.map((ocp, index) => {
+     
+            let actualDate = new Date(ocp.prazo)
 
-        return (
-
-            <tr key={ocp.id}>
-
+        if(isSameDate(actualDate, refDate)) {
+            isSameDate(actualDate, firstDate) && firstDateLineCounter++
+            refDate = actualDate
+            return (
+                
+                <tr key={ocp.id}>
+    
+                    <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
+                    {!isMobile  && <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
+                    {!isMobile  && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>}
+                    <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
+                    {
+                        !isMobile ? <> <td className="align-middle" style={{ textAlign: "center"}}>{ocp.etapaNome}</td>
+                        <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td> </>
+                        : <td className="align-middle" style={{ textAlign: "center"}}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>
+                    }
+                   
+                    {!isMobile  && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
+                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
+                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
+                    <td className="align-middle"  >{ocp.adicoesDto.length == 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
+                    {buildStatusButton(ocp,props)}
+                </tr>
+            )
+        } else {
+            refDate = actualDate
+           return (
+               <Fragment key={ocp.id}>
+                <tr >
+                     <td className="align-middle" style={{ textAlign: "center" }} colSpan={11}>{actualDate.toLocaleDateString("pt-br")}</td>
+                </tr>
+                <tr>
+    
                 <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
                 {!isMobile  && <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
                 {!isMobile  && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>}
@@ -102,10 +150,25 @@ const TableBody = (props) => {
                 <td className="align-middle"  >{ocp.adicoesDto.length == 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
                 {buildStatusButton(ocp,props)}
             </tr>
-        )
+            </Fragment>
+                )
+        }
+        
+
+        
+        
+
+        
     })
 
-    return ocpTd
+    return (
+            <>
+             {firstDateLineCounter > 1 && <tr >
+                <td className="align-middle" style={{ textAlign: "center" }} colSpan={11}>{firstDate.toLocaleDateString("pt-br")}</td>
+             </tr>}
+             {ocpTd}
+             </>
+             )
 
 }
 
@@ -163,8 +226,7 @@ class OrdensDeCorreção extends Component {
     }
 
     getAproveDetails = (ocp) => {
-        let text = `Aprovar OCP ${ocp.parametroNome} ${ocp.resultado}${ocp.unidade} \n
-        |Faixa Especificada ${ocp.pMin} a ${ocp.pMax}| ? `
+        let text = `Aprovar OCP ${ocp.parametroNome} ${ocp.resultado}${ocp.unidade} \n |Faixa Especificada ${ocp.pMin} a ${ocp.pMax}| ? `
         let newText = text.split("\n").map((item, i) => {
             return <p key={i}>{item}</p>;
         });
