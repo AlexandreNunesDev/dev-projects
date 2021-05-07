@@ -110,12 +110,13 @@ class IndicadorDeAnalise extends Component {
 
     render() {
         return (
-            <Fragment>
+            <>
 
-                <body>
+
                     <Container style={{ marginTop: 20 }}>
                         <Form>
-                            <Row className="d-flex" >
+                            
+                   <Row>
                                 <Col>
                                     <GenericSelect default={"Selecione um Processo"} returnType={"id"} title={"Processo"} showType={"nome"} ops={this.state.processos} onChange={(idProcesso) => {
                                         
@@ -127,6 +128,10 @@ class IndicadorDeAnalise extends Component {
                                         })
                                     }}></GenericSelect>
                                 </Col>
+                                </Row>
+                           <Row>
+
+                          
                                 <Col>
                                     <GenericSelect default={"Selecione uma Etapa"} returnType={"id"} title={"Etapa"} ops={this.state.etapas} onChange={(idEtapa) => {
                                         ScqApi.ListaParametrosByEtapa(idEtapa).then(res => {
@@ -137,31 +142,32 @@ class IndicadorDeAnalise extends Component {
                                         })
                                     }}></GenericSelect> 
                                 </Col>
+                                </Row>
+                              <Row>
                                 <Col>
                                     <GenericSelect returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"} ops={this.state.parametros} onChange={(parametroId) => this.setState({ parametroId: parametroId })} selection={this.state.parametro?.id} ></GenericSelect>
                                 </Col>
+                                </Row>
 
 
-
-                            </Row>
+                    
                             <Form.Row>
 
-                                <Col>
+                                <Col  md="auto">
                                     <Button style={{ backgroundColor: this.state.hightLight === 2 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("semanal"); this.setState({ hightLight: 2 }) }}>7 dias</Button>
                                 </Col>
-                                <Col>
+                                <Col md="auto">
                                     <Button style={{ backgroundColor: this.state.hightLight === 3 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("mensal"); this.setState({ hightLight: 3 }) }}> 30 dias</Button>
                                 </Col>
-                                <Col>
+                                <Col md="auto">
                                     <Button style={{ backgroundColor: this.state.hightLight === 4 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("trimestral"); this.setState({ hightLight: 4 }) }}>90 dias</Button>
                                 </Col>
-                                <Col>
+                                <Col md="auto">
                                     <Button style={{ backgroundColor: this.state.hightLight === 5 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("anual"); this.setState({ hightLight: 5 }) }}>Anual</Button>
-                                </Col>
-                                <Col>
+                                </Col >
+                                <Col md="auto">
                                     <Form.Group style={{ marginTop: 5 }}>
-                                        <Form.Check.Input type="checkbox" onChange={(event) => this.setState({ personalizarIntervalo: event.target.checked }, () => console.log(this.state.personalizarIntervalo))} />
-                                        <Form.Check.Label>Intervalo Personalizado</Form.Check.Label>
+                                        <Form.Check type="checkbox" label="Intervalo Personalizado" onChange={(event) => this.setState({ personalizarIntervalo: event.target.checked }, () => console.log(this.state.personalizarIntervalo))} />
                                     </Form.Group>
 
                                 </Col>
@@ -199,8 +205,8 @@ class IndicadorDeAnalise extends Component {
                         {this.state.analiseChartData && <AnaliseChart containerRef={this.containerChartRef} data={this.state.analiseChartData}></AnaliseChart>}
                     </Container>
 
-                </body>
-            </Fragment>
+    
+            </>
         )
     }
 
