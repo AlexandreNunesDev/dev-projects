@@ -210,9 +210,9 @@ class TarefasDeManutencao extends React.Component {
                 </Container>
                 <Table className="table table-hover">
                     <TableHead></TableHead>
-                    <tbody>
+               
                         <TableBody setTarefaToList={this.addTarefaIdToList} tarefas={this.state.filteredTarefas} markedTarefas={this.state.markedTarefas} tarefasChoosed={this.state.tarefasChoosed} ></TableBody>
-                    </tbody>
+             
                 </Table>
 
 

@@ -153,19 +153,19 @@ class IndicadorDeAnalise extends Component {
                     
                             <Form.Row>
 
-                                <Col  md="auto">
+                                <Col >
                                     <Button style={{ backgroundColor: this.state.hightLight === 2 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("semanal"); this.setState({ hightLight: 2 }) }}>7 dias</Button>
                                 </Col>
-                                <Col md="auto">
+                                <Col >
                                     <Button style={{ backgroundColor: this.state.hightLight === 3 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("mensal"); this.setState({ hightLight: 3 }) }}> 30 dias</Button>
                                 </Col>
-                                <Col md="auto">
+                                <Col>
                                     <Button style={{ backgroundColor: this.state.hightLight === 4 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("trimestral"); this.setState({ hightLight: 4 }) }}>90 dias</Button>
                                 </Col>
-                                <Col md="auto">
+                                <Col >
                                     <Button style={{ backgroundColor: this.state.hightLight === 5 ? "BLUE" : "GRAY" }} onClick={() => { this.loadInterval("anual"); this.setState({ hightLight: 5 }) }}>Anual</Button>
                                 </Col >
-                                <Col md="auto">
+                                <Col>
                                     <Form.Group style={{ marginTop: 5 }}>
                                         <Form.Check type="checkbox" label="Intervalo Personalizado" onChange={(event) => this.setState({ personalizarIntervalo: event.target.checked }, () => console.log(this.state.personalizarIntervalo))} />
                                     </Form.Group>

@@ -192,9 +192,9 @@ class Trocas extends React.Component {
                     </Container>
                     <Table className="table table-hover">
                         <TableHead></TableHead>
-                        <tbody>
+                    
                         <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} filterType={this.state.filterType} selection={this.state.selection} omps={this.state.filteredOmps} encerrarOmp={this.encerrarOmp} verOmp={this.verOmp} confirmDeleteDiolog={this.confirmDeleteDiolog}  ></TableBody>
-                        </tbody>
+            
                     </Table>
                     
                     

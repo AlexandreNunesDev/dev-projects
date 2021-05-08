@@ -278,9 +278,9 @@ class Omp extends React.Component {
                 </Container>
                 <Table className="table table-hover">
                     <TableHead></TableHead>
-                    <tbody>
+                
                         <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} trocas={this.state.filteredTroca} markedTroca={this.state.trocasChoosedId}></TableBody>
-                    </tbody>
+           
                 </Table>
 
 
