@@ -66,8 +66,8 @@ class MenuBar extends React.Component {
     if (getUserRole() === "ADMIN_ROLE") {
       return (
         <>
-
-          <Navbar bg="light" expand="lg">
+          <div className='App tc f3'>
+          <Navbar bg="light" expand="lg" >
             {/* <Navbar.Brand href="/home"  >S.C.Q</Navbar.Brand> */}
             <Image height={50} width={80} src={scqlogo} rounded />
 
@@ -108,10 +108,10 @@ class MenuBar extends React.Component {
                   
 
                
-                 {this.state.notifications.map((notificacao) => {
+                 {this.state.notifications.map((notificacao,index) => {
                   let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
                   return (
-                   <Row>
+                   <Row key={index} >
 
                  
                       <Card  >
@@ -134,7 +134,7 @@ class MenuBar extends React.Component {
 
           </Navbar>
 
-
+          </div>
         </>
       )
     } else if (getUserRole() === "USER_ROLE") {

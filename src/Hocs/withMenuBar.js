@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container } from 'react-bootstrap';
 
 import MenuBar from '../Components/MenuBar';
 
@@ -6,10 +7,12 @@ export const withMenuBar = (Component) => {
 
    const withMenuBar = (props) => {
         return <>
-        <header>
-            <MenuBar></MenuBar>
-        </header>
+    
+        
+        <MenuBar></MenuBar>
+ 
         <Component {...props}/>
+   
         </>
     }
     return withMenuBar

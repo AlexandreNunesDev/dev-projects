@@ -40,15 +40,32 @@ class TitulaForm extends React.Component {
 
     render() {
         return (
+            <>
+              <Form.Row>
+                  <Col>
+                  <Form.Label>
+                     Viragem
+                 </Form.Label>
+                  </Col>
+              </Form.Row>
             <Form.Row>
-                <Form.Group as={Col} >
-                    <Form.Control type="text" ref={this.refText} placeholder={"0.00"}  allowedDecimalSeparators={["."]} onChange={(event) => this.setState({viragem : event.target.value})} />
-                </Form.Group>
-                <Form.Group as={Col} >
-                    <Button variant="primary" hidden={this.state?.isHidden} onClick={() => { this.calcular()}}>Calcular</Button>
-                    <Button variant="primary" hidden={!this.state?.isHidden} onClick={() => { this.recalcular()}}>Recalcular</Button>
-                </Form.Group>
+               
+     
+                    <Col>
+                        <Form.Control type="number" ref={this.refText} placeholder={"0.00"}   onChange={(event) => this.setState({viragem : event.target.value})} />
+                    </Col>
+                   
+      
+
+                    <Col>
+                   
+                        <Button variant="primary" hidden={this.state?.isHidden} onClick={() => { this.calcular()}}>Calcular</Button>
+                        <Button variant="primary" hidden={!this.state?.isHidden} onClick={() => { this.recalcular()}}>Recalcular</Button>
+                    </Col>
+
             </Form.Row>
+            </>
+            
         )
     }
     

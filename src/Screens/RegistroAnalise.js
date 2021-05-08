@@ -1,5 +1,5 @@
 import React from 'react'
-import {  Form, Container, Col } from 'react-bootstrap';
+import {  Form, Container, Col, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GenericSelect from '../Components/GenericSelect';
 import ScqApi from '../Http/ScqApi';
@@ -9,12 +9,16 @@ import TitulaForm from './TitulaForm';
 import {capitalize,subId} from '../Services/stringUtils'
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
+import { getUserName } from '../Services/auth';
 
 
 
 const valueForm = (props) => {
     return (
         <Form.Group as={Col}>
+            <Form.Label>
+                Valor
+            </Form.Label>
             <Form.Control type="text"  placeholder={"0.00"} allowedDecimalSeparators={["."]}  onChange={(event) => props.onChange(event.target.value)} />
         </Form.Group>
     )
@@ -184,7 +188,12 @@ class RegistroDeAnalise extends React.Component {
             this.salvarReanalise()
         } else {
   
+
             const { analista, resultado, status } = this.state
+            if(analista===''){
+                analista = getUserName()
+            }
+
             const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: null }
            
                 ScqApi.CriarAnalise(analise).then(res => {
@@ -205,8 +214,10 @@ class RegistroDeAnalise extends React.Component {
 
     salvarReanalise = () => {
 
+        
+
         const { id } = this.state.analise
-        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId : this.state.ocpId }
+        const analise = { id: id, analista: this.state.analista , resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId : this.state.ocpId }
        
             ScqApi.EditarAnalise(analise).then(() => this.props.history.push("/OrdensDeCorrecao"))
             
@@ -243,27 +254,40 @@ class RegistroDeAnalise extends React.Component {
                 <Container style={{ marginTop: 20 }}>
                     <h1>Registro de Analise</h1>
                     <Form>
-                        <Form.Row>
-                            <Col>
+                   
+                            <Form.Row>
+                                <Col>
                                 <GenericSelect displayType={"nome"} returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={this.state.processos} onChange={this.onLinhaSelect} selection={this.state.processo?.id}></GenericSelect>
-                            </Col>
-                            <Col>
+                                </Col>
+                            </Form.Row>
+                            <Form.Row>
+                                <Col>
                                 <GenericSelect displayType={"nome"} returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={this.state.etapas} onChange={this.onEtapaSelect} selection={this.state.etapa?.id} ></GenericSelect>
-                            </Col>
-                            <Col>
+                                </Col>
+                                
+                            </Form.Row>
+                            <Form.Row>
+                                <Col>
                                 <GenericSelect displayType={"nome"} returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"} ops={this.state.parametros} onChange={(parametroId) => this.onParametroSelect(parametroId)} selection={this.state.parametro?.id} ></GenericSelect>
-                            </Col>
-                        </Form.Row>
+                                </Col>
+                                
+                            </Form.Row>
+                     
 
 
                         <Form.Row>
                             <Col>
-                                <Form.Group controlId="nomaAnaliseForm">
-
-                                    <Form.Control type="text" placeholder="Nome do Analista" value={this.state.analista} onChange={this.nomeAnalistaListner} />
-                                </Form.Group>
+                                <Form.Label>
+                                    Nome do Analista:
+                                </Form.Label>
+                                 <Form.Control type="text" placeholder={getUserName()} value={this.state.analista} onChange={this.nomeAnalistaListner} />
                             </Col>
+                         
+                        </Form.Row>
+                        <Form.Row>
+                            
                             <Col>
+                             
                                 {this.state?.valorForm}
                             </Col>
                         </Form.Row>

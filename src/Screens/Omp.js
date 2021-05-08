@@ -54,8 +54,8 @@ const TableBody = props => {
                 </td>
                 <td className="align-middle" >
 
-                    <Form.Check.Input checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca.id )} type="checkbox" />
-                    <Form.Check.Label>Trocar ?</Form.Check.Label>
+                    <Form.Check checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca.id )} type="checkbox" />
+                    <Form.Label>Trocar ?</Form.Label>
 
 
 
@@ -250,8 +250,8 @@ class Omp extends React.Component {
         return (
             <>
 
-                <Container >
-                    <Row className="justify-content-md-center">
+          
+                    <Row className="align-items-center">
                         
                         <Col md="auto">
                             <Button disabled={this.state.trocasChoosedId.length !== 0 ? false : true} style={{ margin: 10 }} onClick={() => {
@@ -275,13 +275,18 @@ class Omp extends React.Component {
                             <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
                         </Col>
                     </Row>
-                </Container>
-                <Table className="table table-hover">
+                    <div className="table-responsive">
+
+                    
+                    <Table className="table table-hover" >
                     <TableHead></TableHead>
                 
                         <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} trocas={this.state.filteredTroca} markedTroca={this.state.trocasChoosedId}></TableBody>
            
-                </Table>
+                     </Table>
+                     </div>
+              
+               
 
 
             </>

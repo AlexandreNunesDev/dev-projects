@@ -125,18 +125,25 @@ const VerOmp = (props) => {
                  
                 </Form.Row>
                 <h4>Trocas</h4>
-                {trocas && <Table className="table table-hover">
+                {trocas && 
+                 <div className="table-responsive">
+                <Table className="table table-hover">
                     <TableHeadTrocas></TableHeadTrocas>
                     <tbody>
                         <TableBodyTrocas trocas={trocas} ></TableBodyTrocas>
                     </tbody>
-                </Table>}
+                </Table>
+                </div>}
                 <Fragment>
                     <h4>Tarefas</h4>
-                    {tarefas && <Table>
+                    
+                    {tarefas && 
+                     <div className="table-responsive">
+                    <Table>
                         <TableHeadTarefas></TableHeadTarefas>
                         <TableBodyTarefas tarefas={tarefas}></TableBodyTarefas>
-                    </Table>}
+                    </Table>
+                    </div>}
                 </Fragment>
            </Container>
         </>

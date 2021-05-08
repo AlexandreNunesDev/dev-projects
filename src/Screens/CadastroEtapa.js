@@ -129,6 +129,8 @@ class CadastroEtapa extends React.Component {
                             <Col>
                                 <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={this.selectedLinhaListner} ops={this.state.processos} isNotEditable={this.state.isNotEditable} selection={this.state.etapa.processoId}></GenericSelect>
                             </Col>
+                        </Form.Row>
+                        <Form.Row>
                             <Col>
                                 <Form.Group controlId="nomeEtapaForm">
                                     <Form.Label>Nome: </Form.Label>
@@ -144,6 +146,8 @@ class CadastroEtapa extends React.Component {
                                     <Form.Label>Posição: </Form.Label>
                                     <Form.Control type="number" min="0" placeholder="Numero do Tanque" value={this.state.posicao} onChange={this.handleChangeEtapaPos} />
                                 </Col>
+                                </Form.Row>
+                                <Form.Row>
                                 <Col>
                                     <Form.Label>Volume (Litros): </Form.Label>
                                     <Form.Control type="number" value={this.state.volume} onChange={(event) => this.setState({ volume: event.target.value })}></Form.Control>
@@ -151,11 +155,16 @@ class CadastroEtapa extends React.Component {
                             </Form.Row>
                         </Form.Group>
                         <MontagemComposition montagemComposes={this.state.montagemComposes} removeMontagemCompose={this.removeMontagemCompose} setMontagemComposes={(montagemCompose) => this.setMontagemComposes(montagemCompose)} ops={this.state.mps}></MontagemComposition>
-
-                        <Form.Group>
+                        <Form.Row>
+         
+                      
                             <Button style={{ margin: 2 }} variant="primary" onClick={this.enterEditMode}>Editar</Button>
+              
+          
                             <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={this.submitForm}>Salvar</Button>
-                        </Form.Group>
+                 
+           
+                        </Form.Row>
                     </Form>
                 </Container>
 

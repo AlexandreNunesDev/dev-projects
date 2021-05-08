@@ -158,6 +158,8 @@ class CadastroParametro extends React.Component {
                             <Col>
                                 <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={this.state.processos} onChange={this.selectedLinhaListner} selection={this.state.parametro?.linha?.id}></GenericSelect>
                             </Col>
+                            </Form.Row>
+                            <Form.Row>
                             <Col>
                                 <GenericSelect title={"Etapa"} returnType={"id"} default={"Escolha uma Etapa"} ops={this.state.etapas} onChange={this.selectedEtapaListner} selection={this.state.parametro?.etapa?.id}></GenericSelect>
                             </Col>
@@ -172,17 +174,23 @@ class CadastroParametro extends React.Component {
 
                                 <SelectEditable getValue={(nome) => nome && this.setState({ nome: nome }, () => { console.log(this.state.nome) })} default={"Clique 2x para digitar"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão"]}></SelectEditable>
                             </Form.Group>
-                            <Col sm={3} >
+                            </Form.Row>
+                            <Form.Row>
+                            <Col >
                                 <UnidadeSelect title={"Escolha um unidade"} type={"parametros"} default={"Escolha um unidade"} onChange={unidade => { this.setState({ unidade: unidade }); console.log(unidade) }}></UnidadeSelect>
                             </Col>
-
-                            <Col sm={2} >
+                            </Form.Row>
+                            <Form.Row>
+                            <Col  >
                                 <Form.Label>Analise a cada : </Form.Label>
                                 <Form.Control type="number" value={this.state.frequenciaAnalise} onChange={this.frequenciaAnalise} />
                             </Col>
-                            <Col sm={2}>
+                            </Form.Row>
+                            <Form.Row>
+                            <Col >
                                 <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={this.escalaTempoController} />
                             </Col>
+                            
 
                         </Form.Row>
 

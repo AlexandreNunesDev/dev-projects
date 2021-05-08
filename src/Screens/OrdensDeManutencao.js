@@ -55,7 +55,7 @@ const TableBody = props => {
                 <Form.Label style={{color : statusToken[1], fontWeight : 'bolder'}} >{statusToken[0]}</Form.Label>
             </td>
             <td className="align-middle" >
-                <Form.Row>
+                <Row>
 
                 <Col>
                     <Button style={{backgroundColor : "RED" , borderColor : "RED"}}  onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
@@ -70,7 +70,7 @@ const TableBody = props => {
                     props.encerrarOmp(omp.id)
                 }}>Encerrar OMP</Button>}
                 </Col>
-                </Form.Row>
+                </Row>
             </td>
         </tr>
         )
@@ -190,12 +190,14 @@ class Trocas extends React.Component {
                    
                        </Row>
                     </Container>
-                    <Table className="table table-hover">
+                    <div className="table-responsive">
+                    <Table >
                         <TableHead></TableHead>
                     
                         <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} filterType={this.state.filterType} selection={this.state.selection} omps={this.state.filteredOmps} encerrarOmp={this.encerrarOmp} verOmp={this.verOmp} confirmDeleteDiolog={this.confirmDeleteDiolog}  ></TableBody>
             
                     </Table>
+                    </div>
                     
                     
             </>
