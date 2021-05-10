@@ -155,31 +155,41 @@ render() {
                 <Form.Label>Nome Matéria Prima: </Form.Label>
                 <Form.Control type="text" placeholder="Nome da Matéria Prima" value={this.state.nome} onChange={this.nomeController}/>
             </Form.Group>
-            
+            </Form.Row>
+            <Form.Row>
             <Form.Group as={Col} controlId="fornecedorMateriaPrimaForm">
                 <Form.Label>Fornecedor: </Form.Label>
                 <Form.Control type="text" placeholder="Nome do Fornecedor" value={this.state.fornecedor} onChange={this.fornecedorController} />
             </Form.Group>
             </Form.Row>
+
             <Form.Row>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <Form.Label>Preco: </Form.Label>
                 <NumberFormat placeholder={"R$ 0.00"} customInput={Form.Control} allowedDecimalSeparators={["."]}  value={this.state.preco} onChange={this.precoController}/>
             </Form.Group>
+            </Form.Row>
+
+            <Form.Row>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <Form.Label>Fator Titulométrico: </Form.Label>
                 <NumberFormat placeholder={"0.00"} customInput={Form.Control} allowedDecimalSeparators={["."]}   value={this.state.fatorTitulometrico} onChange={this.fatorController}/>
             </Form.Group>
+            </Form.Row>
+
+            <Form.Row>
             <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                 <UnidadeSelect default={"Escolha uma Unidade"} type={"adicao"} title={"Unidade Mp"} onChange={(unidade) => this.setState({unidade : unidade}) }></UnidadeSelect>
             </Form.Group>
             </Form.Row>
             
-            
+
+            <Form.Group>
             <Form.Group>
                 <Button style = {{margin:2}} variant="primary" type="reset" onClick={this.enterEditMode} >Editar</Button>
                 <Button style = {{margin:2}} variant="primary" type="reset" onClick={this.salvarMateriaPrima}>Salvar</Button>
             </Form.Group>   
+            </Form.Group>
         </Form>
     </Container>
     

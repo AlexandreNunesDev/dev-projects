@@ -55,6 +55,8 @@ const CadastroDeTarefasDeManutencao = (props) => {
                         <Col>
                             <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(processoId) => { setProcessoId(processoId) }} ></GenericSelect>
                         </Col>
+                    </Form.Row>
+                    <Form.Row>
                         <Col sm >
                             <Form.Label>Nome: </Form.Label>
                             <Form.Control type="text" value={nome} onChange={event => {setNome(event.target.value)}} />
@@ -69,13 +71,19 @@ const CadastroDeTarefasDeManutencao = (props) => {
                                 onChange={event => {setDataExecutada(event.target.value) }}>
                             </Form.Control>
                         </Col>
+                    </Form.Row>
+                    <Form.Row>
                         <Col sm >
                             <Form.Label>Repetir a cada : </Form.Label>
                             <Form.Control type="number" value={repetirAcada} onChange={event => {setRepetirAcada(event.target.value)}} />
                         </Col>
+                    </Form.Row> 
+                    <Form.Row>
                         <Col sm>
                             <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a unidade de tempo"} onChange={unidade => {setEscala(unidade)}} />
                         </Col>
+                    </Form.Row> 
+                    <Form.Row>
                         <Col sm >
                             <Form.Label>Codigo da Instrução: </Form.Label>
                             <Form.Control type="text" value={codigoDoDocumento} onChange={event => {setCodigo(event.target.value)}} />

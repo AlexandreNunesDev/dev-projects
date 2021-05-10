@@ -74,6 +74,8 @@ const CadastroTroca = (props) => {
                         <Col>
                             <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(processoId) => { ScqApi.ListaEtapasByProcesso(processoId).then(res => setEtapas(res)) }} ></GenericSelect>
                         </Col>
+                    </Form.Row>
+                    <Form.Row>
                         <Col>
                             <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={(etapaId) => { setEtapaId(etapaId) }}></GenericSelect>
                         </Col>
@@ -90,18 +92,20 @@ const CadastroTroca = (props) => {
 
                             </Form.Control>
                         </Col>
+                    </Form.Row>
 
-
-
-                        <Col sm >
+                    <Form.Row>
+                        <Col>
                             <Form.Label>Repetir a cada : </Form.Label>
                             <Form.Control type="number" value={frequencia} onChange={event => setFrequencia(event.target.value)} />
                         </Col>
-                        <Col sm>
+                    </Form.Row>
+                    <Form.Row>
+                        <Col>
                             <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a unidade de Tempo"} onChange={unidade => setUnidade(unidade)} />
                         </Col>
                     </Form.Row>
-
+                    <Form.Row>
                     <Form.Group >
 
                         <Button style={{ margin: 2 }} variant="primary" onClick={() => {
@@ -110,7 +114,7 @@ const CadastroTroca = (props) => {
 
                         <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca()} >Salvar</Button>
                     </Form.Group>
-
+                    </Form.Row>
                 </Form>
             </Container>
 
