@@ -67,12 +67,7 @@ const Login = (props) => {
                             </Form.Group>
                            
                          
-                            <Button style={{ margin: 5 }} variant="primary" onClick={() => {
-                                history.push("/Registrar")
-                               
-                            }}>
-                                Registrar
-                             </Button>
+    
                              {!isAuthenticated() ? 
 
                             <Button style={{ margin: 5 }} variant="primary" onClick={() => {

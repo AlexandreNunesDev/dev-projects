@@ -299,9 +299,16 @@ class OrdensDeCorreção extends Component {
         showEncerradas : !this.state.showEncerradas,
        
     },this.setState({filteredOcps: this.state.ocps.filter((ocp)=> {
-        if( this.state.showEncerradas && ocp.statusOCP){
-            return true;
+        if(this.state.showEncerradas) {
+            if(ocp.statusOCP){
+                return true;
+            }
+        } else {
+            if(!ocp.statusOCP){
+                return true;
+            }
         }
+       
     })}))
 
 
