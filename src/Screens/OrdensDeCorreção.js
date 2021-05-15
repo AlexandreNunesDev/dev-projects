@@ -194,7 +194,8 @@ class OrdensDeCorreção extends Component {
             toastManager: toastManager,
             show: false,
             details: '',
-            showEncerradas : false
+            showEncerradas : false,
+            actualFilter : ""
           
         }
     }
@@ -215,7 +216,7 @@ class OrdensDeCorreção extends Component {
                 filterType : '',
                 
                
-            },() => this.filterEncerradas())
+            },() => this.filterEncerradas(false))
         })
     }
 
@@ -295,22 +296,96 @@ class OrdensDeCorreção extends Component {
     }
 
 
-    filterEncerradas = () => this.setState({
-        showEncerradas : !this.state.showEncerradas,
-       
-    },this.setState({filteredOcps: this.state.ocps.filter((ocp)=> {
-        if(this.state.showEncerradas) {
-            if(ocp.statusOCP){
-                return true;
+    filterEncerradas = (show) => this.setState({
+        showEncerradas : show,
+        filteredOcps: this.state.ocps.filter((ocp)=> {
+            if(show) {
+                if(ocp.statusOCP){
+                    return true;
+                }
+            } else {
+                if(!ocp.statusOCP){
+                    return true;
+                }
             }
-        } else {
-            if(!ocp.statusOCP){
-                return true;
-            }
-        }
+           
+        })
        
-    })}))
+    })
 
+
+    checkEncerradas = () =>{
+        this.filterHandler(this.state.actualFilter)
+
+    }
+
+    filterHandler = () => {
+        let filteredByFilterType = []
+            filteredByFilterType = this.state.ocps.filter((ocp) => {
+                if (this.state.filterType === "Processo") {
+                    return String(ocp.processoNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
+                }
+                if (this.state.filterType === "Etapa") {
+                    return String(ocp.etapaNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
+                }
+                if (this.state.filterType === "Parametro") {
+                    return String(ocp.parametroNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
+                }
+                if (this.state.filterType === "Status") {
+                    if(String("Corrigir").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
+                        if(!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
+                            return true
+                        } else {
+                            return false
+                        }
+                        
+                    }
+                    if(String("Reanalisar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
+                        if(ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
+                            return true
+                        } else {
+                            return false
+                        }
+                        
+                    }
+                    if(String("Aprovar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
+                        if(ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP){
+                            return true
+                        } else {
+                            return false
+                        }
+    
+                      
+                    }
+                    if(String("Encerrada").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
+                        if(ocp.statusCorrecao && !ocp.analiseStatus && ocp.statusOCP){
+                            return true
+                        } else {
+                            return false
+                        }
+    
+                      
+                    }
+                    
+                }
+                return true
+    
+            })
+        
+            if(!this.state.showEncerradas){
+                this.setState({
+                    filteredOcps: filteredByFilterType.filter((ocp) => {
+                        return ocp.statusOCP === false
+                    })
+                }) 
+            } else {
+                this.setState({
+                    filteredOcps: filteredByFilterType
+                }) 
+            }
+            
+       
+    }
 
 
 
@@ -326,78 +401,13 @@ class OrdensDeCorreção extends Component {
                             <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/CadastroOcpAdicaoLivre")} >Gerar OCP</Button>
                         </Col>
                         <Col>
-                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => 
-                            
-                            {   
-                                if(event.target.value.length===0) {
-                                    this.setState({
-                                        filteredOcps : this.state.ocps
-                                    })
-                                } else {
-                                    this.setState({
-                                        filteredOcps: this.state.ocps.filter((ocp) => {
-                                            if (this.state.filterType === "Processo") {
-                                                return String(ocp.processoNome).startsWith(event.target.value)
-                                            }
-                                            if (this.state.filterType === "Etapa") {
-                                                return String(ocp.etapaNome).startsWith(event.target.value)
-                                            }
-                                            if (this.state.filterType === "Parametro") {
-                                                return String(ocp.parametroNome).startsWith(event.target.value)
-                                            }
-                                            if (this.state.filterType === "Status") {
-                                                if(String("Corrigir").toLowerCase().startsWith(event.target.value.toLowerCase())){
-                                                    if(!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
-                                                        return true
-                                                    } else {
-                                                        return false
-                                                    }
-                                                    
-                                                }
-                                                if(String("Reanalisar").toLowerCase().startsWith(event.target.value.toLowerCase())){
-                                                    if(ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
-                                                        return true
-                                                    } else {
-                                                        return false
-                                                    }
-                                                    
-                                                }
-                                                if(String("Aprovar").toLowerCase().startsWith(event.target.value.toLowerCase())){
-                                                    if(ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP){
-                                                        return true
-                                                    } else {
-                                                        return false
-                                                    }
-
-                                                  
-                                                }
-                                                if(String("Encerrada").toLowerCase().startsWith(event.target.value.toLowerCase())){
-                                                    if(ocp.statusCorrecao && !ocp.analiseStatus && ocp.statusOCP){
-                                                        return true
-                                                    } else {
-                                                        return false
-                                                    }
-
-                                                  
-                                                }
-                                                
-                                            }
-                                            return ""
-        
-                                        })
-                                    })
-                                }
-                                }
-
-                                
-
-                    }></Form.Control>
+                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.setState({ actualFilter : event.target.value },() => this.filterHandler()) }></Form.Control>
                         </Col>
                    
                         <Col md="auto"  className="text-center text-md-right"  >
                        
     
-                        <Form.Check checked={!this.state.showEncerradas}  label={"Encerradas?"} onClick={() => this.filterEncerradas()} ></Form.Check>
+                        <Form.Check checked={this.state.showEncerradas}  label={"Encerradas?"} onChange={(event) => this.setState({showEncerradas : event.target.checked},() => this.filterHandler())} ></Form.Check>
                         
                       
                         </Col>
