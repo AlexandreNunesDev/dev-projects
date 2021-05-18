@@ -172,7 +172,7 @@ class CadastroParametro extends React.Component {
                             <Form.Group as={Col} controlId="nomeParametroForm">
                                 <Form.Label>Nome do Parametro: </Form.Label>
 
-                                <SelectEditable getValue={(nome) => nome && this.setState({ nome: nome }, () => { console.log(this.state.nome) })} default={"Clique 2x para digitar"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão"]}></SelectEditable>
+                                <SelectEditable getValue={(nome) => nome && this.setState({ nome: nome }, () => { console.log(this.state.nome) })} default={"selecione um nome"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão","--Adicionar--"]}></SelectEditable>
                             </Form.Group>
                             </Form.Row>
                             <Form.Row>

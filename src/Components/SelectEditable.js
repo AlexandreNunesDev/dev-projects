@@ -31,16 +31,29 @@ const SelectEditable = (props) => {
         update()
     },[value])
 
+    const changeToEdit = (event) => {
+        if(event.target.value==="--Adicionar--"){
+            setInputType("text") 
+        } else {
+            setValue(event.target.value)}
+    }
+
          if(inputType==="text") {
              return(
-            <Form.Control ref={textRef} type={"text"} value={value} onChange={(event) => {setValue(event.target.value); props.getValue(value)}} onBlur={() => {if(!options.includes(value)) {options.push(value)}  setInputType("select")}}>
+            <Form.Control ref={textRef} type={"text"} value={value} onChange={(event) => {setValue(event.target.value)}} onBlur={() => {
+                if(!options.includes(value)) 
+                {
+                    value.length >0 && options.push(value)
+                }  
+                setInputType("select")}}>
               
             </Form.Control>
              )
          } else {
             return (
-            <Form.Control ref={selectRef} as={"select"} value={value} onDoubleClick={(event) => setInputType("text")} onChange={(event) =>  {setValue(event.target.value)}} onBlur={() => setInputType("select")} >
-              <option unselectable="on">-- {props.default} --</option>
+        
+            <Form.Control ref={selectRef} as={"select"} value={value} onChange={(event) =>  changeToEdit(event)} onBlur={() => setInputType("select")} >
+              <option unselectable="on" >-- {props.default} --</option>
                     {options && options.map((op,index) =>{
                         if(op === props.value) {
                             return  <option selected={true} value={op} key={index}>{op}</option>
@@ -48,6 +61,7 @@ const SelectEditable = (props) => {
                             return <option  value={op} key={index}>{op}</option>}})
                     }
             </Form.Control>
+           
             )
          }
    
