@@ -25,6 +25,18 @@ const valueForm = (props) => {
 }
 
 
+const timeform = (props) => {
+    return (
+        <Form.Group as={Col}>
+            <Form.Label>
+                Valor
+            </Form.Label>
+            <Form.Control type="text"  placeholder={"0.00"} allowedDecimalSeparators={["."]}  onChange={(event) => props.onChange(event.target.value)} />
+        </Form.Group>
+    )
+}
+
+
 
 class RegistroDeAnalise extends React.Component {
 
@@ -119,6 +131,12 @@ class RegistroDeAnalise extends React.Component {
                             valorForm: valueForm({ onChange: this.setAnaliseStatus }),
     
                         })
+                    }   else if(parametro.unidade === "tempo")  { 
+                        this.setState({
+                            parametro: parametro,
+                            valorForm: valueForm({ onChange: this.setAnaliseStatus }),
+    
+                        })
                     } else {
                         this.setState({
                             parametro: parametro,
@@ -190,11 +208,14 @@ class RegistroDeAnalise extends React.Component {
   
 
             const { analista, resultado, status } = this.state
+            let nomeAnalista
             if(analista===''){
-                analista = getUserName()
+                nomeAnalista = getUserName()
+            } else {
+                nomeAnalista = analista;
             }
 
-            const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: null }
+            const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: null }
            
                 ScqApi.CriarAnalise(analise).then(res => {
                     responseHandler(res,this.props,"Analise")
