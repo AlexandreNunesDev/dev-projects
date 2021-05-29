@@ -7,7 +7,7 @@ import { actions } from '../actions/actions';
 import { useDispatch } from 'react-redux';
 
 const WebSocketContext = createContext(null)
-const SOCKET_URL = 'wss://scqapi/gs-guide-websocket'
+const SOCKET_URL = 'ws://scqapi.com/gs-guide-websocket'
 
 
 export { WebSocketContext }
