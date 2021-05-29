@@ -5,32 +5,39 @@ import ScqApi from "../Http/ScqApi";
 import CredentialConfirm from '../Components/CredentialConfirm'
 import CorrecaoConfirm from "../Components/CorrecaoConfirm";
 import { withToastManager } from "react-toast-notifications";
-import { downloadOcp } from "../Services/documentsDownload";
+
 import { withMenuBar } from "../Hocs/withMenuBar";
 import GenericDropDown from "../Components/GenericDropDown";
-import { BsDot } from "react-icons/bs";
-import {isMobile} from 'react-device-detect';
-import { Fragment } from "react";
-import { Checkbox, FormGroup } from "@material-ui/core";
+
+import { isMobile } from 'react-device-detect';
+
+import mapStateToProps from "../mapStateProps/mapStateToProps"
+import { connect } from "react-redux";
+import dispatchers from "../mapDispatch/mapDispathToProps";
+import { WebSocketContext } from "../websocket/wsProvider";
+import OcpsTableBody from "../Components/OcpsTableBody";
 
 
 
 
 const TableHead = (props) => {
     return (
-
         <thead >
             <tr>
                 <th style={{ textAlign: "center" }}>Id</th>
-                {!isMobile  && <th colSpan={2} style={{ textAlign: "center" }}>Açoes</th>}
-                
+                {!isMobile && <th colSpan={2} style={{ textAlign: "center" }}>Açoes</th>}
+
                 <th style={{ textAlign: "center" }}>Processo</th>
-                {
-                    !isMobile ? <> <th style={{ textAlign: "center" }}>Etapa</th>
-                    <th style={{ textAlign: "center" }}>Parametro</th>  </> :   <th style={{ textAlign: "center" }}>Etapa/Param.</th> 
+                {!isMobile ?
+                    <>
+                        <th style={{ textAlign: "center" }}>Etapa</th>
+                        <th style={{ textAlign: "center" }}>Parametro</th>
+                    </>
+                    :
+                    <th style={{ textAlign: "center" }}>Etapa/Param.</th>
                 }
-               
-                {!isMobile &&  <th style={{ textAlign: "center" }}>Faixa mínima</th>}
+
+                {!isMobile && <th style={{ textAlign: "center" }}>Faixa mínima</th>}
                 {!isMobile && <th style={{ textAlign: "center" }}>Faixa máxima</th>}
                 {!isMobile && <th style={{ textAlign: "center" }}>Resultado</th>}
                 <th style={{ textAlign: "center" }}>Correção</th>
@@ -42,146 +49,18 @@ const TableHead = (props) => {
 }
 
 
-const buildStatusButton = (ocp,props) => {
-
-    if(!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
-        return <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={ocp.statusCorrecao} style={{alignmentBaseline: "center" , backgroundColor : "ORANGE", borderColor: "ORANGE", color : "BLACK"}} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button></td>
-    } else if(ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
-        return <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.analiseStatus} style={{alignmentBaseline: "center",backgroundColor : "YELLOW", borderColor: "YELLOW" , color : "BLACK" }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button></td>
-    } else if (ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP){
-       return  <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={ocp.statusOCP} style={{alignmentBaseline: "center",backgroundColor : "GREEN", borderColor: "GREEN"}} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button></td>
-    } else {
-        return <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={true} style={{ backgroundColor: 'GRAY'  , borderColor: 'GRAY' , alignmentBaseline: "center" }}>Encerrada</Button></td>
-    }
-    
-}
-
-const buildAdicaoDetails = (adicoesDto) => {
-    return adicoesDto.map(adicao => {
-        
-        return(
-                  <Form.Row key={adicao.nomeMp}>
-                    <Form.Label style={{ textAlign: "center" }}><BsDot size={36} ></BsDot>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</Form.Label>
-                  </Form.Row>)
-           
-      });
-  }
-
-  const buildAcaoDetails = (ocp) => {
-
-        
-    return(
-              <Form.Row>
-                <Form.Label style={{ textAlign: "center" }}><BsDot size={36} ></BsDot>{`${ocp.acao} prazo ${ocp.prazo}`}</Form.Label>
-              </Form.Row>)
-       
- 
-}
 
 
 
 
-const  isSameDate = (actualDate, refDate) => {
-    if((actualDate.getDay() === refDate.getDay()) 
-    && (actualDate.getMonth() === refDate.getMonth()) 
-    && (actualDate.getFullYear() === refDate.getFullYear())) {      
-        return true;
-    } else {
-        return false;
-    }
-}
 
 
-const TableBody = (props) => {
 
-    let firstDateLineCounter = 0
-    let firstDate = new Date(props.ocps[0]?.prazo)
-
-    //Pega a data damprimeira OCP da lista de OCPS enviadas pelo servidor
-    let refDate = new Date(props.ocps[0]?.prazo)
-
-    let ocpTd = props.ocps.map((ocp, index) => {
-
-        //Pega data da ocp da atual iteraçao do Map e compara com a data da primeira OCP da lista de OCPS
-        let actualDate = new Date(ocp.prazo)
-
-        if(isSameDate(actualDate, refDate)) {
-
-            isSameDate(actualDate, firstDate) && firstDateLineCounter++
-
-            refDate = actualDate
-            return (
-                
-                <tr key={ocp.id}>
-    
-                    <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                    {!isMobile  && <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
-                    {!isMobile  && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>}
-                    <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
-                    {
-                        !isMobile ? <> <td className="align-middle" style={{ textAlign: "center"}}>{ocp.etapaNome}</td>
-                        <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td> </>
-                        : <td className="align-middle" style={{ textAlign: "center"}}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>
-                    }
-                   
-                    {!isMobile  && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
-                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
-                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
-                    <td className="align-middle"  >{ocp.adicoesDto.length == 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
-                    {buildStatusButton(ocp,props)}
-                </tr>
-            )
-        } else {
-            refDate = actualDate
-           return (
-               <Fragment key={ocp.id}>
-                <tr >
-                     <td className="align-middle" style={{ textAlign: "center" }} colSpan={11}>{actualDate.toLocaleDateString("pt-br")}</td>
-                </tr>
-                <tr>
-    
-                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                {!isMobile  && <th className="align-middle" style={{ textAlign: "center"}}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
-                {!isMobile  && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => props.editarOcp(ocp)}>Editar</Button></th>}
-                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
-                {
-                    !isMobile ? <> <td className="align-middle" style={{ textAlign: "center"}}>{ocp.etapaNome}</td>
-                    <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td> </>
-                    : <td className="align-middle" style={{ textAlign: "center"}}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>
-                }
-               
-                {!isMobile  && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
-                {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
-                {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
-                <td className="align-middle"  >{ocp.adicoesDto.length == 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
-                {buildStatusButton(ocp,props)}
-            </tr>
-            </Fragment>
-                )
-        }
-        
-
-        
-        
-
-        
-    })
-
-    return (
-            <>
-             {firstDateLineCounter > 0 && <tr >
-                <td className="align-middle" style={{ textAlign: "center" }} colSpan={11}>{firstDate.toLocaleDateString("pt-br")}</td>
-             </tr>}
-             {ocpTd}
-             </>
-             )
-
-}
 
 
 
 class OrdensDeCorreção extends Component {
-
+    static contextType = WebSocketContext
 
     constructor(props) {
         super(props)
@@ -189,36 +68,20 @@ class OrdensDeCorreção extends Component {
         const { toastManager } = this.props;
         this.state = {
             ocps: [],
-            filteredOcps : [],
+            filteredOcps: [],
             codigoCorrecao: '',
             toastManager: toastManager,
             show: false,
             details: '',
-            showEncerradas : false,
-            actualFilter : ""
-          
+            showEncerradas: false,
+            actualFilter: "",
+            ocpConfirm: {},
+            filterType: '',
+
         }
     }
 
-
-
-    componentDidMount() {
-        this.lodadOcps()
-      
-    }
-
-    lodadOcps = () => {
-        ScqApi.ListaOcps().then(res => {
-            this.setState({
-                ocps: res,
-                filteredOcps : res,
-                ocpConfirm: {},
-                filterType : '',
-                
-               
-            },() => this.filterEncerradas(false))
-        })
-    }
+   
 
     openCredentialsConfirm = (ocp) => {
         const details = this.getAproveDetails(ocp)
@@ -246,11 +109,11 @@ class OrdensDeCorreção extends Component {
     correcaoConfirm = (isOcp, ocpId, isAdicao) => {
         if (isOcp) {
             if (isAdicao) {
-                ScqApi.AdicaoCorrigir(ocpId).then(() => window.location.reload())
+                ScqApi.AdicaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps, null))
 
 
             } else {
-                ScqApi.AcaoCorrigir(ocpId).then(() => window.location.reload())
+                ScqApi.AcaoCorrigir(ocpId).then(() => this.context.sendMessage(this.props.loadOcps, null))
 
             }
 
@@ -267,132 +130,109 @@ class OrdensDeCorreção extends Component {
 
 
     aprovarOcp = () => {
-        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(this.setState({ show: false }, () => window.location.reload()))
+        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.props.aproveOcp(this.state.ocpToAprove.id))
     }
 
     editOcp = (ocp) => {
-        if(ocp.isAdicao){
+        if (ocp.isAdicao) {
             this.props.history.push("/EditarOcpAdicao", ocp)
         } else {
             this.props.history.push("/EditarOcpAcao", ocp)
         }
-      
+
     }
 
-
-    
 
     adjustTableHeight = () => {
-       var table =  document.getElementById("ocpTable")
-       var rows = table.rows;
-       var mostHeight = 0;
-       for (var i = 0; i < rows.length; i++) {
-        var rowTextHeight = rows[i].style.height
-        if(rowTextHeight > mostHeight){
-            mostHeight = rowTextHeight;
-        } 
-    }
-    return mostHeight;
-    }
-
-
-    filterEncerradas = (show) => this.setState({
-        showEncerradas : show,
-        filteredOcps: this.state.ocps.filter((ocp)=> {
-            if(show) {
-                if(ocp.statusOCP){
-                    return true;
-                }
-            } else {
-                if(!ocp.statusOCP){
-                    return true;
-                }
+        var table = document.getElementById("ocpTable")
+        var rows = table.rows;
+        var mostHeight = 0;
+        for (var i = 0; i < rows.length; i++) {
+            var rowTextHeight = rows[i].style.height
+            if (rowTextHeight > mostHeight) {
+                mostHeight = rowTextHeight;
             }
-           
-        })
-       
-    })
-
-
-    checkEncerradas = () =>{
-        this.filterHandler(this.state.actualFilter)
-
+        }
+        return mostHeight;
     }
 
     filterHandler = () => {
         let filteredByFilterType = []
-            filteredByFilterType = this.state.ocps.filter((ocp) => {
-                if (this.state.filterType === "Processo") {
-                    return String(ocp.processoNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
-                }
-                if (this.state.filterType === "Etapa") {
-                    return String(ocp.etapaNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
-                }
-                if (this.state.filterType === "Parametro") {
-                    return String(ocp.parametroNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
-                }
-                if (this.state.filterType === "Status") {
-                    if(String("Corrigir").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
-                        if(!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
-                            return true
-                        } else {
-                            return false
-                        }
-                        
-                    }
-                    if(String("Reanalisar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
-                        if(ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP){
-                            return true
-                        } else {
-                            return false
-                        }
-                        
-                    }
-                    if(String("Aprovar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
-                        if(ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP){
-                            return true
-                        } else {
-                            return false
-                        }
-    
-                      
-                    }
-                    if(String("Encerrada").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())){
-                        if(ocp.statusCorrecao && !ocp.analiseStatus && ocp.statusOCP){
-                            return true
-                        } else {
-                            return false
-                        }
-    
-                      
-                    }
-                    
-                }
-                return true
-    
-            })
-        
-            if(!this.state.showEncerradas){
-                this.setState({
-                    filteredOcps: filteredByFilterType.filter((ocp) => {
-                        return ocp.statusOCP === false
-                    })
-                }) 
-            } else {
-                this.setState({
-                    filteredOcps: filteredByFilterType
-                }) 
+        filteredByFilterType = this.props.ocps.filter((ocp) => {
+            if (this.state.filterType === "Processo") {
+                return String(ocp.processoNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
             }
-            
-       
+            if (this.state.filterType === "Etapa") {
+                return String(ocp.etapaNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
+            }
+            if (this.state.filterType === "Parametro") {
+                return String(ocp.parametroNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
+            }
+            if (this.state.filterType === "Status") {
+                if (String("Corrigir").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
+                    if (!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
+                        return true
+                    } else {
+                        return false
+                    }
+
+                }
+                if (String("Reanalisar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
+                    if (ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
+                        return true
+                    } else {
+                        return false
+                    }
+
+                }
+                if (String("Aprovar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
+                    if (ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP) {
+                        return true
+                    } else {
+                        return false
+                    }
+
+
+                }
+                if (String("Encerrada").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
+                    if (ocp.statusCorrecao && !ocp.analiseStatus && ocp.statusOCP) {
+                        return true
+                    } else {
+                        return false
+                    }
+
+
+                }
+
+            }
+            return true
+
+        })
+
+        if (!this.state.showEncerradas) {
+            this.setState({
+                filteredOcps: filteredByFilterType.filter((ocp) => {
+                    return ocp.statusOCP === false
+                })
+            })
+        } else {
+            this.setState({
+                filteredOcps: filteredByFilterType
+            })
+        }
+
+
     }
 
 
 
+   
+
+
 
     render() {
+        console.log(this.props)
 
-        
         return (
             <>
                 <Container >
@@ -401,33 +241,36 @@ class OrdensDeCorreção extends Component {
                             <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/CadastroOcpAdicaoLivre")} >Gerar OCP</Button>
                         </Col>
                         <Col>
-                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.setState({ actualFilter : event.target.value },() => this.filterHandler()) }></Form.Control>
+                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} value={this.props.ocp.actualFilter} onChange={(event) => this.props.setActualFilter(event.target.value)}></Form.Control>
                         </Col>
-                   
-                        <Col md="auto"  className="text-center text-md-right"  >
-                       
-    
-                        <Form.Check checked={this.state.showEncerradas}  label={"Encerradas?"} onChange={(event) => this.setState({showEncerradas : event.target.checked},() => this.filterHandler())} ></Form.Check>
-                        
-                      
+
+                        <Col md="auto" className="text-center text-md-right"  >
+
+
+                            <Form.Check checked={this.props.ocp.showEncerradas} label={"Encerradas?"} onChange={(event) => this.props.showEncerradas(event.target.checked)} ></Form.Check>
+
+
                         </Col>
-             
-                        
+
+
                         <Col md="auto">
-                            <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa","Parametro","Status"]} onChoose={(item) => this.setState({ filterType: item})} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                            <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Parametro", "Status"]} onChoose={(filterType) => this.props.setFilterType(filterType) } style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
-            
+
                     </Row>
                 </Container>
 
                 <div className="table-responsive">
-                <Table id={"ocpTable"}>
-                    <TableHead ></TableHead>
-                    <TableBody showEncerradas={this.state.showEncerradas} editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} ocps={this.state.filteredOcps} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></TableBody>
-                </Table>
+                    <Table id={"ocpTable"}>
+                        <TableHead ></TableHead>
+                        <tbody>
+                            <OcpsTableBody editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })}  reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></OcpsTableBody>
+                        </tbody>
+
+                    </Table>
                 </div>
 
-                {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({ showCorrecaoConfirm: false })} show={this.state.showCorrecaoConfirm}  statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocp={this.state.ocpToConfirm} correcaoConfirm={(isOcp, ocpId) => this.correcaoConfirm(isOcp, ocpId, this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
+                {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({ showCorrecaoConfirm: false })} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocp={this.state.ocpToConfirm} correcaoConfirm={(isOcp, ocpId) => this.correcaoConfirm(isOcp, ocpId, this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
                 <CredentialConfirm details={this.state.details} aproveOcp={() => this.aprovarOcp()} show={this.state.show} closeCredentialConfirm={() => this.setState({ show: false })}  ></CredentialConfirm>
             </>
 
@@ -438,4 +281,6 @@ class OrdensDeCorreção extends Component {
 
 }
 
-export default withToastManager(withMenuBar(OrdensDeCorreção))
+
+
+export default withToastManager(withMenuBar(connect(mapStateToProps.toProps, dispatchers)(OrdensDeCorreção)))

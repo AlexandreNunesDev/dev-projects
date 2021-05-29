@@ -5,6 +5,10 @@ import ScqApi from '../Http/ScqApi';
 import { withToastManager } from 'react-toast-notifications'
 import { responseHandler } from '../Services/responseHandler';
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { reloadState } from '../store';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { connect } from 'react-redux';
 
 
 
@@ -53,8 +57,7 @@ class CadastroProcesso extends Component {
 
 
         const processo = { id: null, nome: this.state.nome }
-        ScqApi.CriarProcesso(processo).then(response => responseHandler(response, this.props,"Processo"))
-
+        ScqApi.CriarProcesso(processo).then(response =>{this.props.addProcesso(response); responseHandler(response, this.props,"Processo",)})
         this.cleanState()
 
 
@@ -74,7 +77,7 @@ class CadastroProcesso extends Component {
                 <Container style={{ marginTop: 20 }}>
                     <h1>Cadastro de Processo</h1>
 
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form>
                         <Form.Group controlId="processoLinhaNome">
                             <Form.Label>Nome: </Form.Label>
                             <Form.Control value={this.state.nome} type="text" placeholder="Entre o nome do Processo" onChange={this.handleChange} />
@@ -94,4 +97,4 @@ class CadastroProcesso extends Component {
 
 }
 
-export default withToastManager(withMenuBar(CadastroProcesso))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroProcesso)))

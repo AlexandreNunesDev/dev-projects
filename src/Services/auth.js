@@ -15,12 +15,13 @@ export const getToken = () => localStorage.getItem(TOKEN_INFO);
 export const getUserRole = () => localStorage.getItem(USER_ROLE);
 export const getUserName = () => localStorage.getItem(USER_NAME);
 export const isUserEnable = () => localStorage.getItem(USER_ENABLE);
-export const login = user => {
+export const login = async user  =>  {
   localStorage.setItem(TOKEN_EXP, plusDate())
   localStorage.setItem(TOKEN_INFO, user.token);
   localStorage.setItem(USER_ROLE,user.userRole)
   localStorage.setItem(USER_NAME,user.userName)
   localStorage.setItem(USER_ENABLE,user.enable)
+
 };
 export const logout = () => {
   localStorage.removeItem(TOKEN_EXP)
@@ -28,6 +29,7 @@ export const logout = () => {
   localStorage.removeItem(USER_ROLE)
   localStorage.removeItem(USER_NAME)
   localStorage.removeItem(USER_ENABLE)
+  localStorage.removeItem("state")
 };
 
 

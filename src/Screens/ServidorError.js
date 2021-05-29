@@ -1,5 +1,5 @@
 import React, {useState } from 'react';
-import { Container, Form } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import Home from './Home';
@@ -7,7 +7,7 @@ import Home from './Home';
 
 const ServidorError = (props) => {
 
-    const [redirect , setRedirect] = useState(true)
+    const [redirect ] = useState(true)
 
     
     

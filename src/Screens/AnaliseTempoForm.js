@@ -1,16 +1,17 @@
 import ScqApi from "../Http/ScqApi"
 import React from 'react'
 
+
 const { Form, Button, Col } = require("react-bootstrap")
 
-class TitulaForm extends React.Component {
+class AnaliseTempoForm extends React.Component {
 
     constructor(props){
         super(props)
         this.refText = React.createRef()
 
         this.State = {
-            viragem : '',
+            tempo : '',
             isHidden : false,
             
         }
@@ -70,4 +71,4 @@ class TitulaForm extends React.Component {
     
 }
 
-export default TitulaForm
+export default AnaliseTempoForm

@@ -1,5 +1,5 @@
 import React from 'react'
-import {  Form, Container, Col, Row } from 'react-bootstrap';
+import {  Form, Container, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GenericSelect from '../Components/GenericSelect';
 import ScqApi from '../Http/ScqApi';
@@ -10,9 +10,11 @@ import {capitalize,subId} from '../Services/stringUtils'
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { getUserName } from '../Services/auth';
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps'
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
-
-
+const SOCKET_URL = 'ws://localhost:8080/gs-guide-websocket'
 const valueForm = (props) => {
     return (
         <Form.Group as={Col}>
@@ -25,16 +27,6 @@ const valueForm = (props) => {
 }
 
 
-const timeform = (props) => {
-    return (
-        <Form.Group as={Col}>
-            <Form.Label>
-                Valor
-            </Form.Label>
-            <Form.Control type="text"  placeholder={"0.00"} allowedDecimalSeparators={["."]}  onChange={(event) => props.onChange(event.target.value)} />
-        </Form.Group>
-    )
-}
 
 
 
@@ -58,11 +50,23 @@ class RegistroDeAnalise extends React.Component {
             status: false,
             calcDisabled: false,
             analiseId: '',
-            valorForm: null
+            valorForm: null,
+          
         }
     }
 
+
+
+
+   
+      
+   
     componentDidMount() {
+
+       
+
+    
+
         const analise = this.props.location.state && this.props.location.state[0]
         const ocpId = this.props.location.state && this.props.location.state[1]
 
@@ -86,31 +90,28 @@ class RegistroDeAnalise extends React.Component {
             },() => this.onParametroSelect(analise.parametroId))
 
         } else {
-            ScqApi.ListaProcessos().then(res => {
+            /* ScqApi.ListaProcessos().then(res => {
 
                 this.setState({
                     processos: res
 
                 })
-            })
+            }) */
+          
         }
 
     }
 
     onLinhaSelect = (linhaId) => {
-        ScqApi.ListaEtapasByProcesso(linhaId).then(res => {
-            this.setState({
-                etapas: res
-            })
-        })
+      this.setState({
+          etapas : this.props.etapas.filter(etapa => etapa.processoId === Number(linhaId))
+      }) 
     }
 
     onEtapaSelect = (etapaId) => {
-        ScqApi.ListaParametrosByEtapa(etapaId).then(res => {
-            this.setState({
-                parametros: res
-            })
-        })
+        this.setState({
+            parametros : this.props.parametros.filter(parametro => parametro.etapaId === Number(etapaId))
+        }) 
     }
 
 
@@ -240,7 +241,7 @@ class RegistroDeAnalise extends React.Component {
         const { id } = this.state.analise
         const analise = { id: id, analista: this.state.analista , resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId : this.state.ocpId }
        
-            ScqApi.EditarAnalise(analise).then(() => this.props.history.push("/OrdensDeCorrecao"))
+            ScqApi.EditarAnalise(analise).then(() => this.props.reanaliseOcp(this.state.ocpId))
             
        
            
@@ -278,7 +279,7 @@ class RegistroDeAnalise extends React.Component {
                    
                             <Form.Row>
                                 <Col>
-                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={this.state.processos} onChange={this.onLinhaSelect} selection={this.state.processo?.id}></GenericSelect>
+                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={this.props.processos} onChange={this.onLinhaSelect} selection={this.state.processo?.id}></GenericSelect>
                                 </Col>
                             </Form.Row>
                             <Form.Row>
@@ -317,6 +318,7 @@ class RegistroDeAnalise extends React.Component {
                         <Form.Group style={{ marginTop: 20 }}>
                             <CheckOutAnalise valid={!this.state.calcDisabled} resultado={this.state.resultado} parametro={this.state.parametro} status={this.state.status} salvarAnalise={this.salvarAnalise} salvarReanalise={this.salvarReanalise} gerarOcpReanalise={this.gerarOcpReanalise} gerarOcp={this.gerarOcp} analiseId={this.state.analise?.id}></CheckOutAnalise>
                         </Form.Group>
+                       
                     </Form>
 
                 </Container>
@@ -329,4 +331,4 @@ class RegistroDeAnalise extends React.Component {
 
 }
 
-export default withToastManager(withMenuBar(RegistroDeAnalise))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(RegistroDeAnalise)))

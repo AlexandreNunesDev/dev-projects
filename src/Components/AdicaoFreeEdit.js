@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Form, Row, Table } from 'react-bootstrap'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import ScqApi from '../Http/ScqApi'
 import AdicaoEditDiaolog from '../Components/AdicaoEditDialog'
 
 
@@ -10,7 +8,7 @@ import AdicaoEditDiaolog from '../Components/AdicaoEditDialog'
 
 const AdicaoFreeEdit = (props) => {
 
-    const [ocp,setOcp] = useState(props.ocp)
+    const [ocp] = useState(props.ocp)
     const [isEditing, setIsEditing] = useState(false)
     const [editingAdicao,setEditingAdicao] = useState()
 

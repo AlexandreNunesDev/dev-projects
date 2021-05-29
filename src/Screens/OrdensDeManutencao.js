@@ -39,7 +39,7 @@ const buttonLayout = (props, omp, statusToken) => {
         return (
             <>
                 <Col>
-                    <Button style={{ width: "100%" }} style={{ backgroundColor: "RED", borderColor: "RED" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
+                    <Button style={{ backgroundColor: "RED", borderColor: "RED" , width: "100%" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
                 </Col>
                 <Col>
                     {statusToken[0] === "concluido"
@@ -56,7 +56,7 @@ const buttonLayout = (props, omp, statusToken) => {
         return (
             <Row>
                 <Col>
-                    <Button style={{ width: "100%" }} style={{ backgroundColor: "RED", borderColor: "RED" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
+                    <Button style={{ backgroundColor: "RED", borderColor: "RED",width: "100%" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
                 </Col>
                 <Col>
                     {statusToken[0] === "concluido"
@@ -221,8 +221,10 @@ class Trocas extends React.Component {
                 <div className="table-responsive">
                     <Table >
                         <TableHead></TableHead>
-
+                        <tbody>
                         <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} filterType={this.state.filterType} selection={this.state.selection} omps={this.state.filteredOmps} encerrarOmp={this.encerrarOmp} verOmp={this.verOmp} confirmDeleteDiolog={this.confirmDeleteDiolog}  ></TableBody>
+                        </tbody>
+                        
 
                     </Table>
                 </div>

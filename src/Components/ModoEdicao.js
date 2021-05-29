@@ -6,6 +6,9 @@ import GenericSelect from './GenericSelect'
 import ScqApi from '../Http/ScqApi'
 
 import DeleteConfirm from './DeleteConfirm'
+import { connect } from 'react-redux'
+import mapToStateProps from '../mapStateProps/mapStateToProps'
+import dispatchers from '../mapDispatch/mapDispathToProps'
 
 
     const deleteSelection = (processo,etapa,parametro,materiaPrima,troca,tarefa,type,onDelete) => {
@@ -58,7 +61,6 @@ const evaluateColSequence = (props) => {
 
 const ModoEdicao = (props) => {
 
-    const [processos, setProcessos] = useState(null)
     const [processoId, setProcesso] = useState(null)
     const [processo, setProcessoObj] = useState(null)
 
@@ -83,25 +85,25 @@ const ModoEdicao = (props) => {
 
     const [colSequence] = useState(evaluateColSequence(props))
 
-    const loadEditableProcesso = async (processoId) => {
-        const processoResponse = await ScqApi.FindProcesso(processoId)
-        setProcessoObj(processoResponse)
+    const loadEditableProcesso = (processoId) => {
+        const processoResponse = props.processos.filter(processo => processo.id = processoId)
+        setProcessoObj(processoResponse[0])
         setProcesso(processoId)
        
-        return processoResponse
+        return processoResponse[0]
     }
 
-    const loadEditableEtapa =  async (etapaId) => {
-        const etapaResponse = await ScqApi.FindEtapa(etapaId)
-        setEtapaObj(etapaResponse)
-        return etapaResponse
+    const loadEditableEtapa = (etapaId) => {
+        const etapaResponse = props.etapas.filter(etapa => etapa.id = etapaId)
+        setEtapaObj(etapaResponse[0])
+        return etapaResponse[0]
     }
 
-    const loadEditableParametro = async (parametroId) => {
-        const parametroResponse = await ScqApi.FindParametro(parametroId)
-        setParametroObj(parametroResponse)
+    const loadEditableParametro = (parametroId) => {
+        const parametroResponse = props.parametros.filter(parametro => parametro.id = parametroId)
+        setParametroObj(parametroResponse[0])
      
-        return parametroResponse
+        return parametroResponse[0]
     }
 
     const loadEditableMateriaPrima = async (materiaPrimaId) => {
@@ -125,10 +127,10 @@ const ModoEdicao = (props) => {
     }
 
     useEffect(() => {
-            ScqApi.ListaProcessos().then(res => setProcessos(res))
+         
             ScqApi.ListaMateriaPrimas().then(res => setMateriasPrima(res))
 
-    },[props.edited])
+    })
 
 
   
@@ -161,11 +163,11 @@ const ModoEdicao = (props) => {
         
             <Row>
                 <Col xs={{ order: colSequence[0]}} >
-               {processos!=null && props.type !== "materiaPrima" && <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(processoId) => {
+               {props.type !== "materiaPrima" && <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={props.processos} onChange={(processoId) => {
                     setProcesso(processoId)
                     if(props.type=== "processo") {
-                    loadEditableProcesso(processoId).then( res => props.getSelectedProcesso(res))}
-                    else {
+                    props.getSelectedProcesso( loadEditableProcesso(processoId))
+                    }else{
                     loadEditableProcesso(processoId)
                     }}}>
                 </GenericSelect> }
@@ -174,9 +176,9 @@ const ModoEdicao = (props) => {
                 { etapas!=null && <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={(idEtapa) => {
                     setEtapa(idEtapa)
                     if(props.type === "etapa") {
-                    loadEditableEtapa(idEtapa).then( res => props.getSelectedEtapa(res))}
-                    else if(props.type === "troca") {
-                    loadEditableTroca(idEtapa).then(res => props.getSelectedTroca(res))
+                        props.getSelectedEtapa(loadEditableEtapa(idEtapa))
+                    }else if(props.type === "troca") {
+                        props.getSelectedTroca(loadEditableTroca(idEtapa))
                     } else {
                         loadEditableEtapa(idEtapa)
                     }
@@ -185,8 +187,9 @@ const ModoEdicao = (props) => {
                 <Col xs={{ order: colSequence[2]}} >
                 { parametros!=null && <GenericSelect returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"}  ops={parametros} onChange={(idParametro) => {
                     if(props.type === "parametro") {
-                    loadEditableParametro(idParametro).then( res => props.getSelectedParametro(res))}
-                    else {
+                    props.getSelectedParametro(loadEditableParametro(idParametro))
+        
+                    } else {
                     loadEditableParametro(idParametro)
                     }
                     }}></GenericSelect> }
@@ -246,4 +249,4 @@ const ModoEdicao = (props) => {
 
 }
 
-export default ModoEdicao
+export default connect(mapToStateProps.toProps,dispatchers)(ModoEdicao)

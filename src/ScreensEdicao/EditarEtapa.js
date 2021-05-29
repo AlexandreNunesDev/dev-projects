@@ -9,6 +9,7 @@ import GenericSelect from '../Components/GenericSelect';
 import EditarMontagemComposition from './EditarMontagemComposition';
 import { useHistory } from 'react-router-dom';
 import {withMenuBar} from '../Hocs/withMenuBar';
+import { reloadState } from '../store';
 
 
 const EditarEtapa = (props) => {
@@ -68,7 +69,7 @@ const EditarEtapa = (props) => {
           
 
         
-
+            reloadState()
   
     }
 

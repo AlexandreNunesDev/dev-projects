@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Col, Button,Container, Form } from 'react-bootstrap';
-import { useHistory, withRouter } from 'react-router';
 import { withToastManager } from 'react-toast-notifications';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
 import { responseHandler } from '../Services/responseHandler';
 
 const EditarOcpAcao = (props) => {
-    const [ocp,setOcp] = useState(props.location.state)
+    const [ocp] = useState(props.location.state)
     const [responsavel, setResponsavel] = useState(props.location.state.responsavel)
     const [observacao, setObservacao] = useState(props.location.state.observacao)
     const [prazo, setPrazo] = useState(props.location.state.prazo)

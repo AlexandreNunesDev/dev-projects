@@ -1,9 +1,9 @@
 import axios from "axios"
 
 
-import { getToken, logout } from "../Services/auth"
+import { getToken } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
-// " http://localhost:8080/" 
+// http://localhost:8080/ 
 const http = axios.create({
      baseURL: "https://scqapi.com/"
     
@@ -202,6 +202,9 @@ const ScqApi = {
         return http.get("ocpsList")
 
     },
+    FindOneOcp : (id) => {
+        return http.get('fullOcp/'+id)
+    },
     FindParametro: (parametroId) => {
         return http.get("parametro/" + parametroId)
 
@@ -305,6 +308,21 @@ const ScqApi = {
     },
     FindMontagemByEtapaId: (etapaId) => {
         return http.get("montagens/" + etapaId)
+
+    },
+
+    GeatUnidades: () => {
+        return http.get("unidades")
+
+    },
+
+    UpdateTarefaOmp: (tarefaId) => {
+        return http.put("omp/tarefa/{tarefaId}")
+
+    },
+
+    UpdadteTrocaOmp: (trocaId) => {
+        return http.put("omp/troca/{trocaId}")
 
     },
 

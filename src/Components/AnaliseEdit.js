@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
-import { useHistory, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { formatIsoDate } from '../Services/stringUtils';
 import CredentialConfirm from './CredentialConfirm';
@@ -12,7 +12,7 @@ const AnaliseEdit = (props) => {
   const [dataPlanejada,setDataPlanejada] = useState()
   const [showDelete,setShowDelete] = useState(false)
 
-  let history = useHistory();
+
   
   const closeCredentialConfirm = () => {
     setShowDelete(false)

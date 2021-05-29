@@ -5,9 +5,12 @@ import ScqApi from '../Http/ScqApi';
 import GenericSelect from '../Components/GenericSelect';
 import { withToastManager } from 'react-toast-notifications';
 import MontagemComposition from '../Components/MontagemComposition';
-import { getToken } from '../Services/auth';
 import { responseHandler } from '../Services/responseHandler';
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { reloadState } from '../store';
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
 
 class CadastroEtapa extends React.Component {
@@ -30,22 +33,6 @@ class CadastroEtapa extends React.Component {
 
 
 
-    componentDidMount() {
-        console.log(getToken())
-        ScqApi.ListaProcessos().then(res => {
-            this.setState({
-                processos: res
-
-            })
-        })
-        ScqApi.ListaMateriaPrimas().then(res => {
-            this.setState({
-                mps: res
-            })
-        })
-    }
-
-
     selectedLinhaListner = (processoId) => {
         this.setState({ processoId: processoId })
     }
@@ -66,12 +53,13 @@ class CadastroEtapa extends React.Component {
         const etapa = { processoId: processoId, nome, posicao, volume: this.state.volume }
 
         ScqApi.CriarEtapa(etapa).then(res => {
+            this.props.addEtapa(res)
             responseHandler(res, this.props,"Etapa")
             const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
             ScqApi.CriarMontagem(composes).then(res => this.cleanState())
         })
 
-
+        reloadState()
 
 
     }
@@ -86,7 +74,6 @@ class CadastroEtapa extends React.Component {
         this.setState({
             isNotEditable: true,
             etapa: {},
-            processo: {},
             nome: '',
             posicao: '',
             volume: null,
@@ -127,7 +114,7 @@ class CadastroEtapa extends React.Component {
 
                         <Form.Row>
                             <Col>
-                                <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={this.selectedLinhaListner} ops={this.state.processos} isNotEditable={this.state.isNotEditable} selection={this.state.etapa.processoId}></GenericSelect>
+                                <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={this.selectedLinhaListner} ops={this.props.processos} isNotEditable={this.state.isNotEditable} selection={this.state.etapa.processoId}></GenericSelect>
                             </Col>
                         </Form.Row>
                         <Form.Row>
@@ -154,7 +141,7 @@ class CadastroEtapa extends React.Component {
                                 </Col>
                             </Form.Row>
                         </Form.Group>
-                        <MontagemComposition montagemComposes={this.state.montagemComposes} removeMontagemCompose={this.removeMontagemCompose} setMontagemComposes={(montagemCompose) => this.setMontagemComposes(montagemCompose)} ops={this.state.mps}></MontagemComposition>
+                        <MontagemComposition montagemComposes={this.state.montagemComposes} removeMontagemCompose={this.removeMontagemCompose} setMontagemComposes={(montagemCompose) => this.setMontagemComposes(montagemCompose)} ops={this.props.materiasPrima}></MontagemComposition>
                         <Form.Row>
          
                       
@@ -175,4 +162,4 @@ class CadastroEtapa extends React.Component {
 
 }
 
-export default withToastManager(withMenuBar(CadastroEtapa))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroEtapa)))

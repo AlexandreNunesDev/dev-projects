@@ -61,7 +61,7 @@ const AdicaoFree = (props) => {
                 </Col>
 
             </Row>
-            <Form></Form>
+          
             <Row >
                 <Col>
                  

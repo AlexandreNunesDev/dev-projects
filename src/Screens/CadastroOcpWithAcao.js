@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { reloadState } from '../store';
 
 
 
@@ -19,6 +20,7 @@ const redirectAnalise = (history, analise) => {
 
 
 const saveOcp = (analise, acao, prazo, responsavel, observacao, history) => {
+    reloadState()
     const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
     ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm).then(() => redirectOcps(history))
 }
@@ -31,7 +33,7 @@ const CadastroDeOcp = (props) => {
     const [observacao, setObservacao] = useState()
     const [prazo, setPrazo] = useState(new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0])
     const [responsavel, setResponsavel] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [loading] = useState(false)
     const [etapa, setEtapa] = useState()
 
 

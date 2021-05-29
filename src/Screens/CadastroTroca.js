@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState} from 'react'
 import {capitalize,subId} from '../Services/stringUtils'
 import ScqApi from '../Http/ScqApi';
 import { Button, Form, Container, Col } from 'react-bootstrap'
@@ -6,6 +6,9 @@ import { withToastManager } from 'react-toast-notifications'
 import UnidadeSelect from '../Components/UnidadeSelect'
 import GenericSelect from '../Components/GenericSelect';
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
 
 
@@ -19,16 +22,9 @@ const CadastroTroca = (props) => {
     const [frequencia, setFrequencia] = useState()
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
-    const [processos, setProcessos] = useState()
     const [unidade, setUnidade] = useState()
    
 
-
-    useEffect(() => {
-        ScqApi.ListaProcessos().then(res => setProcessos(res))
-        
-    }, []
-    )
 
     const salvarTroca = () => {
         const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade }
@@ -72,7 +68,7 @@ const CadastroTroca = (props) => {
                 <Form>
                     <Form.Row>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(processoId) => { ScqApi.ListaEtapasByProcesso(processoId).then(res => setEtapas(res)) }} ></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={props.processos} onChange={(processoId) =>setEtapas(props.etapas.filter(etapa => etapa.processoId === Number(processoId))) } ></GenericSelect>
                         </Col>
                     </Form.Row>
                     <Form.Row>
@@ -124,4 +120,4 @@ const CadastroTroca = (props) => {
 
 }
 
-export default withToastManager(withMenuBar(CadastroTroca))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroTroca)))

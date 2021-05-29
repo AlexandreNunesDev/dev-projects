@@ -7,6 +7,7 @@ import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
 import { useHistory } from 'react-router-dom';
 import {capitalize,subId} from '../Services/stringUtils'
+import { reloadState } from '../store';
 
 const EditarProcesso = (props) => {
 
@@ -24,6 +25,7 @@ const EditarProcesso = (props) => {
     const submitForm = (event) => {
         const replaceProcesso = { id: id, nome: nome }
         ScqApi.EditarProcesso(replaceProcesso).then(res =>  responseHandler(res))
+        reloadState()
          
     }
 

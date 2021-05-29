@@ -4,6 +4,7 @@ import {capitalize} from '../Services/stringUtils'
 export const responseHandler = (response, props, type, callBack,history) => {
     const { toastManager } = props;
     
+
     if(response.error){
         
         response.data.forEach(erro => {
@@ -79,6 +80,8 @@ const buildMsg = (type,response,msgType) => {
             return `${type} ${response.id} criada com sucesso`
         case "DeleteAnalise" :
             return `Analise deletada com sucesso`
+        default : 
+            return 'Dado processado com sucesso'
         
     }
 }

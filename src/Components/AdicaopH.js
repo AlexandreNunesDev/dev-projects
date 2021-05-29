@@ -10,7 +10,6 @@ const AdicaopH = (props) => {
 
     const[materiasPrima, setMateriasPrima] = useState([])
     const[mpOptions,setMateriasPrimaOptions] = useState([])
-    const[selectedMpNome, setSelectedMpNome] = useState()
     const[selectedMp, setSelectedMp] = useState()
 
 
@@ -25,14 +24,13 @@ const AdicaopH = (props) => {
         }))
     },[materiasPrima])
 
-    useEffect(()=>{
-       const filtered = materiasPrima.filter((mp,index) => {
+  
+    const selectedMpHandler = (selectedMpNome) => {
+        const filtered = materiasPrima.filter((mp,index) => {
             return mp.nome === selectedMpNome[0]
         })
         setSelectedMp(filtered[0])
-    },[selectedMpNome])
-
-  
+    }
 
 
 
@@ -60,7 +58,7 @@ const AdicaopH = (props) => {
     	                        
                                 id={"searchMp"}
                                 onChange={(selected) => {
-                                    setSelectedMpNome(selected)
+                                    selectedMpHandler(selected)
                                 }}
                                 
                                 options={mpOptions}

@@ -23,6 +23,7 @@ const TableBodyTarefas = props => {
     const tarefaTd = props.tarefas?.map((tarefa, index) => {
         return (
 
+        
             <tr style={{ textAlign: "center" }} key={tarefa.id}>
                 <td className="align-middle">{tarefa.id}</td>
                 <td className="align-middle">{tarefa.nome}</td>
@@ -31,6 +32,7 @@ const TableBodyTarefas = props => {
                         <Form.Label>{tarefa.pendente ? "Não Realizado" : "Realizado"}</Form.Label>
                 </td>
             </tr>
+     
         )
     })
 
@@ -86,20 +88,20 @@ const TableBodyTrocas = props => {
 
 const VerOmp = (props) => {
 
-    const [omp] = useState(props.location.state)
+  
     const [trocas, setTrocas] = useState([])
     const [tarefas, setTarefas] = useState([])
 
 
-    const [dataRealizada, setDataRealizada] = useState(omp.data)
+    const [dataRealizada, setDataRealizada] = useState(props.location.state.data)
 
     useEffect(() => {
-        ScqApi.LoadOmpHistorico(omp).then(res => {
+        ScqApi.LoadOmpHistorico(props.location.state).then(res => {
             setTrocas(res.trocas)
             setTarefas(res.tarefas)
             setDataRealizada(res.data)
         })
-    },[])
+    },[props.location.state])
 
 
 
@@ -140,8 +142,12 @@ const VerOmp = (props) => {
                     {tarefas && 
                      <div className="table-responsive">
                     <Table>
+                        
                         <TableHeadTarefas></TableHeadTarefas>
-                        <TableBodyTarefas tarefas={tarefas}></TableBodyTarefas>
+                        <tbody>
+                            <TableBodyTarefas tarefas={tarefas}></TableBodyTarefas>
+                        </tbody>
+                       
                     </Table>
                     </div>}
                 </Fragment>

@@ -1,9 +1,10 @@
 import React, {Fragment, useEffect, useState } from 'react'
-import { Button, Col, Container, Form, Row, Spinner, Table } from 'react-bootstrap'
+import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
 import { useHistory, useLocation } from 'react-router-dom'
 import ScqApi from '../Http/ScqApi'
 
 import { withMenuBar } from '../Hocs/withMenuBar'
+import { responseHandler } from '../Services/responseHandler'
 
 
 
@@ -111,12 +112,7 @@ const CadastroOmp = (props) => {
     const history = useHistory()
     
 
-        useEffect(() => {
-        
-                generateTarefasChoosedIdarray()
-         
-           
-        },[])
+    useEffect(() => generateTarefasChoosedIdarray)
 
     const generateTarefasChoosedIdarray = () =>{
         let markedTarefas = tarefas.map((value) => {
@@ -217,10 +213,10 @@ const CadastroOmp = (props) => {
                         
                         if(trocas.length ===0){
                             const omp = {processoId : tarefas[0].processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
-                            ScqApi.GerarOmp(omp).then(history.push("/OrdensDeManutencao"))
+                            ScqApi.GerarOmp(omp).then(res => responseHandler(res,props,"OrdemDeManutencao",history.push("/OrdensDeManutencao"),history))
                         } else {
                             const omp = {processoId : trocas[0]?.processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
-                            ScqApi.GerarOmp(omp).then(history.push("/OrdensDeManutencao"))
+                            ScqApi.GerarOmp(omp).then(res => responseHandler(res,props,"OrdemDeManutencao",history.push("/OrdensDeManutencao"),history))
                         }
                         
                         

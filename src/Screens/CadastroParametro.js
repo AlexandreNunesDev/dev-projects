@@ -9,6 +9,10 @@ import FormulaBuilder from '../Components/FormulaBuilder';
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { reloadState } from '../store';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { connect } from 'react-redux';
 
 class CadastroParametro extends React.Component {
 
@@ -38,11 +42,10 @@ class CadastroParametro extends React.Component {
 
 
     componentDidMount = () => {
-        ScqApi.ListaProcessos().then(res => {
             this.setState({
-                processos: res
+                processos: this.props.processos
             })
-        })
+           
     }
 
 
@@ -77,9 +80,9 @@ class CadastroParametro extends React.Component {
     }
 
     loadEtapasFromLinha = (linhaId) => {
-        ScqApi.ListaEtapasByProcesso(linhaId).then(res => {
-            this.setState({ etapas: res })
-        })
+       
+            this.setState({ etapas: this.props.etapas.filter(etapa => etapa.processoId === Number(linhaId)) })
+     
     }
 
     titulaConfirm = () => {
@@ -105,7 +108,7 @@ class CadastroParametro extends React.Component {
 
         if (this.state.isNotEditable) {
             ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro"); })
-
+            reloadState()
         }
     }
 
@@ -251,4 +254,4 @@ class CadastroParametro extends React.Component {
 
 }
 
-export default withToastManager(withMenuBar(CadastroParametro))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroParametro)))

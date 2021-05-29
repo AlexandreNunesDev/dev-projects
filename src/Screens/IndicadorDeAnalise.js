@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { Form, Button, Col, Container, Row } from "react-bootstrap"
 import GenericSelect from "../Components/GenericSelect"
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,6 +6,9 @@ import ScqApi from "../Http/ScqApi";
 import AnaliseChart from "../Components/AnaliseChart";
 import { withMenuBar } from "../Hocs/withMenuBar";
 import { formatIsoDate } from "../Services/stringUtils";
+import { connect } from "react-redux";
+import mapToStateProps from "../mapStateProps/mapStateToProps";
+import dispatchers from "../mapDispatch/mapDispathToProps";
 
 
 class IndicadorDeAnalise extends Component {
@@ -31,16 +34,7 @@ class IndicadorDeAnalise extends Component {
 
     }
 
-    componentDidMount = () => {
-        ScqApi.ListaProcessos().then(res => {
-            this.setState({
-                processos: res
-
-
-            })
-        })
-    }
-
+   
 
     getFullEtapaAnaliseChart = () => {
         return this.state.fullEtapaAnaliseChartData.map(etapaChart => <AnaliseChart containerRef={this.containerChartRef} data={etapaChart}></AnaliseChart> )
@@ -118,14 +112,12 @@ class IndicadorDeAnalise extends Component {
                             
                    <Row>
                                 <Col>
-                                    <GenericSelect default={"Selecione um Processo"} returnType={"id"} title={"Processo"} showType={"nome"} ops={this.state.processos} onChange={(idProcesso) => {
-                                        
-                                        ScqApi.ListaEtapasByProcesso(idProcesso).then(res => {
-                                            this.setState({
-                                                etapas: res,
+                                    <GenericSelect default={"Selecione um Processo"} returnType={"id"} title={"Processo"} showType={"nome"} ops={this.props.processos} onChange={(idProcesso) => {
+                                           this.setState({
+                                                etapas: this.props.etapas.filter(etapa => etapa.processoId === Number(idProcesso)),
                                                 processoId : idProcesso
                                             })
-                                        })
+                                       
                                     }}></GenericSelect>
                                 </Col>
                                 </Row>
@@ -134,12 +126,11 @@ class IndicadorDeAnalise extends Component {
                           
                                 <Col>
                                     <GenericSelect default={"Selecione uma Etapa"} returnType={"id"} title={"Etapa"} ops={this.state.etapas} onChange={(idEtapa) => {
-                                        ScqApi.ListaParametrosByEtapa(idEtapa).then(res => {
                                             this.setState({
-                                                parametros: res,
+                                                parametros: this.props.parametros.filter(parametro => parametro.etapaId === Number(idEtapa)),
                                                 etapaId : idEtapa
                                             })
-                                        })
+                                
                                     }}></GenericSelect> 
                                 </Col>
                                 </Row>
@@ -212,4 +203,4 @@ class IndicadorDeAnalise extends Component {
 
 }
 
-export default withMenuBar(IndicadorDeAnalise)
+export default withMenuBar(connect(mapToStateProps.toProps,dispatchers)(IndicadorDeAnalise))

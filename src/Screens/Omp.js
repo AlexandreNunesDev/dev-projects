@@ -1,6 +1,6 @@
 import React from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button, Container, Col, Row, Form } from "react-bootstrap";
+import { Table, Button, Col, Row, Form } from "react-bootstrap";
 import ScqApi from "../Http/ScqApi";
 import GenericDropDown from "../Components/GenericDropDown";
 import { withToastManager } from "react-toast-notifications";
@@ -280,8 +280,10 @@ class Omp extends React.Component {
                     
                     <Table className="table table-hover" >
                     <TableHead></TableHead>
-                
-                        <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} trocas={this.state.filteredTroca} markedTroca={this.state.trocasChoosedId}></TableBody>
+                        <tbody>
+                            <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} trocas={this.state.filteredTroca} markedTroca={this.state.trocasChoosedId}></TableBody>
+                        </tbody>
+                        
            
                      </Table>
                      </div>

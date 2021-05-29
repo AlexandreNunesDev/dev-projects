@@ -62,8 +62,20 @@ const AnaliseChart = (props) => {
 
 
     const buildDomain = () => {
-        let yMax = props.data.pMax
-        let yMin = props.data.pMin
+      let yMax
+      let yMin
+        if(props.data.limiteMax) {
+         yMax = props.data.limiteMax > props.data.yRangeMax ? props.data.limiteMax :  props.data.yRangeMax
+        } else {
+          yMax = props.data.pMax
+        }
+
+        if(props.data.limiteMin) {
+          yMin = props.data.limiteMin < props.data.yRangeMin ? props.data.limiteMin :  props.data.yRangeMin
+         } else {
+           yMin = props.data.pMin
+         }
+         
         return [yMin,yMax] 
     }
 

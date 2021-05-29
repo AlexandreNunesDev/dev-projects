@@ -10,6 +10,7 @@ import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import { useHistory } from 'react-router-dom';
 import {withMenuBar} from '../Hocs/withMenuBar';
+import { reloadState } from '../store';
 
 
 const EditarParametro = (props) => {
@@ -17,7 +18,7 @@ const EditarParametro = (props) => {
     const {toastManager} = props;
     const history = useHistory()
     const [parametro, setParametro] = useState()
-    const [frequenciaId, setFrequenciaId] = useState()
+
     const [processos, setProcessos] = useState([])
     const [processoId, setProcessoId] = useState()
     const [etapas, setEtapas] = useState()
@@ -65,7 +66,7 @@ const EditarParametro = (props) => {
         if(parametro.formula.length>0){
             setTitula(true)
         }
-        setFrequenciaId(parametro.frequenciaId)
+     
         setFrequenciaAnalise(parametro.frequencia)
         setEscalaTempo(parametro.escalaFrequencia)
         setProcessoId(parametro.processoId)
@@ -85,14 +86,14 @@ const EditarParametro = (props) => {
         setFormula(null)
         setTitula(false)
      
-        setFrequenciaId(null)
+      
         setFrequenciaAnalise(null)
         setEscalaTempo(null)
         setProcessoId(null)
         setEtapaId(null)
         setUnidade(null)
     }
-    },[edited])
+    },[edited,parametro])
 
 
 
@@ -105,6 +106,7 @@ const EditarParametro = (props) => {
         
         toastManager.add(`Parametro: ${editedParametro.nome} editado com sucesso`, {appearance: 'success', autoDismiss: true ,autoDismissTimeout: 3000, onDismiss : () => {history.push("/CadastroParametro")}})
         setEdited(!edited)
+        reloadState()
     }
 
 

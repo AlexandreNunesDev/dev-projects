@@ -9,6 +9,11 @@ import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
 import AdicaoFreeEdit from '../Components/AdicaoFreeEdit';
+import { reloadState } from '../store';
+import { loadOcps } from '../Services/storeService';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import { connect } from 'react-redux';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
 
 
@@ -28,17 +33,25 @@ const EditarOcpAdicao = (props) => {
     }
 
     const salvarEdicaoOcp = () => {
+        reloadState()
         let mpQtds = ocp.adicoesDto.map((adicao) => {
             return `${adicao.id}:${adicao.quantidade}`
         }) 
 
         let newOcp = {id: ocp.id, responsavel,observacao,mpQtds : mpQtds}
         ScqApi.EditarOcpAdicao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao"))
+       
     }
 
     const deletarOcp = () => {
-       
-        ScqApi.DeleteOcp(ocp.id).then(res => props.history.push("/OrdensDeCorrecao"))
+        
+        ScqApi.DeleteOcp(ocp.id).then(res => { 
+            props.removeOcp(ocp.id)
+            props.history.push("/OrdensDeCorrecao")
+        })
+      
+        
+        
     }
  
 
@@ -123,4 +136,4 @@ const EditarOcpAdicao = (props) => {
 
 
 
-export default withRouter(withMenuBar(withToastManager(EditarOcpAdicao)))
+export default withRouter(withMenuBar(withToastManager(connect(mapToStateProps.toProps,dispatchers)(EditarOcpAdicao))))

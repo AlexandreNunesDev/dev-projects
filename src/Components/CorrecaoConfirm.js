@@ -44,7 +44,7 @@ const CorrecaoConfirm = (props) => {
         </Modal.Header>
         <Modal.Body>
             
-              {props.ocp.adicoesDto.length == 0 ? buildAcaoDetails(props.ocp) : buildAdicaoDetails(props.ocp.adicoesDto)}
+              {props.ocp.adicoesDto.length === 0 ? buildAcaoDetails(props.ocp) : buildAdicaoDetails(props.ocp.adicoesDto)}
          
             <Form.Row>
                 <Form.Label>Digite numero da {props.correcaoType}</Form.Label>

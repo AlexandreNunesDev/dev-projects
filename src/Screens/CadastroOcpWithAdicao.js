@@ -8,6 +8,10 @@ import AdicaopH from '../Components/AdicaopH';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import {loadOcps} from '../Services/storeService'
 
 
 
@@ -25,6 +29,7 @@ const saveOcp = (analise, mpQtds, responsavel, observacao, history ,props) => {
     const fullAnaliseForm = { ...analise, responsavel: responsavel, observacao: observacao, mpQtds: mpQtds }
 
     ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm).then((res) => {
+        loadOcps(props)
         responseHandler(res,props, "OrdemDeCorrecao", redirectOcps ,history)
        
     }
@@ -216,4 +221,4 @@ const CadastroDeOcp = (props) => {
 
 
 
-export default withToastManager(withRouter(withMenuBar(CadastroDeOcp)))
+export default withToastManager(withRouter(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroDeOcp))))

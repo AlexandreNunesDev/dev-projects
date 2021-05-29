@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Container, Col, Button,} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useHistory, withRouter } from 'react-router-dom';
+import {withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import GenericSelect from '../Components/GenericSelect'
 import AdicaoFree from '../Components/AdicaoFree';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
+import { reloadState } from '../store';
 
 
 
@@ -18,7 +19,7 @@ const CadastroDeOcpLivre = (props) => {
     const [parametros, setParametros] = useState([])
     const [parametro, setParametro] = useState(props.location.state?.parametroId || null)
     
-    const [materiasPrima, setMateriasPrima] = useState()
+    const [materiasPrima] = useState()
     const [mpQtds, setMpQtd] = useState([])
     const [responsavel, setResponsavel] = useState('')
     const [observacao, setObservacao] = useState('')
@@ -28,9 +29,10 @@ const CadastroDeOcpLivre = (props) => {
     const [processos,setProcessos] = useState([])
     const [mpNomes , setMpNome] = useState([])
 
-    let unidade = ""
+
 
     const saveOcp = () => {
+        reloadState()
         if(analise){
             ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro ,analiseId : analise.id}).then((res) => responseHandler(res,props,"OrdemDeCorrecao"))
         }
@@ -61,19 +63,17 @@ const CadastroDeOcpLivre = (props) => {
         setMpQtd(tempoMpQtd)
         setMpNome(tempoMpNome)
         
-        console.log(tempoMpQtd)
     }
 
     const removeMpQtd = (indexToRemove) => {
      
         let tempoMpQtd = mpQtds.filter((mpqtd,index) => {
-            return index != indexToRemove
+            return index !== indexToRemove
         })
        
         
         setMpQtd(tempoMpQtd)
        
-        console.log(mpQtds)
     }
 
     

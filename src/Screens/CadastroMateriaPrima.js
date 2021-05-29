@@ -40,7 +40,6 @@ class CadastroMateriaPrima extends React.Component {
 
 
     salvarMateriaPrima = () => {
-        const {toastManager} = this.props
         let {nome,fornecedor,fatorTitulometrico, preco, unidade } = this.state
         if(fatorTitulometrico===''){
             fatorTitulometrico=1
