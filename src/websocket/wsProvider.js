@@ -7,7 +7,7 @@ import { actions } from '../actions/actions';
 import { useDispatch } from 'react-redux';
 
 const WebSocketContext = createContext(null)
-const SOCKET_URL = 'ws://localhost:8080/gs-guide-websocket'
+const SOCKET_URL = 'wss://scqapi/gs-guide-websocket'
 
 
 export { WebSocketContext }
@@ -32,8 +32,11 @@ export default ({ children }) => {
     const onConnect = () => {
         console.log("Socket Conectado")
         socket.subscribe("/reducer/return", (message) => {
+            
             const bodyMsg = JSON.parse(message.body)
+           
             const functionName = bodyMsg.content
+            console.log(functionName)
             const action = actions[functionName]()
             storeService[functionName](null,action)
             
