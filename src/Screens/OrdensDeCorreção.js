@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import { WebSocketContext } from "../websocket/wsProvider";
 import OcpsTableBody from "../Components/OcpsTableBody";
+import { actions } from "../actions/actions";
 
 
 
@@ -130,7 +131,7 @@ class OrdensDeCorreção extends Component {
 
 
     aprovarOcp = () => {
-        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.props.aproveOcp(this.state.ocpToAprove.id))
+        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(null, actions.reanaliseOcp(this.state.ocpToAprove.id)))
     }
 
     editOcp = (ocp) => {

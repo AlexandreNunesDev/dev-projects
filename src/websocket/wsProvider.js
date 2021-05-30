@@ -18,11 +18,13 @@ export default ({ children }) => {
   
     const dispatch =  useDispatch()
 
-    const sendMessage = (clickedReducerFunction,payload) => {
-       
+    const sendMessage = (clickedReducerFunction,action) => {
+        const message = clickedReducerFunction == null ? {type : 'action' , action : action} :  {type: 'function',function : clickedReducerFunction.name}
+   
+     
         socket.publish({
             destination: '/app/dispatcher',
-            body: JSON.stringify(clickedReducerFunction.name),
+            body: JSON.stringify(message),
             headers: { priority: '9' },
           });
        
@@ -34,11 +36,18 @@ export default ({ children }) => {
         socket.subscribe("/reducer/return", (message) => {
             
             const bodyMsg = JSON.parse(message.body)
+            
+            
+            console.log(bodyMsg.content)
+            if(bodyMsg.content.type == 'action'){
+                const actionObj = bodyMsg.content.action
+                dispatch(actionObj)
+            } else {
+                const functionName = bodyMsg.content
+                const action = actions[functionName]()
+                storeService[functionName](null,action)
+            }
            
-            const functionName = bodyMsg.content
-            console.log(functionName)
-            const action = actions[functionName]()
-            storeService[functionName](null,action)
             
         })
     }

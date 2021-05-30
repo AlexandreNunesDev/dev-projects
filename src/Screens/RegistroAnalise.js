@@ -13,6 +13,7 @@ import { getUserName } from '../Services/auth';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 const SOCKET_URL = 'ws://localhost:8080/gs-guide-websocket'
 const valueForm = (props) => {
@@ -31,7 +32,7 @@ const valueForm = (props) => {
 
 
 class RegistroDeAnalise extends React.Component {
-
+    static contextType = WebSocketContext
 
     constructor(props) {
         super(props)
@@ -241,7 +242,7 @@ class RegistroDeAnalise extends React.Component {
         const { id } = this.state.analise
         const analise = { id: id, analista: this.state.analista , resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId : this.state.ocpId }
        
-            ScqApi.EditarAnalise(analise).then(() => this.props.reanaliseOcp(this.state.ocpId))
+            ScqApi.EditarAnalise(analise).then(() =>  this.context.ws.sendMessage(this.props.loadOcps, null))
             
        
            
