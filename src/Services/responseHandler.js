@@ -1,7 +1,7 @@
 
 import {capitalize} from '../Services/stringUtils'
 
-export const responseHandler = (response, props, type, callBack,history) => {
+export const responseHandler = (response, props, type, callBack,history,context,func,act,toastType) => {
     const { toastManager } = props;
     
 
@@ -9,14 +9,14 @@ export const responseHandler = (response, props, type, callBack,history) => {
         
         response.data.forEach(erro => {
             
-            toastManager.add(`${(capitalize(transformField(erro.field)))} : ${erro.error}`, {
-                appearance: 'error', autoDismiss: true, onDismiss : () => window.location.reload()
+           toastManager && toastManager.add(`${(capitalize(transformField(erro.field)))} : ${erro.error}`, {
+                appearance: 'error', autoDismiss: true
               })});
               return false;
     } else {
-         
-        toastManager.add(buildMsg(type,response), {
-            appearance: 'success', autoDismiss: true , onDismiss : () =>callBack ? callBack(history) : window.location.reload()
+       context && context.ws.sendMessage(func,act,history)
+       toastManager && toastManager.add(buildMsg(type,response,toastType), {
+            appearance: toastType ||'success', autoDismiss: true
           })
           return true
     }
@@ -60,28 +60,45 @@ const transformField = field => {
     
 }
 
+
+
+
 const buildMsg = (type,response,msgType) => {
     
-
+let textByMsgType =  getTextByTostType(msgType)
     switch(type) {
         case "Processo" :
-            return `${type} ${response.nome} criado com sucesso`  
+            return `${type} ${response.nome} ${textByMsgType} com sucesso`  
         case "Etapa" :
-            return `${type} ${response.nome} criado com sucesso`
+            return `${type} ${response.nome} ${textByMsgType} com sucesso`
         case "Parametro" :
-            return `${type} ${response.nome} criado com sucesso`
+            return `${type} ${response.nome} ${textByMsgType} com sucesso`
         case "MateriaPrima" :
-            return `${type} ${response.nome} criado com sucesso`
+            return `${type} ${response.nome} ${textByMsgType} com sucesso`
         case "OrdemDeCorrecao" :
-            return `${type} criado com sucesso`
+            return `${type} ${textByMsgType} com sucesso`
         case "OrdemDeManutencao" :
-            return `${type} da ${response.nome} criado com sucesso`
+            return `${type} da ${response.nome} ${textByMsgType} com sucesso`
         case "Analise" : 
-            return `${type} ${response.id} criada com sucesso`
+            return `${type} ${response.id} ${textByMsgType} com sucesso`
         case "DeleteAnalise" :
-            return `Analise deletada com sucesso`
+            return `Analise ${textByMsgType} com sucesso`
         default : 
             return 'Dado processado com sucesso'
         
+    }
+}
+const getTextByTostType = (toastType) => {
+    switch(toastType) {
+        case "success" :
+            return  "driado"
+        case "error" :
+            return  "cancelado"
+        case "warning" :
+            return  "deletado"
+        case "info" :
+            return  "alterado"
+        default : 
+            return "processado"
     }
 }

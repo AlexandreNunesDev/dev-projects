@@ -108,11 +108,11 @@ const CadastroOmp = (props) => {
     const [trocas] = useState(location.state.trocas || [])
     const [emitidoPor , setEmitidoPor] = useState()
     const [tarefas, setTarefas] = useState(location.state.tarefas || [])
-    const [tarefasChoosedId , setTarefasChoosedId] = useState()
+    const [tarefasChoosedId , setTarefasChoosedId] = useState([])
     const history = useHistory()
     
 
-    useEffect(() => generateTarefasChoosedIdarray)
+    useEffect(() => generateTarefasChoosedIdarray,[])
 
     const generateTarefasChoosedIdarray = () =>{
         let markedTarefas = tarefas.map((value) => {

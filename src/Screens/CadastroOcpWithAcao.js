@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Form, Container, Col, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { reloadState } from '../store';
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 
 
@@ -19,13 +23,14 @@ const redirectAnalise = (history, analise) => {
 
 
 
-const saveOcp = (analise, acao, prazo, responsavel, observacao, history) => {
-    reloadState()
+const saveOcp = (analise, acao, prazo, responsavel, observacao, props,context) => {
+    
     const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
-    ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm).then(() => redirectOcps(history))
+    ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm).then(() => context.ws.sendMessage(props.loadOcps, null, "OrdensDeCorrecao"))
 }
 
 const CadastroDeOcp = (props) => {
+    let context = useContext(WebSocketContext)
     let history = useHistory();
     const [analise, setAnalise] = useState()
     const [parametro, setParametro] = useState()
@@ -123,7 +128,7 @@ const CadastroDeOcp = (props) => {
                              Cancelar
                                          </Button>
                          <Button style={{ margin: 2 }} type="reset" onClick={() => {
-                             saveOcp(analise, acao, prazo, responsavel,observacao, history)
+                             saveOcp(analise, acao, prazo, responsavel,observacao, props,context)
                  
                          }}>
                              Salvar
@@ -143,4 +148,4 @@ const CadastroDeOcp = (props) => {
 
 
 
-export default withRouter(withMenuBar(CadastroDeOcp))
+export default withRouter(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroDeOcp)))

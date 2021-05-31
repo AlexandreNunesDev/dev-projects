@@ -78,6 +78,7 @@ class OrdensDeCorreção extends Component {
             actualFilter: "",
             ocpConfirm: {},
             filterType: '',
+            showCorrecaoConfirm : false
 
         }
     }
@@ -114,7 +115,7 @@ class OrdensDeCorreção extends Component {
 
 
             } else {
-                ScqApi.AcaoCorrigir(ocpId).then(() => this.context.sendMessage(this.props.loadOcps, null))
+                ScqApi.AcaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps, null))
 
             }
 
@@ -131,19 +132,10 @@ class OrdensDeCorreção extends Component {
 
 
     aprovarOcp = () => {
-        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(null, actions.reanaliseOcp(this.state.ocpToAprove.id)))
+        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(null, actions.aproveOcp(this.state.ocpToAprove.id)))
     }
 
-    editOcp = (ocp) => {
-        if (ocp.isAdicao) {
-            this.props.history.push("/EditarOcpAdicao", ocp)
-        } else {
-            this.props.history.push("/EditarOcpAcao", ocp)
-        }
-
-    }
-
-
+   
     adjustTableHeight = () => {
         var table = document.getElementById("ocpTable")
         var rows = table.rows;
@@ -226,13 +218,16 @@ class OrdensDeCorreção extends Component {
     }
 
 
+    
+
+
 
    
 
 
 
     render() {
-        console.log(this.props)
+
 
         return (
             <>
@@ -271,8 +266,8 @@ class OrdensDeCorreção extends Component {
                     </Table>
                 </div>
 
-                {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={() => this.setState({ showCorrecaoConfirm: false })} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocp={this.state.ocpToConfirm} correcaoConfirm={(isOcp, ocpId) => this.correcaoConfirm(isOcp, ocpId, this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
-                <CredentialConfirm details={this.state.details} aproveOcp={() => this.aprovarOcp()} show={this.state.show} closeCredentialConfirm={() => this.setState({ show: false })}  ></CredentialConfirm>
+                {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={(value) => this.setState({ showCorrecaoConfirm: value })} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocp={this.state.ocpToConfirm} correcaoConfirm={(isOcp, ocpId) => this.correcaoConfirm(isOcp, ocpId, this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
+                <CredentialConfirm details={this.state.details} aproveOcp={() => this.aprovarOcp()} show={this.state.show} closeCredentialConfirm={(value) => this.setState({ show: value })}  ></CredentialConfirm>
             </>
 
 

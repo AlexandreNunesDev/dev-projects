@@ -21,6 +21,9 @@ export const optionsLoad = async (props) => {
   if (props.ocp.ocps.length === 0) {
     loadOcps(props)
   }
+  if (props.notifications.length === 0) {
+    loadNotifications(props)
+  }
 
 
 
@@ -30,8 +33,8 @@ export const loadProcessos = (props,action) => {
   ScqApi.ListaProcessos().then(res => {
     if(props) {
       props.loadProcessos(res) 
-      props.loadPosition(0)
-      isFinished(props)
+     
+      
     } else {
       store.dispatch(action(res))
     }
@@ -44,8 +47,7 @@ export const loadProcessos = (props,action) => {
 export const loadEtapas = (props,redirect) => {
   ScqApi.ListaEtapas().then(res => {
     props.loadEtapas(res)
-    props.loadPosition(1)
-    isFinished(props)
+   
 
   })
 }
@@ -53,8 +55,7 @@ export const loadEtapas = (props,redirect) => {
 export const loadParametros = (props,redirect) => {
   ScqApi.ListaParametros().then(res => {
     props.loadParametros(res)
-    props.loadPosition(2)
-    isFinished(props)
+   
 
   })
 }
@@ -62,8 +63,7 @@ export const loadParametros = (props,redirect) => {
 export const loadMateriasPrima = (props,redirect) => {
   ScqApi.ListaMateriaPrimas().then(res => {
     props.loadMateriasPrima(res)
-    props.loadPosition(3)
-    isFinished(props)
+   
 
   })
 }
@@ -72,8 +72,7 @@ export const loadMateriasPrima = (props,redirect) => {
 export const loadTrocas = (props,redirect) => {
   ScqApi.ListaTrocas().then(res => {
     props.loadTrocas(res)
-    props.loadPosition(4)
-    isFinished(props)
+   
 
   })
 }
@@ -85,8 +84,7 @@ export const loadOcps = (props,action) => {
     if(props!=null){
      
       props.loadOcps(res)
-      props.loadPosition(5)
-      isFinished(props)
+     
     } else {
       action.payload = res
       store.dispatch(action)
@@ -94,6 +92,22 @@ export const loadOcps = (props,action) => {
     
   })
 }
+
+export const loadNotifications = (props,action) => {
+  
+  ScqApi.ListaNotificacoes().then(res => {
+    if(props!=null){
+     
+      props.loadNotifications(res)
+     
+    } else {
+      action.payload = res
+      store.dispatch(action)
+    }
+    
+  })
+}
+
 
 
 

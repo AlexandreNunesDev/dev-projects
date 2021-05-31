@@ -6,6 +6,7 @@ const initialState = {
   showEncerradas : false,
   filterType : '',
   actualFilter : '',
+  ocpToEdit : {}
  
 
 }
@@ -46,18 +47,23 @@ const ocpsReducer = produce(
         break
       case "REANALISE_OCP":
           const indexReanalise = draft.ocps.findIndex(ocp => ocp.id === action.payload)
-          if (indexReanalise !== -1) draft.ocps[indexReanalise].analiseStatus = false
-         
+          if (indexReanalise !== -1) draft.ocps[indexReanalise].analiseStatus = false   
         break
       case "SHOW_ENCERRADAS":
           draft.showEncerradas = action.payload
         break
       case "REMOVE_OCP":
         const indexOcps = draft.ocps.findIndex(ocp => ocp.id === action.payload)
-        if (indexOcps !== -1) draft.splice(indexOcps, 1)
-       
-     
-        
+        if (indexOcps !== -1) draft.ocps.splice(indexOcps, 1)
+        break
+      case "OCP_TO_EDIT":
+        draft.ocpToEdit = action.payload
+        break
+      case "OCP_QTD_ADICAO":
+        let ocpAdicaoIndex = draft.ocpToEdit.adicoesDto.findIndex(adicao => adicao.id === action.payload.id)
+        if (ocpAdicaoIndex !== -1) draft.ocpToEdit.adicoesDto[ocpAdicaoIndex].quantidade = action.payload.quantidade   
+        break
+      
        
     }
     return

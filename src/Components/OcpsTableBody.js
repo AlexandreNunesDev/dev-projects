@@ -7,6 +7,7 @@ import { Button, Form } from 'react-bootstrap';
 import { downloadOcp } from "../Services/documentsDownload";
 import { BsDot } from 'react-icons/bs';
 import { Fragment } from 'react';
+import { useHistory } from 'react-router';
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -47,25 +48,54 @@ const buildAcaoDetails = (ocp) => {
 const OcpsTableBody = (props) => {
 
 
+    const history = useHistory()
+
+    const editOcp = (ocp) => {
+        props.ocpToEdit(ocp)
+        if (ocp.isAdicao) {
+            history.push("/EditarOcpAdicao", ocp)
+        } else {
+            history.push("/EditarOcpAcao", ocp)
+        }
+
+    }
+
+
+    const getCorrectionButton = (ocp) => {
+        return <Button disabled={ocp.statusCorrecao} style={{ alignmentBaseline: "center", backgroundColor: "ORANGE", borderColor: "ORANGE", color: "BLACK" }} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button>
+    }
+
+    const getReanalisebutton = (ocp) => {
+        return <Button disabled={!ocp.analiseStatus} style={{ alignmentBaseline: "center", backgroundColor: "YELLOW", borderColor: "YELLOW", color: "BLACK" }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button>
+    }
+
+    const getAproveOcpButton = (ocp) => {
+        return <Button disabled={ocp.statusOCP} style={{ alignmentBaseline: "center", backgroundColor: "GREEN", borderColor: "GREEN" }} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button>
+    }
+
+    const getEncerradaOcpButton = () => {
+        return <Button disabled={true} style={{ backgroundColor: 'GRAY', borderColor: 'GRAY', alignmentBaseline: "center" }}>Encerrada</Button>
+    }
 
     const buildStatusButton = (ocp) => {
-
-        if (!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
-            return <Button disabled={ocp.statusCorrecao} style={{ alignmentBaseline: "center", backgroundColor: "ORANGE", borderColor: "ORANGE", color: "BLACK" }} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button>
-        } else if (ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
-            return <Button disabled={!ocp.analiseStatus} style={{ alignmentBaseline: "center", backgroundColor: "YELLOW", borderColor: "YELLOW", color: "BLACK" }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button>
-        } else if (ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP) {
-            return <Button disabled={ocp.statusOCP} style={{ alignmentBaseline: "center", backgroundColor: "GREEN", borderColor: "GREEN" }} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button>
+        if (!ocp.statusCorrecao) {
+            return getCorrectionButton(ocp)
+        } else if (ocp.analiseStatus) {
+            return getReanalisebutton(ocp)
+        } else if (!ocp.statusOCP) {
+            return getAproveOcpButton(ocp)
         } else {
-            return <Button disabled={true} style={{ backgroundColor: 'GRAY', borderColor: 'GRAY', alignmentBaseline: "center" }}>Encerrada</Button>
+            return getEncerradaOcpButton()
         }
-    
+
+
+
     }
 
     const filterHandler = () => {
         let filteredByFilterType = []
-        
-        if(props.ocp.actualfilter === '') {
+
+        if (props.ocp.actualfilter === '') {
             filteredByFilterType = props.ocp.ocps
         } else {
             filteredByFilterType = props.ocp.ocps.filter((ocp) => {
@@ -85,7 +115,7 @@ const OcpsTableBody = (props) => {
                         } else {
                             return false
                         }
-        
+
                     }
                     if (String("Reanalisar").toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())) {
                         if (ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
@@ -93,7 +123,7 @@ const OcpsTableBody = (props) => {
                         } else {
                             return false
                         }
-        
+
                     }
                     if (String("Aprovar").toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())) {
                         if (ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP) {
@@ -101,8 +131,8 @@ const OcpsTableBody = (props) => {
                         } else {
                             return false
                         }
-        
-        
+
+
                     }
                     if (String("Encerrada").toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())) {
                         if (ocp.statusCorrecao && !ocp.analiseStatus && ocp.statusOCP) {
@@ -110,39 +140,39 @@ const OcpsTableBody = (props) => {
                         } else {
                             return false
                         }
-        
-        
+
+
                     }
-        
+
                 }
                 return true
-        
+
             })
         }
-       
-    
+
+
         if (!props.ocp.showEncerradas) {
             return filteredByFilterType.filter((ocp) => {
                 return ocp.statusOCP === false
             })
-        
+
         } else {
             return filteredByFilterType
-       
+
         }
-    
-    
+
+
     }
-    
+
 
     let firstDateLineCounter = 0
     let firstDate = new Date(props.ocp.ocps[0]?.prazo)
-   
+
     //Pega a data damprimeira OCP da lista de OCPS enviadas pelo servidor
     let refDate = new Date(props.ocp.ocps[0]?.prazo)
 
     let ocpTd = filterHandler().map((ocp, index) => {
-        let buttonKey = ocp.statucOcp ? 1 : !ocp.analiseStatus ?  2 : 3
+        let buttonKey = ocp.statucOcp ? 1 : !ocp.analiseStatus ? 2 : 3
         //Pega data da ocp da atual iteraçao do Map e compara com a data da primeira OCP da lista de OCPS
         let actualDate = new Date(ocp.prazo)
 
@@ -156,7 +186,7 @@ const OcpsTableBody = (props) => {
                 <tr key={ocp.id}>
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
                     {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
-                    {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => this.editOcp(ocp)}>Editar</Button></th>}
+                    {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></th>}
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                     {
                         !isMobile
@@ -184,19 +214,17 @@ const OcpsTableBody = (props) => {
                     </tr>
                     <tr>
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                        {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
-                        {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => this.editOcp(ocp)}>Editar</Button></th>}
+                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></td>}
+                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
-                        {
-                        !isMobile ? <> <td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
-                        <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td> </>
-                        : <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>
-                        }
+                        {!isMobile ? <><td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
+                            <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td></>
+                            : <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>}
 
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
-                        <td  className="align-middle"  >{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
+                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax} ${ocp.unidade}`}</td>}
+                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado} ${ocp.unidade}`}</td>}
+                        <td className="align-middle">{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
                         <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                     </tr>
                 </Fragment>
@@ -209,13 +237,13 @@ const OcpsTableBody = (props) => {
 
 
     })
-    
-    if(props.ocp.ocps.length === 0) {
+
+    if (props.ocp.ocps.length === 0) {
         return <h1>Voce não possui conrreçoes</h1>
     } else {
         return (
-     
-            <>  
+
+            <>
                 {firstDateLineCounter > 0 && <tr >
                     <td className="align-middle" style={{ textAlign: "center" }} colSpan={11}>{firstDate.toLocaleDateString("pt-br")}</td>
                 </tr>}
@@ -223,8 +251,8 @@ const OcpsTableBody = (props) => {
             </>
         )
     }
- 
+
 
 }
 
-export default  connect(mapToStateProps.toProps,dispatchers)(OcpsTableBody)
+export default connect(mapToStateProps.toProps, dispatchers)(OcpsTableBody)

@@ -8,7 +8,8 @@ const mapToStateProps = {
           trocas : state.options.trocas,
           tarefasDeManutencao : state.options.tarefasDeManutencao,
           ocp : state.ocp,
-          global : state.global
+          global : state.global,
+          notifications : state.notification.notifications
 
         }
     },

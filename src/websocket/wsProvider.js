@@ -5,9 +5,12 @@ import store from '../store';
 import * as storeService from '../Services/storeService';
 import { actions } from '../actions/actions';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
+import { logout } from '../Services/auth';
 
 const WebSocketContext = createContext(null)
 const SOCKET_URL = 'wss://scqapi.com/gs-guide-websocket'
+const SOCKET_URL_TEST = 'ws://localhost:8080/gs-guide-websocket'
 
 
 export { WebSocketContext }
@@ -17,9 +20,10 @@ export default ({ children }) => {
     let ws;
   
     const dispatch =  useDispatch()
+    const history = useHistory()
 
-    const sendMessage = (clickedReducerFunction,action) => {
-        const message = clickedReducerFunction == null ? {type : 'action' , action : action} :  {type: 'function',function : clickedReducerFunction.name}
+    const sendMessage = (clickedReducerFunction,action,route) => {
+        const message = clickedReducerFunction == null ? {type : 'action' , action : action,route : route } :  {type: 'function',function : clickedReducerFunction.name, route : route}
    
      
         socket.publish({
@@ -27,7 +31,7 @@ export default ({ children }) => {
             body: JSON.stringify(message),
             headers: { priority: '9' },
           });
-       
+          
     }
 
 
@@ -38,14 +42,16 @@ export default ({ children }) => {
             const bodyMsg = JSON.parse(message.body)
             
             
-            console.log(bodyMsg.content)
-            if(bodyMsg.content.type == 'action'){
-                const actionObj = bodyMsg.content.action
+            console.log(bodyMsg)
+            if(bodyMsg.type == 'action'){
+                const actionObj = bodyMsg.action
                 dispatch(actionObj)
+                bodyMsg.route && history.push("/"+bodyMsg.route);
             } else {
-                const functionName = bodyMsg.content
+                const functionName = bodyMsg.function
                 const action = actions[functionName]()
                 storeService[functionName](null,action)
+                bodyMsg.route && history.push("/"+bodyMsg.route);
             }
            
             
@@ -55,6 +61,7 @@ export default ({ children }) => {
     const onDisconnect = () => {
         console.log("socket desconectado")
         socket.deactivate()
+        logout()
     }
 
     if (socket == null) {

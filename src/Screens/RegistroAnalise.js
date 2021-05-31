@@ -18,12 +18,12 @@ import { WebSocketContext } from '../websocket/wsProvider';
 const SOCKET_URL = 'ws://localhost:8080/gs-guide-websocket'
 const valueForm = (props) => {
     return (
-        <Form.Group as={Col}>
+        <>
             <Form.Label>
                 Valor
             </Form.Label>
-            <Form.Control type="text"  placeholder={"0.00"} allowedDecimalSeparators={["."]}  onChange={(event) => props.onChange(event.target.value)} />
-        </Form.Group>
+            <Form.Control type="number"  placeholder={"0.00"}   onChange={(event) => props.onChange(event.target.value)} />
+        </>
     )
 }
 
@@ -90,17 +90,7 @@ class RegistroDeAnalise extends React.Component {
 
             },() => this.onParametroSelect(analise.parametroId))
 
-        } else {
-            /* ScqApi.ListaProcessos().then(res => {
-
-                this.setState({
-                    processos: res
-
-                })
-            }) */
-          
-        }
-
+        } 
     }
 
     onLinhaSelect = (linhaId) => {
@@ -242,7 +232,7 @@ class RegistroDeAnalise extends React.Component {
         const { id } = this.state.analise
         const analise = { id: id, analista: this.state.analista , resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId : this.state.ocpId }
        
-            ScqApi.EditarAnalise(analise).then(() =>  this.context.ws.sendMessage(this.props.loadOcps, null))
+            ScqApi.EditarAnalise(analise).then(() =>  this.context.ws.sendMessage(this.props.loadOcps, null, "OrdensDeCorrecao"))
             
        
            

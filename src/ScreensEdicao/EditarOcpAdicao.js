@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React, {useContext, useState } from 'react'
 import { Form, Container, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {  withRouter } from 'react-router-dom';
@@ -14,6 +14,8 @@ import { loadOcps } from '../Services/storeService';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import { connect } from 'react-redux';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { actions } from '../actions/actions';
 
 
 
@@ -22,32 +24,28 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 
 
 const EditarOcpAdicao = (props) => {
-    const [ocp,setOcp] = useState(props.location.state)
+    
+
+    const context = useContext(WebSocketContext)
     const [responsavel, setResponsavel] = useState(props.location.state.responsavel)
     const [observacao, setObservacao] = useState(props.location.state.observacao)
 
 
-    const updadteQuantidadeAdicao = (quantidade,index) => {
-        ocp.adicoesDto[index].quantidade = quantidade
-        setOcp(ocp)
-    }
-
     const salvarEdicaoOcp = () => {
-        reloadState()
-        let mpQtds = ocp.adicoesDto.map((adicao) => {
+       
+        let mpQtds = props.ocp.ocpToEdit.adicoesDto.map((adicao) => {
             return `${adicao.id}:${adicao.quantidade}`
         }) 
 
-        let newOcp = {id: ocp.id, responsavel,observacao,mpQtds : mpQtds}
-        ScqApi.EditarOcpAdicao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao"))
+        let newOcp = {id: props.ocp.ocpToEdit.id, responsavel,observacao,mpQtds : mpQtds}
+        ScqApi.EditarOcpAdicao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao",null,"OrdensDeCorrecao",context,props.loadOcps,null))
        
     }
 
     const deletarOcp = () => {
-        
-        ScqApi.DeleteOcp(ocp.id).then(res => { 
-            props.removeOcp(ocp.id)
-            props.history.push("/OrdensDeCorrecao")
+        ScqApi.DeleteOcp(props.ocp.ocpToEdit.id).then(res => { 
+            responseHandler(res,props,"OrdemDeCorrecao",null,"OrdensDeCorrecao",context,null,actions.removeOcp(props.ocp.ocpToEdit.id),"warning")
+          
         })
       
         
@@ -69,7 +67,7 @@ const EditarOcpAdicao = (props) => {
                                <Form.Label style={{fontWeight : "bold"}}>Processo: </Form.Label>
                             </Col>
                             <Col>
-                               <Form.Label>{ocp.processoNome}</Form.Label>
+                               <Form.Label>{props.ocp.ocpToEdit.processoNome}</Form.Label>
                             </Col>
                         </Form.Group>
                         </Col>
@@ -79,7 +77,7 @@ const EditarOcpAdicao = (props) => {
                                <Form.Label style={{fontWeight : "bold"}}>Etapa: </Form.Label>
                             </Col>
                             <Col>
-                                <Form.Label>{ocp.etapaNome}</Form.Label>
+                                <Form.Label>{props.ocp.ocpToEdit.etapaNome}</Form.Label>
                             </Col>
                         </Form.Group>
                         </Col>
@@ -90,13 +88,13 @@ const EditarOcpAdicao = (props) => {
                                <Form.Label style={{fontWeight : "bold"}}>Parametro: </Form.Label>
                             </Col>
                             <Col>
-                             <Form.Label>{ocp.parametroNome}</Form.Label>
+                             <Form.Label>{props.ocp.ocpToEdit.parametroNome}</Form.Label>
                             </Col>
                         </Form.Group>
                         </Col>
                             
                         </Form.Row>
-                        <AdicaoFreeEdit  ocp={ocp} mpQtds={ocp.adicoesDto} updateAdicao={(quantidade,index) => updadteQuantidadeAdicao(quantidade,index)}></AdicaoFreeEdit>
+                        <AdicaoFreeEdit></AdicaoFreeEdit>
                             
                         <Form.Row>
                             <Form.Group as={Col}>
@@ -112,7 +110,7 @@ const EditarOcpAdicao = (props) => {
                       
                         <Form.Row>
                             <Form.Group >
-                                <Button style={{ margin: 2 }}>
+                                <Button style={{ margin: 2 }} onClick={()=> props.history.push("/OrdensDeCorrecao") }>
                                     Cancelar
                                 </Button>
                                 <Button style={{ margin: 2 ,backgroundColor : 'RED' , borderColor : 'RED'}} type="reset"  onClick={() =>  deletarOcp()} >

@@ -32,7 +32,7 @@ const CadastroDeOcpLivre = (props) => {
 
 
     const saveOcp = () => {
-        reloadState()
+    
         if(analise){
             ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro ,analiseId : analise.id}).then((res) => responseHandler(res,props,"OrdemDeCorrecao"))
         }

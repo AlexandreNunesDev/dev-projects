@@ -1,3 +1,5 @@
+import { actions } from "../actions/actions";
+
 const dispatchers = (dispatch,data) => {
     return {
         loading : (data) => dispatch({type: 'IS_LOADING' , payload : data}),
@@ -17,7 +19,10 @@ const dispatchers = (dispatch,data) => {
         setFilterType : (data) => dispatch({type:'SET_FILTER_TYPE' , payload : data}),
         showEncerradas : (data) => dispatch({type:'SHOW_ENCERRADAS' , payload : data}),
         setActualFilter : (data) => dispatch({type:'ACTUAL_FILTER' , payload : data}),
-        removeOcp : (data) => dispatch({type: 'REMOVE_OCP' , payload : data})
+        removeOcp : (data) => dispatch({type: 'REMOVE_OCP' , payload : data}),
+        ocpToEdit : (data) => dispatch({type: 'OCP_TO_EDIT' , payload : data}),
+        updadteOcpQuantidadeAdicao : (data) => dispatch({type: 'OCP_QTD_ADICAO' , payload : data}),
+        loadNotifications : (data) => dispatch(actions.loadNotifications(data))
        
     }
 };

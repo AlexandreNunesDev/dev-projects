@@ -32,10 +32,9 @@ class Login  extends React.Component {
 
     populateStore () {
         
-        if(!this.props.global.loading){
-            this.props.loading(true)
             optionsLoad(this.props)
-        }
+            this.props.history.push("/Home")
+
     
       
        

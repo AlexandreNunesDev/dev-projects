@@ -1,37 +1,40 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Form, Row, Table } from 'react-bootstrap'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
-import AdicaoEditDiaolog from '../Components/AdicaoEditDialog'
+import { connect } from 'react-redux'
+
+import dispatchers from '../mapDispatch/mapDispathToProps'
+import mapToStateProps from '../mapStateProps/mapStateToProps'
 
 
 
 
 const AdicaoFreeEdit = (props) => {
-
-    const [ocp] = useState(props.ocp)
-    const [isEditing, setIsEditing] = useState(false)
-    const [editingAdicao,setEditingAdicao] = useState()
-
-    const openOcpEdit = (adicao,index) => {
-        
-        setEditingAdicao([adicao,index])
-        
-    }
-
-    useEffect(() => {
-        setIsEditing(true)
-    },[editingAdicao])
-
   
 
+    const [quantidades , setQuantidades] = useState(props.ocp.ocpToEdit.adicoesDto.map((adicao) => adicao.quantidade))
 
 
+
+
+    const commitAdicaoEdit = (index,adicao) => {
+
+        props.updadteOcpQuantidadeAdicao({id : adicao.id, quantidade : quantidades[index]}) 
+
+    }
+
+    const changeQuantiadeValue = (index,event) => {
+        let newQuantidades = [...quantidades]
+        newQuantidades[index] = event.target.value
+        setQuantidades(newQuantidades)
+    }
+ 
 
 
 
     return (
         <>
-           {editingAdicao && <AdicaoEditDiaolog show={isEditing} setAdicao={(quantidade,index) => props.updateAdicao(quantidade,index)} adicao={editingAdicao} handleClose={setIsEditing}></AdicaoEditDiaolog>}
+          
             <Row  >
                 <Col>
                     <h4>Adicoes</h4>
@@ -40,7 +43,7 @@ const AdicaoFreeEdit = (props) => {
             </Row>
           
           
-            {props.mpQtds.length > 0 &&
+            {props.ocp.ocpToEdit.adicoesDto.length > 0 &&
                 <Table >
                     <thead>
 
@@ -62,7 +65,7 @@ const AdicaoFreeEdit = (props) => {
                     </thead>
                     <tbody>
 
-                        {ocp.adicoesDto.map((adicao, index) => {
+                        {props.ocp.ocpToEdit.adicoesDto.map((adicao, index) => {
                             return (
                                 <tr key={index}>
                                     <td className="align-middle" style={{ textAlign: "center" }} >
@@ -71,14 +74,9 @@ const AdicaoFreeEdit = (props) => {
                                     <td  className="align-middle" style={{ textAlign: "center" }}>
                                         <Form.Label style={{ fontWeight: 'bold' }}>{adicao.nomeMp}</Form.Label>
                                     </td>
-                                    <td  className="align-middle" style={{ textAlign: "center" }} >
-                                        <Form.Label  style={{ fontWeight: 'bold' }}>{adicao.quantidade}</Form.Label>
+                                    <td  className="align-middle" >
+                                        <Form.Control key={adicao.quantidade} value={quantidades[index]} style={{ fontWeight: 'bold', textAlign: "center" }} onChange={(event => {changeQuantiadeValue(index,event)})} onBlur={() =>commitAdicaoEdit(index,adicao) }></Form.Control>
                                     </td>
-                                    <td  className="align-middle" style={{ textAlign: "center" }} >
-                                        <Button style={{ fontWeight: 'bold' }} onClick={()=> openOcpEdit(adicao,index)} >Editar</Button>
-                                    </td>
-                               
-
                                 </tr>)
                         })}
 
@@ -96,4 +94,4 @@ const AdicaoFreeEdit = (props) => {
 
 }
 
-export default AdicaoFreeEdit
+export default connect(mapToStateProps.toProps,dispatchers)(AdicaoFreeEdit)

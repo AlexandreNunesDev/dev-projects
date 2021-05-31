@@ -5,7 +5,9 @@ import ScqApi from '../Http/ScqApi';
 import scqlogo from '../logoscq.png';
 import { withToastManager } from 'react-toast-notifications';
 import { getUserName, getUserRole, isAuthenticated} from '../Services/auth';
-
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from "../mapDispatch/mapDispathToProps";
 
 
 
@@ -32,16 +34,7 @@ class MenuBar extends React.Component {
     })
   }
 
-  componentDidMount() {
-    if (isAuthenticated) {
-      ScqApi.ListaNotificacoes().then(res => {
-        this.setState({
-          notifications: this.state.notifications.concat(res)
-        })
-      })
-    }
-
-  }
+  
 
   resolveNotificacao = (notificacao) => {
     ScqApi.EditarNotificacao(notificacao.id).then(data => this.showNotificationsReponse(data))
@@ -101,14 +94,14 @@ class MenuBar extends React.Component {
 
               <Button onClick={() => this.setState((prevState, props) => ({
   show : true
-}))}  >Notificacoes <Badge variant="light">{this.state.notifications.length}</Badge></Button>
+}))}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>
                 <Modal show={this.state.show} onHide={() => this.setState({show : false})}>
                   <Modal.Body>
 
                   
 
                
-                 {this.state.notifications.map((notificacao,index) => {
+                 {this.props.notifications.map((notificacao,index) => {
                   let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
                   return (
                    <Row key={index} >
@@ -220,4 +213,4 @@ class MenuBar extends React.Component {
 
 }
 
-export default withToastManager(MenuBar);
+export default withToastManager(connect(mapToStateProps.toProps,dispatchers)(MenuBar));

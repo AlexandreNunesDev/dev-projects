@@ -13,7 +13,7 @@ import WebSocketProvider, { WebSocketContext } from './websocket/wsProvider';
 
 ReactDOM.render(
   
-  <BrowserRouter forceRefresh={true}>
+  <BrowserRouter>
     
       <ToastProvider>
         <Provider store={store}> 

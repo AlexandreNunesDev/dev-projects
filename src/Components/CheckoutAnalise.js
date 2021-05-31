@@ -83,6 +83,7 @@ const CheckOutAnalise = (props) => {
             </Button>
             {props.status !== "fofe" ? <Button style={{ margin: 2 }} variant="primary" onClick={() => { 
               if(props.analiseId){
+                handleClose()
                 props.salvarReanalise()
               } else {
                 handleClose()

@@ -17,6 +17,8 @@ export const actions = {
     setFilterType : (data) => {return {type:'SET_FILTER_TYPE' , payload : data}},
     showEncerradas : (data) => {return {type:'SHOW_ENCERRADAS' , payload : data}},
     setActualFilter : (data) =>  {return{type:'ACTUAL_FILTER' , payload : data}},
-    removeOcp : (data) => {return {type: 'REMOVE_OCP' , payload : data}}
+    removeOcp : (data) => {return {type: 'REMOVE_OCP' , payload : data}},
+    ocpToEdit : (data) => {return{type: 'OCP_TO_EDIT' , payload : data}},
+    loadNotifications : (data) => {return{type: 'LOAD_NOTIFICATIONS' , payload: data}}
 }
 

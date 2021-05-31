@@ -26,7 +26,7 @@ const CredentialConfirm = (props) => {
             <Button variant="secondary" onClick={() => props.closeCredentialConfirm()} >
               Cancelar
             </Button>
-            <Button variant="primary" type="submit" onClick={() => {props.aproveOcp()}}> 
+            <Button variant="primary" type="submit" onClick={() => {props.aproveOcp(); props.closeCredentialConfirm() }}> 
               Confirmar
             </Button>
           </Modal.Footer>

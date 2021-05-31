@@ -1,6 +1,6 @@
 const initialState = {
     loadedOptions : [],
-    loading : false
+    loading : false,
 }
 
 const loadState = () => {
