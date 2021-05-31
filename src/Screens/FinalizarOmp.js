@@ -180,7 +180,10 @@ const FinalizarOmp = (props) => {
                     <h4>Tarefas</h4>
                     {tarefas && <Table>
                         <TableHeadTarefas></TableHeadTarefas>
+                        <tbody>
                         <TableBodyTarefas tarefas={tarefas} checkedElement={(checked,id,type) => checkedElement(checked,id,type)}></TableBodyTarefas>
+                        </tbody>
+                        
                     </Table>}
                 </Fragment>
 

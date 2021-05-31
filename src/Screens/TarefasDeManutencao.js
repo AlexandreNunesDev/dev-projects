@@ -74,8 +74,8 @@ class TarefasDeManutencao extends React.Component {
             processos: [],
             tarefas: [],
             filteredTarefas: [],
-            filterType : "",
-            markedTarefas : []
+            filterType: "",
+            markedTarefas: []
 
 
         }
@@ -86,13 +86,13 @@ class TarefasDeManutencao extends React.Component {
     }
 
 
-    
+
     addTarefaIdToList = (checked, tarefa) => {
 
         if (checked) {
             this.setState((prevState) => ({
-                markedTarefas : [...prevState.markedTarefas,...[tarefa.id]]
-            }),()=>console.log(this.state.markedTarefas));
+                markedTarefas: [...prevState.markedTarefas, ...[tarefa.id]]
+            }), () => console.log(this.state.markedTarefas));
 
         } else {
 
@@ -101,9 +101,9 @@ class TarefasDeManutencao extends React.Component {
             })
 
             this.setState({
-                markedTarefas : removedMarkedId
-            
-            }, () => console.log(this.state.markedTarefas) )
+                markedTarefas: removedMarkedId
+
+            }, () => console.log(this.state.markedTarefas))
         }
 
     }
@@ -125,18 +125,18 @@ class TarefasDeManutencao extends React.Component {
 
 
         for (const tarefaId of this.state.markedTarefas) {
-            choosedTarefas = [...choosedTarefas,...this.state.tarefas.filter(value =>  Number(value.id) === Number(tarefaId))]
+            choosedTarefas = [...choosedTarefas, ...this.state.tarefas.filter(value => Number(value.id) === Number(tarefaId))]
         }
 
-       
-        this.props.history.push("/CadastroOmp",{tarefasChecked : true,tarefas:choosedTarefas, markedIds :  this.state.markedTarefasId})
+
+        this.props.history.push("/CadastroOmp", { tarefasChecked: true, tarefas: choosedTarefas, markedIds: this.state.markedTarefasId })
 
     }
 
 
     markAll = () => {
         this.setState({
-            markedTarefas : []
+            markedTarefas: []
         })
         this.state.tarefas.forEach(tarefa => {
             this.addTarefaIdToList(true, tarefa)
@@ -150,18 +150,18 @@ class TarefasDeManutencao extends React.Component {
     }
 
 
-    
+
     filterAction = (filterText) => {
-        if(filterText!=="" && this.state.filterType !==""){
+        if (filterText !== "" && this.state.filterType !== "") {
             this.setState({
                 filteredTarefas: this.state.tarefas.filter((tarefa) => {
-                    if(this.state.filterType==="Nome"){
+                    if (this.state.filterType === "Nome") {
                         return String(tarefa.nome).includes(filterText)
                     }
-                    if(this.state.filterType==="Status"){
+                    if (this.state.filterType === "Status") {
                         return String(tarefa.status).includes(filterText)
                     }
-                    if(this.state.filterType==="Data"){
+                    if (this.state.filterType === "Data") {
                         return String(tarefa.dataPlanejada).includes(filterText)
                     }
                     return ""
@@ -170,11 +170,11 @@ class TarefasDeManutencao extends React.Component {
             })
         } else {
             this.setState({
-                filteredTroca : this.state.trocas
+                filteredTroca: this.state.trocas
             })
         }
 
-   }
+    }
 
 
 
@@ -182,40 +182,42 @@ class TarefasDeManutencao extends React.Component {
     render() {
         return (
             <>
-    
+
                 <Container>
-                    <Form.Row style={{padding : 10}}>
+                    <Form.Row style={{ padding: 10 }}>
                         <Col >
-                            <GenericSelect noLabel={true} title={"Processo"}   returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.loadTarefas(processoId)} ops={this.state.processos}  ></GenericSelect>
+                            <GenericSelect noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.loadTarefas(processoId)} ops={this.state.processos}  ></GenericSelect>
                         </Col>
                         <Col>
-                           
+
                             <Form.Control placeholder="buscar por nome..." onChange={(event) => this.filterAction(event.target.value)}></Form.Control>
                         </Col>
-                        
+
                         <Col md="auto" >
-                            <GenericDropDown display={"Tipo"}   itens={["Nome","Status","Data"]} onChoose={(item) => this.setState({filterType : item})} style={{margin : 10}}>Filtrar </GenericDropDown>
-                       </Col>
+                            <GenericDropDown display={"Tipo"} itens={["Nome", "Status", "Data"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                        </Col>
                         <Col>
                             <Button onClick={() => {
-                               this.pushWithSelectedTarefas()
+                                this.pushWithSelectedTarefas()
                             }} >Gerar OMP</Button>
                         </Col>
                         <Col md="auto">
-                            <Button hidden={this.state.markAllHide}  onClick={() => { this.markAll(); this.setState({ markAllHide: true }) }}>Selecionar Todos</Button>
-                            <Button hidden={!this.state.markAllHide}  onClick={() => { this.unmarkAll(); this.setState({ markedTarefas: [], markAllHide: false }) }}>Desmarcar Todos</Button>
+                            <Button hidden={this.state.markAllHide} onClick={() => { this.markAll(); this.setState({ markAllHide: true }) }}>Selecionar Todos</Button>
+                            <Button hidden={!this.state.markAllHide} onClick={() => { this.unmarkAll(); this.setState({ markedTarefas: [], markAllHide: false }) }}>Desmarcar Todos</Button>
                         </Col>
                     </Form.Row>
 
                 </Container>
                 <div className="table-responsive">
-                <Table className="table table-hover">
-                    <TableHead></TableHead>
-               
-                        <TableBody setTarefaToList={this.addTarefaIdToList} tarefas={this.state.filteredTarefas} markedTarefas={this.state.markedTarefas} tarefasChoosed={this.state.tarefasChoosed} ></TableBody>
-             
-                </Table>
-                            </div>
+                    <Table className="table table-hover">
+                        <TableHead></TableHead>
+                        <tbody>
+                            <TableBody setTarefaToList={this.addTarefaIdToList} tarefas={this.state.filteredTarefas} markedTarefas={this.state.markedTarefas} tarefasChoosed={this.state.tarefasChoosed} ></TableBody>
+                        </tbody>
+
+
+                    </Table>
+                </div>
 
 
             </>

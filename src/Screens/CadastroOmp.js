@@ -112,7 +112,7 @@ const CadastroOmp = (props) => {
     const history = useHistory()
     
 
-    useEffect(() => generateTarefasChoosedIdarray,[])
+    useEffect(() => generateTarefasChoosedIdarray(),[])
 
     const generateTarefasChoosedIdarray = () =>{
         let markedTarefas = tarefas.map((value) => {
@@ -137,6 +137,10 @@ const CadastroOmp = (props) => {
        
     }
 
+    useEffect(() => {
+        console.log(tarefasChoosedId)
+    },[tarefasChoosedId])
+
 
     useEffect(()=>{
         if(trocas.length !== 0){
@@ -146,7 +150,7 @@ const CadastroOmp = (props) => {
     },[trocas])
 
     
-
+    console.log(tarefasChoosedId)
 
     return (
         <>
@@ -196,7 +200,10 @@ const CadastroOmp = (props) => {
 
                  
                 <TableHeadTarefas tarefasChecked={location.state.tarefasChecked} ></TableHeadTarefas>
+                <tbody>
                 <TableBodyTarefas tarefasChecked={location.state.tarefasChecked} choosedTarefaClick={setTarefaToList} tarefas={tarefas}></TableBodyTarefas>
+                </tbody>
+                
                 </Table>
                 </Fragment>
                 }
