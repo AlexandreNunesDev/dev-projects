@@ -6,8 +6,8 @@ import { statusResponseHandler } from "../Services/statusService";
 const URL_TEST = 'http://localhost:8080/'
 const URL = "https://scqapi.com/"
 const http = axios.create({
-     baseURL: URL
-    
+     baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
+     
 })
 
 const respInter = http.interceptors.response.use(function (response) {

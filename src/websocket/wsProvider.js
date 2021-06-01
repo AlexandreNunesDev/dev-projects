@@ -105,7 +105,7 @@ export default ({ children }) => {
 
     if (socket == null) {
         socket =  new Client({
-            brokerURL: SOCKET_URL,
+            brokerURL: process.env.NODE_ENV === "production" ? SOCKET_URL : SOCKET_URL_TEST,
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,

@@ -37,7 +37,7 @@ const FormatDate = (data) => {
 const TableBody = props => {
     
     const filteredByProcessoId = props.tarefasDeManutencao.filter((tarefa) => tarefa.processoId == props.global.processoIdTarefaRef)
-    console.log(filteredByProcessoId)
+    
     const trocaTd = filteredByProcessoId.map((tarefa, index) => {
         let check = props.markedTarefas.includes(tarefa.id)
         let data = String(tarefa.dataPlanejada).substr(0, 10)

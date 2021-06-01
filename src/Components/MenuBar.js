@@ -83,6 +83,7 @@ class MenuBar extends React.Component {
                   <NavDropdown.Item href="/CadastroMateriaPrima">Matéria Prima</NavDropdown.Item>
                   <NavDropdown.Item href="/CadastroTroca">Trocas</NavDropdown.Item>
                   <NavDropdown.Item href="/CadastroTarefasDeManutencao">Tarefas de Manutenção</NavDropdown.Item>
+                  <NavDropdown.Item href="/Registrar">Novo usuario</NavDropdown.Item>
                 </NavDropdown>
 
               </Nav>

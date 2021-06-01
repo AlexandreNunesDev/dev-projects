@@ -43,7 +43,7 @@ const Registrar = (props) => {
                         <Form>
                             <Form.Group controlId="formBasicEmail">
                                 <Form.Label>Usuario</Form.Label>
-                                <Form.Control type="email" placeholder="Entre com seu usuario" onChange={(event) => setMail(event.target.value)} />
+                                <Form.Control type="email" placeholder="Entre com seu mail" onChange={(event) => setMail(event.target.value)} />
 
 
                             </Form.Group>
