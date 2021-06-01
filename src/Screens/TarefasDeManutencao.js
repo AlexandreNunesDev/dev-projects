@@ -86,8 +86,6 @@ class TarefasDeManutencao extends React.Component {
         }
     }
 
-    componentDidMount() {
-        ScqApi.ListaProcessos().then(res => this.setState({ processos: res }))
     addTarefaIdToList = (checked, tarefa) => {
 
         if (checked) {

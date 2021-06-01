@@ -1,4 +1,4 @@
-import React, { createContext } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { Client } from '@stomp/stompjs';
 
 import store from '../store';
@@ -10,6 +10,7 @@ import { logout } from '../Services/auth';
 import {isAuthenticated} from '../Services/auth'
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+
 
 
 const WebSocketContext = createContext(null)
@@ -27,6 +28,32 @@ export default ({ children }) => {
     const store = useStore()
     const history = useHistory()
 
+
+
+   
+    const onVisibilityChange = () => {
+        if((isAuthenticated()) && (!document.hidden)){
+            console.log("Refresh na ui")
+            let storeProps = mapToStateProps.toProps(store.getState())
+            let dispatchersFunctions = dispatchers(dispatch)
+            let allprops = {...storeProps,...dispatchersFunctions}
+            storeService.optionsLoad(allprops,true)
+        }
+     
+    }
+
+    
+    useEffect(() => {
+      window.addEventListener("visibilitychange", onVisibilityChange);
+    
+      return () => {
+        window.removeEventListener("visibilitychange", onVisibilityChange);
+      };
+    });
+
+
+
+
     const sendMessage = (clickedReducerFunction,action,route) => {
         const message = clickedReducerFunction == null ? {type : 'action' , action : action,route : route } :  {type: 'function',function : clickedReducerFunction.name, route : route}
    
@@ -40,20 +67,15 @@ export default ({ children }) => {
     }
 
 
-    const onConnect = () => {
-        console.log("Socket Conectado")
+  
 
-        if(isAuthenticated()){
-            
-            let storeProps = mapToStateProps.toProps(store.getState())
-            let dispatchersFunctions = dispatchers(dispatch)
-            let allprops = {...storeProps,...dispatchersFunctions}
-            storeService.optionsLoad(allprops,true)
-        }
+    const onConnect = () => {
+        
+
+
         socket.subscribe("/reducer/return", (message) => {
             
             const bodyMsg = JSON.parse(message.body)
-            
             
             console.log(bodyMsg)
             if(bodyMsg.type == 'action'){
@@ -71,11 +93,15 @@ export default ({ children }) => {
         })
     }
 
+  
+
     const onDisconnect = () => {
         console.log("socket desconectado")
         socket.deactivate()
         logout()
     }
+
+
 
     if (socket == null) {
         socket =  new Client({
@@ -85,6 +111,7 @@ export default ({ children }) => {
             heartbeatOutgoing: 4000,
             onConnect: onConnect,
             onDisconnect: onDisconnect,
+         
             
           });
           socket.activate()  

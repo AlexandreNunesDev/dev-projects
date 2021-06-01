@@ -51,7 +51,7 @@ import { WebSocketContext } from './websocket/wsProvider';
 
 class App extends React.Component {
   
-
+  static contextType = WebSocketContext
   constructor(props) {
 
    
@@ -70,10 +70,6 @@ class App extends React.Component {
 
 
   componentDidMount() {
-    
-   
-
-    
 
 
 
