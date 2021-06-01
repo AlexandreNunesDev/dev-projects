@@ -1,12 +1,16 @@
 import React, { createContext } from 'react'
 import { Client } from '@stomp/stompjs';
-import dispatchers from '../mapDispatch/mapDispathToProps';
+
 import store from '../store';
 import * as storeService from '../Services/storeService';
 import { actions } from '../actions/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import { logout } from '../Services/auth';
+import {isAuthenticated} from '../Services/auth'
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+
 
 const WebSocketContext = createContext(null)
 const SOCKET_URL = 'wss://scqapi.com/gs-guide-websocket'
@@ -20,6 +24,7 @@ export default ({ children }) => {
     let ws;
   
     const dispatch =  useDispatch()
+    const store = useStore()
     const history = useHistory()
 
     const sendMessage = (clickedReducerFunction,action,route) => {
@@ -37,6 +42,14 @@ export default ({ children }) => {
 
     const onConnect = () => {
         console.log("Socket Conectado")
+
+        if(isAuthenticated()){
+            
+            let storeProps = mapToStateProps.toProps(store.getState())
+            let dispatchersFunctions = dispatchers(dispatch)
+            let allprops = {...storeProps,...dispatchersFunctions}
+            storeService.optionsLoad(allprops,true)
+        }
         socket.subscribe("/reducer/return", (message) => {
             
             const bodyMsg = JSON.parse(message.body)
@@ -46,12 +59,12 @@ export default ({ children }) => {
             if(bodyMsg.type == 'action'){
                 const actionObj = bodyMsg.action
                 dispatch(actionObj)
-                bodyMsg.route && history.push("/"+bodyMsg.route);
+              
             } else {
                 const functionName = bodyMsg.function
                 const action = actions[functionName]()
                 storeService[functionName](null,action)
-                bodyMsg.route && history.push("/"+bodyMsg.route);
+               
             }
            
             
@@ -71,7 +84,8 @@ export default ({ children }) => {
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
             onConnect: onConnect,
-            onDisconnect: onDisconnect
+            onDisconnect: onDisconnect,
+            
           });
           socket.activate()  
     }

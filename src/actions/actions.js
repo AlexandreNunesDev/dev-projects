@@ -19,6 +19,7 @@ export const actions = {
     setActualFilter : (data) =>  {return{type:'ACTUAL_FILTER' , payload : data}},
     removeOcp : (data) => {return {type: 'REMOVE_OCP' , payload : data}},
     ocpToEdit : (data) => {return{type: 'OCP_TO_EDIT' , payload : data}},
-    loadNotifications : (data) => {return{type: 'LOAD_NOTIFICATIONS' , payload: data}}
+    loadNotifications : (data) => {return{type: 'LOAD_NOTIFICATIONS' , payload: data}},
+    setProcessoIdTarefaRef : (data) => {return{type: 'PROCESSOID_TAREFA_REF' , payload: data}},
 }
 

@@ -1,41 +1,42 @@
+import produce from "immer"
+
 const initialState = {
     loadedOptions : [],
     loading : false,
+    processoIdTarefaRef : ''
 }
 
 const loadState = () => {
-    try {
-      const serializedState = localStorage.getItem('state');
-      if(serializedState === null) {
-        return initialState;
-      }
-
-      const actualState = JSON.parse(serializedState);
-      if(actualState.global=== null){
-        return initialState;
-      } else {
-        return actualState.global
-      }
-      
-      
-    } catch (e) {
-      return undefined;
+  try {
+    const serializedState = localStorage.getItem('state');
+    if (serializedState === null) {
+      return initialState;
     }
-  };
+    const actualState = JSON.parse(serializedState);
+    return actualState.global;
+  } catch (e) {
+    return null;
+  }
+};
 
+
+
+  const globalConfig = produce(
+    (draft, action) => {
+      switch (action.type) {
+        case "LOAD_POSITIONS":
+            draft.loadedOptions.push(action.payload)
+            break
+        case "IS_LOADING":
+            draft.loading = action.payload
+            break
+        case "PROCESSOID_TAREFA_REF":
+            draft.processoIdTarefaRef = action.payload
+            break
   
-const globalConfig = function (state = loadState(), action) {
-    switch (action.type) {
-    case "LOAD_POSITIONS":
-        state.loadedOptions.push(action.payload)
-        return state
-    case "IS_LOADING":
-        state.loading = action.payload
-        return state
-    default :
-        return state
-
-    }
-  };
-
+    
+        }
+      return
+    },loadState())
+  
   export default globalConfig

@@ -6,6 +6,9 @@ import { withToastManager } from "react-toast-notifications";
 import GenericSelect from "../Components/GenericSelect";
 import GenericDropDown from "../Components/GenericDropDown";
 import { withMenuBar } from "../Hocs/withMenuBar";
+import { connect } from "react-redux";
+import mapToStateProps from "../mapStateProps/mapStateToProps";
+import dispatchers from "../mapDispatch/mapDispathToProps";
 
 
 const TableHead = () => {
@@ -32,8 +35,10 @@ const FormatDate = (data) => {
 }
 
 const TableBody = props => {
-
-    const trocaTd = props.tarefas.map((tarefa, index) => {
+    
+    const filteredByProcessoId = props.tarefasDeManutencao.filter((tarefa) => tarefa.processoId == props.global.processoIdTarefaRef)
+    console.log(filteredByProcessoId)
+    const trocaTd = filteredByProcessoId.map((tarefa, index) => {
         let check = props.markedTarefas.includes(tarefa.id)
         let data = String(tarefa.dataPlanejada).substr(0, 10)
 
@@ -71,7 +76,7 @@ class TarefasDeManutencao extends React.Component {
     constructor(props) {
         super()
         this.state = {
-            processos: [],
+            processoId:null,
             tarefas: [],
             filteredTarefas: [],
             filterType: "",
@@ -83,10 +88,6 @@ class TarefasDeManutencao extends React.Component {
 
     componentDidMount() {
         ScqApi.ListaProcessos().then(res => this.setState({ processos: res }))
-    }
-
-
-
     addTarefaIdToList = (checked, tarefa) => {
 
         if (checked) {
@@ -108,16 +109,6 @@ class TarefasDeManutencao extends React.Component {
 
     }
 
-
-
-    loadTarefas = (processoId) => {
-        ScqApi.ListaTarefasByProcesso(processoId).then(res => {
-            this.setState({
-                tarefas: res,
-                filteredTarefas: res
-            })
-        })
-    }
 
     pushWithSelectedTarefas = () => {
         let choosedTarefas = []
@@ -186,7 +177,7 @@ class TarefasDeManutencao extends React.Component {
                 <Container>
                     <Form.Row style={{ padding: 10 }}>
                         <Col >
-                            <GenericSelect noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.loadTarefas(processoId)} ops={this.state.processos}  ></GenericSelect>
+                            <GenericSelect selection={this.props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.props.setProcessoIdTarefaRef(processoId)} ops={this.props.processos}  ></GenericSelect>
                         </Col>
                         <Col>
 
@@ -212,7 +203,7 @@ class TarefasDeManutencao extends React.Component {
                     <Table className="table table-hover">
                         <TableHead></TableHead>
                         <tbody>
-                            <TableBody setTarefaToList={this.addTarefaIdToList} tarefas={this.state.filteredTarefas} markedTarefas={this.state.markedTarefas} tarefasChoosed={this.state.tarefasChoosed} ></TableBody>
+                            <TableBody {...this.props} setTarefaToList={this.addTarefaIdToList}  markedTarefas={this.state.markedTarefas} tarefasChoosed={this.state.tarefasChoosed} ></TableBody>
                         </tbody>
 
 
@@ -227,4 +218,4 @@ class TarefasDeManutencao extends React.Component {
 
 }
 
-export default withToastManager(withMenuBar(TarefasDeManutencao))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(TarefasDeManutencao)))

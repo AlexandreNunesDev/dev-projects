@@ -8,7 +8,7 @@ const dispatchers = (dispatch,data) => {
         loadParametros: (data) => dispatch({type : 'LOAD_PARAMETROS' , payload : data}),
         loadMateriasPrima: (data) => dispatch({type : 'LOAD_MATERIAS_PRIMA' , payload : data}),
         loadTrocas: (data) => dispatch({type : 'LOAD_TROCAS' , payload : data}),
-        loadTarefasDeManutencao: (data) => dispatch({type : 'LOAD_TAREFAS_DE_MANUTENCAO' , payload : data}),
+        loadTarefasDeManutencao: (data) => dispatch(actions.loadTarefasDeManutencao(data)),
         loadOcps: (data) => dispatch({type : 'LOAD_OCPS' , payload : data}),
         loadPosition : (data) => dispatch({type: 'LOAD_POSITIONS' , payload : data}),
         addProcesso : (data) => dispatch({type: 'ADD_PROCESSO' , payload : data}),
@@ -22,7 +22,8 @@ const dispatchers = (dispatch,data) => {
         removeOcp : (data) => dispatch({type: 'REMOVE_OCP' , payload : data}),
         ocpToEdit : (data) => dispatch({type: 'OCP_TO_EDIT' , payload : data}),
         updadteOcpQuantidadeAdicao : (data) => dispatch({type: 'OCP_QTD_ADICAO' , payload : data}),
-        loadNotifications : (data) => dispatch(actions.loadNotifications(data))
+        loadNotifications : (data) => dispatch(actions.loadNotifications(data)),
+        setProcessoIdTarefaRef : (data) => dispatch(actions.setProcessoIdTarefaRef(data)),
        
     }
 };

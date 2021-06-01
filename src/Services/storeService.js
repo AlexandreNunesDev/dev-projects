@@ -1,7 +1,7 @@
 import ScqApi from "../Http/ScqApi"
 import store from "../store"
 
-export const optionsLoad = async (props) => {
+export const optionsLoad = async (props,forceUpdade) => {
   if (props.processos.length === 0) {
     loadProcessos(props)
   }
@@ -18,10 +18,25 @@ export const optionsLoad = async (props) => {
   if (props.trocas.length === 0) {
     loadTrocas(props)
   }
+  if (props.tarefasDeManutencao.length === 0) {
+    loadTarefas(props)
+  }
   if (props.ocp.ocps.length === 0) {
     loadOcps(props)
   }
   if (props.notifications.length === 0) {
+    loadNotifications(props)
+  }
+
+  if(forceUpdade) {
+    console.log("Ui atualizada")
+    loadProcessos(props)
+    loadEtapas(props)
+    loadParametros(props)
+    loadMateriasPrima(props)
+    loadTrocas(props)
+    loadTarefas(props)
+    loadOcps(props)
     loadNotifications(props)
   }
 
@@ -77,6 +92,14 @@ export const loadTrocas = (props,redirect) => {
   })
 }
 
+export const loadTarefas = (props,redirect) => {
+  ScqApi.ListaTarefasDeManutencao().then(res => {
+    props.loadTarefasDeManutencao(res)
+   
+
+  })
+}
+
 
 export const loadOcps = (props,action) => {
   
@@ -108,12 +131,3 @@ export const loadNotifications = (props,action) => {
   })
 }
 
-
-
-
-const isFinished = (props) => {
-  if (props.global.loadedOptions.length === 6) {
-    props.loading(false)
-    props.history.push("/Home")
-  }
-}
