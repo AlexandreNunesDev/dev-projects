@@ -30,9 +30,16 @@ export const initialState = {
   };
 
 
-  
 
-let store = createStore(rootReducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+const store = createStore(
+  rootReducer,
+  compose(applyMiddleware(thunk), devTools)
+)
+
+  
+const devTools = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_ && window.__REDUX_DEVTOOLS_EXTENSION_() : null
+let store = createStore(rootReducer,devTools);
 store.subscribe(() => {saveState(store.getState());});
 
 export default store;
