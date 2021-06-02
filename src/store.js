@@ -30,13 +30,6 @@ export const initialState = {
   };
 
 
-
-
-const store = createStore(
-  rootReducer,
-  compose(applyMiddleware(thunk), devTools)
-)
-
   
 const devTools = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_ && window.__REDUX_DEVTOOLS_EXTENSION_() : null
 let store = createStore(rootReducer,devTools);
