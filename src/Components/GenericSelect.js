@@ -3,12 +3,16 @@ import {Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+
+
+
+
 const GenericSelect = (props) => {
 
             return ( 
                 <Form.Group >
                     <Form.Label hidden={props.noLabel}>{props.title}:</Form.Label>
-                    <Form.Control as="select"  onChange={(event) => {props.onChange(event.target.value)}}>
+                    <Form.Control as="select" onChange={(event) => {props.onChange(event.target.value)}}>
                     <option unselectable="on" key={0}>-- {props.default ? props.default : "Seleciona uma Opção"} --</option>
                     {props.ops && props.ops.map((op,index) =>{
                         if(Number(op.id || op) === Number(props?.selection)) {

@@ -6,6 +6,7 @@ import globalConfig from './globalConfigReducer'
 import notificationsReducer from './notificationsReducer'
 
 
+
 export  const rootReducer = combineReducers({
    options :  optionsReducer,
    ocp : ocpsReducer,

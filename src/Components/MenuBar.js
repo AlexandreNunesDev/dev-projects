@@ -1,13 +1,14 @@
 import React from 'react'
-import {Modal, Navbar, Nav, NavDropdown, Badge, Button, Dropdown, Card, NavItem, Image, Row } from 'react-bootstrap';
+import { Modal, Navbar, Nav, NavDropdown, Badge, Button, Dropdown, Card, NavItem, Image, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
 import scqlogo from '../logoscq.png';
 import { withToastManager } from 'react-toast-notifications';
-import { getUserName, getUserRole, isAuthenticated} from '../Services/auth';
+import { getUserName, getUserRole, isAuthenticated } from '../Services/auth';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from "../mapDispatch/mapDispathToProps";
+import { isMobile } from 'react-device-detect';
 
 
 
@@ -19,7 +20,7 @@ class MenuBar extends React.Component {
     this.state = {
       notifications: [],
       user: {},
-      show : false
+      show: false
     }
   }
 
@@ -34,7 +35,7 @@ class MenuBar extends React.Component {
     })
   }
 
-  
+
 
   resolveNotificacao = (notificacao) => {
     ScqApi.EditarNotificacao(notificacao.id).then(data => this.showNotificationsReponse(data))
@@ -60,73 +61,70 @@ class MenuBar extends React.Component {
       return (
         <>
           <div className='App tc f3'>
-          <Navbar bg="light" expand="lg" >
-            {/* <Navbar.Brand href="/home"  >S.C.Q</Navbar.Brand> */}
-            <Image height={50} width={80} src={scqlogo} rounded />
+            <Navbar bg="light" expand="lg" >
+              {/* <Navbar.Brand href="/home"  >S.C.Q</Navbar.Brand> */}
+              <Image height={50} width={80} src={scqlogo} rounded />
 
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <Nav.Link href="/Home">Home</Nav.Link>
-                <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
-                <Nav.Link href="/RegistroAnalise">Registro de Analise</Nav.Link>
-                <Nav.Link href="/OrdensDeCorrecao">Ordens de Correção</Nav.Link>
-                <Nav.Link href='/Omp' >OMP</Nav.Link>
-                <Nav.Link href="/TarefasDeManutencao" >Tarefas de Manutenção</Nav.Link>
-                <Nav.Link href="/IndicadorDeAnalise">Indicador de Analises</Nav.Link>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse  id="basic-navbar-nav">
+                <Nav className="mr-auto">
+                  <Nav.Link href="/Home">Home</Nav.Link>
+                  <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
+                  <Nav.Link href="/RegistroAnalise">Registro de Analise</Nav.Link>
+                  <Nav.Link href="/OrdensDeCorrecao">Ordens de Correção</Nav.Link>
+                  <Nav.Link href='/Omp' >OMP</Nav.Link>
+                  <Nav.Link href="/TarefasDeManutencao" >Tarefas de Manutenção</Nav.Link>
+                  <Nav.Link href="/IndicadorDeAnalise">Indicador de Analises</Nav.Link>
 
-                <NavDropdown title="Cadastros" id="basic-nav-dropdown">
+                  <NavDropdown title="Cadastros" id="basic-nav-dropdown">
 
-                  <NavDropdown.Item href="/CadastroProcesso">Processo</NavDropdown.Item>
-                  <NavDropdown.Item href="/CadastroEtapa">Etapa</NavDropdown.Item>
-                  <NavDropdown.Item href="/CadastroParametro">Parametro</NavDropdown.Item>
-                  <NavDropdown.Item href="/CadastroMateriaPrima">Matéria Prima</NavDropdown.Item>
-                  <NavDropdown.Item href="/CadastroTroca">Trocas</NavDropdown.Item>
-                  <NavDropdown.Item href="/CadastroTarefasDeManutencao">Tarefas de Manutenção</NavDropdown.Item>
-                  <NavDropdown.Item href="/Registrar">Novo usuario</NavDropdown.Item>
-                </NavDropdown>
+                    <NavDropdown.Item href="/CadastroProcesso">Processo</NavDropdown.Item>
+                    <NavDropdown.Item href="/CadastroEtapa">Etapa</NavDropdown.Item>
+                    <NavDropdown.Item href="/CadastroParametro">Parametro</NavDropdown.Item>
+                    <NavDropdown.Item href="/CadastroMateriaPrima">Matéria Prima</NavDropdown.Item>
+                    <NavDropdown.Item href="/CadastroTroca">Trocas</NavDropdown.Item>
+                    <NavDropdown.Item href="/CadastroTarefasDeManutencao">Tarefas de Manutenção</NavDropdown.Item>
+                    <NavDropdown.Item href="/Registrar">Novo usuario</NavDropdown.Item>
+                  </NavDropdown>
 
-              </Nav>
+                </Nav>
 
-            </Navbar.Collapse>
-            <NavItem style={{ marginRight: 20 }}>Usuario: {getUserName()}</NavItem>
-  
-        
+              </Navbar.Collapse>
 
-              <Button onClick={() => this.setState((prevState, props) => ({
-  show : true
-}))}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>
-                <Modal show={this.state.show} onHide={() => this.setState({show : false})}>
-                  <Modal.Body>
+             {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {getUserName()}</NavItem>} 
 
-                  
 
-               
-                 {this.props.notifications.map((notificacao,index) => {
-                  let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
-                  return (
-                   <Row key={index} >
+              <NavItem>{isMobile ?  <Button onClick={() => this.setState((prevState, props) => ({
+                show: true
+              }))}  ><Badge variant="light">{this.props.notifications.length}</Badge></Button>  : <Button onClick={() => this.setState((prevState, props) => ({
+                show: true
+              }))}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>}</NavItem>
 
-                 
-                      <Card  >
-                        <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
-                        <Card.Body>
-                          <Card.Text>
-                            {notificacao.messagem}
-                          </Card.Text>
-                        </Card.Body>
-                      </Card>
+              <Modal show={this.state.show} onHide={() => this.setState({ show: false })}>
+                <Modal.Body>
+                  {this.props.notifications.map((notificacao, index) => {
+                    let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
+                    return (
+                      <Row key={index} >
+                        <Card  >
+                          <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
+                          <Card.Body>
+                            <Card.Text>
+                              {notificacao.messagem}
+                            </Card.Text>
+                          </Card.Body>
+                        </Card>
                       </Row>
-  
-                  )
-                })}
+
+                    )
+                  })}
                 </Modal.Body>
-                 </Modal>
+              </Modal>
 
 
 
 
-          </Navbar>
+            </Navbar>
 
           </div>
         </>
@@ -214,4 +212,4 @@ class MenuBar extends React.Component {
 
 }
 
-export default withToastManager(connect(mapToStateProps.toProps,dispatchers)(MenuBar));
+export default withToastManager(connect(mapToStateProps.toProps, dispatchers)(MenuBar));
