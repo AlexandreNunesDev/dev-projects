@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
 import scqlogo from '../logoscq.png';
 import { withToastManager } from 'react-toast-notifications';
-import { getUserName, getUserRole, isAuthenticated } from '../Services/auth';
+import { getUserName, getUserRole, isAuthenticated, logout } from '../Services/auth';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from "../mapDispatch/mapDispathToProps";
@@ -69,7 +69,7 @@ class MenuBar extends React.Component {
               <Navbar.Collapse  id="basic-navbar-nav">
                 <Nav className="mr-auto">
                   <Nav.Link href="/Home">Home</Nav.Link>
-                  <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
+                  <Nav.Link href= {!isAuthenticated() ? "/Login" : "Home"} onClick={() => isAuthenticated() && logout()}>{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
                   <Nav.Link href="/RegistroAnalise">Registro de Analise</Nav.Link>
                   <Nav.Link href="/OrdensDeCorrecao">Ordens de Correção</Nav.Link>
                   <Nav.Link href='/Omp' >OMP</Nav.Link>

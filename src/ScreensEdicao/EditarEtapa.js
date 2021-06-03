@@ -69,7 +69,7 @@ const EditarEtapa = (props) => {
           
 
         
-            reloadState()
+
   
     }
 

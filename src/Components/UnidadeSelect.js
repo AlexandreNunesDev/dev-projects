@@ -47,7 +47,7 @@ const UnidadeSelect = (props) =>{
             <Form.Control as="select"  onChange={(event) => {props.onChange(event.target.value)}}>
             <option unselectable="on" >-- {props.default} --</option>
             {options && options.map((option,index) => {
-                if(option === props.value) {
+                if(option === props.selection) {
                     return <option key={index} selected={true} value={option}>{option}</option>
                 }else {
                     return <option key={index} value={option}>{option}</option>

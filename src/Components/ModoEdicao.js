@@ -86,7 +86,7 @@ const ModoEdicao = (props) => {
     const [colSequence] = useState(evaluateColSequence(props))
 
     const loadEditableProcesso = (processoId) => {
-        const processoResponse = props.processos.filter(processo => processo.id = processoId)
+        const processoResponse = props.processos.filter(processo => processo.id == processoId)
         setProcessoObj(processoResponse[0])
         setProcesso(processoId)
        
@@ -94,13 +94,13 @@ const ModoEdicao = (props) => {
     }
 
     const loadEditableEtapa = (etapaId) => {
-        const etapaResponse = props.etapas.filter(etapa => etapa.id = etapaId)
+        const etapaResponse = props.etapas.filter(etapa => etapa.id == etapaId)
         setEtapaObj(etapaResponse[0])
         return etapaResponse[0]
     }
 
     const loadEditableParametro = (parametroId) => {
-        const parametroResponse = props.parametros.filter(parametro => parametro.id = parametroId)
+        const parametroResponse = props.parametros.filter(parametro => parametro.id == parametroId)
         setParametroObj(parametroResponse[0])
      
         return parametroResponse[0]
@@ -130,7 +130,7 @@ const ModoEdicao = (props) => {
          
             ScqApi.ListaMateriaPrimas().then(res => setMateriasPrima(res))
 
-    })
+    },[])
 
 
   

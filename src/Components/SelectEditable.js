@@ -43,7 +43,7 @@ const SelectEditable = (props) => {
             <Form.Control ref={textRef} type={"text"} value={value} onChange={(event) => {setValue(event.target.value)}} onBlur={() => {
                 if(!options.includes(value)) 
                 {
-                    value.length >0 && options.push(value)
+                   value && value.length >0 && options.push(value)
                 }  
                 setInputType("select")}}>
               
@@ -60,6 +60,7 @@ const SelectEditable = (props) => {
                         } else {
                             return <option  value={op} key={index}>{op}</option>}})
                     }
+                    <option value={"--Adicionar--"} >--Adicionar--</option>
             </Form.Control>
            
             )

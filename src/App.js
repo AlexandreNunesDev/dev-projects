@@ -77,9 +77,9 @@ class App extends React.Component {
     if (isAuthenticated()) {
       if (isTokenExpired()) {
         logout()
-        if (this.props.location.pathname !== "/VoceFoiDesconectado") {
+        
           this.props.history.push("/VoceFoiDesconectado")
-        }
+      
 
       }
     }

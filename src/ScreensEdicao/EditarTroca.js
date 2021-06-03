@@ -90,7 +90,7 @@ const EditarTroca = (props) => {
                             <Form.Control type="number" value={frequencia} onChange={event => setFrequencia(event.target.value)} />
                         </Col>
                         <Col sm>
-                            <UnidadeSelect value={escalaFrequencia} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => setEscalaFrequencia(escala)} />
+                            <UnidadeSelect selection={escalaFrequencia} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => setEscalaFrequencia(escala)} />
                         </Col>
                     </Form.Row>
 

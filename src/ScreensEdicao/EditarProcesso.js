@@ -25,7 +25,7 @@ const EditarProcesso = (props) => {
     const submitForm = (event) => {
         const replaceProcesso = { id: id, nome: nome }
         ScqApi.EditarProcesso(replaceProcesso).then(res =>  responseHandler(res))
-        reloadState()
+  
          
     }
 

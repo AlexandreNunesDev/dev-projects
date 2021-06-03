@@ -75,26 +75,28 @@ const EditarParametro = (props) => {
     }
     },[parametro])
 
-    useEffect(() => {
+
+
+    const cleanForm = () => {
+        setEdited(!edited)
         if(parametro) {
 
-        setNome(null)
-        setPmax(null)
-        setPmin(null)
-        setPmaxT(null)
-        setPminT(null)
-        setFormula(null)
-        setTitula(false)
-     
-      
-        setFrequenciaAnalise(null)
-        setEscalaTempo(null)
-        setProcessoId(null)
-        setEtapaId(null)
-        setUnidade(null)
+            setNome(null)
+            setPmax(null)
+            setPmin(null)
+            setPmaxT(null)
+            setPminT(null)
+            setFormula(null)
+            setTitula(false)
+         
+          
+            setFrequenciaAnalise(null)
+            setEscalaTempo(null)
+            setProcessoId(null)
+            setEtapaId(null)
+            setUnidade(null)
+        }
     }
-    },[edited,parametro])
-
 
 
     
@@ -105,7 +107,7 @@ const EditarParametro = (props) => {
         ScqApi.EditarParametro(editedParametro)
         
         toastManager.add(`Parametro: ${editedParametro.nome} editado com sucesso`, {appearance: 'success', autoDismiss: true ,autoDismissTimeout: 3000, onDismiss : () => {history.push("/CadastroParametro")}})
-        setEdited(!edited)
+        
         reloadState()
     }
 
@@ -142,7 +144,7 @@ const EditarParametro = (props) => {
                             <SelectEditable value={nome} getValue={(nome) => nome && setNome(nome)} default={"Clique 2x para digitar"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão"]}></SelectEditable>
                         </Form.Group>
                         <Col sm={3} >
-                            <UnidadeSelect value={unidade}  title={"Escolha um unidade"} type={"parametros"} default={"Escolha um unidade"} onChange={unidade => setUnidade(unidade)}></UnidadeSelect>
+                            <UnidadeSelect selection={unidade}  title={"Escolha um unidade"} type={"parametros"} default={"Escolha um unidade"} onChange={unidade => setUnidade(unidade)}></UnidadeSelect>
                         </Col>
 
                         <Col sm={2} >
@@ -150,7 +152,7 @@ const EditarParametro = (props) => {
                             <Form.Control type="number" value={frequenciaAnalise} onChange={event => setFrequenciaAnalise(event.target.value)} />
                         </Col>
                         <Col sm={2}>
-                            <UnidadeSelect value={escalaTempo} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={value => setEscalaTempo(value)} />
+                            <UnidadeSelect selection={escalaTempo} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={value => setEscalaTempo(value)} />
                         </Col>
 
                     </Form.Row>

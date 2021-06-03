@@ -76,7 +76,7 @@ const EditarTarefaDeManutencao = (props) => {
                             <Form.Control type="number" value={frequencia} onChange={event => { setFrequencia(event.target.value) }} />
                         </Col>
                         <Col sm>
-                            <UnidadeSelect value={escala} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => { setEscala(escala) }} />
+                            <UnidadeSelect selection={escala} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => { setEscala(escala) }} />
                         </Col>
                         <Col sm >
                             <Form.Label>Codigo da Instrução: </Form.Label>

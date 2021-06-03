@@ -78,7 +78,7 @@ const EditarMateriaPrima = (props) => {
                             <Form.Control type="text" placeholder="Fator Titulometrico" value={fatorTitulometrico} onChange={(event) => setFatorTitulometrico(event.target.value)} />
                         </Form.Group>
                         <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
-                            <UnidadeSelect value={unidade} default={"Escolha uma Unidade"} type={"adicao"} title={"Unidade Mp"} onChange={(unidade) => setUnidade(unidade)}></UnidadeSelect>
+                            <UnidadeSelect selection={unidade} default={"Escolha uma Unidade"} type={"adicao"} title={"Unidade Mp"} onChange={(unidade) => setUnidade(unidade)}></UnidadeSelect>
                         </Form.Group>
                     </Form.Row>
 
