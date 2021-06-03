@@ -77,7 +77,7 @@ class App extends React.Component {
     if (isAuthenticated()) {
       if (isTokenExpired()) {
         logout()
-        
+          
           this.props.history.push("/VoceFoiDesconectado")
       
 

@@ -67,12 +67,19 @@ export default ({ children }) => {
     }
 
 
-  
+    const saveState = (state) => {
+        try {
+          const serializedState = JSON.stringify(state);
+          localStorage.setItem('state', serializedState);
+        } catch (e) {
+          // Ignore write errors;
+        }
+      };
 
     const onConnect = () => {
         
 
-
+        store.subscribe(() => {saveState(store.getState());});
         socket.subscribe("/reducer/return", (message) => {
             
             const bodyMsg = JSON.parse(message.body)

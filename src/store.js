@@ -32,7 +32,7 @@ export const initialState = {
 
   
 const devTools = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_ && window.__REDUX_DEVTOOLS_EXTENSION_() : null
-let store = createStore(rootReducer);
-store.subscribe(() => {saveState(store.getState());});
+let store = createStore(rootReducer,devTools && devTools);
+
 
 export default store;
