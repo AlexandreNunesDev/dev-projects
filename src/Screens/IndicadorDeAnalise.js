@@ -49,6 +49,8 @@ class IndicadorDeAnalise extends Component {
     }
 
     loadChart = () => {
+
+
         if (this.state.processoId != null && this.state.etapaId == null && this.state.parametroId == null) {
             ScqApi.LoadFullProcessoChart(this.state.dataInicial, this.state.dataFinal, this.state.processoId).then(res => {
                 this.setState({
@@ -186,7 +188,7 @@ class IndicadorDeAnalise extends Component {
                             </Form.Row>
 
                             <Form.Group style={{ marginTop: 20 }}>
-                                <Button style={{ margin: 5 }} variant="primary" onClick={() => this.loadChart()}>Carregar Grafico</Button>
+                                <Button style={{ margin: 5 }} variant="primary" onClick={() => {this.setState({fullProcessoAnaliseChartData : [], fullEtapaAnaliseChartData : [] , analiseChartData : null },()=>this.loadChart()) }}>Carregar Grafico</Button>
                             </Form.Group>
                         </Form>
                     </Container>

@@ -29,7 +29,6 @@ export const logout = () => {
   localStorage.removeItem(USER_ROLE)
   localStorage.removeItem(USER_NAME)
   localStorage.removeItem(USER_ENABLE)
-  localStorage.removeItem("state")
 };
 
 
