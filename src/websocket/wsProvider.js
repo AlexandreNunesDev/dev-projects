@@ -31,13 +31,19 @@ export default ({ children }) => {
 
 
    
+
+
+    const forcedLoadOptions = () => {
+        let storeProps = mapToStateProps.toProps(store.getState())
+        let dispatchersFunctions = dispatchers(dispatch)
+        let allprops = {...storeProps,...dispatchersFunctions}
+        storeService.optionsLoad(allprops,true)
+    }
+
     const onVisibilityChange = () => {
         if((isAuthenticated()) && (!document.hidden)){
-        
-            let storeProps = mapToStateProps.toProps(store.getState())
-            let dispatchersFunctions = dispatchers(dispatch)
-            let allprops = {...storeProps,...dispatchersFunctions}
-            storeService.optionsLoad(allprops,true)
+            forcedLoadOptions()
+       
         }
      
     }
@@ -72,7 +78,7 @@ export default ({ children }) => {
     const onConnect = () => {
         
 
-       
+        window.addEventListener("beforeunload", forcedLoadOptions());
         socket.subscribe("/reducer/return", (message) => {
             
             const bodyMsg = JSON.parse(message.body)
