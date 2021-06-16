@@ -1,6 +1,7 @@
 
 export const actions = {
     loading : (data) => {return {type: 'IS_LOADING' , payload : data}},
+    firstReload : (data) => {return{type: 'FIRST_RELOAD' , payload : data}},
     loadProcessos: (data) => {return { type: 'LOAD_PROCESSOS', payload : data }},
     loadEtapas: (data) =>  {return {type: 'LOAD_ETAPAS', payload : data }},
     loadParametros: (data) => {return {type : 'LOAD_PARAMETROS' , payload : data}},

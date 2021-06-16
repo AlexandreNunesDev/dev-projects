@@ -3,6 +3,7 @@ import { actions } from "../actions/actions";
 const dispatchers = (dispatch,data) => {
     return {
         loading : (data) => dispatch({type: 'IS_LOADING' , payload : data}),
+        firstReload : (data) => dispatch({type: 'FIRST_RELOAD' , payload : data}),
         loadProcessos: (data) => dispatch({ type: 'LOAD_PROCESSOS', payload : data }),
         loadEtapas: (data) => dispatch( {type: 'LOAD_ETAPAS', payload : data }),
         loadParametros: (data) => dispatch({type : 'LOAD_PARAMETROS' , payload : data}),

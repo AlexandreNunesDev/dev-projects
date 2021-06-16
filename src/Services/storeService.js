@@ -29,7 +29,7 @@ export const optionsLoad = async (props,forceUpdade) => {
   }
 
   if(forceUpdade) {
-    console.log("Ui atualizada")
+    props.firstReload(false)
     loadProcessos(props)
     loadEtapas(props)
     loadParametros(props)

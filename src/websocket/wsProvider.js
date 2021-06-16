@@ -33,7 +33,7 @@ export default ({ children }) => {
    
     const onVisibilityChange = () => {
         if((isAuthenticated()) && (!document.hidden)){
-            console.log("Refresh na ui")
+        
             let storeProps = mapToStateProps.toProps(store.getState())
             let dispatchersFunctions = dispatchers(dispatch)
             let allprops = {...storeProps,...dispatchersFunctions}
@@ -67,19 +67,12 @@ export default ({ children }) => {
     }
 
 
-    const saveState = (state) => {
-        try {
-          const serializedState = JSON.stringify(state);
-          localStorage.setItem('state', serializedState);
-        } catch (e) {
-          // Ignore write errors;
-        }
-      };
+
 
     const onConnect = () => {
         
 
-        store.subscribe(() => {saveState(store.getState());});
+       
         socket.subscribe("/reducer/return", (message) => {
             
             const bodyMsg = JSON.parse(message.body)

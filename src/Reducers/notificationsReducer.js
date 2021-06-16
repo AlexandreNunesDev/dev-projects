@@ -6,18 +6,8 @@ const initialState = {
 }
 
 const loadState = () => {
-  try {
-    const serializedState = localStorage.getItem('state');
-    if (serializedState === null) {
-      return initialState;
-    }
-    const actualState = JSON.parse(serializedState);
-    return actualState.notification;
-  } catch (e) {
-    return null;
-  }
+  return initialState;
 };
-
 
 const notificationsReducer = produce(
   (draft, action) => {

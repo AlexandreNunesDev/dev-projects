@@ -12,18 +12,8 @@ const initialState = {
 }
 
 const loadState = () => {
-  try {
-    const serializedState = localStorage.getItem('state');
-    if (serializedState === null) {
-      return initialState;
-    }
-    const actualState = JSON.parse(serializedState);
-    return actualState.ocp;
-  } catch (e) {
-    return null;
-  }
+  return initialState;
 };
-
 
 const ocpsReducer = produce(
   (draft, action) => {

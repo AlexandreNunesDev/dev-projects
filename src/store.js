@@ -13,15 +13,6 @@ export const initialState = {
 
 
   
-  const saveState = (state) => {
-    try {
-      const serializedState = JSON.stringify(state);
-      localStorage.setItem('state', serializedState);
-    } catch (e) {
-      // Ignore write errors;
-    }
-  };
-
   
 
   export const reloadState = () => {
@@ -32,7 +23,7 @@ export const initialState = {
 
   
 const devTools = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_ && window.__REDUX_DEVTOOLS_EXTENSION_() : null
-let store = createStore(rootReducer);
+let store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 
 export default store;

@@ -14,14 +14,12 @@ import WebSocketProvider, { WebSocketContext } from './websocket/wsProvider';
 ReactDOM.render(
   
   <BrowserRouter>
-    
       <ToastProvider>
         <Provider store={store}> 
           <WebSocketProvider>
             <App/>
             </WebSocketProvider>
         </Provider>
-         
       </ToastProvider>
   </BrowserRouter>
  ,

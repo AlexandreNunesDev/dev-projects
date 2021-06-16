@@ -9,8 +9,7 @@ import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import { isMobile } from 'react-device-detect';
-
-
+import { Link } from 'react-router-dom';
 
 class MenuBar extends React.Component {
 
@@ -66,37 +65,34 @@ class MenuBar extends React.Component {
               <Image height={50} width={80} src={scqlogo} rounded />
 
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse  id="basic-navbar-nav">
+              <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/Home">Home</Nav.Link>
-                  <Nav.Link href= {!isAuthenticated() ? "/Login" : "Home"} onClick={() => isAuthenticated() && logout()}>{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
-                  <Nav.Link href="/RegistroAnalise">Registro de Analise</Nav.Link>
-                  <Nav.Link href="/OrdensDeCorrecao">Ordens de Correção</Nav.Link>
-                  <Nav.Link href='/Omp' >OMP</Nav.Link>
-                  <Nav.Link href="/TarefasDeManutencao" >Tarefas de Manutenção</Nav.Link>
-                  <Nav.Link href="/IndicadorDeAnalise">Indicador de Analises</Nav.Link>
-
+                  <Link className="nav-link" to="/Home">Home</Link>
+                  <Link className="nav-link" to={!isAuthenticated() ? "/Login" : "Home"} onClick={() => isAuthenticated() && logout()}>{!isAuthenticated() ? "Login" : "Logout"}</Link>
+                  <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                  <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
+                  <Link className="nav-link" to='/Omp' >OMP</Link>
+                  <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
+                  <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                   <NavDropdown title="Cadastros" id="basic-nav-dropdown">
-
-                    <NavDropdown.Item href="/CadastroProcesso">Processo</NavDropdown.Item>
-                    <NavDropdown.Item href="/CadastroEtapa">Etapa</NavDropdown.Item>
-                    <NavDropdown.Item href="/CadastroParametro">Parametro</NavDropdown.Item>
-                    <NavDropdown.Item href="/CadastroMateriaPrima">Matéria Prima</NavDropdown.Item>
-                    <NavDropdown.Item href="/CadastroTroca">Trocas</NavDropdown.Item>
-                    <NavDropdown.Item href="/CadastroTarefasDeManutencao">Tarefas de Manutenção</NavDropdown.Item>
-                    <NavDropdown.Item href="/Registrar">Novo usuario</NavDropdown.Item>
+                    <Link className="dropdown-item" to="/CadastroProcesso">Processo</Link>
+                    <Link className="dropdown-item" to="/CadastroEtapa">Etapa</Link>
+                    <Link className="dropdown-item" to="/CadastroParametro">Parametro</Link>
+                    <Link className="dropdown-item" to="/CadastroMateriaPrima">Matéria Prima</Link>
+                    <Link className="dropdown-item" to="/CadastroTroca">Trocas</Link>
+                    <Link className="dropdown-item" to="/CadastroTarefasDeManutencao">Tarefas de Manutenção</Link>
+                    <Link className="dropdown-item" to="/Registrar">Novo usuario</Link>
                   </NavDropdown>
-
                 </Nav>
 
               </Navbar.Collapse>
 
-             {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {getUserName()}</NavItem>} 
+              {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {getUserName()}</NavItem>}
 
 
-              <NavItem>{isMobile ?  <Button onClick={() => this.setState((prevState, props) => ({
+              <NavItem>{isMobile ? <Button onClick={() => this.setState((prevState, props) => ({
                 show: true
-              }))}  ><Badge variant="light">{this.props.notifications.length}</Badge></Button>  : <Button onClick={() => this.setState((prevState, props) => ({
+              }))}  ><Badge variant="light">{this.props.notifications.length}</Badge></Button> : <Button onClick={() => this.setState((prevState, props) => ({
                 show: true
               }))}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>}</NavItem>
 
@@ -138,14 +134,16 @@ class MenuBar extends React.Component {
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
+
               <Nav className="mr-auto">
-                <Nav.Link href="/Home">Home</Nav.Link>
-                <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
-                <Nav.Link href="/RegistroAnalise">Registro de Analise</Nav.Link>
-                <Nav.Link href="/OrdensDeCorrecao">Ordens de Correção</Nav.Link>
-                <Nav.Link href='/Omp'>Omp</Nav.Link>
-                <Nav.Link href="/TarefasDeManutencao" >Tarefas de Manutenção</Nav.Link>
-                <Nav.Link href="/IndicadorDeAnalise">Indicador de Analises</Nav.Link>
+
+                <Link className="nav-link" to="/Home">Home</Link>
+                <Link className="nav-link" to={!isAuthenticated() ? "/Login" : "Home"} onClick={() => isAuthenticated() && logout()}>{!isAuthenticated() ? "Login" : "Logout"}</Link>
+                <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
+                <Link className="nav-link" to='/Omp' >OMP</Link>
+                <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
+                <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
 
               </Nav>
 
@@ -193,9 +191,8 @@ class MenuBar extends React.Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link href="/Home">Home</Nav.Link>
-
-                <Nav.Link href="/Login">{!isAuthenticated() ? "Login" : "Logout"}</Nav.Link>
+                <Link className="nav-link" to="/Home">Home</Link>
+                <Link className="nav-link" to={!isAuthenticated() ? "/Login" : "Home"} onClick={() => isAuthenticated() && logout()}>{!isAuthenticated() ? "Login" : "Logout"}</Link>
               </Nav>
 
             </Navbar.Collapse>

@@ -4,18 +4,8 @@ const initialState = {
   choosedTrocasId: [],
   choosedTarefasId: [],
 }
-
 const loadState = () => {
-  try {
-    const serializedState = localStorage.getItem('state');
-    if (serializedState === null) {
-      return initialState;
-    }
-    const actualState = JSON.parse(serializedState);
-    return actualState.omp;
-  } catch (e) {
-    return null;
-  }
+  return initialState;
 };
 
 

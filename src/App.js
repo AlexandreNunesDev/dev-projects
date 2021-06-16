@@ -70,11 +70,9 @@ class App extends React.Component {
 
 
   componentDidMount() {
-
     if (isAuthenticated()) {
       if (isTokenExpired()) {
         logout()
-          
           this.props.history.push("/VoceFoiDesconectado")
       
 
@@ -82,14 +80,6 @@ class App extends React.Component {
     }
 
   }
-
-
-
-
-
-
-
-
 
 
 
@@ -103,7 +93,7 @@ class App extends React.Component {
         <>
        
           <Switch>
-            <Route path='/' exact={true} component={Home} />
+            <Route path='/' exact={true} component={Home}/> 
             <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />

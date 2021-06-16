@@ -3,20 +3,12 @@ import produce from "immer"
 const initialState = {
     loadedOptions : [],
     loading : false,
-    processoIdTarefaRef : ''
+    processoIdTarefaRef : '',
+    firstReload : true
 }
 
 const loadState = () => {
-  try {
-    const serializedState = localStorage.getItem('state');
-    if (serializedState === null) {
-      return initialState;
-    }
-    const actualState = JSON.parse(serializedState);
-    return actualState.global;
-  } catch (e) {
-    return null;
-  }
+    return initialState;
 };
 
 
@@ -29,6 +21,9 @@ const loadState = () => {
             break
         case "IS_LOADING":
             draft.loading = action.payload
+            break
+        case "FIRST_RELOAD":
+            draft.firstReload = action.payload
             break
         case "PROCESSOID_TAREFA_REF":
             draft.processoIdTarefaRef = action.payload
