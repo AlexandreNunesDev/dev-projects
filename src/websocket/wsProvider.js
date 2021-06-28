@@ -41,18 +41,22 @@ export default ({ children }) => {
     }
 
     const onVisibilityChange = () => {
-        if((isAuthenticated()) && (!document.hidden)){
-            forcedLoadOptions()
        
+        if((isAuthenticated()) && (!document.hidden)){
+         
+            forcedLoadOptions()
+         
         }
      
     }
 
     
     useEffect(() => {
+        window.addEventListener("beforeunload", onVisibilityChange());
       window.addEventListener("visibilitychange", onVisibilityChange);
     
       return () => {
+        window.removeEventListener("beforeunload", onVisibilityChange());
         window.removeEventListener("visibilitychange", onVisibilityChange);
       };
     });
@@ -78,7 +82,7 @@ export default ({ children }) => {
     const onConnect = () => {
         
 
-        window.addEventListener("beforeunload", forcedLoadOptions());
+       
         socket.subscribe("/reducer/return", (message) => {
             
             const bodyMsg = JSON.parse(message.body)
