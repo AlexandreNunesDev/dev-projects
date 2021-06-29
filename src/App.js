@@ -41,6 +41,7 @@ import { connect } from 'react-redux';
 import mapToStateProps from './mapStateProps/mapStateToProps'
 import SockJsClient from 'react-stomp';
 import { WebSocketContext } from './websocket/wsProvider';
+import { optionsLoad } from './Services/storeService';
 
 
 
@@ -72,19 +73,14 @@ class App extends React.Component {
 
 
   componentDidMount() {
-   
     if (isAuthenticated()) {
       if (isTokenExpired()) {
         logout()
           this.props.history.push("/VoceFoiDesconectado")
-      
-
       }
     }
 
   }
-
-
 
 
   render() {

@@ -25,6 +25,8 @@ const dispatchers = (dispatch,data) => {
         updadteOcpQuantidadeAdicao : (data) => dispatch({type: 'OCP_QTD_ADICAO' , payload : data}),
         loadNotifications : (data) => dispatch(actions.loadNotifications(data)),
         setProcessoIdTarefaRef : (data) => dispatch(actions.setProcessoIdTarefaRef(data)),
+        setLogIn : (data) => dispatch(actions.logIn(data)),
+        setLogOut : (data) => dispatch(actions.logOut(data))
        
     }
 };

@@ -4,7 +4,8 @@ const initialState = {
     loadedOptions : [],
     loading : false,
     processoIdTarefaRef : '',
-    firstReload : true
+    firstReload : true,
+    isAuth : false
 }
 
 const loadState = () => {
@@ -18,6 +19,12 @@ const loadState = () => {
       switch (action.type) {
         case "LOAD_POSITIONS":
             draft.loadedOptions.push(action.payload)
+            break
+        case "LOGIN":
+            draft.isAuth = true
+            break
+        case "LOGOUT":
+            draft.isAuth = false
             break
         case "IS_LOADING":
             draft.loading = action.payload

@@ -22,5 +22,7 @@ export const actions = {
     ocpToEdit : (data) => {return{type: 'OCP_TO_EDIT' , payload : data}},
     loadNotifications : (data) => {return{type: 'LOAD_NOTIFICATIONS' , payload: data}},
     setProcessoIdTarefaRef : (data) => {return{type: 'PROCESSOID_TAREFA_REF' , payload: data}},
+    logIn : (data) => {return{type: 'LOGIN' , payload: data}},
+    logOut : (data) => {return{type: 'LOGOUT' , payload: data}},
 }
 

@@ -5,20 +5,24 @@ import { BrowserRouter } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Provider } from 'react-redux';
-import store from './store';
+import {store} from './store';
+import {persistor} from './store';
 import WebSocketProvider, { WebSocketContext } from './websocket/wsProvider';
+import { PersistGate } from 'redux-persist/integration/react'
 
 
 
 
 ReactDOM.render(
   
-  <BrowserRouter>
+  <BrowserRouter >
       <ToastProvider>
         <Provider store={store}> 
+        <PersistGate loading={null} persistor={persistor}>
           <WebSocketProvider>
             <App/>
             </WebSocketProvider>
+            </PersistGate>
         </Provider>
       </ToastProvider>
   </BrowserRouter>

@@ -20,7 +20,7 @@ class MenuBar extends React.Component {
       notifications: [],
       user: {},
       show: false,
-      isAuth : false,
+
     }
   }
 
@@ -36,11 +36,7 @@ class MenuBar extends React.Component {
   }
 
 
-  componentDidMount() {
-    this.setState({isAuth : isAuthenticated()})
-  }
-
-
+ 
 
   resolveNotificacao = (notificacao) => {
     ScqApi.EditarNotificacao(notificacao.id).then(data => this.showNotificationsReponse(data))
@@ -54,10 +50,12 @@ class MenuBar extends React.Component {
   }
 
 
-  logUserOut = () => {
+  logUserOut () {
+    this.props.setLogOut()
     logout()
-    this.setState({isAuth : isAuthenticated()})
   }
+
+
 
 
 
@@ -78,7 +76,7 @@ class MenuBar extends React.Component {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                   <Link className="nav-link" to="/Home">Home</Link>
-                  <Link className="nav-link" to={!this.state.isAuth ? "/Login" : "/Home"} onClick={() => this.state.isAuth && this.logUserOut()}>{!this.state.isAuth ? "Login" : "Logout"}</Link>
+                  <Link className="nav-link" to={!this.props.global.isAuth ? "/Login" : "/Home"} onClick={() => this.props.global.isAuth && this.logUserOut()}>{!this.props.global.isAuth ? "Login" : "Logout"}</Link>
                   <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
                   <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
                   <Link className="nav-link" to='/Omp' >OMP</Link>

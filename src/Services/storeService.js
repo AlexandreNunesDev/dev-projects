@@ -1,7 +1,8 @@
 import ScqApi from "../Http/ScqApi"
-import store from "../store"
+import {store} from "../store"
 
 export const optionsLoad = async (props,forceUpdade) => {
+  console.log("chamou force : " + forceUpdade)
   if (props.processos.length === 0) {
     loadProcessos(props)
   }
@@ -29,6 +30,7 @@ export const optionsLoad = async (props,forceUpdade) => {
   }
 
   if(forceUpdade) {
+
     props.firstReload(false)
     loadProcessos(props)
     loadEtapas(props)

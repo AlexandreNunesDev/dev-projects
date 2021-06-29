@@ -28,12 +28,13 @@ export default ({ children }) => {
     const store = useStore()
     const history = useHistory()
 
-
+    
 
    
 
 
     const forcedLoadOptions = () => {
+ 
         let storeProps = mapToStateProps.toProps(store.getState())
         let dispatchersFunctions = dispatchers(dispatch)
         let allprops = {...storeProps,...dispatchersFunctions}
@@ -41,25 +42,23 @@ export default ({ children }) => {
     }
 
     const onVisibilityChange = () => {
-       console.log("chamou")
         if((isAuthenticated()) && (!document.hidden)){
-         
             forcedLoadOptions()
-         
         }
-     
     }
 
-    
-    useEffect(() => {
 
-      window.addEventListener("visibilitychange", onVisibilityChange);
-    
-      return () => {
+
+
      
+    useEffect(() => {
+       
+        window.addEventListener("visibilitychange", onVisibilityChange);
+      
+      return () => {
         window.removeEventListener("visibilitychange", onVisibilityChange);
       };
-    });
+    },[]);
 
 
 

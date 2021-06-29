@@ -28,21 +28,23 @@ class Login extends React.Component {
         }
     }
 
+   
 
-    populateStore() {
-        optionsLoad(this.props,this.props.global.firstReload)
-      
-        this.props.history.push("/Home")
+    componentDidUpdate (prevProps) {
+        if((this.props.global.isAuth) && (this.props.global.isAuth != prevProps.global.isAuth)){
+            console.log("carregou as opcoes")
+            optionsLoad(this.props,true)
+            this.props.firstReload(false)
+        }
     }
 
     authenticationHandler = (res) => {
         const { toastManager } = this.props
 
         if (res.token) {
-
-            login(res).then(() => this.populateStore())
-
-
+            login(res)
+            this.props.setLogIn()
+            this.props.history.push("/Home")
         } else if (res.userName) {
             toastManager.add("Confirme sua conta para acessar", {
                 appearance: 'warning', autoDismiss: true
@@ -90,7 +92,7 @@ class Login extends React.Component {
                             </Button>
                             :
                             <Button style={{ margin: 5 }} variant="primary" onClick={() => {
-                                logout(); this.props.history.push("/Home");
+                                logout(); this.props.history.push("/Home");  this.props.setLogOut()
                             }}>
                                 Sair
                             </Button>
