@@ -41,7 +41,7 @@ export default ({ children }) => {
     }
 
     const onVisibilityChange = () => {
-       
+       console.log("chamou")
         if((isAuthenticated()) && (!document.hidden)){
          
             forcedLoadOptions()
@@ -52,11 +52,11 @@ export default ({ children }) => {
 
     
     useEffect(() => {
-        window.addEventListener("beforeunload", onVisibilityChange());
+
       window.addEventListener("visibilitychange", onVisibilityChange);
     
       return () => {
-        window.removeEventListener("beforeunload", onVisibilityChange());
+     
         window.removeEventListener("visibilitychange", onVisibilityChange);
       };
     });
