@@ -288,7 +288,8 @@ const ScqApi = {
 
     },
     Calcular: (formula, viragem) => {
-        const encodedUrl = encodeURI("calculadora?formula=" + formula + "&viragem=" + viragem)
+        let encoderForumula = encodeURIComponent(formula)
+        const encodedUrl = "calculadora?formula=" + encoderForumula + "&viragem=" + viragem
         return http.get(encodedUrl)
 
     },

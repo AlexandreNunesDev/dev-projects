@@ -43,7 +43,7 @@ const AnaliseEdit = (props) => {
             </Row>
             <Row>
             <Col>
-              <Form.Label>Data Planejada : </Form.Label>
+              <Form.Label>Data Realizada : </Form.Label>
                 <Form.Control
                   type="datetime-local"
                   defaultValue={props?.analise?.defaultData}

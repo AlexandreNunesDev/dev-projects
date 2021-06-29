@@ -51,14 +51,14 @@ export default ({ children }) => {
 
 
      
-    useEffect(() => {
+   /*useEffect(() => {
        
         window.addEventListener("visibilitychange", onVisibilityChange);
       
       return () => {
         window.removeEventListener("visibilitychange", onVisibilityChange);
       };
-    },[]);
+    },[]);*/
 
 
 
