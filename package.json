@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/data-grid": "^4.0.0-alpha.32",
     "@stomp/stompjs": "^6.1.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -20,6 +21,7 @@
     "react-bootstrap": "^1.2.2",
     "react-bootstrap-typeahead": "^5.1.1",
     "react-chart": "^0.0.1",
+    "react-data-grid": "^7.0.0-canary.49",
     "react-device-detect": "^1.17.0",
     "react-dom": "^16.13.1",
     "react-editable-select": "^1.0.0",
