@@ -93,8 +93,7 @@ export default ({ children }) => {
               
             } else {
                 const functionName = bodyMsg.function
-                const action = actions[functionName]()
-                storeService[functionName](null,action)
+                dispatchers(dispatch)[functionName]()
                
             }
            
@@ -107,7 +106,7 @@ export default ({ children }) => {
     const onDisconnect = () => {
         console.log("socket desconectado")
         socket.deactivate()
-        logout()
+        dispatchers(dispatch).setLogOut()
     }
 
 

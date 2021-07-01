@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Container, Col, Button } from 'react-bootstrap';
+import { Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GenericSelect from '../Components/GenericSelect';
 import ScqApi from '../Http/ScqApi';
@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
+
 
 const SOCKET_URL = 'ws://localhost:8080/gs-guide-websocket'
 const valueForm = (props) => {
@@ -59,20 +60,18 @@ class RegistroDeAnalise extends React.Component {
 
 
 
+    componentDidUpdate (prevProps) {
+        if(prevProps.parametros !== this.props.parametros){
+           this.onEtapaSelect(this.state.etapaId)
+        }
+    }
 
 
 
     componentDidMount() {
-
-
-
-
-
         const analise = this.props.location.state && this.props.location.state[0]
         const ocpId = this.props.location.state && this.props.location.state[1]
-
         if (analise) {
-
             const processo = { id: analise.processoId, nome: analise.processoNome }
             const etapa = { id: analise.etapaId, nome: analise.etapaNome }
             const parametro = { id: analise.parametroId, nome: analise.parametroNome, menuType: analise.menuType, pMin: analise.pMin, pMax: analise.pMax, pMaxT: analise.pMaxT, pMinT: analise.pMinT, formula: analise.formula, unidade: analise.unidade }
@@ -86,8 +85,6 @@ class RegistroDeAnalise extends React.Component {
                 analista: analise.analista,
                 analise: analise,
                 ocpId: ocpId
-
-
             }, () => this.onParametroSelect(analise.parametroId))
 
         }
@@ -95,13 +92,13 @@ class RegistroDeAnalise extends React.Component {
 
     onLinhaSelect = (linhaId) => {
         this.setState({
-
             etapas: this.props.etapas.filter(etapa => etapa.processoId === Number(linhaId))
         })
     }
 
     onEtapaSelect = (etapaId) => {
         this.setState({
+            etapaId : etapaId,
             parametros: this.props.parametros.filter(parametro => parametro.etapaId === Number(etapaId))
         })
     }
@@ -173,25 +170,6 @@ class RegistroDeAnalise extends React.Component {
         }
     }
 
-    responseHandler = (response) => {
-
-        const { toastManager } = this.props;
-        if (response.error) {
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                })
-            });
-        } else {
-            toastManager.add(`Analise processo ${response.id} criada`, {
-                appearance: 'success', autoDismiss: true
-            })
-        }
-
-
-
-
-    }
 
 
 
@@ -204,7 +182,7 @@ class RegistroDeAnalise extends React.Component {
             const { analista, resultado, status } = this.state
             let nomeAnalista
             if (analista === '') {
-                nomeAnalista = getUserName()
+                nomeAnalista = this.props.global.userName
             } else {
                 nomeAnalista = analista;
             }
@@ -212,39 +190,23 @@ class RegistroDeAnalise extends React.Component {
             const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: null }
 
             ScqApi.CriarAnalise(analise).then(res => {
-                responseHandler(res, this.props, "Analise")
+                responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros,this.props.loadOcps])
             })
-
-
-
         }
-
-
-
-
-
-
 
     }
 
     salvarReanalise = () => {
 
-
-
         const { id } = this.state.analise
         const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId }
 
-        ScqApi.EditarAnalise(analise).then(() => this.context.ws.sendMessage(this.props.loadOcps, null, "OrdensDeCorrecao"))
+        ScqApi.EditarAnalise(analise).then((res) => responseHandler(res, this.props, "Analise", 'info',this.context, [this.props.loadParametros,this.props.loadOcps]))
 
 
 
 
     }
-
-
-
-
-
 
 
     gerarOcpReanalise = (history) => {
@@ -290,7 +252,7 @@ class RegistroDeAnalise extends React.Component {
                                 <Form.Label>
                                     Nome do Analista:
                                 </Form.Label>
-                                <Form.Control type="text" placeholder={getUserName()} value={this.state.analista} onChange={this.nomeAnalistaListner} />
+                                <Form.Control type="text" placeholder={this.props.global.userName} value={this.state.analista} onChange={this.nomeAnalistaListner} />
                             </Col>
 
                         </Form.Row>

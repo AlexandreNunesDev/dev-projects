@@ -1,21 +1,22 @@
 import { actions } from "../actions/actions";
+import ScqApi from "../Http/ScqApi";
 
-const dispatchers = (dispatch,data) => {
+const dispatchers = (dispatch) => {
     return {
         loading : (data) => dispatch({type: 'IS_LOADING' , payload : data}),
         firstReload : (data) => dispatch({type: 'FIRST_RELOAD' , payload : data}),
-        loadProcessos: (data) => dispatch({ type: 'LOAD_PROCESSOS', payload : data }),
-        loadEtapas: (data) => dispatch( {type: 'LOAD_ETAPAS', payload : data }),
-        loadParametros: (data) => dispatch({type : 'LOAD_PARAMETROS' , payload : data}),
-        loadMateriasPrima: (data) => dispatch({type : 'LOAD_MATERIAS_PRIMA' , payload : data}),
-        loadTrocas: (data) => dispatch({type : 'LOAD_TROCAS' , payload : data}),
-        loadTarefasDeManutencao: (data) => dispatch(actions.loadTarefasDeManutencao(data)),
-        loadOcps: (data) => dispatch({type : 'LOAD_OCPS' , payload : data}),
+        loadProcessos: () => ScqApi.ListaProcessos().then(data =>  dispatch(actions.loadProcessos(data))),
+        loadEtapas: () => ScqApi.ListaEtapas().then(data => dispatch(actions.loadEtapas(data))),
+        loadParametros: () => ScqApi.ListaParametros().then(data => dispatch(actions.loadParametros(data))),
+        loadMateriasPrima: () => ScqApi.ListaMateriaPrimas().then(data => dispatch(actions.loadMateriasPrima(data))),
+        loadTrocas: () => ScqApi.ListaTrocas().then(data => dispatch(actions.loadTrocas(data))),
+        loadTarefasDeManutencao: () => ScqApi.ListaTarefasDeManutencao().then(data => dispatch(actions.loadTarefasDeManutencao(data))) ,
+        loadOcps: () => ScqApi.ListaOcps().then(data => dispatch(actions.loadOcps(data))) ,
         loadPosition : (data) => dispatch({type: 'LOAD_POSITIONS' , payload : data}),
         addProcesso : (data) => dispatch({type: 'ADD_PROCESSO' , payload : data}),
         addEtapa : (data) => dispatch({type: 'ADD_ETAPA' , payload : data}),
         addOcp : (data) => dispatch({type: 'ADD_OCP' , payload : data}),
-        aproveOcp : (data) => dispatch({type: 'APROVE_OCP' , payload : data}),
+        aproveOcp : (data) => dispatch(actions.aproveOcp(data)),
         reanaliseOcp : (data) => dispatch({type:'REANALISE_OCP' , payload : data}),
         setFilterType : (data) => dispatch({type:'SET_FILTER_TYPE' , payload : data}),
         showEncerradas : (data) => dispatch({type:'SHOW_ENCERRADAS' , payload : data}),
@@ -23,7 +24,7 @@ const dispatchers = (dispatch,data) => {
         removeOcp : (data) => dispatch({type: 'REMOVE_OCP' , payload : data}),
         ocpToEdit : (data) => dispatch({type: 'OCP_TO_EDIT' , payload : data}),
         updadteOcpQuantidadeAdicao : (data) => dispatch({type: 'OCP_QTD_ADICAO' , payload : data}),
-        loadNotifications : (data) => dispatch(actions.loadNotifications(data)),
+        loadNotifications : () => ScqApi.ListaNotificacoes().then(data => dispatch(actions.loadNotifications(data))),
         setProcessoIdTarefaRef : (data) => dispatch(actions.setProcessoIdTarefaRef(data)),
         setLogIn : (data) => dispatch(actions.logIn(data)),
         setLogOut : (data) => dispatch(actions.logOut(data))

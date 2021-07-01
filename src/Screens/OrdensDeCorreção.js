@@ -111,11 +111,11 @@ class OrdensDeCorreção extends Component {
     correcaoConfirm = (isOcp, ocpId, isAdicao) => {
         if (isOcp) {
             if (isAdicao) {
-                ScqApi.AdicaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps, null))
+                ScqApi.AdicaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps))
 
 
             } else {
-                ScqApi.AcaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps, null))
+                ScqApi.AcaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps))
 
             }
 
@@ -132,7 +132,7 @@ class OrdensDeCorreção extends Component {
 
 
     aprovarOcp = () => {
-        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(null, actions.aproveOcp(this.state.ocpToAprove.id)))
+        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(this.props.aproveOcp(this.state.ocpToAprove.id)))
     }
 
    

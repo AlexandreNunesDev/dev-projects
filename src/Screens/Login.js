@@ -31,9 +31,7 @@ class Login extends React.Component {
 
 
     componentDidUpdate (prevProps) {
-       
         if((this.props.global.isAuth) && (this.props.global.isAuth != prevProps.global.isAuth)){
-          
             console.log("carregou as opcoes")
             optionsLoad(this.props,true)
             this.props.firstReload(false)
@@ -44,8 +42,7 @@ class Login extends React.Component {
         const { toastManager } = this.props
 
         if (res.token) {
-            login(res)
-            this.props.setLogIn()
+            this.props.setLogIn(res)
             this.props.history.push("/Home")
         } else if (res.userName) {
             toastManager.add("Confirme sua conta para acessar", {
@@ -68,7 +65,7 @@ class Login extends React.Component {
         } else {
             return (
                 <Container style={{ marginTop: 20 }}>
-                    <h1>{!isAuthenticated() ? "Entrar" : "Sair"}</h1>
+                    <h1>{!this.props.global.isAuth ? "Entrar" : "Sair"}</h1>
                     <Form>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Usuario</Form.Label>
@@ -84,7 +81,7 @@ class Login extends React.Component {
 
 
 
-                        {!isAuthenticated() ?
+                        {!this.props.global.isAuth ?
 
                             <Button style={{ margin: 5 }} variant="primary" onClick={() => {
                                 const loginForm = { usuario: this.state.usuario, senha: this.state.senha }
@@ -94,7 +91,7 @@ class Login extends React.Component {
                             </Button>
                             :
                             <Button style={{ margin: 5 }} variant="primary" onClick={() => {
-                                logout(); this.props.history.push("/Home");  this.props.setLogOut()
+                                this.props.history.push("/Home");  this.props.setLogOut()
                             }}>
                                 Sair
                             </Button>

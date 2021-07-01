@@ -73,9 +73,10 @@ class App extends React.Component {
 
 
   componentDidMount() {
-    if (isAuthenticated()) {
-      if (isTokenExpired()) {
+    if (isAuthenticated(this.props.global.tokenInfo)) {
+      if (isTokenExpired(this.props.global.tokenInfo)) {
         logout()
+        this.props.setLogOut()
           this.props.history.push("/VoceFoiDesconectado")
       }
     }
@@ -87,7 +88,7 @@ class App extends React.Component {
 
 
 
-    if (getUserRole() === "ADMIN_ROLE") {
+    if (this.props.global.userRole === "ADMIN_ROLE") {
       return (
         <>
        
@@ -134,7 +135,7 @@ class App extends React.Component {
 
 
       )
-    } else if (getUserRole() === "USER_ROLE") {
+    } else if (this.props.global.userRole === "USER_ROLE") {
       return (
 
         <>

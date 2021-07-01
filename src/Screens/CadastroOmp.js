@@ -220,10 +220,10 @@ const CadastroOmp = (props) => {
                         
                         if(trocas.length ===0){
                             const omp = {processoId : tarefas[0].processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
-                            ScqApi.GerarOmp(omp).then(res => responseHandler(res,props,"OrdemDeManutencao",history.push("/OrdensDeManutencao"),history))
+                            ScqApi.GerarOmp(omp).then(res => responseHandler(res,props,"OrdemDeManutencao"))
                         } else {
                             const omp = {processoId : trocas[0]?.processoId,programadoPara: dataPlanejada ,emitidoPor : emitidoPor,trocasId, tarefasId : tarefasChoosedId}
-                            ScqApi.GerarOmp(omp).then(res => responseHandler(res,props,"OrdemDeManutencao",history.push("/OrdensDeManutencao"),history))
+                            ScqApi.GerarOmp(omp).then(res => responseHandler(res,props,"OrdemDeManutencao"))
                         }
                         
                         

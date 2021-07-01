@@ -3,14 +3,14 @@ export const USER_ROLE = "@scq-Role";
 export const USER_NAME = "@scq-UserName";
 export const USER_ENABLE = "@scq-UserEnable";
 export const TOKEN_EXP = "@scq-TokenExp"
-const plusDate = () => {
+export const plusDate = () => {
   var date = new Date()
   var expTime = date.getTime() + 14000000
 
   return expTime
 }
-export const isAuthenticated = () => localStorage.getItem(TOKEN_INFO) !== null;
-export const isTokenExpired = () => localStorage.getItem(TOKEN_EXP) < new Date().getTime()
+export const isAuthenticated = (tokenInfo) => tokenInfo !== '';
+export const isTokenExpired = (tokenExp) => tokenExp < new Date().getTime()
 export const getToken = () => localStorage.getItem(TOKEN_INFO);
 export const getUserRole = () => localStorage.getItem(USER_ROLE);
 export const getUserName = () => localStorage.getItem(USER_NAME);

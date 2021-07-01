@@ -3,6 +3,7 @@ import axios from "axios"
 
 import { getToken } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
+import { store } from "../store";
 const URL_TEST = 'http://localhost:8080/'
 const URL = "https://scqapi.com/"
 const http = axios.create({
@@ -24,7 +25,7 @@ const respInter = http.interceptors.response.use(function (response) {
   });
 
 http.interceptors.request.use(async config => {
-    const token = getToken();
+    const token = store.getState().global.tokenInfo;
  
     if (token!=null) {
         config.headers.Authorization = `Bearer ${token}`;

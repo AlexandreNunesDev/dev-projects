@@ -7,10 +7,22 @@ import notificationsReducer from './notificationsReducer'
 
 
 
-export  const rootReducer = combineReducers({
+const appReducer = combineReducers({
    options :  optionsReducer,
    ocp : ocpsReducer,
    global : globalConfig,
    notification :notificationsReducer
   
 })
+
+
+const rootReducer = (state, action) => {
+   // when a logout action is dispatched it will reset redux state
+   if (action.type === 'LOGOUT') {
+     state = undefined;
+   }
+ 
+   return appReducer(state, action);
+ };
+ 
+ export default rootReducer;

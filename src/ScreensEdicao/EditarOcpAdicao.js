@@ -38,13 +38,13 @@ const EditarOcpAdicao = (props) => {
         }) 
 
         let newOcp = {id: props.ocp.ocpToEdit.id, responsavel,observacao,mpQtds : mpQtds}
-        ScqApi.EditarOcpAdicao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao",null,"OrdensDeCorrecao",context,props.loadOcps,null))
+        ScqApi.EditarOcpAdicao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao"))
        
     }
 
     const deletarOcp = () => {
         ScqApi.DeleteOcp(props.ocp.ocpToEdit.id).then(res => { 
-            responseHandler(res,props,"OrdemDeCorrecao",null,"OrdensDeCorrecao",context,null,actions.removeOcp(props.ocp.ocpToEdit.id),"warning")
+            responseHandler(res,props,"OrdemDeCorrecao")
           
         })
       

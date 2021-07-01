@@ -1,7 +1,7 @@
 
 import {capitalize} from '../Services/stringUtils'
 
-export const responseHandler = (response, props, type, callBack,history,context,func,act,toastType) => {
+export const responseHandler = (response, props, type,toastType, context, dispatchersFunctions) => {
     const { toastManager } = props;
     
 
@@ -14,7 +14,7 @@ export const responseHandler = (response, props, type, callBack,history,context,
               })});
               return false;
     } else {
-       context && context.ws.sendMessage(func,act,history)
+        notifyByWebSocket(context.ws,dispatchersFunctions)
        toastManager && toastManager.add(buildMsg(type,response,toastType), {
             appearance: toastType ||'success', autoDismiss: true
           })
@@ -24,6 +24,11 @@ export const responseHandler = (response, props, type, callBack,history,context,
 
 
 
+
+const notifyByWebSocket = (ws, functions)  => {
+    functions.forEach((fuction) => ws.sendMessage(fuction))
+   
+}
 
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Form, Container, Col, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import {loadOcps} from '../Services/storeService'
+import { WebSocketContext } from '../websocket/wsProvider';
 
 
 
@@ -24,14 +25,14 @@ const redirectAnalise = (history, analise) => {
 }
 
 
-const saveOcp = (analise, mpQtds, responsavel, observacao, history ,props) => {
+const saveOcp = (analise, mpQtds, responsavel, observacao, history ,props,context) => {
 
     const fullAnaliseForm = { ...analise, responsavel: responsavel, observacao: observacao, mpQtds: mpQtds }
 
     ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm).then((res) => {
         loadOcps(props)
-        responseHandler(res,props, "OrdemDeCorrecao", redirectOcps ,history)
-       
+        responseHandler(res,props, "OrdemDeCorrecao",'success',context, [props.loadParametros,props.loadOcps])
+        
     }
     );
 
@@ -43,7 +44,7 @@ const CadastroDeOcp = (props) => {
     let history = useHistory();
     const [analise, setAnalise] = useState()
     const [parametro, setParametro] = useState()
-
+    const context = useContext(WebSocketContext)
     const [materiasPrima, setMateriasPrima] = useState()
     const [mpQtds, setMpQtd] = useState([])
     const [responsavel, setResponsavel] = useState('')
@@ -200,7 +201,7 @@ const CadastroDeOcp = (props) => {
                         </Button>
                                     <Button style={{ margin: 2 }} type="reset" onClick={() => {
 
-                                        saveOcp(analise, mpQtds, responsavel, observacao, history,props)
+                                        saveOcp(analise, mpQtds, responsavel, observacao, history,props,context)
 
 
                                     }}>

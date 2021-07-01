@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import {rootReducer} from './Reducers/combineReducers';
+import rootReducer from './Reducers/combineReducers';
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

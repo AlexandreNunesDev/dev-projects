@@ -63,7 +63,7 @@ class MenuBar extends React.Component {
 
   render() {
 
-    if (getUserRole() === "ADMIN_ROLE") {
+    if (this.props.global.userRole === "ADMIN_ROLE") {
       
       return (
         <>
@@ -95,7 +95,7 @@ class MenuBar extends React.Component {
 
               </Navbar.Collapse>
 
-              {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {getUserName()}</NavItem>}
+              {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {this.props.global.userName}</NavItem>}
 
 
               <NavItem>{isMobile ? <Button onClick={() => this.setState((prevState, props) => ({
@@ -133,7 +133,7 @@ class MenuBar extends React.Component {
           </div>
         </>
       )
-    } else if (getUserRole() === "USER_ROLE") {
+    } else if (this.props.global.userRole === "USER_ROLE") {
       return (
         <>
 
@@ -156,7 +156,7 @@ class MenuBar extends React.Component {
               </Nav>
 
             </Navbar.Collapse>
-            <NavItem style={{ marginRight: 20 }}>Usuario: {getUserName()}</NavItem>
+            <NavItem style={{ marginRight: 20 }}>Usuario: {this.props.global.userName}</NavItem>
             <Dropdown drop="left" navbar={true}>
 
               <Dropdown.Toggle>Notificacoes <Badge variant="light">{this.state.notifications.length}</Badge></Dropdown.Toggle>

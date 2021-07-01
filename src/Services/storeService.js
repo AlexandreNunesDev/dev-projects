@@ -47,89 +47,38 @@ export const optionsLoad = async (props,forceUpdade) => {
 }
 
 export const loadProcessos = (props,action) => {
-  ScqApi.ListaProcessos().then(res => {
-    if(props) {
-      props.loadProcessos(res) 
-     
-      
-    } else {
-      store.dispatch(action(res))
-    }
-   
-  
-
-  })
+ props.loadProcessos()
 }
 
 export const loadEtapas = (props,redirect) => {
-  ScqApi.ListaEtapas().then(res => {
-    props.loadEtapas(res)
-   
-
-  })
+    props.loadEtapas()
 }
 
-export const loadParametros = (props,redirect) => {
-  ScqApi.ListaParametros().then(res => {
-    props.loadParametros(res)
-   
-
-  })
+export const loadParametros = (props) => {
+  props.loadParametros()
 }
 
 export const loadMateriasPrima = (props,redirect) => {
-  ScqApi.ListaMateriaPrimas().then(res => {
-    props.loadMateriasPrima(res)
-   
-
-  })
+    props.loadMateriasPrima()
 }
 
 
 export const loadTrocas = (props,redirect) => {
-  ScqApi.ListaTrocas().then(res => {
-    props.loadTrocas(res)
-   
-
-  })
+    props.loadTrocas()
 }
 
 export const loadTarefas = (props,redirect) => {
-  ScqApi.ListaTarefasDeManutencao().then(res => {
-    props.loadTarefasDeManutencao(res)
-   
-
-  })
+    props.loadTarefasDeManutencao()
 }
 
 
 export const loadOcps = (props,action) => {
-  
-  ScqApi.ListaOcps().then(res => {
-    if(props!=null){
-     
-      props.loadOcps(res)
-     
-    } else {
-      action.payload = res
-      store.dispatch(action)
-    }
-    
-  })
+  props.loadOcps()
 }
 
 export const loadNotifications = (props,action) => {
-  
-  ScqApi.ListaNotificacoes().then(res => {
-    if(props!=null){
-     
-      props.loadNotifications(res)
-     
-    } else {
-      action.payload = res
-      store.dispatch(action)
-    }
-    
-  })
+  props.loadNotifications()
 }
+
+
 
