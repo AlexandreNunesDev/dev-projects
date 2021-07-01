@@ -70,18 +70,32 @@ class App extends React.Component {
 
 
 
-
-
-  componentDidMount() {
+  initiate()  {
     if (isAuthenticated(this.props.global.tokenInfo)) {
       if (isTokenExpired(this.props.global.tokenInfo)) {
         logout()
         this.props.setLogOut()
           this.props.history.push("/VoceFoiDesconectado")
       }
+  }
+}
+
+
+  componentDidMount() {
+    this.initiate()
+    this.reloadStore = setInterval(() => {
+      optionsLoad(this.props,true)
+    },900000)
     }
 
-  }
+   
+  
+    componentWillUnmount () {
+      console.log("Limpou refresher")
+      clearInterval(this.reloadStore)
+    }
+
+
 
 
   render() {
