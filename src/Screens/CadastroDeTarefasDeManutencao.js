@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react'
+import React, {useState, useEffect, useContext } from 'react'
 import { Button, Form, Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {capitalize,subId} from '../Services/stringUtils'
@@ -7,11 +7,18 @@ import {withToastManager} from 'react-toast-notifications'
 import UnidadeSelect from '../Components/UnidadeSelect';
 import GenericSelect from '../Components/GenericSelect';
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { responseHandler } from '../Services/responseHandler';
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { toastOk } from '../Services/toastType';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 const CadastroDeTarefasDeManutencao = (props) => {
 
 
     const [processoId , setProcessoId] = useState()
+    const context = useContext(WebSocketContext)
     const [nome, setNome] = useState()
     const [dataExecutada, setDataExecutada] = useState(new Date())
     const [repetirAcada, setRepetirAcada] = useState()
@@ -27,23 +34,7 @@ const CadastroDeTarefasDeManutencao = (props) => {
     }, []
     )
 
-    const responseHandler = (response) => {
-        const { toastManager } = props;
-        if(response.error){
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Tarefa de Manutençao ${response.nome} criado`, {
-                appearance: 'success', autoDismiss: true
-              })
-        }
-
-       
-       
-        
-    }
+   
 
         return (
             <>
@@ -96,7 +87,7 @@ const CadastroDeTarefasDeManutencao = (props) => {
                         }} >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
                             const tarefaManutencao = {nome,processoId,codigoDoDocumento,dataExecutada: dataExecutada,escala: escala ,frequencia : repetirAcada}
-                            ScqApi.CriarTarefaManutencao(tarefaManutencao).then(res => responseHandler(res))
+                            ScqApi.CriarTarefaManutencao(tarefaManutencao).then(res => responseHandler(res,props,null,toastOk,context,[props.loadTarefasDeManutencao]))
                      
                         }} >Salvar</Button>
                     </Form.Group>
@@ -106,4 +97,4 @@ const CadastroDeTarefasDeManutencao = (props) => {
         </>
         )
     }
-export default withToastManager(withMenuBar(CadastroDeTarefasDeManutencao))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroDeTarefasDeManutencao)))

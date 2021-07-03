@@ -7,14 +7,15 @@ import { withToastManager } from 'react-toast-notifications';
 import MontagemComposition from '../Components/MontagemComposition';
 import { responseHandler } from '../Services/responseHandler';
 import { withMenuBar } from '../Hocs/withMenuBar';
-import { reloadState } from '../store';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { toastOk } from '../Services/toastType';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 
 class CadastroEtapa extends React.Component {
-
+    static contextType = WebSocketContext
     constructor(props) {
 
         super(props)
@@ -53,13 +54,12 @@ class CadastroEtapa extends React.Component {
         const etapa = { processoId: processoId, nome, posicao, volume: this.state.volume }
 
         ScqApi.CriarEtapa(etapa).then(res => {
-            this.props.addEtapa(res)
-            responseHandler(res, this.props,"Etapa")
+            responseHandler(res, this.props,"Etapa",toastOk,this.context,[this.props.loadEtapas])
             const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
-            ScqApi.CriarMontagem(composes).then(res => this.cleanState())
+            ScqApi.CriarMontagem(composes)
         })
 
-        reloadState()
+      
 
 
     }

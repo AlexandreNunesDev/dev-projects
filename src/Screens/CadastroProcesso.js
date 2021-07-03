@@ -9,12 +9,14 @@ import { reloadState } from '../store';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { connect } from 'react-redux';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { toastOk } from '../Services/toastType';
 
 
 
 
 class CadastroProcesso extends Component {
-
+    static contextType = WebSocketContext
     constructor(props) {
 
 
@@ -57,8 +59,8 @@ class CadastroProcesso extends Component {
 
 
         const processo = { id: null, nome: this.state.nome }
-        ScqApi.CriarProcesso(processo).then(response =>{this.props.addProcesso(response); responseHandler(response, this.props,"Processo",)})
-        this.cleanState()
+        ScqApi.CriarProcesso(processo).then(response =>{this.props.addProcesso(response); responseHandler(response, this.props,"Processo",toastOk, [this.context,this.props.loadProcessos],)})
+        
 
 
 

@@ -1,5 +1,4 @@
-import React, { useState} from 'react'
-import {capitalize,subId} from '../Services/stringUtils'
+import React, { useContext, useState} from 'react'
 import ScqApi from '../Http/ScqApi';
 import { Button, Form, Container, Col } from 'react-bootstrap'
 import { withToastManager } from 'react-toast-notifications'
@@ -9,6 +8,9 @@ import { withMenuBar } from '../Hocs/withMenuBar';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { responseHandler } from '../Services/responseHandler';
+import { toastOk } from '../Services/toastType';
 
 
 
@@ -18,7 +20,7 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 const CadastroTroca = (props) => {
 
     const [dataPlanejada, setDataPlanejada] = useState(new Date())
-    
+    const context = useContext(WebSocketContext)
     const [frequencia, setFrequencia] = useState()
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
@@ -29,30 +31,10 @@ const CadastroTroca = (props) => {
     const salvarTroca = () => {
         const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade }
     
-        ScqApi.CriarTroca(troca).then(res => responseHandler(res))
+        ScqApi.CriarTroca(troca).then(res => responseHandler(res,props,'Troca',toastOk,context,[props.loadTrocas]))
     
      
     }
-
-    const responseHandler = (response) => {
-        const { toastManager } = props;
-        if(response.error){
-           
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Troca etapa ${response.etapaNome} criado`, {
-                appearance: 'success', autoDismiss: true
-              })
-        }
-
-       
-       
-        
-    }
-
 
     
 

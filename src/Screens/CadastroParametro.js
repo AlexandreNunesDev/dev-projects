@@ -9,13 +9,15 @@ import FormulaBuilder from '../Components/FormulaBuilder';
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import { withMenuBar } from '../Hocs/withMenuBar';
-import { reloadState } from '../store';
+
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { connect } from 'react-redux';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { toastOk } from '../Services/toastType';
 
 class CadastroParametro extends React.Component {
-
+    static contextType = WebSocketContext
     constructor(props) {
         super(props)
         this.state = {
@@ -107,8 +109,8 @@ class CadastroParametro extends React.Component {
         const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise }
 
         if (this.state.isNotEditable) {
-            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro"); })
-            reloadState()
+            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro",toastOk,this.context,[this.props.loadParametros]); })
+ 
         }
     }
 

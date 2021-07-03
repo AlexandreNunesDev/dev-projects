@@ -7,9 +7,15 @@ import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import {capitalize,subId} from '../Services/stringUtils'
 import { withMenuBar } from '../Hocs/withMenuBar';
+import { responseHandler } from '../Services/responseHandler';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { toastOk } from '../Services/toastType';
+import { connect } from 'react-redux';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
 class CadastroMateriaPrima extends React.Component {
-
+    static contextType = WebSocketContext
     constructor(props){
         super(props)
     
@@ -45,7 +51,7 @@ class CadastroMateriaPrima extends React.Component {
             fatorTitulometrico=1
         }
         const materiaPrima = {nome,fornecedor,fatorTitulometrico,preco,unidade}
-            ScqApi.CriarMateriaPrima(materiaPrima).then(res => this.responseHandler(res))
+            ScqApi.CriarMateriaPrima(materiaPrima).then(res => responseHandler(res,this.props,"MateriaPrima",toastOk,this.context,[this.props.loadMateriasPrima]))
             this.cleanState()
             
       
@@ -123,23 +129,7 @@ class CadastroMateriaPrima extends React.Component {
     }
 
 
-    responseHandler = (response) => {
-        const { toastManager } = this.props;
-        if(response.error){
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Materia Prima ${response.nome} criado`, {
-                appearance: 'success', autoDismiss: true
-              })
-        }
-
-       
-       
-        
-    }
+    
    
 
 render() {
@@ -199,4 +189,4 @@ render() {
 
 }
 
-export default withToastManager(withMenuBar(CadastroMateriaPrima))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroMateriaPrima)))
