@@ -39,7 +39,6 @@ import EditarOcpAcao from './ScreensEdicao/EditarOcpAcao';
 import dispatchers from './mapDispatch/mapDispathToProps';
 import { connect } from 'react-redux';
 import mapToStateProps from './mapStateProps/mapStateToProps'
-import SockJsClient from 'react-stomp';
 import { WebSocketContext } from './websocket/wsProvider';
 import { optionsLoad } from './Services/storeService';
 
@@ -85,7 +84,7 @@ class App extends React.Component {
     this.initiate()
     this.reloadStore = setInterval(() => {
       optionsLoad(this.props,true)
-    },900000)
+    },300000)
     }
 
    
