@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Form, Container, Col, Button,} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {withRouter } from 'react-router-dom';
+import {useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import GenericSelect from '../Components/GenericSelect'
@@ -9,6 +9,9 @@ import AdicaoFree from '../Components/AdicaoFree';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
 import { reloadState } from '../store';
+import { toastOk } from '../Services/toastType';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 
 
@@ -18,7 +21,7 @@ const CadastroDeOcpLivre = (props) => {
     let analise = props.location.state
     const [parametros, setParametros] = useState([])
     const [parametro, setParametro] = useState(props.location.state?.parametroId || null)
-    
+    const context = useContext(WebSocketContext)
     const [materiasPrima] = useState()
     const [mpQtds, setMpQtd] = useState([])
     const [responsavel, setResponsavel] = useState('')
@@ -28,15 +31,18 @@ const CadastroDeOcpLivre = (props) => {
     const [processo,setProcesso] = useState(props.location.state?.processoId || null)
     const [processos,setProcessos] = useState([])
     const [mpNomes , setMpNome] = useState([])
+    const history = useHistory()
 
 
 
     const saveOcp = () => {
     
         if(analise){
-            ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro ,analiseId : analise.id}).then((res) => responseHandler(res,props,"OrdemDeCorrecao"))
+            ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro ,analiseId : analise.id}).then((res) => responseHandler(res,props,"OrdemDeCorrecao",toastOk,context,[dispatchers().loadOcps]))
+            history.push("/OrdensDeCorrecao")
         }
-            ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro,analiseId: null}).then((res) => responseHandler(res,props,"OrdemDeCorrecao"))
+            ScqApi.CriarOcp({responsavel,observacao,mpQtds, parametroId : parametro,analiseId: null}).then((res) => responseHandler(res,props,"OrdemDeCorrecao",toastOk,context,[dispatchers().loadOcps]))
+            history.push("/OrdensDeCorrecao")
         }
 
     useEffect(() => {
