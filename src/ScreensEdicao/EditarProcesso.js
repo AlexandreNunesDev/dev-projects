@@ -1,4 +1,4 @@
-import React, { Fragment,useState, useEffect } from 'react'
+import React, { Fragment,useState, useEffect, useContext } from 'react'
 import { Button, Form, Container} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ModoEdicao from '../Components/ModoEdicao'
@@ -8,10 +8,15 @@ import {withToastManager} from 'react-toast-notifications'
 import { useHistory } from 'react-router-dom';
 import {capitalize,subId} from '../Services/stringUtils'
 import { reloadState } from '../store';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { toastInfo } from '../Services/toastType';
+import { responseHandler } from '../Services/responseHandler';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
 const EditarProcesso = (props) => {
 
     const [id , setId] = useState()
+    const context =  useContext(WebSocketContext)
     const [nome, setNome] = useState()
     const [isEditableSelected, setIsEditableSelected] = useState(false)
     const [edited, setEdited] = useState(false)
@@ -24,24 +29,9 @@ const EditarProcesso = (props) => {
 
     const submitForm = (event) => {
         const replaceProcesso = { id: id, nome: nome }
-        ScqApi.EditarProcesso(replaceProcesso).then(res =>  responseHandler(res))
-  
-         
+        ScqApi.EditarProcesso(replaceProcesso).then(res =>  responseHandler(res, props,"Processo",toastInfo, context, [dispatchers().loadProcessos,dispatchers().loadOcps]))       
     }
 
-    const responseHandler = (response) => {
-        const { toastManager } = props;
-        if(response.error){
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Processo ${response.nome} editado com sucesso`, {
-                appearance: 'success', autoDismiss: true
-              })
-        }
-    }
 
   
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GenericSelect from '../Components/GenericSelect';
@@ -11,6 +11,10 @@ import UnidadeSelect from '../Components/UnidadeSelect';
 import { useHistory } from 'react-router-dom';
 import {withMenuBar} from '../Hocs/withMenuBar';
 import { reloadState } from '../store';
+import { responseHandler } from '../Services/responseHandler';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { toastInfo, toastOk } from '../Services/toastType';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
 
 const EditarParametro = (props) => {
@@ -18,7 +22,7 @@ const EditarParametro = (props) => {
     const {toastManager} = props;
     const history = useHistory()
     const [parametro, setParametro] = useState()
-
+    const context = useContext(WebSocketContext)
     const [processos, setProcessos] = useState([])
     const [processoId, setProcessoId] = useState()
     const [etapas, setEtapas] = useState()
@@ -104,11 +108,8 @@ const EditarParametro = (props) => {
 
         const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise}
 
-        ScqApi.EditarParametro(editedParametro)
+        ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res, props,"Parametro",toastInfo,context, [dispatchers().loadParametros,dispatchers().loadOcps],))
         
-        toastManager.add(`Parametro: ${editedParametro.nome} editado com sucesso`, {appearance: 'success', autoDismiss: true ,autoDismissTimeout: 3000, onDismiss : () => {history.push("/CadastroParametro")}})
-        
-        reloadState()
     }
 
 

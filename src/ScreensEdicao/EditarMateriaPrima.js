@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {withMenuBar} from '../Hocs/withMenuBar';
@@ -6,11 +6,15 @@ import ScqApi from '../Http/ScqApi';
 import ModoEdicao from '../Components/ModoEdicao'
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
+import { responseHandler } from '../Services/responseHandler';
+import { toastInfo } from '../Services/toastType';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 const EditarMateriaPrima = (props) => {
 
     const [materiaPrima, setMateriaPrima] = useState()
- 
+    const context = useContext(WebSocketContext)
     const [nome, setNome] = useState()
     const [fornecedor, setFornecedor] = useState()
     const [fatorTitulometrico, setFatorTitulometrico] = useState()
@@ -38,11 +42,7 @@ const EditarMateriaPrima = (props) => {
         }
 
         const newMateriaPrima = { id: materiaPrima.id, nome: nome, fornecedor: fornecedor, fatorTitulometrico: fatorTitulometrico, preco: preco, unidade: unidade }
-        ScqApi.EditarMateriaPrima(newMateriaPrima)
-
-        toastManager.add(`Materia ${newMateriaPrima.nome} alterada com sucesso`, {
-            appearance: 'info', autoDismiss: true
-        })
+        ScqApi.EditarMateriaPrima(newMateriaPrima).then(res => responseHandler(res, props,"Materia Prima",toastInfo,context, [dispatchers().loadMateriasPrima,dispatchers().loadEtapas,dispatchers().loadTrocas,dispatchers().loadOcps]))
     }
 
     return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {withMenuBar} from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
 import { Button, Form, Container, Col } from 'react-bootstrap'
@@ -6,23 +6,18 @@ import { withToastManager } from 'react-toast-notifications'
 import UnidadeSelect from '../Components/UnidadeSelect'
 import GenericSelect from '../Components/GenericSelect';
 import ModoEdicao from '../Components/ModoEdicao'
+import { toastInfo } from '../Services/toastType';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { responseHandler } from '../Services/responseHandler';
 
 
 
-const salvarTroca = (troca,toastManager) => {
-    
-   
-    ScqApi.EditarTroca(troca)
-
-    toastManager.add(`Troca cadastrada com sucesso`, {
-        appearance: 'success', autoDismiss: true
-    })
-}
 
 
 const EditarTroca = (props) => {
 
-
+    const context = useContext(WebSocketContext)
     const [frequencia, setFrequencia] = useState()
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
@@ -44,20 +39,23 @@ const EditarTroca = (props) => {
         
     }, [processoId])
 
-    useEffect(() => {
-        if(troca) {
-            setFrequencia(troca.frequencia)
-            setEtapaId(troca.etapaId)
-            setProcessoId(troca.processoId)
-            setEscalaFrequencia(troca.escalaFrequencia)
-       
-  
+
+    const loadTroca = (troca) => {
+        setTroca(troca)
+        setFrequencia(troca.frequencia)
+        setEtapaId(troca.etapaId)
+        setProcessoId(troca.processoId)
+        setEscalaFrequencia(troca.escalaFrequencia)
     }
-    }, [troca])
 
    
 
-
+    const salvarTroca = (troca,toastManager) => {
+    
+   
+        ScqApi.EditarTroca(troca).then(res => responseHandler(res, props,"Troca",toastInfo,context, [dispatchers().loadTrocas,dispatchers().loadOcps]))
+    }
+    
 
 
 
@@ -69,7 +67,7 @@ const EditarTroca = (props) => {
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar Troca</h1>
                 <Form>
-                     <ModoEdicao  type={"troca"} getSelectedTroca={(troca) => setTroca(troca)}></ModoEdicao>
+                     <ModoEdicao  type={"troca"} getSelectedTroca={(troca) => loadTroca(troca)}></ModoEdicao>
                      {troca && <Form.Group style={{ marginTop: 20 }} >
                             <Form.Label style={{ color: "RED", fontWeight: "bold" }} >Troca Id: {troca.id} || Data Planejada : {troca?.dataPlanejada }</Form.Label>
                         </Form.Group>}

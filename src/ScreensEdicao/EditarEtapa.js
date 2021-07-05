@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Button, Form, Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ModoEdicao from '../Components/ModoEdicao'
@@ -10,11 +10,16 @@ import EditarMontagemComposition from './EditarMontagemComposition';
 import { useHistory } from 'react-router-dom';
 import {withMenuBar} from '../Hocs/withMenuBar';
 import { reloadState } from '../store';
+import { responseHandler } from '../Services/responseHandler';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { WebSocketContext } from '../websocket/wsProvider';
+import { toastInfo } from '../Services/toastType';
 
 
 const EditarEtapa = (props) => {
 
     const [nome, setNome] = useState()
+    const context = useContext(WebSocketContext)
     const [posicao, setPosicao] = useState()
     const [volume, setVolume] = useState()
     const [processoId , setProcessoId] = useState()
@@ -35,25 +40,11 @@ const EditarEtapa = (props) => {
         setMontagemComposes(montagemComposes.concat(montagemCompose))
     }
 
-    const responseHandler = (response) => {
-        const { toastManager } = props;
-        if(response.error){
-            response.data.forEach(erro => {
-                toastManager.add(`${subId(capitalize(erro.field))} : ${erro.error}`, {
-                    appearance: 'error', autoDismiss: true
-                  })});
-        } else {
-            toastManager.add(`Etapa ${response.nome} editada com sucesso`, {
-                appearance: 'success', autoDismiss: true, onDismiss : () => window.location.reload()
-              })
-        }
-    }
-
     const submitForm = () => {
             const replacedEtapa = { id: etapa.id, processoId: processoId, nome : nome, posicao : posicao,volume : volume }
    
             ScqApi.EditarEtapa(replacedEtapa).then(res => {
-                responseHandler(res)
+                responseHandler(res, props,"Etapa",toastInfo, context, [dispatchers().loadTrocas,dispatchers().loadEtapas,dispatchers().loadOcps ])
                 const composes = montagemComposes.map((montagemCompose) => { return { id : montagemCompose.id ,quantidade: montagemCompose.quantidade, mpId: montagemCompose.mpId, etapaId: etapa.id} })
                 if(montagemComposes.length!==0) {
                     ScqApi.CriarMontagem(composes)

@@ -6,17 +6,14 @@ import ScqApi from '../Http/ScqApi';
 import CheckOutAnalise from '../Components/CheckoutAnalise';
 import { withToastManager } from 'react-toast-notifications';
 import TitulaForm from './TitulaForm';
-import { capitalize, subId } from '../Services/stringUtils'
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
-import { getUserName } from '../Services/auth';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 
 
-const SOCKET_URL = 'ws://localhost:8080/gs-guide-websocket'
 const valueForm = (props) => {
     return (
         <>

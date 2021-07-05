@@ -173,12 +173,12 @@ const ModoEdicao = (props) => {
                 </GenericSelect> }
                 </Col>
                 <Col xs={{ order: colSequence[1]}} >
-                { etapas!=null && <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={(idEtapa) => {
+                { etapas!=null && <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={async (idEtapa) => {
                     setEtapa(idEtapa)
                     if(props.type === "etapa") {
                         props.getSelectedEtapa(loadEditableEtapa(idEtapa))
                     }else if(props.type === "troca") {
-                        props.getSelectedTroca(loadEditableTroca(idEtapa))
+                        props.getSelectedTroca( await loadEditableTroca(idEtapa))
                     } else {
                         loadEditableEtapa(idEtapa)
                     }
