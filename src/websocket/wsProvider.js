@@ -6,10 +6,11 @@ import * as storeService from '../Services/storeService';
 import { actions } from '../actions/actions';
 import { useDispatch, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
-import { logout } from '../Services/auth';
+import { isTokenExpired, logout } from '../Services/auth';
 import {isAuthenticated} from '../Services/auth'
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { sortedGridRowsSelector } from '@material-ui/data-grid';
 
 
 
@@ -84,18 +85,23 @@ export default ({ children }) => {
        
         socket.subscribe("/reducer/return", (message) => {
             
-            const bodyMsg = JSON.parse(message.body)
+            if((store.getState().global.isAuth) &&  (!isTokenExpired(store.getState().global.tokenExpiration))){
+                const bodyMsg = JSON.parse(message.body)
             
-            console.log(bodyMsg)
-            if(bodyMsg.type == 'action'){
-                const actionObj = bodyMsg.action
-                dispatch(actionObj)
-              
+                console.log(bodyMsg)
+                if(bodyMsg.type == 'action'){
+                    const actionObj = bodyMsg.action
+                    dispatch(actionObj)
+                  
+                } else {
+                    const functionName = bodyMsg.function
+                    dispatchers(dispatch)[functionName]()
+                   
+                }
             } else {
-                const functionName = bodyMsg.function
-                dispatchers(dispatch)[functionName]()
-               
+                history.push("/VoceFoiDesconectado")
             }
+           
            
             
         })
