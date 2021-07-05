@@ -14,7 +14,10 @@ export const responseHandler = (response, props, type,toastType, context, dispat
               })});
               return false;
     } else {
-        notifyByWebSocket(context.ws,dispatchersFunctions)
+        if(context){
+            notifyByWebSocket(context.ws,dispatchersFunctions)
+        }
+       
        toastManager && toastManager.add(buildMsg(type,response,toastType), {
             appearance: toastType ||'success', autoDismiss: true
           })

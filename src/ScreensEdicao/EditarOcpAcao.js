@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Col, Button,Container, Form } from 'react-bootstrap';
 import { withToastManager } from 'react-toast-notifications';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 import { responseHandler } from '../Services/responseHandler';
+import { toastInfo } from '../Services/toastType';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 const EditarOcpAcao = (props) => {
     const [ocp] = useState(props.location.state)
@@ -11,6 +14,7 @@ const EditarOcpAcao = (props) => {
     const [observacao, setObservacao] = useState(props.location.state.observacao)
     const [prazo, setPrazo] = useState(props.location.state.prazo)
     const [acao,setAcao] = useState(props.location.state.acao)
+    const context = useContext(WebSocketContext)
 
     const saveOcp = () => {
      
@@ -18,7 +22,7 @@ const EditarOcpAcao = (props) => {
       
         
         let newOcp = {id: ocp.id,acaoId: ocp.acaoId, responsavel,prazo,observacao,acao}
-        ScqApi.EditarOcpAcao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao"))
+        ScqApi.EditarOcpAcao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao",toastInfo,context,[dispatchers().loadOcps]))
     }
     
 

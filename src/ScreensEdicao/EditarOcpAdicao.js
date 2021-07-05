@@ -1,7 +1,7 @@
 import React, {useContext, useState } from 'react'
 import { Form, Container, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {  withRouter } from 'react-router-dom';
+import {  useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 
 import { withMenuBar } from '../Hocs/withMenuBar';
@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { actions } from '../actions/actions';
+import { toastInfo, toastWarn } from '../Services/toastType';
 
 
 
@@ -27,6 +28,7 @@ const EditarOcpAdicao = (props) => {
     
 
     const context = useContext(WebSocketContext)
+    const history = useHistory()
     const [responsavel, setResponsavel] = useState(props.location.state.responsavel)
     const [observacao, setObservacao] = useState(props.location.state.observacao)
 
@@ -38,14 +40,15 @@ const EditarOcpAdicao = (props) => {
         }) 
 
         let newOcp = {id: props.ocp.ocpToEdit.id, responsavel,observacao,mpQtds : mpQtds}
-        ScqApi.EditarOcpAdicao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao"))
+        ScqApi.EditarOcpAdicao(newOcp).then(res => responseHandler(res,props,"OrdemDeCorrecao",toastInfo,context,[dispatchers().loadOcps]))
+            history.push("/OrdensDeCorrecao")
        
     }
 
     const deletarOcp = () => {
         ScqApi.DeleteOcp(props.ocp.ocpToEdit.id).then(res => { 
-            responseHandler(res,props,"OrdemDeCorrecao")
-          
+            responseHandler(res,props,"OrdemDeCorrecao",toastWarn,context,[dispatchers().loadOcps])
+            history.push("/OrdensDeCorrecao")
         })
       
         
