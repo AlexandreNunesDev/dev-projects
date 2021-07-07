@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { withMenuBar } from '../Hocs/withMenuBar';
-import { reloadState } from '../store';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';

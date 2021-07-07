@@ -6,8 +6,6 @@ import {withMenuBar} from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
 import { useHistory } from 'react-router-dom';
-import {capitalize,subId} from '../Services/stringUtils'
-import { reloadState } from '../store';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { toastInfo } from '../Services/toastType';
 import { responseHandler } from '../Services/responseHandler';

@@ -2,7 +2,6 @@ import { Button, Container, Form, ProgressBar } from "react-bootstrap"
 import React from 'react'
 
 import ScqApi from "../Http/ScqApi"
-import { isAuthenticated, login, logout } from "../Services/auth"
 import { withToastManager } from "react-toast-notifications"
 
 import { optionsLoad } from "../Services/storeService"

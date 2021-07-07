@@ -70,12 +70,11 @@ class App extends React.Component {
 
 
   initiate()  {
-    if (isAuthenticated(this.props.global.tokenInfo)) {
-      if (isTokenExpired(this.props.global.tokenInfo)) {
-        logout()
-        this.props.setLogOut()
+    if ((isAuthenticated(this.props.global.tokenInfo)) && (isTokenExpired(this.props.global.tokenExpiration))) {
+          logout()
+          this.props.setLogOut()
           this.props.history.push("/VoceFoiDesconectado")
-      }
+      
   }
 }
 
@@ -85,6 +84,7 @@ class App extends React.Component {
     this.reloadStore = setInterval(() => {
       optionsLoad(this.props,true)
     },300000)
+ 
     }
 
    

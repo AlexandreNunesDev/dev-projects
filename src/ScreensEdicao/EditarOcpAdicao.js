@@ -9,13 +9,10 @@ import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
 import AdicaoFreeEdit from '../Components/AdicaoFreeEdit';
-import { reloadState } from '../store';
-import { loadOcps } from '../Services/storeService';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import { connect } from 'react-redux';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
-import { actions } from '../actions/actions';
 import { toastInfo, toastWarn } from '../Services/toastType';
 
 

@@ -85,7 +85,7 @@ const AnaliseChart = (props) => {
         <>
         <h4 style={{alignContent:"center"}}>{`Grafico de Analise  ${props.data.nomeParam} ${props.data.nomeEtapa} ${props.data.nomeProcesso} `}</h4>
       
-        <AnaliseEdit show={show} handleClose={handleClose} analise={selectedAnalise}></AnaliseEdit>
+        <AnaliseEdit show={show} handleClose={handleClose} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
         <LineChart  width={props.containerRef.current.offsetWidth} height={250}  
 
             data={entries}

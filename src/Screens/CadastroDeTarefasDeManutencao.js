@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useContext } from 'react'
 import { Button, Form, Container, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {capitalize,subId} from '../Services/stringUtils'
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications'
 import UnidadeSelect from '../Components/UnidadeSelect';

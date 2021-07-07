@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
 import scqlogo from '../logoscq.png';
 import { withToastManager } from 'react-toast-notifications';
-import { getUserName, getUserRole, isAuthenticated, logout } from '../Services/auth';
+import { logout } from '../Services/auth';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from "../mapDispatch/mapDispathToProps";

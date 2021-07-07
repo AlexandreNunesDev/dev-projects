@@ -5,7 +5,7 @@ import ScqApi from '../Http/ScqApi';
 import NumberFormat from 'react-number-format';
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
-import {capitalize,subId} from '../Services/stringUtils'
+
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { WebSocketContext } from '../websocket/wsProvider';

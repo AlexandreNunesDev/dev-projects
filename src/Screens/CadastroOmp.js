@@ -109,7 +109,6 @@ const CadastroOmp = (props) => {
     const [emitidoPor , setEmitidoPor] = useState()
     const [tarefas, setTarefas] = useState(location.state.tarefas || [])
     const [tarefasChoosedId , setTarefasChoosedId] = useState([])
-    const history = useHistory()
     
 
     useEffect(() => generateTarefasChoosedIdarray(),[])

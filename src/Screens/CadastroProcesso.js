@@ -5,7 +5,7 @@ import ScqApi from '../Http/ScqApi';
 import { withToastManager } from 'react-toast-notifications'
 import { responseHandler } from '../Services/responseHandler';
 import { withMenuBar } from '../Hocs/withMenuBar';
-import { reloadState } from '../store';
+
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { connect } from 'react-redux';

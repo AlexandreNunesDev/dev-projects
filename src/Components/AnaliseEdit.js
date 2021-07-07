@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications/dist/ToastProvider';
 import ScqApi from '../Http/ScqApi';
 import { formatIsoDate } from '../Services/stringUtils';
+import { toastWarn } from '../Services/toastType';
 import CredentialConfirm from './CredentialConfirm';
 
 
@@ -11,6 +13,7 @@ const AnaliseEdit = (props) => {
 
   const [dataPlanejada,setDataPlanejada] = useState()
   const [showDelete,setShowDelete] = useState(false)
+  const toastManager = useToasts()
 
 
   
@@ -19,7 +22,9 @@ const AnaliseEdit = (props) => {
   }
 
   const deleteAnalise = () => {
-    ScqApi.DeleteAnalise(props.analise.id)
+    ScqApi.DeleteAnalise(props.analise.id).then(() =>  {props.handleClose(); toastManager.addToast("Analise deletada com sucesso", {
+      appearance: toastWarn , autoDismiss: true
+    }); props.reloadChart()})
   }
 
   return (
@@ -62,7 +67,7 @@ const AnaliseEdit = (props) => {
           <Button style={{ margin: 2 }} variant="secondary" onClick={() => props.handleClose(false)}>
             Cancelar
           </Button>
-          <Button onClick={() => setShowDelete(true)}> 
+          <Button onClick={() => {setShowDelete(true)}}> 
             Excluir
           </Button>
           <Button onClick={() => props.history.push("/CadastroOcpAdicaoLivre",props.analise)}>

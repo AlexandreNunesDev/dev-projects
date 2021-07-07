@@ -10,10 +10,9 @@ import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import { useHistory } from 'react-router-dom';
 import {withMenuBar} from '../Hocs/withMenuBar';
-import { reloadState } from '../store';
 import { responseHandler } from '../Services/responseHandler';
 import { WebSocketContext } from '../websocket/wsProvider';
-import { toastInfo, toastOk } from '../Services/toastType';
+import { toastInfo} from '../Services/toastType';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 
 
@@ -78,29 +77,6 @@ const EditarParametro = (props) => {
         setUnidade(parametro.unidade)
     }
     },[parametro])
-
-
-
-    const cleanForm = () => {
-        setEdited(!edited)
-        if(parametro) {
-
-            setNome(null)
-            setPmax(null)
-            setPmin(null)
-            setPmaxT(null)
-            setPminT(null)
-            setFormula(null)
-            setTitula(false)
-         
-          
-            setFrequenciaAnalise(null)
-            setEscalaTempo(null)
-            setProcessoId(null)
-            setEtapaId(null)
-            setUnidade(null)
-        }
-    }
 
 
     

@@ -8,7 +8,6 @@ import GenericSelect from '../Components/GenericSelect'
 import AdicaoFree from '../Components/AdicaoFree';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
-import { reloadState } from '../store';
 import { toastOk } from '../Services/toastType';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';

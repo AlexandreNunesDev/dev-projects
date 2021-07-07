@@ -35,13 +35,16 @@ class IndicadorDeAnalise extends Component {
     }
 
    
+    reloadChart = () => {
+        this.loadChart()
+    }
 
     getFullEtapaAnaliseChart = () => {
-        return this.state.fullEtapaAnaliseChartData.map(etapaChart => <AnaliseChart containerRef={this.containerChartRef} data={etapaChart}></AnaliseChart> )
+        return this.state.fullEtapaAnaliseChartData.map(etapaChart => <AnaliseChart containerRef={this.containerChartRef} data={etapaChart} reloadChart={this.reloadChart}></AnaliseChart> )
     }
 
     getFullProcessoAnaliseChart = () => {
-        return this.state.fullProcessoAnaliseChartData.map(processoChart => <AnaliseChart containerRef={this.containerChartRef} data={processoChart}></AnaliseChart> )
+        return this.state.fullProcessoAnaliseChartData.map(processoChart => <AnaliseChart containerRef={this.containerChartRef} data={processoChart} reloadChart={this.reloadChart}></AnaliseChart> )
     }
 
     formatDate = (date) => {
@@ -195,7 +198,7 @@ class IndicadorDeAnalise extends Component {
                     <Container ref={this.containerChartRef}>
                         {this.state.fullProcessoAnaliseChartData && this.getFullProcessoAnaliseChart()}
                         {this.state.fullEtapaAnaliseChartData && this.getFullEtapaAnaliseChart()}
-                        {this.state.analiseChartData && <AnaliseChart containerRef={this.containerChartRef} data={this.state.analiseChartData}></AnaliseChart>}
+                        {this.state.analiseChartData && <AnaliseChart containerRef={this.containerChartRef} data={this.state.analiseChartData} reloadChart={this.reloadChart}></AnaliseChart>}
                     </Container>
 
     

@@ -4,12 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ModoEdicao from '../Components/ModoEdicao'
 import ScqApi from '../Http/ScqApi';
 import {withToastManager} from 'react-toast-notifications';
-import {capitalize,subId} from '../Services/stringUtils'
 import GenericSelect from '../Components/GenericSelect';
 import EditarMontagemComposition from './EditarMontagemComposition';
 import { useHistory } from 'react-router-dom';
 import {withMenuBar} from '../Hocs/withMenuBar';
-import { reloadState } from '../store';
 import { responseHandler } from '../Services/responseHandler';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
