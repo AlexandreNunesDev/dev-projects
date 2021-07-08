@@ -184,6 +184,10 @@ const ScqApi = {
     CriarOcp: (ocp) => {
         return http.post("ocp", ocp)
     },
+
+    CriarOcpAcao: (ocp) => {
+        return http.post("ocpAcao", ocp)
+    },
     ListaEtapasByProcesso: (processoId) => {
         return http.get("etapas/" + processoId)
 

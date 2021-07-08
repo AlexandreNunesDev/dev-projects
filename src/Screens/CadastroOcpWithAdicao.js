@@ -37,7 +37,7 @@ const saveOcp = (analise, mpQtds, responsavel, observacao, history ,props,contex
 
 }
 
-const CadastroDeOcp = (props) => {
+const CadastroDeOcpAdicao = (props) => {
     let history = useHistory();
     const [analise, setAnalise] = useState()
     const [parametro, setParametro] = useState()
@@ -219,4 +219,4 @@ const CadastroDeOcp = (props) => {
 
 
 
-export default withToastManager(withRouter(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroDeOcp))))
+export default withToastManager(withRouter(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroDeOcpAdicao))))

@@ -132,7 +132,7 @@ class OrdensDeCorreção extends Component {
 
 
     aprovarOcp = () => {
-        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(this.props.aproveOcp(this.state.ocpToAprove.id)))
+        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(this.props.loadOcps))
     }
 
    
@@ -234,7 +234,7 @@ class OrdensDeCorreção extends Component {
                 <Container >
                     <Row className="align-items-center">
                         <Col md="auto">
-                            <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/CadastroOcpAdicaoLivre")} >Gerar OCP</Button>
+                            <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/CadastroOcpLivre")} >Gerar OCP</Button>
                         </Col>
                         <Col>
                             <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} value={this.props.ocp.actualFilter} onChange={(event) => this.props.setActualFilter(event.target.value)}></Form.Control>

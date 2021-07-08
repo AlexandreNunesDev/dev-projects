@@ -3,6 +3,7 @@ import { Button, Col, Form, Row, Table } from 'react-bootstrap'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import ScqApi from '../Http/ScqApi'
+import { useSelector } from 'react-redux'
 
 
 
@@ -10,8 +11,7 @@ import ScqApi from '../Http/ScqApi'
 
 const AdicaoFree = (props) => {
 
-
-    const [materiasPrima, setMateriasPrima] = useState([])
+    const materiasPrima = useSelector(state => state.options.materiasPrima)
     const [mpOptions, setMateriasPrimaOptions] = useState([])
     const [selectedMpNome, setSelectedMpNome] = useState([])
     const [selectedMp, setSelectedMp] = useState()
@@ -19,11 +19,8 @@ const AdicaoFree = (props) => {
 
 
 
-    useEffect(() => {
-        ScqApi.ListaMateriaPrimas().then(response => setMateriasPrima(response))
 
-    }, [])
-
+ 
     useEffect(() => {
         materiasPrima && setMateriasPrimaOptions(materiasPrima.map((mp) => {
             return mp.nome

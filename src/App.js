@@ -13,7 +13,7 @@ import CadastroDeOcpAcao from './Screens/CadastroOcpWithAcao';
 import CadastroProcesso from './Screens/CadastroProcesso';
 import CadastroTroca from './Screens/CadastroTroca';
 import CadastroDeTarefasDeManutencao from './Screens/CadastroDeTarefasDeManutencao';
-import CadastroDeOcpLivre from './Screens/CadastroOcpWithAdicaoLivre'
+import CadastroDeOcpLivre from './Screens/CadastroOcpWithLivre'
 import CadastroOmp from './Screens/CadastroOmp';
 import OrdensDeManutencao from './Screens/OrdensDeManutencao';
 import FinalizarOmp from './Screens/FinalizarOmp';
@@ -119,8 +119,8 @@ class App extends React.Component {
             <Route path='/CadastroEtapa' exact={true} component={CadastroEtapa} />
             <Route path='/CadastroParametro' exact={true} component={CadastroParametro} />
             <Route path='/CadastroMateriaPrima' exact={true} component={CadastroMateriaPrima} />
-            <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao} />
-            <Route path='/CadastroOcpAdicaoLivre' exact={true} component={CadastroDeOcpLivre} />
+            <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao } />
+            <Route path='/CadastroOcpLivre' exact={true} component={CadastroDeOcpLivre} />
             <Route path='/CadastroOcpAcao' exact={true} component={CadastroDeOcpAcao} />
             <Route path='/CadastroTroca' exact={true} component={CadastroTroca} />
             <Route path='/CadastroTarefasDeManutencao' exact={true} component={CadastroDeTarefasDeManutencao} />
