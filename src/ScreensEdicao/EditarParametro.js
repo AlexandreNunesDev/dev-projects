@@ -34,6 +34,7 @@ const EditarParametro = (props) => {
     const [formula, setFormula] = useState()
     const [titula, setTitula] = useState(false)
     const [unidade, setUnidade] = useState()
+    const [showChart , setShowChart] = useState()
     const [escalaTempo, setEscalaTempo] = useState()
     const [frequenciaAnalise, setFrequenciaAnalise] = useState()
     const [edited, setEdited] = useState(false)
@@ -69,6 +70,7 @@ const EditarParametro = (props) => {
         if(parametro.formula.length>0){
             setTitula(true)
         }
+        setShowChart(parametro.showChart)
      
         setFrequenciaAnalise(parametro.frequencia)
         setEscalaTempo(parametro.escalaFrequencia)
@@ -82,7 +84,7 @@ const EditarParametro = (props) => {
     
     const onSaveClick = () => {
 
-        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise}
+        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart}
 
         ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res, props,"Parametro",toastInfo,context, [dispatchers().loadParametros,dispatchers().loadOcps],))
         
@@ -155,11 +157,19 @@ const EditarParametro = (props) => {
 
                     </Form.Row>
 
+
+                    <Form.Row>
+                    <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkTitula">
+                        <Form.Check.Input  type="checkbox" checked={showChart} onChange={(event) =>  setShowChart(!showChart)} />
+                        <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
+                    </Form.Check>
                     <Form.Check type="checkbox" id="checkTitula">
                         <Form.Check.Input type="checkbox" checked={titula} onChange={(event) => setTitula(!titula)} />
                         <Form.Check.Label>Formulas ?</Form.Check.Label>
                     </Form.Check>
 
+                    </Form.Row>
+                   
 
 
                     <Form.Row hidden={!titula}>

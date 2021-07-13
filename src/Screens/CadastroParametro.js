@@ -36,7 +36,8 @@ class CadastroParametro extends React.Component {
             formula: '',
             unidade: '',
             escalaTempo: '',
-            frequenciaAnalise: ''
+            frequenciaAnalise: '',
+            showChart : true
         }
 
         this.titulaConfirm = this.titulaConfirm.bind(this)
@@ -94,6 +95,13 @@ class CadastroParametro extends React.Component {
         }));
     }
 
+    setShoweChart = () => {
+        this.setState(prevState => ({
+            showChart: !prevState.showChart
+        }));
+    }
+
+
 
     editSelection = (parametro) => {
 
@@ -106,7 +114,7 @@ class CadastroParametro extends React.Component {
     salvarParametro = () => {
 
         const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT, frequenciaAnalise, escalaTempo } = this.state
-        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise }
+        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise,showChart : this.state.showChart }
 
         if (this.state.isNotEditable) {
             ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro",toastOk,this.context,[this.props.loadParametros]); })
@@ -222,15 +230,22 @@ class CadastroParametro extends React.Component {
 
 
 
-
-
-
+                        <Form.Row>
+                        <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkTitula">
+                            <Form.Check.Input type="checkbox" checked={this.state.showChart} onChange={this.setShoweChart} />
+                            <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
+                        </Form.Check>
 
                         <Form.Check type="checkbox" id="checkTitula">
                             <Form.Check.Input type="checkbox" checked={!this.state.titula} onChange={this.titulaConfirm} />
                             <Form.Check.Label>Formulas ?</Form.Check.Label>
                         </Form.Check>
 
+                        </Form.Row>
+                        
+
+
+                     
 
 
                         <Form.Row hidden={this.state.titula}>

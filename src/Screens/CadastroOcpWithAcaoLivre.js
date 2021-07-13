@@ -11,15 +11,11 @@ import { WebSocketContext } from '../websocket/wsProvider';
 
 
 const CadastroDeOcp = (props) => {
-    let context = useContext(WebSocketContext)
-    let history = useHistory();
-    const [analise, setAnalise] = useState()
-    const [parametro, setParametro] = useState()
+
     const [acao, setAcao] = useState()
     const [observacao, setObservacao] = useState()
     const [prazo, setPrazo] = useState(new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0])
     const [responsavel, setResponsavel] = useState('')
-    const [etapa, setEtapa] = useState()
 
 
 
