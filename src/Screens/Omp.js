@@ -219,10 +219,10 @@ class Omp extends React.Component {
                         return String(troca.etapaNome).toLowerCase().includes(filterText.toLowerCase())
                     }
                     if (this.state.filterType === "Status") {
-                        if(String("Pendente").toLowerCase().includes(filterText.toLowerCase())){
+                        if(String("Pendente").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())){
                             return troca.pendente === true 
                         }
-                        if(String("Em dia").toLowerCase().includes(filterText.toLowerCase())){
+                        if(String("Em dia").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())){
                             return troca.pendente === false 
                         }
                     

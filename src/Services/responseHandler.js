@@ -74,6 +74,7 @@ const transformField = field => {
 const buildMsg = (type,response,msgType) => {
     
 let textByMsgType =  getTextByTostType(msgType)
+
     switch(type) {
         case "Processo" :
             return `${type} ${response.nome} ${textByMsgType} com sucesso`  
@@ -99,7 +100,7 @@ let textByMsgType =  getTextByTostType(msgType)
 const getTextByTostType = (toastType) => {
     switch(toastType) {
         case "success" :
-            return  "driado"
+            return  "criado"
         case "error" :
             return  "cancelado"
         case "warning" :

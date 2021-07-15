@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Form, Row, Table } from 'react-bootstrap'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { Typeahead } from 'react-bootstrap-typeahead'
-import ScqApi from '../Http/ScqApi'
 import { useSelector } from 'react-redux'
 
 

@@ -5,7 +5,6 @@ import {useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import GenericSelect from '../Components/GenericSelect'
-import AdicaoFree from '../Components/AdicaoFree';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
 import { toastOk } from '../Services/toastType';

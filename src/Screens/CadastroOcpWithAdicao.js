@@ -49,7 +49,7 @@ const CadastroDeOcpAdicao = (props) => {
     const [etapa, setEtapa] = useState()
     const [correcaoArray, setCorrecaoArray] = useState([])
     const [adicaoMenu, setAdicaoMenu] = useState()
-    const [loading, setLoading] = useState(false)
+    const [loading] = useState(false)
     let unidade = ""
 
 

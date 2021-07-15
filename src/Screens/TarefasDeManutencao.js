@@ -1,7 +1,6 @@
 import React from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Button, Container, Col, Form } from "react-bootstrap";
-import ScqApi from "../Http/ScqApi";
 import { withToastManager } from "react-toast-notifications";
 import GenericSelect from "../Components/GenericSelect";
 import GenericDropDown from "../Components/GenericDropDown";
@@ -36,14 +35,13 @@ const FormatDate = (data) => {
 
 const TableBody = props => {
     
-    const filteredByProcessoId = props.tarefasDeManutencao.filter((tarefa) => tarefa.processoId == props.global.processoIdTarefaRef)
+    const filteredByProcessoId = props.tarefasDeManutencao.filter((tarefa) => Number(tarefa.processoId) === Number(props.global.processoIdTarefaRef))
     
     const trocaTd = filteredByProcessoId.map((tarefa, index) => {
         let check = props.markedTarefas.includes(tarefa.id)
         let data = String(tarefa.dataPlanejada).substr(0, 10)
 
         return (
-
             <tr style={{ textAlign: "center" }} key={tarefa.id}>
                 <td className="align-middle">{tarefa.id}</td>
                 <td className="align-middle">{tarefa.nome}</td>

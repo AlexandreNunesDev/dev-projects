@@ -20,8 +20,6 @@ const notificationsReducer = produce(
         const indexNotif = draft.notifications.findIndex(notification => notification.id === action.payload)
         if (indexNotif !== -1) draft.notifications.splice(indexNotif, 1)
         break
-  
-       
     }
     return
   },loadState()

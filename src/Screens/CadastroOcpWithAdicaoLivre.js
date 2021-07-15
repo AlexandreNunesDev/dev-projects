@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Form, Col, Button, } from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
-import ScqApi from '../Http/ScqApi';
-import { withMenuBar } from '../Hocs/withMenuBar';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
@@ -13,24 +11,12 @@ import AdicaoFree from '../Components/AdicaoFree';
 
 const CadastroOcpWithAdicaoLivre = (props) => {
 
-    const [parametros, setParametros] = useState([])
-    const [parametro, setParametro] = useState(props.location.state?.parametroId || null)
-    const context = useContext(WebSocketContext)
+    const [parametro] = useState(props.location.state?.parametroId || null)
     const [materiasPrima] = useState()
     const [mpQtds, setMpQtd] = useState([])
     const [responsavel, setResponsavel] = useState('')
     const [observacao, setObservacao] = useState('')
-    const [etapa, setEtapa] = useState(props.location.state?.etapaId || null)
-    const [etapas,setEtapas] = useState([])
-    const [processo,setProcesso] = useState(props.location.state?.processoId || null)
-    const [processos,setProcessos] = useState([])
     const [mpNomes , setMpNome] = useState([])
-    const history = useHistory()
-
-
-
-
-
 
 
 
