@@ -57,9 +57,9 @@ class RegistroDeAnalise extends React.Component {
 
 
 
-    componentDidUpdate (prevProps) {
-        if(prevProps.parametros !== this.props.parametros){
-           this.onEtapaSelect(this.state.etapaId)
+    componentDidUpdate(prevProps) {
+        if (prevProps.parametros !== this.props.parametros) {
+            this.onEtapaSelect(this.state.etapaId)
         }
     }
 
@@ -89,13 +89,20 @@ class RegistroDeAnalise extends React.Component {
 
     onLinhaSelect = (linhaId) => {
         this.setState({
-            etapas: this.props.etapas.filter(etapa => etapa.processoId === Number(linhaId))
+            etapas: this.props.etapas.filter(etapa => {
+                if ((etapa.processoId === Number(linhaId)) && (!etapa.hasNoParam)) {
+                    return true
+                } else {
+                    return false
+                }
+
+            })
         })
     }
 
     onEtapaSelect = (etapaId) => {
         this.setState({
-            etapaId : etapaId,
+            etapaId: etapaId,
             parametros: this.props.parametros.filter(parametro => parametro.etapaId === Number(etapaId))
         })
     }
@@ -187,7 +194,7 @@ class RegistroDeAnalise extends React.Component {
             const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: null }
 
             ScqApi.CriarAnalise(analise).then(res => {
-                responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros,this.props.loadOcps])
+                responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros, this.props.loadOcps])
             })
         }
 
@@ -198,7 +205,7 @@ class RegistroDeAnalise extends React.Component {
         const { id } = this.state.analise
         const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId }
 
-        ScqApi.EditarAnalise(analise).then((res) => responseHandler(res, this.props, "Analise", 'info',this.context, [this.props.loadParametros,this.props.loadOcps]))
+        ScqApi.EditarAnalise(analise).then((res) => responseHandler(res, this.props, "Analise", 'info', this.context, [this.props.loadParametros, this.props.loadOcps]))
 
 
 

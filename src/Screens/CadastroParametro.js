@@ -117,7 +117,7 @@ class CadastroParametro extends React.Component {
         const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise,showChart : this.state.showChart }
 
         if (this.state.isNotEditable) {
-            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro",toastOk,this.context,[this.props.loadParametros]); })
+            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro",toastOk,this.context,[this.props.loadParametros,this.props.loadEtapas]); })
  
         }
     }

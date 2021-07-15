@@ -154,7 +154,7 @@ class App extends React.Component {
         <>
 
           <Switch>
-            <Route path='/' exact={true} component={Home} />
+          <Route path='/' exact={true} component={Home}/> 
             <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />
@@ -163,18 +163,19 @@ class App extends React.Component {
             <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
             <Route path='/OMP' exact={true} component={Omp} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
-            <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao} />
-            <Route path='/CadastroOcpAdicaoLivre' exact={true} component={CadastroDeOcpLivre} />
+            <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao } />
+            <Route path='/CadastroOcpLivre' exact={true} component={CadastroDeOcpLivre} />
             <Route path='/CadastroOcpAcao' exact={true} component={CadastroDeOcpAcao} />
             <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
-            <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
-            <Route path='/EditarOcpAdicao' exact={true} component={EditarOcpAdicao} />
-            <Route path='/EditarOcpAcao' exact={true} component={EditarOcpAcao} />
             <Route path='/OrdensDeManutencao' exact={true} component={OrdensDeManutencao} />
             <Route path='/FinalizarOmp' exact={true} component={FinalizarOmp} />
             <Route path='/VerOmp' exact={true} component={VerOmp} />
+            <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
+            <Route path='/EditarOcpAdicao' exact={true} component={EditarOcpAdicao} />
+            <Route path='/EditarOcpAcao' exact={true} component={EditarOcpAcao} />
             <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
+            <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
           </Switch>
         </>

@@ -156,31 +156,37 @@ class MenuBar extends React.Component {
               </Nav>
 
             </Navbar.Collapse>
-            <NavItem style={{ marginRight: 20 }}>Usuario: {this.props.global.userName}</NavItem>
-            <Dropdown drop="left" navbar={true}>
+           
 
-              <Dropdown.Toggle>Notificacoes <Badge variant="light">{this.state.notifications.length}</Badge></Dropdown.Toggle>
-              <Dropdown.Menu>
-                {this.state.notifications.map((notificacao) => {
-                  let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
-                  return (
-                    <Dropdown.Item key={notificacao.id}>
-                      <Card>
-                        <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
-                        <Card.Body>
-                          <Card.Text>
-                            {notificacao.messagem}
-                          </Card.Text>
-                          <Button variant="primary" onClick={() => this.resolveNotificacao(notificacao)}>Resolvido</Button>
-                        </Card.Body>
-                      </Card>
-                    </Dropdown.Item>
-                  )
-                })}
+              {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {this.props.global.userName}</NavItem>}
 
-              </Dropdown.Menu>
 
-            </Dropdown>
+              <NavItem>{isMobile ? <Button onClick={() => this.setState((prevState, props) => ({
+                show: true
+              }))}  ><Badge variant="light">{this.props.notifications.length}</Badge></Button> : <Button onClick={() => this.setState((prevState, props) => ({
+                show: true
+              }))}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>}</NavItem>
+
+              <Modal show={this.state.show} onHide={() => this.setState({ show: false })}>
+                <Modal.Body>
+                  {this.props.notifications.map((notificacao, index) => {
+                    let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
+                    return (
+                      <Row key={index} >
+                        <Card  >
+                          <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
+                          <Card.Body>
+                            <Card.Text>
+                              {notificacao.messagem}
+                            </Card.Text>
+                          </Card.Body>
+                        </Card>
+                      </Row>
+
+                    )
+                  })}
+                </Modal.Body>
+              </Modal>
 
           </Navbar>
 

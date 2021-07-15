@@ -57,6 +57,7 @@ class CadastroEtapa extends React.Component {
             responseHandler(res, this.props,"Etapa",toastOk,this.context,[this.props.loadEtapas])
             const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
             ScqApi.CriarMontagem(composes)
+          
         })
 
       
