@@ -8,6 +8,7 @@ import { downloadOcp } from "../Services/documentsDownload";
 import { BsDot } from 'react-icons/bs';
 import { Fragment } from 'react';
 import { useHistory } from 'react-router';
+import { FormatDate, OnlyDate } from '../Services/stringUtils';
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -24,22 +25,33 @@ const isSameDate = (actualDate, refDate) => {
 
 
 const buildAdicaoDetails = (adicoesDto) => {
-    return adicoesDto.map(adicao => {
+    const lis =  adicoesDto.map(adicao => {
 
         return (
-            <Form.Row key={adicao.nomeMp}>
-                <Form.Label style={{ textAlign: "center" }}><BsDot size={36} ></BsDot>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</Form.Label>
-            </Form.Row>)
+           
+               <li prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
+            )
 
     });
+    return (
+        <div className="text-nowrap">
+        <ul>
+            {lis}
+        </ul>
+        </div>
+    )
 }
 
 const buildAcaoDetails = (ocp) => {
 
     return (
-        <Form.Row>
-            <Form.Label style={{ textAlign: "center" }}><BsDot size={36} ></BsDot>{`${ocp.acao} prazo ${ocp.prazo}`}</Form.Label>
-        </Form.Row>)
+        <div>
+            <ul>
+            <li>{`${ocp.acao}`}</li>
+            <li  className="text-nowrap"><span style={{fontWeight : 'bold'}}>Prazo: </span>{`${OnlyDate(ocp.prazo)}`}</li>
+            </ul>
+           
+        </div>)
 
 
 }
