@@ -70,7 +70,7 @@ const AnaliseEdit = (props) => {
           <Button onClick={() => {setShowDelete(true)}}> 
             Excluir
           </Button>
-          <Button onClick={() => props.history.push("/CadastroOcpAdicaoLivre",props.analise)}>
+          <Button onClick={() => props.history.push("/CadastroOcpAdicao",props.analise)}>
             Gerar Ocp
           </Button>
           <Button onClick={() => {ScqApi.UpdataAnaliseData(props.analise.id,dataPlanejada);props.handleClose()}}>

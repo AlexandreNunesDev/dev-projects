@@ -86,6 +86,7 @@ const AnaliseChart = (props) => {
         <h4 style={{alignContent:"center"}}>{`Grafico de Analise  ${props.data.nomeParam} ${props.data.nomeEtapa} ${props.data.nomeProcesso} `}</h4>
       
         <AnaliseEdit show={show} handleClose={handleClose} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
+        <div style={{display : "flex"}}>
         <LineChart  width={props.containerRef.current.offsetWidth} height={250}  
 
             data={entries}
@@ -100,6 +101,12 @@ const AnaliseChart = (props) => {
             <Tooltip content={<CustomTooltip ></CustomTooltip>} />
             <Line  type="monotone"  unit={props.data.unidade} dataKey="Resultado" activeDot={{ onClick: handleClick }}  strokeWidth={1.5} stroke="cyan" />
         </LineChart>
+        <div style={{display : "grid",gridColumn : 1}}>
+            <h2>{props.data.numbersOfRed}</h2>
+            <h2>{props.data.numbersOfYellow}</h2>
+            <h2>{props.data.numbersOfInsideFrequency}</h2>
+        </div>
+        </div>
       
    
         </>
