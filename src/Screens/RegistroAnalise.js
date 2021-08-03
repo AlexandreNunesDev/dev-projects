@@ -12,6 +12,8 @@ import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
+import { formatIsoDate } from '../Services/stringUtils';
+import { FormGroup } from '@material-ui/core';
 
 
 const valueForm = (props) => {
@@ -50,6 +52,8 @@ class RegistroDeAnalise extends React.Component {
             calcDisabled: false,
             analiseId: '',
             valorForm: null,
+            data: null,
+            showData: false
 
         }
     }
@@ -191,7 +195,7 @@ class RegistroDeAnalise extends React.Component {
                 nomeAnalista = analista;
             }
 
-            const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: null }
+            const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data }
 
             ScqApi.CriarAnalise(analise).then(res => {
                 responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros, this.props.loadOcps])
@@ -223,7 +227,7 @@ class RegistroDeAnalise extends React.Component {
 
     gerarOcp = (history) => {
         const { analista, resultado, status } = this.state
-        const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: null }
+        const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: this.state.data }
         history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
     }
 
@@ -235,6 +239,21 @@ class RegistroDeAnalise extends React.Component {
                 <Container style={{ marginTop: 20 }}>
                     <h1>Registro de Analise</h1>
                     <Form>
+                        <Form.Row>
+                            <Col style={{ marginBottom: 10 }}>
+                               
+                                    <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => this.setState({ showData: event.target.checked })} />
+                                <Form.Group hidden={!this.state.showData}>
+                                <Form.Label>Data: </Form.Label>
+                                <Form.Control
+                                    type="datetime-local"
+                                    defaultValue={this.state.data}
+                                    onChange={event => { this.setState({ data: formatIsoDate(event.target.value) }, () => console.log(this.state.data)); }}>
+
+                                </Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Form.Row>
 
                         <Form.Row>
                             <Col>
