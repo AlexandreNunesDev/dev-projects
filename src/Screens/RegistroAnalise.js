@@ -36,7 +36,7 @@ class RegistroDeAnalise extends React.Component {
 
     constructor(props) {
         super(props)
-
+        this.dataFieldRef = React.createRef();
 
         this.state = {
             processos: [],
@@ -231,6 +231,17 @@ class RegistroDeAnalise extends React.Component {
         history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
     }
 
+
+    showData = (checked) => {
+        if(checked === true) {
+            this.setState({ showData: checked })
+        } else {
+            this.dataFieldRef.current.value = null
+            this.setState({ showData: checked, data : null })
+        }
+         
+    }
+
     render() {
         return (
             <>
@@ -242,13 +253,14 @@ class RegistroDeAnalise extends React.Component {
                         <Form.Row>
                             <Col style={{ marginBottom: 10 }}>
                                
-                                    <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => this.setState({ showData: event.target.checked })} />
+                                <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => this.showData(event.target.checked)  } />
                                 <Form.Group hidden={!this.state.showData}>
                                 <Form.Label>Data: </Form.Label>
                                 <Form.Control
+                                    ref={this.dataFieldRef}
                                     type="datetime-local"
                                     defaultValue={this.state.data}
-                                    onChange={event => { this.setState({ data: formatIsoDate(event.target.value) }, () => console.log(this.state.data)); }}>
+                                    onChange={event => { this.setState({ data: formatIsoDate(event.target.value)})}}>
 
                                 </Form.Control>
                                 </Form.Group>
