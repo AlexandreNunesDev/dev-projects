@@ -41,6 +41,7 @@ import { connect } from 'react-redux';
 import mapToStateProps from './mapStateProps/mapStateToProps'
 import { WebSocketContext } from './websocket/wsProvider';
 import { optionsLoad } from './Services/storeService';
+import HistoricoDeAnalise from './Screens/HistoricoDeAnalise';
 
 
 
@@ -83,7 +84,7 @@ class App extends React.Component {
     this.initiate()
     this.reloadStore = setInterval(() => {
       optionsLoad(this.props,true)
-    },300000)
+    },600000)
  
     }
 
@@ -141,6 +142,7 @@ class App extends React.Component {
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
+            <Route path='/HistoricoDeAnalise' exact={true} component={HistoricoDeAnalise} />
 
           </Switch>
         </>
@@ -177,6 +179,7 @@ class App extends React.Component {
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
+            <Route path='/HistoricoDeAnalise' exact={true} component={HistoricoDeAnalise} />
           </Switch>
         </>
 
@@ -195,6 +198,7 @@ class App extends React.Component {
             <Route path='/Registrar' exact={true} component={Registrar} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
+            
           </Switch>
         </>)
     }

@@ -4,7 +4,6 @@ import * as storeService from '../Services/storeService';
 import { useDispatch, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import { isTokenExpired } from '../Services/auth';
-import {isAuthenticated} from '../Services/auth'
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 
@@ -36,12 +35,6 @@ export default ({ children }) => {
         let dispatchersFunctions = dispatchers(dispatch)
         let allprops = {...storeProps,...dispatchersFunctions}
         storeService.optionsLoad(allprops,true)
-    }
-
-    const onVisibilityChange = () => {
-        if((isAuthenticated()) && (!document.hidden)){
-            forcedLoadOptions()
-        }
     }
 
 
@@ -84,8 +77,7 @@ export default ({ children }) => {
             if((store.getState().global.isAuth) &&  (!isTokenExpired(store.getState().global.tokenExpiration))){
                 const bodyMsg = JSON.parse(message.body)
             
-                console.log(bodyMsg)
-                if(bodyMsg.type == 'action'){
+                if(bodyMsg.type === 'action'){
                     const actionObj = bodyMsg.action
                     dispatch(actionObj)
                   

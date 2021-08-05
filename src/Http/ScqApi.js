@@ -1,7 +1,6 @@
 import axios from "axios"
 
 
-import { getToken } from "../Services/auth"
 import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
 const URL_TEST = 'http://localhost:8080/'
@@ -51,6 +50,10 @@ const ScqApi = {
     },
     LoadAnaliseChart: (dataInicial, dataFinal, parametroId) => {
         return http.get("analise/" + dataInicial + "/" + dataFinal + "/" + parametroId)
+
+    },
+    LoadAnaliseHistocial: (dataInicial, dataFinal) => {
+        return http.get("analise/" + dataInicial + "/" + dataFinal)
 
     },
 

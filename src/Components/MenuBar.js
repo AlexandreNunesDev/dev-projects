@@ -36,7 +36,7 @@ class MenuBar extends React.Component {
   }
 
 
- 
+
 
   resolveNotificacao = (notificacao) => {
     ScqApi.EditarNotificacao(notificacao.id).then(data => this.showNotificationsReponse(data))
@@ -50,7 +50,7 @@ class MenuBar extends React.Component {
   }
 
 
-  logUserOut () {
+  logUserOut() {
     this.props.setLogOut()
     logout()
   }
@@ -64,7 +64,7 @@ class MenuBar extends React.Component {
   render() {
 
     if (this.props.global.userRole === "ADMIN_ROLE") {
-      
+
       return (
         <>
           <div className='App tc f3'>
@@ -81,7 +81,11 @@ class MenuBar extends React.Component {
                   <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
                   <Link className="nav-link" to='/Omp' >OMP</Link>
                   <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
-                  <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
+
+                  <NavDropdown title="Consultas" id="basic-nav-dropdown">
+                    <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
+                    <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
+                  </NavDropdown>
                   <NavDropdown title="Cadastros" id="basic-nav-dropdown">
                     <Link className="dropdown-item" to="/CadastroProcesso">Processo</Link>
                     <Link className="dropdown-item" to="/CadastroEtapa">Etapa</Link>
@@ -89,6 +93,7 @@ class MenuBar extends React.Component {
                     <Link className="dropdown-item" to="/CadastroMateriaPrima">Matéria Prima</Link>
                     <Link className="dropdown-item" to="/CadastroTroca">Trocas</Link>
                     <Link className="dropdown-item" to="/CadastroTarefasDeManutencao">Tarefas de Manutenção</Link>
+
                     <Link className="dropdown-item" to="/Registrar">Novo usuario</Link>
                   </NavDropdown>
                 </Nav>
@@ -152,41 +157,45 @@ class MenuBar extends React.Component {
                 <Link className="nav-link" to='/Omp' >OMP</Link>
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
+                <NavDropdown title="Consultas" id="basic-nav-dropdown">
+                    <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
+                    <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
+                  </NavDropdown>
 
               </Nav>
 
             </Navbar.Collapse>
-           
-
-              {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {this.props.global.userName}</NavItem>}
 
 
-              <NavItem>{isMobile ? <Button onClick={() => this.setState((prevState, props) => ({
-                show: true
-              }))}  ><Badge variant="light">{this.props.notifications.length}</Badge></Button> : <Button onClick={() => this.setState((prevState, props) => ({
-                show: true
-              }))}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>}</NavItem>
+            {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {this.props.global.userName}</NavItem>}
 
-              <Modal show={this.state.show} onHide={() => this.setState({ show: false })}>
-                <Modal.Body>
-                  {this.props.notifications.map((notificacao, index) => {
-                    let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
-                    return (
-                      <Row key={index} >
-                        <Card  >
-                          <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
-                          <Card.Body>
-                            <Card.Text>
-                              {notificacao.messagem}
-                            </Card.Text>
-                          </Card.Body>
-                        </Card>
-                      </Row>
 
-                    )
-                  })}
-                </Modal.Body>
-              </Modal>
+            <NavItem>{isMobile ? <Button onClick={() => this.setState((prevState, props) => ({
+              show: true
+            }))}  ><Badge variant="light">{this.props.notifications.length}</Badge></Button> : <Button onClick={() => this.setState((prevState, props) => ({
+              show: true
+            }))}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>}</NavItem>
+
+            <Modal show={this.state.show} onHide={() => this.setState({ show: false })}>
+              <Modal.Body>
+                {this.props.notifications.map((notificacao, index) => {
+                  let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
+                  return (
+                    <Row key={index} >
+                      <Card  >
+                        <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
+                        <Card.Body>
+                          <Card.Text>
+                            {notificacao.messagem}
+                          </Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </Row>
+
+                  )
+                })}
+              </Modal.Body>
+            </Modal>
 
           </Navbar>
 
