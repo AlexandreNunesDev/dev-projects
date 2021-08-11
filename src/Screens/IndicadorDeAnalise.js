@@ -9,6 +9,7 @@ import { formatIsoDate } from "../Services/stringUtils";
 import { connect } from "react-redux";
 import mapToStateProps from "../mapStateProps/mapStateToProps";
 import dispatchers from "../mapDispatch/mapDispathToProps";
+import { Fragment } from "react";
 
 
 class IndicadorDeAnalise extends Component {
@@ -28,7 +29,8 @@ class IndicadorDeAnalise extends Component {
             analiseChartData: null,
             fullProcessoAnaliseChartData: null,
             fullEtapaAnaliseChartData: null,
-            personalizarIntervalo: false
+            personalizarIntervalo: false,
+            showAnalitics : false
 
         }
 
@@ -40,11 +42,11 @@ class IndicadorDeAnalise extends Component {
     }
 
     getFullEtapaAnaliseChart = () => {
-        return this.state.fullEtapaAnaliseChartData.map(etapaChart => <AnaliseChart containerRef={this.containerChartRef} data={etapaChart} reloadChart={this.reloadChart}></AnaliseChart> )
+        return this.state.fullEtapaAnaliseChartData.map((etapaChart,index) => <Fragment key={index} ><AnaliseChart showAnalitics={this.state.showAnalitics}  chave={etapaChart.analiseId} containerRef={this.containerChartRef} data={etapaChart} reloadChart={this.reloadChart}></AnaliseChart></Fragment>   )
     }
 
     getFullProcessoAnaliseChart = () => {
-        return this.state.fullProcessoAnaliseChartData.map(processoChart => <AnaliseChart containerRef={this.containerChartRef} data={processoChart} reloadChart={this.reloadChart}></AnaliseChart> )
+        return this.state.fullProcessoAnaliseChartData.map((processoChart,index) => <Fragment key={index}><AnaliseChart showAnalitics={this.state.showAnalitics}  chave={processoChart.analisesId} containerRef={this.containerChartRef} data={processoChart} reloadChart={this.reloadChart}></AnaliseChart> </Fragment> )
     }
 
     formatDate = (date) => {
@@ -163,7 +165,13 @@ class IndicadorDeAnalise extends Component {
                                 </Col >
                                 <Col>
                                     <Form.Group style={{ marginTop: 5 }}>
-                                        <Form.Check type="checkbox" label="Intervalo Personalizado" onChange={(event) => this.setState({ personalizarIntervalo: event.target.checked }, () => console.log(this.state.personalizarIntervalo))} />
+                                        <Form.Check type="checkbox" label="Intervalo Personalizado" onChange={(event) => this.setState({ personalizarIntervalo: event.target.checked })} />
+                                    </Form.Group>
+
+                                </Col>
+                                <Col>
+                                    <Form.Group style={{ marginTop: 5 }}>
+                                        <Form.Check type="checkbox" label="Modo Gerencial" onChange={(event) => this.setState({ showAnalitics: event.target.checked })} />
                                     </Form.Group>
 
                                 </Col>
@@ -175,7 +183,7 @@ class IndicadorDeAnalise extends Component {
                                     <Form.Control
                                         type="datetime-local"
                                         defaultValue={this.state.dataInicial}
-                                        onChange={event => { this.setState({ dataInicial: formatIsoDate(event.target.value) }, () => console.log(this.state.dataInicial)); }}>
+                                        onChange={event => { this.setState({ dataInicial: formatIsoDate(event.target.value) }) }}>
 
                                     </Form.Control>
                                 </Form.Group>
@@ -184,7 +192,7 @@ class IndicadorDeAnalise extends Component {
                                     <Form.Control
                                         type="datetime-local"
                                         defaultValue={this.state.dataFinal}
-                                        onChange={event => { this.setState({ dataFinal: formatIsoDate(event.target.value) }, () => console.log(this.state.dataFinal)); }}>
+                                        onChange={event => { this.setState({ dataFinal: formatIsoDate(event.target.value) })}}>
 
                                     </Form.Control>
                                 </Form.Group>
@@ -198,7 +206,7 @@ class IndicadorDeAnalise extends Component {
                     <Container ref={this.containerChartRef}>
                         {this.state.fullProcessoAnaliseChartData && this.getFullProcessoAnaliseChart()}
                         {this.state.fullEtapaAnaliseChartData && this.getFullEtapaAnaliseChart()}
-                        {this.state.analiseChartData && <AnaliseChart containerRef={this.containerChartRef} data={this.state.analiseChartData} reloadChart={this.reloadChart}></AnaliseChart>}
+                        {this.state.analiseChartData && <AnaliseChart chave={1} showAnalitics={this.state.showAnalitics} containerRef={this.containerChartRef} data={this.state.analiseChartData} reloadChart={this.reloadChart}></AnaliseChart>}
                     </Container>
 
     
