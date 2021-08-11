@@ -45,9 +45,6 @@ const getHeads = () => {
 
 
 const OcpView = (props) => {
-
-
-    console.log(props)
     return (
     <Modal size={"xl"} show={props.ocp.showOcpView} onHide={() => props.showOcpView(false) }>
         <Modal.Header closeButton>
