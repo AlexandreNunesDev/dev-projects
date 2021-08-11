@@ -45,10 +45,14 @@ class IndicadorDeAnalise extends Component {
     }
 
     getGlobalsStats = () => {
+        let qtd =  this.state.fullProcessoAnaliseChartData.length
         let globalRed = 0
         let globalYellow = 0
         let globalFreq = 0
         this.state.fullProcessoAnaliseChartData.forEach((processoChart) => { globalRed += Number(processoChart.numbersOfRed); globalYellow += Number(processoChart.numbersOfYellow); globalFreq += Number(processoChart.numbersOfInsideFrequency) })
+        globalRed = globalRed/qtd
+        globalYellow = globalYellow/qtd
+        globalFreq = globalFreq/qtd
         return (
             <Col style={{justifyContent : 'center'}}>
                 <div hidden={!this.state.showAnalitics} style={{ display: "grid", gridColumn: 1 }}>
