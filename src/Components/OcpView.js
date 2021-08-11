@@ -51,7 +51,7 @@ const OcpView = (props) => {
     return (
     <Modal size={"xl"} show={props.ocp.showOcpView} onHide={() => props.showOcpView(false) }>
         <Modal.Header closeButton>
-            <Modal.Title>Ocps da analise {props.ocp.ocpsView[0].analiseId}</Modal.Title>
+            <Modal.Title>Ocps da analise {props.ocp.ocpsView[0]?.analiseId}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Table striped bordered hover>
