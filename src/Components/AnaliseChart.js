@@ -103,9 +103,10 @@ const AnaliseChart = (props) => {
             <Line  type="monotone"  unit={props.data.unidade} dataKey="Resultado" activeDot={{ onClick: handleClick }}  strokeWidth={1.5} stroke="cyan" />
         </LineChart>
         <div  hidden={!props.showAnalitics} style={{display : "grid",gridColumn : 1}}>
-            <h2>{props.data.numbersOfRed}</h2>
-            <h2>{props.data.numbersOfYellow}</h2>
-            <h2>{props.data.numbersOfInsideFrequency}</h2>
+            <h2 style={{color : "#ed493e"}} >{props.data.numbersOfRed}</h2>
+            <h2 style={{color : "#f0e06c"}}>{props.data.numbersOfYellow}</h2>
+            <h2 style={{color : "#8ae364"}}>{props.data.numbersOfGreen}</h2>
+            <h2 style={{color : "#7fb2f0"}}>{props.data.numbersOfInsideFrequency}</h2>
         </div>
         </div>
       

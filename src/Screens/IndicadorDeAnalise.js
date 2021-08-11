@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Form, Button, Col, Container, Row } from "react-bootstrap"
+import { Form, Button, Col, Container, Row, Table } from "react-bootstrap"
 import GenericSelect from "../Components/GenericSelect"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from "../Http/ScqApi";
@@ -48,19 +48,33 @@ class IndicadorDeAnalise extends Component {
         let qtd =  this.state.fullProcessoAnaliseChartData.length
         let globalRed = 0
         let globalYellow = 0
+        let globalGreen = 0
         let globalFreq = 0
-        this.state.fullProcessoAnaliseChartData.forEach((processoChart) => { globalRed += Number(processoChart.numbersOfRed); globalYellow += Number(processoChart.numbersOfYellow); globalFreq += Number(processoChart.numbersOfInsideFrequency) })
+        this.state.fullProcessoAnaliseChartData.forEach((processoChart) => { globalGreen += Number(processoChart.numbersOfGreen); globalRed += Number(processoChart.numbersOfRed); globalYellow += Number(processoChart.numbersOfYellow); globalFreq += Number(processoChart.numbersOfInsideFrequency) })
         globalRed = globalRed/qtd
         globalYellow = globalYellow/qtd
+        globalGreen = globalGreen/qtd
         globalFreq = globalFreq/qtd
         return (
-            <Col style={{justifyContent : 'center'}}>
-                <div hidden={!this.state.showAnalitics} style={{ display: "grid", gridColumn: 1 }}>
-                    <h2>Faixas vermelhas: {globalRed.toFixed(2)} %</h2>
-                    <h2>Faixas Amarelas: {globalYellow.toFixed(2)} % </h2>
-                    <h2>Frquencia: {globalFreq.toFixed(2)} %</h2>
-                </div>
-            </Col>)
+            <div hidden={!this.state.showAnalitics} style={{ display: "grid", gridColumn: 2 }}>
+            <Table>
+                <thead>
+                    <th>Faixas vermelhas</th>
+                    <th>Faixas amarelas</th>
+                    <th>Faixas verdes</th>
+                    <th>Frequencia</th>
+                </thead>
+                <tbody>
+                    <td style={{backgroundColor : "#ed493e",textAlign: "center" }}>{globalRed.toFixed(2)} %</td>
+                    <td style={{backgroundColor : "#f0e06c",textAlign: "center" }}>{globalYellow.toFixed(2)} %</td>
+                    <td style={{backgroundColor : "#8ae364",textAlign: "center" }}>{globalGreen.toFixed(2)} %</td>
+                    <td style={{backgroundColor : "#7fb2f0",textAlign: "center" }}>{globalFreq.toFixed(2)} %</td>
+                </tbody>
+            </Table>
+            </div>
+            
+            
+            )
 
 
     }
