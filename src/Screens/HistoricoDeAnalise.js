@@ -35,25 +35,25 @@ export const HistoricoDeAnalise = (props) => {
     }, [dataFinal, dataInicial])
 
     const filter = (value, needFilter) => {
+    
         const searchTokens = value.split(",")
- 
-
-
         if (needFilter) {
             if (value.length !== 0) {
                 let resultList = []
                 searchTokens.forEach(searchElement => {
                     if(searchElement.trim().length !== 0) {
                         let textToSearch = removeAccents(searchElement.toLowerCase()).trim()
-                        let resultFilter = dynamicFieldFilter(textToSearch)
-                        if(resultFilter.length !== 0) {
-                           resultList =  resultFilter
+                        let resultFilter
+                        if(resultList.length > 0) {
+                           resultFilter = dynamicFieldFilter(textToSearch,resultList)
+                        }  else {
+                            resultFilter = dynamicFieldFilter(textToSearch)
                         }
-                       
-                
-                    }
-                   
-
+                      
+                        if(resultFilter.length !== 0) {
+                           resultList = resultFilter
+                        }
+                    } 
                 });
 
                 setSuggestionLi(resultList)
@@ -63,16 +63,13 @@ export const HistoricoDeAnalise = (props) => {
             }
         } else {
             setSuggestionLi([])
-            setActualSearchValue(value)
+           
       
         }
+    
 
     }
 
-    const updadteField = (value, needFilter) => {
-        filter(value, needFilter)
-
-    }
 
 
     const removeAccents = (str) => {
@@ -120,9 +117,13 @@ export const HistoricoDeAnalise = (props) => {
 
 
 
-    const dynamicFieldFilter = (valor) => {
-      
-            return suggestionLi.filter(op => filterfunction(op, valor));
+    const dynamicFieldFilter = (valor,opsRef) => {
+                if(opsRef) {
+                    return opsRef.filter(op => filterfunction(op, valor));
+                } else {
+                    return options.filter(op => filterfunction(op, valor));
+                }
+           
         
        
 
@@ -217,7 +218,7 @@ export const HistoricoDeAnalise = (props) => {
                 </Form.Row>
                 <Form.Row>
                     <Col>
-                        <Form.Control placeholder="Filtrar por..." onChange={(event) => updadteField(event.target.value, true)}></Form.Control>
+                        <Form.Control placeholder="Filtrar por..." onChange={(event) => filter(event.target.value, true)}></Form.Control>
                     </Col>
                     <Col>
                         <Form.Label>Filtrado por: <b>  {actualFilter.join(",") || ''}</b></Form.Label>
