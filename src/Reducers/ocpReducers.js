@@ -2,12 +2,14 @@ import produce from "immer"
 
 const initialState = {
   ocps: [],
-  filteredOcps : [],
-  showEncerradas : false,
-  filterType : '',
-  actualFilter : '',
-  ocpToEdit : {}
- 
+  filteredOcps: [],
+  showEncerradas: false,
+  filterType: '',
+  actualFilter: '',
+  ocpToEdit: {},
+  ocpsView: [],
+  showOcpView: false
+
 
 }
 
@@ -20,7 +22,12 @@ const ocpsReducer = produce(
     switch (action.type) {
       case "LOAD_OCPS":
         const maxIndexOcps = draft.ocps.length
-        draft.ocps.splice(0,maxIndexOcps,...action.payload)
+        draft.ocps.splice(0, maxIndexOcps, ...action.payload)
+        break
+      case "LOAD_OCP_VIEW":
+        const maxIndexOcpToView = draft.ocpsView.length
+        const ocpsToView = draft.ocps.filter(ocp => Number(ocp.analiseId) === Number(action.payload))
+        draft.ocpsView.splice(0, maxIndexOcpToView, ...ocpsToView)
         break
       case "ADD_OCP":
         draft.ocps.push(action.payload)
@@ -36,11 +43,11 @@ const ocpsReducer = produce(
         if (indexToUpdadte !== -1) draft.ocps[indexToUpdadte].statusOCP = true
         break
       case "REANALISE_OCP":
-          const indexReanalise = draft.ocps.findIndex(ocp => ocp.id === action.payload)
-          if (indexReanalise !== -1) draft.ocps[indexReanalise].analiseStatus = false   
+        const indexReanalise = draft.ocps.findIndex(ocp => ocp.id === action.payload)
+        if (indexReanalise !== -1) draft.ocps[indexReanalise].analiseStatus = false
         break
       case "SHOW_ENCERRADAS":
-          draft.showEncerradas = action.payload
+        draft.showEncerradas = action.payload
         break
       case "REMOVE_OCP":
         const indexOcps = draft.ocps.findIndex(ocp => ocp.id === action.payload)
@@ -49,15 +56,18 @@ const ocpsReducer = produce(
       case "OCP_TO_EDIT":
         draft.ocpToEdit = action.payload
         break
+      case "SET_OCP_VIEW":
+        draft.showOcpView = action.payload
+        break
       case "OCP_QTD_ADICAO":
         let ocpAdicaoIndex = draft.ocpToEdit.adicoesDto.findIndex(adicao => adicao.id === action.payload.id)
-        if (ocpAdicaoIndex !== -1) draft.ocpToEdit.adicoesDto[ocpAdicaoIndex].quantidade = action.payload.quantidade   
+        if (ocpAdicaoIndex !== -1) draft.ocpToEdit.adicoesDto[ocpAdicaoIndex].quantidade = action.payload.quantidade
         break
-      
-       
+
+
     }
     return
-  },loadState()
-  
+  }, loadState()
+
 )
 export default ocpsReducer;

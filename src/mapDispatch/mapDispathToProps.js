@@ -12,6 +12,8 @@ const dispatchers = (dispatch) => {
         loadTrocas: () => ScqApi.ListaTrocas().then(data => dispatch(actions.loadTrocas(data))),
         loadTarefasDeManutencao: () => ScqApi.ListaTarefasDeManutencao().then(data => dispatch(actions.loadTarefasDeManutencao(data))) ,
         loadOcps: () => ScqApi.ListaOcps().then(data => dispatch(actions.loadOcps(data))) ,
+        loadOcpView: data => dispatch(actions.loadOcpsView(data)) ,
+        showOcpView: data => dispatch(actions.setOcpView(data)) ,
         loadPosition : (data) => dispatch({type: 'LOAD_POSITIONS' , payload : data}),
         addProcesso : (data) => dispatch({type: 'ADD_PROCESSO' , payload : data}),
         addEtapa : (data) => dispatch({type: 'ADD_ETAPA' , payload : data}),
