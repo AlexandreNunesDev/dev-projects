@@ -28,7 +28,7 @@ import Omp from './Screens/Omp';
 import TarefasDeManutencao from './Screens/TarefasDeManutencao';
 import Login from './Screens/Login';
 import ConfirmMailPage from './Screens/ConfirmYourMail';
-import { getUserRole, isAuthenticated, isTokenExpired, logout } from './Services/auth';
+import {  isAuthenticated, isTokenExpired, logout } from './Services/auth';
 import Registrar from './Screens/Registrar';
 import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
 import AlgoDeuErrado from './Screens/algoDeuErrado';

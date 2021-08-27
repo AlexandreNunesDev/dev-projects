@@ -100,10 +100,13 @@ const CadastroDeOcpAdicao = (props) => {
     const calcularCorrecaoArray = () => {
         let tempCorrecaoArray = []
         let correcaoTotal = 0
+        let nominal = (parametro.pMax + parametro.pMin) / 2
 
+        //Itero sobre todas as materias primas da Etapa do parametro que esta em analise
         materiasPrima && materiasPrima.forEach((mp => {
+            //Se a formula do parametro contem o fator titulometrico da materia prima sera gerado analise com base no resultado da concentracao
             if (String(parametro.formula).includes(mp.fatorTitulometrico)) {
-                let nominal = (parametro.pMax + parametro.pMin) / 2
+                
                 let valorCorrecao = 0
                 if (analise.resultado < nominal) {
                     valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
@@ -113,22 +116,34 @@ const CadastroDeOcpAdicao = (props) => {
                 tempCorrecaoArray = tempCorrecaoArray.concat(pairCorrecaoMp)
                 setCorrecaoArray(tempCorrecaoArray)
             } else {
+                //Se o fator titulometri nao contem na formula do parametro então sera considerado a proporção entrar os valores de montagem
                 etapa.proportionMps.forEach((proportion) => {
+                    //Pra cada iteração cria uma par de "mpId:qtd"
+                    let pairCorreMp
+                    // reinicia a variavel valorCorrecao para sera  calculada novamente para Materia prima
+                    let valorCorrecao
                     let pair = String(proportion).split(":")
+                    //Verifican se a materia prima é a mesma da do token de proporçao de montagem
                     if (String(mp.id) === String(pair[0])) {
-                        let pairCorreMp;
+                        //Se sim verifica se a proporcao é igual a 1.0 , o que quer dizer que so existe essa materia prima
                         if (Number(pair[1] === 1.0)) {
-                            let nominal = (parametro.pMax + parametro.pMin) / 2
-
-                            let valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
-
+                            valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
+                            //Adiciona à correcao total o valor da correcao 
+                            correcaoTotal = correcaoTotal + valorCorrecao
                             pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
                         } else {
-                            pairCorreMp = `${mp.id}:${Math.round(correcaoTotal * pair[1] * 100) / 100}`
+                            valorCorrecao = correcaoTotal * pair[1]
+                            //Adiciona à correcao total o valor da correcao 
+                            correcaoTotal = correcaoTotal + valorCorrecao
+                            pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
                         }
 
-                        tempCorrecaoArray = tempCorrecaoArray.concat(pairCorreMp)
-                        setCorrecaoArray(tempCorrecaoArray)
+                        //Se o valor da correcao for 0 , não adiciona ao  array de Correcao
+                        if(Number(valorCorrecao) > 0) {
+                            tempCorrecaoArray = tempCorrecaoArray.concat(pairCorreMp)
+                            setCorrecaoArray(tempCorrecaoArray)
+                        }
+                        
                     }
                 })
 

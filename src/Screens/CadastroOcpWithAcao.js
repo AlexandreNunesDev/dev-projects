@@ -12,10 +12,6 @@ import { WebSocketContext } from '../websocket/wsProvider';
 
 
 
-const redirectOcps = (history) => {
-    history.push("/OrdensDeCorrecao")
-}
-
 const redirectAnalise = (history, analise) => {
     history.push("/RegistroAnalise", analise)
 }

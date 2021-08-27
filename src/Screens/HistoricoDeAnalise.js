@@ -11,7 +11,6 @@ import { formatIsoDate } from "../Services/stringUtils"
 
 export const HistoricoDeAnalise = (props) => {
 
-    const [actualSearchValue, setActualSearchValue] = useState('')
     const [options, setOptions] = useState(null)
     const [suggestionLi, setSuggestionLi] = useState(null)
    

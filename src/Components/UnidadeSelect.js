@@ -4,10 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
-
-
-
-
 const UnidadeSelect = (props) =>{
 
     const [options, setOptions] = useState()

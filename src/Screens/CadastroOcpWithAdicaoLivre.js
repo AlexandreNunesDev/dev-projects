@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { Form, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useHistory, withRouter } from 'react-router-dom';
+import {withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
-import { WebSocketContext } from '../websocket/wsProvider';
 import AdicaoFree from '../Components/AdicaoFree';
 
 

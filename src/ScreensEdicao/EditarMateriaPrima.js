@@ -35,7 +35,6 @@ const EditarMateriaPrima = (props) => {
 
 
     const salvarMateriaPrima = () => {
-        const { toastManager } = props
 
         if (fatorTitulometrico === '' || fatorTitulometrico === null) {
             setFatorTitulometrico(1)

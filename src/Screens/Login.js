@@ -30,8 +30,7 @@ class Login extends React.Component {
 
 
     componentDidUpdate (prevProps) {
-        if((this.props.global.isAuth) && (this.props.global.isAuth != prevProps.global.isAuth)){
-            console.log("carregou as opcoes")
+        if((this.props.global.isAuth) && (this.props.global.isAuth !== prevProps.global.isAuth)){
             optionsLoad(this.props,true)
             this.props.firstReload(false)
         }

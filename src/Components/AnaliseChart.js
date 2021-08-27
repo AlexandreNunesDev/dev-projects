@@ -1,6 +1,5 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { Fragment } from 'react';
 
 import { LineChart, XAxis, CartesianGrid, Line, YAxis,ReferenceLine ,Tooltip} from 'recharts'
 import AnaliseEdit from './AnaliseEdit';

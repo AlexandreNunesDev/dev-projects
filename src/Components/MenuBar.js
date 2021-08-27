@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Navbar, Nav, NavDropdown, Badge, Button, Dropdown, Card, NavItem, Image, Row } from 'react-bootstrap';
+import { Modal, Navbar, Nav, NavDropdown, Badge, Button, Card, NavItem, Image, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
 import scqlogo from '../logoscq.png';

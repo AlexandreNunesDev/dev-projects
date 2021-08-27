@@ -29,7 +29,6 @@ const CadastroDeOcpLivre = (props) => {
     const [processos,setProcessos] = useState([])
     const [newOcp, setOcp] = useState([])
     const history = useHistory()
-    const analise = props.location.state || null
     let menuType = null;
 
 

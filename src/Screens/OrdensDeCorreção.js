@@ -5,18 +5,14 @@ import ScqApi from "../Http/ScqApi";
 import CredentialConfirm from '../Components/CredentialConfirm'
 import CorrecaoConfirm from "../Components/CorrecaoConfirm";
 import { withToastManager } from "react-toast-notifications";
-
 import { withMenuBar } from "../Hocs/withMenuBar";
 import GenericDropDown from "../Components/GenericDropDown";
-
 import { isMobile } from 'react-device-detect';
-
 import mapStateToProps from "../mapStateProps/mapStateToProps"
 import { connect } from "react-redux";
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import { WebSocketContext } from "../websocket/wsProvider";
 import OcpsTableBody from "../Components/OcpsTableBody";
-import { actions } from "../actions/actions";
 
 
 
@@ -78,12 +74,12 @@ class OrdensDeCorreção extends Component {
             actualFilter: "",
             ocpConfirm: {},
             filterType: '',
-            showCorrecaoConfirm : false
+            showCorrecaoConfirm: false
 
         }
     }
 
-   
+
 
     openCredentialsConfirm = (ocp) => {
         const details = this.getAproveDetails(ocp)
@@ -135,7 +131,7 @@ class OrdensDeCorreção extends Component {
         ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(this.props.loadOcps))
     }
 
-   
+
     adjustTableHeight = () => {
         var table = document.getElementById("ocpTable")
         var rows = table.rows;
@@ -218,11 +214,11 @@ class OrdensDeCorreção extends Component {
     }
 
 
-    
 
 
 
-   
+
+
 
 
 
@@ -250,7 +246,7 @@ class OrdensDeCorreção extends Component {
 
 
                         <Col md="auto">
-                            <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Parametro", "Status"]} onChoose={(filterType) => this.props.setFilterType(filterType) } style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                            <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Parametro", "Status"]} onChoose={(filterType) => this.props.setFilterType(filterType)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
 
                     </Row>
@@ -260,7 +256,7 @@ class OrdensDeCorreção extends Component {
                     <Table id={"ocpTable"}>
                         <TableHead ></TableHead>
                         <tbody>
-                            <OcpsTableBody editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })}  reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></OcpsTableBody>
+                            <OcpsTableBody editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></OcpsTableBody>
                         </tbody>
 
                     </Table>

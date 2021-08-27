@@ -3,12 +3,11 @@ import { connect } from "react-redux"
 import dispatchers from "../mapDispatch/mapDispathToProps"
 import mapToStateProps from "../mapStateProps/mapStateToProps"
 import { isMobile } from 'react-device-detect';
-import { Button, Form } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { downloadOcp } from "../Services/documentsDownload";
-import { BsDot } from 'react-icons/bs';
 import { Fragment } from 'react';
 import { useHistory } from 'react-router';
-import { FormatDate, OnlyDate } from '../Services/stringUtils';
+import { OnlyDate } from '../Services/stringUtils';
 
 
 const isSameDate = (actualDate, refDate) => {

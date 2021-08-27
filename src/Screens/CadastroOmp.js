@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
-import { useHistory, useLocation } from 'react-router-dom'
+import {useLocation } from 'react-router-dom'
 import ScqApi from '../Http/ScqApi'
 
 import { withMenuBar } from '../Hocs/withMenuBar'

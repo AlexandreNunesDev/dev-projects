@@ -13,7 +13,6 @@ import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { formatIsoDate } from '../Services/stringUtils';
-import { FormGroup } from '@material-ui/core';
 
 
 const valueForm = (props) => {

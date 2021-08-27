@@ -1,10 +1,8 @@
 import React, { createContext } from 'react'
 import { Client } from '@stomp/stompjs';
-import * as storeService from '../Services/storeService';
 import { useDispatch, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import { isTokenExpired } from '../Services/auth';
-import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 
 
@@ -23,32 +21,6 @@ export default ({ children }) => {
     const dispatch =  useDispatch()
     const store = useStore()
     const history = useHistory()
-
-    
-
-   
-
-
-    const forcedLoadOptions = () => {
- 
-        let storeProps = mapToStateProps.toProps(store.getState())
-        let dispatchersFunctions = dispatchers(dispatch)
-        let allprops = {...storeProps,...dispatchersFunctions}
-        storeService.optionsLoad(allprops,true)
-    }
-
-
-
-
-     
-   /*useEffect(() => {
-       
-        window.addEventListener("visibilitychange", onVisibilityChange);
-      
-      return () => {
-        window.removeEventListener("visibilitychange", onVisibilityChange);
-      };
-    },[]);*/
 
 
 

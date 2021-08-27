@@ -7,6 +7,7 @@ import DeleteOmpConfirm from "../Components/DeleteOMPConfirm"
 import { withMenuBar } from "../Hocs/withMenuBar";
 import { downloadOmp } from "../Services/documentsDownload";
 import GenericDropDown from "../Components/GenericDropDown";
+import GenericSelect from "../Components/GenericSelect";
 import { isMobile } from "react-device-detect";
 
 
@@ -39,7 +40,7 @@ const buttonLayout = (props, omp, statusToken) => {
         return (
             <>
                 <Col>
-                    <Button style={{ backgroundColor: "RED", borderColor: "RED" , width: "100%" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
+                    <Button style={{ backgroundColor: "RED", borderColor: "RED", width: "100%" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
                 </Col>
                 <Col>
                     {statusToken[0] === "concluido"
@@ -56,7 +57,7 @@ const buttonLayout = (props, omp, statusToken) => {
         return (
             <Row>
                 <Col>
-                    <Button style={{ backgroundColor: "RED", borderColor: "RED",width: "100%" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
+                    <Button style={{ backgroundColor: "RED", borderColor: "RED", width: "100%" }} onClick={() => props.confirmDeleteDiolog(omp.id)}>Deletar Omp</Button>
                 </Col>
                 <Col>
                     {statusToken[0] === "concluido"
@@ -175,17 +176,10 @@ class Trocas extends React.Component {
                     if (this.state.filterType === "Processo") {
                         return String(omp.nomeProcesso).toLowerCase().includes(filterText.toLowerCase())
                     }
-
                     if (this.state.filterType === "Status") {
-
                         return String(omp.status).toLowerCase().includes(filterText.toLowerCase())
-
-
-
                     }
-
                     return ""
-
                 }),
                 selection: filterText
             })
@@ -195,6 +189,10 @@ class Trocas extends React.Component {
             })
         }
 
+    }
+
+    filterByGlobalProcesso = (processoId) => {
+        
     }
 
 
@@ -208,6 +206,9 @@ class Trocas extends React.Component {
                 <Container >
                     <DeleteOmpConfirm show={this.state.showDeleteConfirm} deletarOmp={this.deletarOmp} omp={this.state.ompToDelete} handleClose={() => { this.setState({ showDeleteConfirm: false }) }}></DeleteOmpConfirm>
                     <Row className="justify-content-md-center">
+                        <Col >
+                            <GenericSelect selection={this.props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.props.setProcessoIdTarefaRef(processoId)} ops={this.props.processos}  ></GenericSelect>
+                        </Col>
                         <Col>
                             <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.filterAction(event.target.value)
                             }></Form.Control>
@@ -222,9 +223,9 @@ class Trocas extends React.Component {
                     <Table >
                         <TableHead></TableHead>
                         <tbody>
-                        <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} filterType={this.state.filterType} selection={this.state.selection} omps={this.state.filteredOmps} encerrarOmp={this.encerrarOmp} verOmp={this.verOmp} confirmDeleteDiolog={this.confirmDeleteDiolog}  ></TableBody>
+                            <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} filterType={this.state.filterType} selection={this.state.selection} omps={this.state.filteredOmps} encerrarOmp={this.encerrarOmp} verOmp={this.verOmp} confirmDeleteDiolog={this.confirmDeleteDiolog}  ></TableBody>
                         </tbody>
-                        
+
 
                     </Table>
                 </div>
