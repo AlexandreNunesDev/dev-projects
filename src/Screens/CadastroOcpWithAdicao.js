@@ -89,12 +89,19 @@ const CadastroDeOcpAdicao = (props) => {
 
 
     const saveMpQtd = (quantidade, mpId, unidade, index) => {
-        console.log(quantidade, mpId, unidade)
         let tempoMpQtd = mpQtds
-        tempoMpQtd.splice(index, 1, `${mpId}:${quantidade}:${unidade}`)
-
-        setMpQtd(tempoMpQtd)
-
+        if(Number(quantidade) > 0) {
+            console.log(quantidade, mpId, unidade)
+          
+            tempoMpQtd.splice(index, 1, `${mpId}:${quantidade}:${unidade}`)
+    
+            setMpQtd(tempoMpQtd)
+    
+        } else {
+            tempoMpQtd.splice(index,1)
+            setMpQtd(tempoMpQtd)
+        }
+       
     }
 
     const calcularCorrecaoArray = () => {
