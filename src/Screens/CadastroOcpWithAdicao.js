@@ -126,7 +126,10 @@ const CadastroDeOcpAdicao = (props) => {
                     //Verifican se a materia prima é a mesma da do token de proporçao de montagem
                     if (String(mp.id) === String(pair[0])) {
                         //Se sim verifica se a proporcao é igual a 1.0 , o que quer dizer que so existe essa materia prima
-                        if (Number(pair[1] === 1.0)) {
+                            valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
+                            valorCorrecao = valorCorrecao * pair[1]
+                            pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
+/*                         if (Number(pair[1] === 1.0)) {
                             valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
                             //Adiciona à correcao total o valor da correcao 
                             correcaoTotal = correcaoTotal + valorCorrecao
@@ -136,7 +139,7 @@ const CadastroDeOcpAdicao = (props) => {
                             //Adiciona à correcao total o valor da correcao 
                             correcaoTotal = correcaoTotal + valorCorrecao
                             pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-                        }
+                        } */
 
                         //Se o valor da correcao for 0 , não adiciona ao  array de Correcao
                         if(Number(valorCorrecao) > 0) {
