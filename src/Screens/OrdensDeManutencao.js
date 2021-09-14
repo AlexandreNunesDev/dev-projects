@@ -9,6 +9,9 @@ import { downloadOmp } from "../Services/documentsDownload";
 import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
 import { isMobile } from "react-device-detect";
+import { connect } from "react-redux";
+import mapStateToProps from "../mapStateProps/mapStateToProps"
+import dispatchers from "../mapDispatch/mapDispathToProps";
 
 
 const TableHead = () => {
@@ -133,7 +136,10 @@ class Trocas extends React.Component {
     }
 
     componentDidMount() {
-        ScqApi.LoadOmps().then(res => this.setState({ omps: res, filteredOmps: res }))
+        let processoIdTarefaRef = this.props.global.processoIdTarefaRef
+        ScqApi.LoadOmps().then(res => this.setState({ omps: res, filteredOmps: res.filter(omp => Number(omp.processoId) === Number(processoIdTarefaRef) ) }))
+        
+        
     }
 
     encerrarOmp = (ompId) => {
@@ -192,7 +198,10 @@ class Trocas extends React.Component {
     }
 
     filterByGlobalProcesso = (processoId) => {
-        
+        this.props.setProcessoIdTarefaRef(processoId)
+        let newFilteredOmps = this.state.omps.filter(omp => Number(omp.processoId === Number(processoId)))
+        this.setState({filteredOmps :newFilteredOmps  })
+
     }
 
 
@@ -206,8 +215,8 @@ class Trocas extends React.Component {
                 <Container >
                     <DeleteOmpConfirm show={this.state.showDeleteConfirm} deletarOmp={this.deletarOmp} omp={this.state.ompToDelete} handleClose={() => { this.setState({ showDeleteConfirm: false }) }}></DeleteOmpConfirm>
                     <Row className="justify-content-md-center">
-                        <Col >
-                            <GenericSelect selection={this.props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.props.setProcessoIdTarefaRef(processoId)} ops={this.props.processos}  ></GenericSelect>
+                        <Col style={{paddingTop : 10}} >
+                            <GenericSelect selection={this.props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.filterByGlobalProcesso(processoId) } ops={this.props.processos}  ></GenericSelect>
                         </Col>
                         <Col>
                             <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.filterAction(event.target.value)
@@ -238,4 +247,4 @@ class Trocas extends React.Component {
 
 }
 
-export default withToastManager(withMenuBar(Trocas))
+export default withToastManager(withMenuBar(connect(mapStateToProps.toProps, dispatchers)(Trocas)))
