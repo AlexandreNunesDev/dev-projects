@@ -5,6 +5,10 @@ import ScqApi from "../Http/ScqApi";
 import GenericDropDown from "../Components/GenericDropDown";
 import { withToastManager } from "react-toast-notifications";
 import { withMenuBar } from "../Hocs/withMenuBar";
+import GenericSelect from "../Components/GenericSelect";
+import { connect } from "react-redux";
+import mapToStateProps from "../mapStateProps/mapStateToProps";
+import dispatchers from "../mapDispatch/mapDispathToProps";
 
 
 const TableHead = () => {
@@ -54,7 +58,7 @@ const TableBody = props => {
                 </td>
                 <td className="align-middle" >
 
-                    <Form.Check checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca.id )} type="checkbox" />
+                    <Form.Check checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca.id)} type="checkbox" />
                     <Form.Label>Trocar ?</Form.Label>
 
 
@@ -74,7 +78,7 @@ class Omp extends React.Component {
 
 
     constructor(props) {
-        super()
+        super(props)
         this.state = {
             trocas: [],
             filteredTroca: [],
@@ -84,7 +88,8 @@ class Omp extends React.Component {
             trocasChoosed: [],
             markAllHide: false,
             filterText: '',
-          
+            processoId: null
+
 
         }
     }
@@ -95,16 +100,16 @@ class Omp extends React.Component {
 
     addTrocaIdToChoosedIdList = (checked, clickeTroca) => {
 
-        if(!clickeTroca.programada){
+        if (!clickeTroca.programada) {
             if (checked) {
 
 
                 this.setState((prevState) => ({
                     trocasChoosedId: [...prevState.trocasChoosedId, ...[clickeTroca]]
                 }), () => console.log(this.state.trocasChoosedId));
-    
+
             } else {
-    
+
                 const removedArray = this.state.trocasChoosedId.filter((value) => {
                     return Number(value) !== Number(clickeTroca)
                 })
@@ -119,7 +124,7 @@ class Omp extends React.Component {
             })
         }
 
-       
+
 
     }
 
@@ -179,9 +184,9 @@ class Omp extends React.Component {
 
     markAll = () => {
         this.setState({
-            trocasChoosedId : []
+            trocasChoosedId: []
         })
-        this.state.trocas.forEach(troca => {
+        this.state.filteredTroca.forEach(troca => {
             this.addTrocaIdToChoosedIdList(true, troca.id)
         })
     }
@@ -194,24 +199,25 @@ class Omp extends React.Component {
 
     showPendentes = (checked) => {
 
-        if(checked){
+        if (checked) {
             this.setState({
-                filteredTroca : this.state.trocas.filter((troca) => {
+                filteredTroca: this.state.trocas.filter((troca) => {
                     return troca.pendente === true
                 })
             })
         } else {
             this.setState({
-                filteredTroca : this.state.trocas
+                filteredTroca: this.state.trocas
             })
         }
-       
+
     }
 
     filterAction = (filterText) => {
-        if(filterText!==""){
+        let tofilterTrocas = this.state.processoId ? this.filterByGlobalProcesso(this.state.processoId) : this.state.trocas
+        if (filterText !== "") {
             this.setState({
-                filteredTroca: this.state.trocas.filter((troca) => {
+                filteredTroca: tofilterTrocas.filter((troca) => {
                     if (this.state.filterType === "Processo") {
                         return String(troca.processoNome).toLowerCase().includes(filterText.toLowerCase())
                     }
@@ -219,14 +225,14 @@ class Omp extends React.Component {
                         return String(troca.etapaNome).toLowerCase().includes(filterText.toLowerCase())
                     }
                     if (this.state.filterType === "Status") {
-                        if(String("Pendente").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())){
-                            return troca.pendente === true 
+                        if (String("Pendente").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())) {
+                            return troca.pendente === true
                         }
-                        if(String("Em dia").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())){
-                            return troca.pendente === false 
+                        if (String("Em dia").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())) {
+                            return troca.pendente === false
                         }
-                    
-                   
+
+
                     }
 
                     return ""
@@ -234,12 +240,23 @@ class Omp extends React.Component {
                 })
             })
         } else {
-            this.setState({
-                filteredTroca : this.state.trocas
+            this.state.processoId ? this.filterByGlobalProcesso(this.state.processoId) : this.setState({
+                filteredTroca: this.state.trocas
             })
+
         }
 
-   }
+    }
+
+
+    filterByGlobalProcesso = (processoId) => {
+        let filteredTrocas = this.state.trocas.filter(troca => Number(troca.processoId) === Number(processoId))
+        this.setState({
+            processoId: processoId,
+            filteredTroca: filteredTrocas
+        })
+        return filteredTrocas
+    }
 
 
 
@@ -250,45 +267,49 @@ class Omp extends React.Component {
         return (
             <>
 
-          
-                    <Row className="align-items-center">
-                        
-                        <Col md="auto">
-                            <Button disabled={this.state.trocasChoosedId.length !== 0 ? false : true} style={{ margin: 10 }} onClick={() => {
-                                this.buildTrocasChoosedArray()
-                            }}>Gerar OMP</Button>
-                        </Col>
 
-                        <Col md="auto">
-                            <Button hidden={this.state.markAllHide} style={{ margin: 10 }} onClick={() => { this.markAll(); this.setState({ markAllHide: true }) }}>Selecionar Todos</Button>
-                            <Button hidden={!this.state.markAllHide} style={{ margin: 10 }} onClick={() => { this.unmarkAll(); this.setState({ trocasChoosedId: [], markAllHide: false }) }}>Desmarcar Todos</Button>
-                        </Col>
-                        
-                        <Col>
-                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.filterAction(event.target.value)
-                            }></Form.Control>
-                        </Col>
-                        <Col md="auto">
-                            <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Status"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
-                        </Col>
-                        <Col md="auto">
-                            <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
-                        </Col>
-                    </Row>
-                    <div className="table-responsive">
+                <Row className="align-items-center">
 
-                    
+                    <Col md="auto">
+                        <Button disabled={this.state.trocasChoosedId.length !== 0 ? false : true} style={{ margin: 10 }} onClick={() => {
+                            this.buildTrocasChoosedArray()
+                        }}>Gerar OMP</Button>
+                    </Col>
+
+                    <Col style={{paddingTop : 20}} md="auto">
+                        <GenericSelect noLabel={true} default={"--Selecione um Processo--"} onChange={(processoId) => this.filterByGlobalProcesso(processoId)} ops={this.props.processos} displayType={"nome"} returnType={"id"}></GenericSelect>
+                    </Col>
+
+                    <Col md="auto">
+                        <Button hidden={this.state.markAllHide} style={{ margin: 10 }} onClick={() => { this.markAll(); this.setState({ markAllHide: true }) }}>Selecionar Todos</Button>
+                        <Button hidden={!this.state.markAllHide} style={{ margin: 10 }} onClick={() => { this.unmarkAll(); this.setState({ trocasChoosedId: [], markAllHide: false }) }}>Desmarcar Todos</Button>
+                    </Col>
+
+                    <Col>
+                        <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.filterAction(event.target.value)
+                        }></Form.Control>
+                    </Col>
+                    <Col md="auto">
+                        <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Status"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                    </Col>
+                    <Col md="auto">
+                        <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
+                    </Col>
+                </Row>
+                <div className="table-responsive">
+
+
                     <Table className="table table-hover" >
-                    <TableHead></TableHead>
+                        <TableHead></TableHead>
                         <tbody>
                             <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} trocas={this.state.filteredTroca} markedTroca={this.state.trocasChoosedId}></TableBody>
                         </tbody>
-                        
-           
-                     </Table>
-                     </div>
-              
-               
+
+
+                    </Table>
+                </div>
+
+
 
 
             </>
@@ -298,4 +319,4 @@ class Omp extends React.Component {
 
 }
 
-export default withToastManager(withMenuBar(Omp))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps, dispatchers)(Omp)))
