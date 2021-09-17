@@ -42,6 +42,7 @@ import mapToStateProps from './mapStateProps/mapStateToProps'
 import { WebSocketContext } from './websocket/wsProvider';
 import { optionsLoad } from './Services/storeService';
 import HistoricoDeAnalise from './Screens/HistoricoDeAnalise';
+import RegistroDetempos from './Screens/RegistroDeTempos';
 
 
 
@@ -113,6 +114,7 @@ class App extends React.Component {
             <Route path='/Login' exact={true} component={Login} />
             <Route path='/Registrar' exact={true} component={Registrar} />
             <Route path='/RegistroAnalise' exact={true} component={RegistroDeAnalise} />
+            <Route path='/RegistroTempo' exact={true} component={RegistroDetempos} />
             <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
             <Route path='/OMP' exact={true} component={Omp} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />

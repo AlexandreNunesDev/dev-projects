@@ -4,6 +4,7 @@ import optionsReducer from './baseSelectionsReducer'
 import ocpsReducer from './ocpReducers'
 import globalConfig from './globalConfigReducer'
 import notificationsReducer from './notificationsReducer'
+import timeReducer from './timeReducers'
 
 
 
@@ -11,7 +12,8 @@ const appReducer = combineReducers({
    options :  optionsReducer,
    ocp : ocpsReducer,
    global : globalConfig,
-   notification :notificationsReducer
+   notification :notificationsReducer,
+   timeReducer : timeReducer
   
 })
 

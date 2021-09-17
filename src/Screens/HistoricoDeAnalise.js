@@ -78,7 +78,7 @@ export const HistoricoDeAnalise = (props) => {
         var strLen = str.length;
         var i, x;
         for (i = 0; i < strLen; i++) {
-            if ((x = accents.indexOf(str[i])) != -1) {
+            if (Number((x = accents.indexOf(str[i]))) !== -1) {
                 str[i] = accentsOut[x];
             }
         }

@@ -77,7 +77,10 @@ class MenuBar extends React.Component {
                 <Nav className="mr-auto">
                   <Link className="nav-link" to="/Home">Home</Link>
                   <Link className="nav-link" to={!this.props.global.isAuth ? "/Login" : "/Home"} onClick={() => this.props.global.isAuth && this.logUserOut()}>{!this.props.global.isAuth ? "Login" : "Logout"}</Link>
-                  <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                  <NavDropdown title="Registros" id="basic-nav-dropdown">
+                    <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                    <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
+                  </NavDropdown>
                   <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
                   <Link className="nav-link" to='/Omp' >OMP</Link>
                   <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
@@ -152,15 +155,18 @@ class MenuBar extends React.Component {
 
                 <Link className="nav-link" to="/Home">Home</Link>
                 <Link className="nav-link" to={!this.props.global.isAuth ? "/Login" : "/Home"} onClick={() => this.props.global.isAuth && this.logUserOut()}>{!this.props.global.isAuth ? "Login" : "Logout"}</Link>
-                <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                <NavDropdown title="Registros" id="basic-nav-dropdown">
+                  <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                  <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
+                </NavDropdown>
                 <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
                 <Link className="nav-link" to='/Omp' >OMP</Link>
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
-                    <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
-                    <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
-                  </NavDropdown>
+                  <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
+                  <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
+                </NavDropdown>
 
               </Nav>
 

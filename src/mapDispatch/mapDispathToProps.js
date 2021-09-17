@@ -11,6 +11,7 @@ const dispatchers = (dispatch) => {
         loadMateriasPrima: () => ScqApi.ListaMateriaPrimas().then(data => dispatch(actions.loadMateriasPrima(data))),
         loadTrocas: () => ScqApi.ListaTrocas().then(data => dispatch(actions.loadTrocas(data))),
         loadTarefasDeManutencao: () => ScqApi.ListaTarefasDeManutencao().then(data => dispatch(actions.loadTarefasDeManutencao(data))) ,
+        loadUnidades: () => ScqApi.GeatUnidades().then(data => dispatch(actions.loadUnidades(data))) ,
         loadOcps: () => ScqApi.ListaOcps().then(data => dispatch(actions.loadOcps(data))) ,
         loadOcpView: data => dispatch(actions.loadOcpsView(data)) ,
         showOcpView: data => dispatch(actions.setOcpView(data)) ,
@@ -29,7 +30,12 @@ const dispatchers = (dispatch) => {
         loadNotifications : () => ScqApi.ListaNotificacoes().then(data => dispatch(actions.loadNotifications(data))),
         setProcessoIdTarefaRef : (data) => dispatch(actions.setProcessoIdTarefaRef(data)),
         setLogIn : (data) => dispatch(actions.logIn(data)),
-        setLogOut : (data) => dispatch(actions.logOut(data))
+        setLogOut : (data) => dispatch(actions.logOut(data)),
+        updateTimeField : (data) => dispatch(actions.updateTimeField(data)),
+        setCiclo : (data) => dispatch(actions.setCiclo(data)),
+        setTimeProcessoId : (data) => dispatch(actions.setTimeProcessId(data)),
+        loadFieldTime : (data) => dispatch(actions.loadFieldTime)
+
        
     }
 };

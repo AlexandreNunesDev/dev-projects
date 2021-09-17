@@ -7,6 +7,7 @@ const initialState = {
   materiasPrima : [],
   tarefasDeManutencao : [],
   trocas : [],
+  unidades : []
 
 
 
@@ -48,6 +49,10 @@ const optionsReducer = produce(
     case "LOAD_TAREFAS_DE_MANUTENCAO":
       const maxTarefasDeManutencaoIndex = draft.tarefasDeManutencao.length
       draft.tarefasDeManutencao.splice(0,maxTarefasDeManutencaoIndex,...action.payload)
+      break
+    case "LOAD_UNIDADES":
+      const maxUnidades = draft.unidades.length
+      draft.unidades.splice(0,maxUnidades,...action.payload)
       break
     }
     return

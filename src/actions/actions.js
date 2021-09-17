@@ -8,6 +8,7 @@ export const actions = {
     loadMateriasPrima: (data) => {return {type : 'LOAD_MATERIAS_PRIMA' , payload : data}},
     loadTrocas: (data) => {return {type : 'LOAD_TROCAS' , payload : data}},
     loadTarefasDeManutencao: (data) => {return {type : 'LOAD_TAREFAS_DE_MANUTENCAO' , payload : data}},
+    loadUnidades: (data) => {return {type : 'LOAD_UNIDADES' , payload : data}},
     loadOcps: (data) => {return {type : 'LOAD_OCPS' , payload : data}},
     loadOcpsView: (data) => {return {type : 'LOAD_OCP_VIEW' , payload : data}},
     setOcpView: (data) => {return {type : 'SET_OCP_VIEW' , payload : data}},
@@ -26,5 +27,11 @@ export const actions = {
     setProcessoIdTarefaRef : (data) => {return{type: 'PROCESSOID_TAREFA_REF' , payload: data}},
     logIn : (data) => {return{type: 'LOGIN' , payload: data}},
     logOut : (data) => {return{type: 'LOGOUT' , payload: data}},
+    updateTimeField : (data) => {return{type: 'UPDADTE_FIELDTIME' , payload: data}},
+    setCiclo : (data) => {return{type: 'SET_CICLO' , payload: data}},
+    clearCiclo : (data) => {return{type: "CLEAR_CICLO" , payload: data}},
+    setTimeProcessId : (data) => {return{type: "TIME_PROCESSO_ID" , payload: data}},
+    loadFieldTime : (data) => {return{type: "LOAD_FIELDTIME" , payload: data}},
+
 }
 
