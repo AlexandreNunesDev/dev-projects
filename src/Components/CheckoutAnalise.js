@@ -1,6 +1,7 @@
 import React, {useState } from 'react'
 import { Button, Modal, Form, Row, Col} from 'react-bootstrap';
 import {useHistory } from 'react-router-dom';
+import { withToastManager } from 'react-toast-notifications';
 
 const CheckOutAnalise = (props) => {
     
@@ -12,10 +13,19 @@ const CheckOutAnalise = (props) => {
   let history = useHistory();
 
   
+  const checkOpen = () => {
+    if(props.parametro?.cantBeUsed) {
+      const { toastManager } = props
+      toastManager.add("Este parametro possui correcoes pendentes", {
+          appearance: 'warning', autoDismiss: true})
+      } else {
+        handleShow()
+      }
+  }
 
     return (
       <>
-        <Button variant="primary" disabled={props.valid} style={{ margin: 5 }} onClick={handleShow}>
+        <Button variant="primary" disabled={props.valid} style={{ margin: 5 }} onClick={() => checkOpen()}>
           Salvar
         </Button>
         <Modal size={"lg"}  show={show} onHide={handleClose}>
@@ -103,4 +113,4 @@ const CheckOutAnalise = (props) => {
 }
   
 
-  export default CheckOutAnalise;
+  export default withToastManager(CheckOutAnalise);

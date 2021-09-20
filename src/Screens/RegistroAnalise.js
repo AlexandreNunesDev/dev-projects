@@ -184,21 +184,24 @@ class RegistroDeAnalise extends React.Component {
         if (this.state.analise) {
             this.salvarReanalise()
         } else {
+            
+                const { analista, resultado, status } = this.state
+                let nomeAnalista
+                if (analista === '') {
+                    nomeAnalista = this.props.global.userName
+                } else {
+                    nomeAnalista = analista;
+                }
+    
+                const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data }
+    
+                ScqApi.CriarAnalise(analise).then(res => {
+                    responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros, this.props.loadOcps])
+                })
+            
 
 
-            const { analista, resultado, status } = this.state
-            let nomeAnalista
-            if (analista === '') {
-                nomeAnalista = this.props.global.userName
-            } else {
-                nomeAnalista = analista;
-            }
-
-            const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data }
-
-            ScqApi.CriarAnalise(analise).then(res => {
-                responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros, this.props.loadOcps])
-            })
+            
         }
 
     }
