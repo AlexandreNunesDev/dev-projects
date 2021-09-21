@@ -25,10 +25,10 @@ const CheckOutAnalise = (props) => {
 
     return (
       <>
-        <Button variant="primary" disabled={props.valid} style={{ margin: 5 }} onClick={() => checkOpen()}>
+        <Button variant="primary" hidden={props.hide || false} disabled={props.valid} style={{ margin: 5 }} onClick={() => checkOpen()}>
           Salvar
         </Button>
-        <Modal size={"lg"}  show={show} onHide={handleClose}>
+        <Modal size={"lg"}  show={props.showCheckOut || show} onHide={props.showCheckOut ==! null ? props.closeCheckOut :  handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Resumo de Analise</Modal.Title>
           </Modal.Header>
@@ -78,7 +78,7 @@ const CheckOutAnalise = (props) => {
           
          
           <Modal.Footer>
-            <Button style={{ margin: 2 }} variant="secondary" onClick={handleClose}>
+            <Button style={{ margin: 2 }} variant="secondary" onClick={props.showCheckOut ==! null ? props.closeCheckOut :  handleClose}>
               Cancelar
             </Button>
             <Button onClick={() => { 

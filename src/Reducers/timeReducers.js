@@ -2,7 +2,6 @@ import produce from "immer"
 
 const initialState = {
     processoId: null,
-    ciclo: 0,
     timeFields: []
 }
 
@@ -22,17 +21,9 @@ const timeReducer = produce(
             case "LOAD_FIELDTIME":
                 draft.timeFields = action.payload
                 break
-            case "SET_CICLO":
-                draft.ciclo++
-                break
             case "TIME_PROCESSO_ID":
                 draft.processoId = action.payload
                 break
-            case "CLEAR_CICLO":
-                draft.ciclo = 0
-                break
-
-
         }
         return
     }, loadState()
