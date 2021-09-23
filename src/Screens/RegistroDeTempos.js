@@ -48,8 +48,8 @@ const RegistroDetempos = (props) => {
             tField.initialTime = timeTick
         }
         if (timeField.finalTime !== null) {
-            let difference =  timeTick.getTime() - new Date(timeField.finalTime).getTime()
-            let newInitialDate = new Date(new Date(timeField.initialTime).getTime() + difference) 
+            let difference = timeTick.getTime() - new Date(timeField.finalTime).getTime()
+            let newInitialDate = new Date(new Date(timeField.initialTime).getTime() + difference)
             tField.initialTime = newInitialDate
         }
         tField.isMeasuring = true
@@ -120,7 +120,7 @@ const RegistroDetempos = (props) => {
         if (analista) {
             nomeAnalista = analista;
         } else {
-            
+
             nomeAnalista = userName
         }
 
@@ -154,7 +154,7 @@ const RegistroDetempos = (props) => {
         let nomeAnalista
         if (analista) {
             nomeAnalista = analista;
-            
+
         } else {
             nomeAnalista = userName
         }
@@ -197,46 +197,47 @@ const RegistroDetempos = (props) => {
                 <Container style={{ padding: 30 }}>
                     <h3>Registro de Tempos</h3>
 
-                    <Table >
-                        <thead>
-                            <tr>
-                                <th style={{ textAlign: "center" }}>Etapa</th>
-                                <th style={{ textAlign: "center" }}>Tempo</th>
-                                <th style={{ textAlign: "center" }} colSpan={3}>Ação</th>
-                            </tr>
-                        </thead>
+                    <div className="table-responsive">
+                        <Table >
+                            <thead>
+                                <tr>
+                                    <th style={{ textAlign: "center" }}>Etapa</th>
+                                    <th style={{ textAlign: "center" }}>Tempo</th>
+                                    <th style={{ textAlign: "center" }} colSpan={3}>Ação</th>
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                            {timeForm.processoId && timeForm.timeFields.map((timeField, index) => {
+                            <tbody>
+                                {timeForm.processoId && timeForm.timeFields.map((timeField, index) => {
 
-                                if (timeField.index === 0) {
-                                    return (
-                                        <tr key={timeField.index} >
-                                            <td className="align-middle"><Form.Label>{timeField.label}</Form.Label></td>
-                                            <td className="align-middle"><Form.Control value={timeField.isMeasuring ? `${(timeTick.getTime() / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos` : `${(new Date(timeField.finalTime) / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos`}></Form.Control></td>
-                                            <td className="align-middle">{timeField.isMeasuring ? <Button style={{ backgroundColor: "ORANGE", borderColor: "ORANGE", alignmentBaseline: "center" }} onClick={() => startStopMeasureProcess(timeField, false)}>Parar</Button> : <Button style={{ borderColor: intervaloProcesso ? "BLUE" : "BLUE" }} onClick={() => startStopMeasureProcess(timeField, true)}>Iniciar</Button>}</td>
-                                            <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
-                                            <td className="align-middle"><Button disabled={true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => console.log("Abrir Checkout analise")}>Salvar</Button></td>
-                                        </tr>
-                                    )
-                                } else {
-                                    return (
-                                        <tr key={timeField.index} >
-                                            <td className="align-middle"><Form.Label>{timeField.label}</Form.Label></td>
-                                            <td className="align-middle"><Form.Control value={timeField.isMeasuring ? `${(timeTick.getTime() / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos` : `${(new Date(timeField.finalTime) / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos`}></Form.Control></td>
-                                            <td className="align-middle">{timeField.isMeasuring ? <Button style={{ backgroundColor: "ORANGE", borderColor: "ORANGE", alignmentBaseline: "center" }} onClick={() => startStopMeasureProcess(timeField, false)}>Parar</Button> : <Button style={{ borderColor: intervaloProcesso ? "BLUE" : "BLUE" }} onClick={() => startStopMeasureProcess(timeField, true)}>Iniciar</Button>}</td>
-                                            <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
-                                            <td className="align-middle"><Button disabled={isFinished(timeField) ? false : true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => onTimeSaveClick(timeField)}>Salvar</Button></td>
-                                        </tr>
-                                    )
-                                }
+                                    if (timeField.index === 0) {
+                                        return (
+                                            <tr key={timeField.index} >
+                                                <td className="align-middle"><Form.Label>{timeField.label}</Form.Label></td>
+                                                <td className="align-middle"><Form.Control value={timeField.isMeasuring ? `${(timeTick.getTime() / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos` : `${(new Date(timeField.finalTime) / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos`}></Form.Control></td>
+                                                <td className="align-middle">{timeField.isMeasuring ? <Button style={{ backgroundColor: "ORANGE", borderColor: "ORANGE", alignmentBaseline: "center" }} onClick={() => startStopMeasureProcess(timeField, false)}>Parar</Button> : <Button style={{ borderColor: intervaloProcesso ? "BLUE" : "BLUE" }} onClick={() => startStopMeasureProcess(timeField, true)}>Iniciar</Button>}</td>
+                                                <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
+                                                <td className="align-middle"><Button disabled={true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => console.log("Abrir Checkout analise")}>Salvar</Button></td>
+                                            </tr>
+                                        )
+                                    } else {
+                                        return (
+                                            <tr key={timeField.index} >
+                                                <td className="align-middle"><Form.Label>{timeField.label}</Form.Label></td>
+                                                <td className="align-middle"><Form.Control value={timeField.isMeasuring ? `${(timeTick.getTime() / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos` : `${(new Date(timeField.finalTime) / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos`}></Form.Control></td>
+                                                <td className="align-middle">{timeField.isMeasuring ? <Button style={{ backgroundColor: "ORANGE", borderColor: "ORANGE", alignmentBaseline: "center" }} onClick={() => startStopMeasureProcess(timeField, false)}>Parar</Button> : <Button style={{ borderColor: intervaloProcesso ? "BLUE" : "BLUE" }} onClick={() => startStopMeasureProcess(timeField, true)}>Iniciar</Button>}</td>
+                                                <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
+                                                <td className="align-middle"><Button disabled={isFinished(timeField) ? false : true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => onTimeSaveClick(timeField)}>Salvar</Button></td>
+                                            </tr>
+                                        )
+                                    }
 
-                            })}
-                        </tbody>
+                                })}
+                            </tbody>
 
 
-                    </Table>
-
+                        </Table>
+                    </div>
                 </Container>
             </Container>
         </>

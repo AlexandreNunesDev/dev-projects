@@ -58,7 +58,7 @@ const MultiRegistroAnalise = (props) => {
     }
 
     const gerarOcp = () => {
-        history.push({pathname :`/CadastroOcp${checkOutAnaliseField.parametro.menuType}`, state : analiseToCheckOut})
+        history.push({ pathname: `/CadastroOcp${checkOutAnaliseField.parametro.menuType}`, state: analiseToCheckOut })
 
     }
 
@@ -77,7 +77,7 @@ const MultiRegistroAnalise = (props) => {
         analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, analiseFieldCheckOut.parametro)
         setCheckOutAnaliseField(analiseFieldCheckOut)
         setShowCheckOut(true)
-        setAnaliseToCheckOut({ id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data})
+        setAnaliseToCheckOut({ id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data })
     }
 
     const closeCheckOut = () => {
@@ -88,7 +88,7 @@ const MultiRegistroAnalise = (props) => {
 
 
     const observacaoUpdate = (valor) => {
-        let analiseCheckOutWithObservacao = { ...analiseToCheckOut}
+        let analiseCheckOutWithObservacao = { ...analiseToCheckOut }
         analiseCheckOutWithObservacao.observacaoAnalise = valor
         setAnaliseToCheckOut(analiseCheckOutWithObservacao)
     }
@@ -130,36 +130,36 @@ const MultiRegistroAnalise = (props) => {
                 </Row>
                 <Container style={{ padding: 30 }}>
                     <h3>Registro de Analises</h3>
+                    <div className="table-responsive">
+                        <Table >
+                            <thead>
+                                <tr>
+                                    <th style={{ textAlign: "center" }}>Turno</th>
+                                    <th style={{ textAlign: "center" }}>Etapa</th>
+                                    <th style={{ textAlign: "center" }}>Parametro</th>
+                                    <th style={{ textAlign: "center" }}>Valor</th>
+                                    <th style={{ textAlign: "center" }}>Ação</th>
+                                </tr>
+                            </thead>
 
-                    <Table >
-                        <thead>
-                            <tr>
-                                <th style={{ textAlign: "center" }}>Turno</th>
-                                <th style={{ textAlign: "center" }}>Etapa</th>
-                                <th style={{ textAlign: "center" }}>Parametro</th>
-                                <th style={{ textAlign: "center" }}>Valor</th>
-                                <th style={{ textAlign: "center" }}>Ação</th>
-                            </tr>
-                        </thead>
+                            <tbody>
+                                {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
+                                    return (
+                                        <tr key={analiseField.index} >
+                                            <td className="align-middle"><Form.Label>{analiseField.parametro.turno}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label>{analiseField.parametro.etapaNome}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label>{analiseField.parametro.nome}</Form.Label></td>
+                                            <td className="align-middle">{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
+                                            <td className="align-middle">{analiseField.parametro.analiseHoje ? <Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button> : <Button disabled={true} style={{ backgroundColor: "GRAY", borderColor: "GRAY", alignmentBaseline: "center" }}>Salvar</Button>}</td>
+                                        </tr>
+                                    )
 
-                        <tbody>
-                            {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
-                                return (
-                                    <tr key={analiseField.index} >
-                                        <td className="align-middle"><Form.Label>{analiseField.parametro.turno}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label>{analiseField.parametro.etapaNome}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label>{analiseField.parametro.nome}</Form.Label></td>
-                                        <td className="align-middle">{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
-                                        <td className="align-middle">{analiseField.parametro.analiseHoje ? <Button disabled={analiseField.valor  ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button> : <Button disabled={true} style={{ backgroundColor: "GRAY", borderColor: "GRAY", alignmentBaseline: "center" }}>Salvar</Button>}</td>
-                                    </tr>
-                                )
-
-                            })}
-                        </tbody>
+                                })}
+                            </tbody>
 
 
-                    </Table>
-
+                        </Table>
+                    </div>
                 </Container>
             </Container>
         </>

@@ -13,7 +13,7 @@ export const HistoricoDeAnalise = (props) => {
 
     const [options, setOptions] = useState(null)
     const [suggestionLi, setSuggestionLi] = useState(null)
-   
+
     const [actualFilter, setActualFilter] = useState([])
     const [dataInicial, setDataInicial] = useState(null)
     const [dataFinal, setDataFinal] = useState(null)
@@ -27,45 +27,45 @@ export const HistoricoDeAnalise = (props) => {
             let dataIn = new Date(dataInicial)
             let dataFi = new Date(dataFinal)
             if (dataIn.getTime() < dataFi.getTime()) {
-                ScqApi.LoadAnaliseHistocial(dataInicial, dataFinal).then(res => {setOptions(res); setSuggestionLi(res) })
+                ScqApi.LoadAnaliseHistocial(dataInicial, dataFinal).then(res => { setOptions(res); setSuggestionLi(res) })
             }
         }
 
     }, [dataFinal, dataInicial])
 
     const filter = (value, needFilter) => {
-    
+
         const searchTokens = value.split(",")
         if (needFilter) {
             if (value.length !== 0) {
                 let resultList = []
                 searchTokens.forEach(searchElement => {
-                    if(searchElement.trim().length !== 0) {
+                    if (searchElement.trim().length !== 0) {
                         let textToSearch = removeAccents(searchElement.toLowerCase()).trim()
                         let resultFilter
-                        if(resultList.length > 0) {
-                           resultFilter = dynamicFieldFilter(textToSearch,resultList)
-                        }  else {
+                        if (resultList.length > 0) {
+                            resultFilter = dynamicFieldFilter(textToSearch, resultList)
+                        } else {
                             resultFilter = dynamicFieldFilter(textToSearch)
                         }
-                      
-                        if(resultFilter.length !== 0) {
-                           resultList = resultFilter
+
+                        if (resultFilter.length !== 0) {
+                            resultList = resultFilter
                         }
-                    } 
+                    }
                 });
 
                 setSuggestionLi(resultList)
             } else {
                 setSuggestionLi(options)
-          
+
             }
         } else {
             setSuggestionLi([])
-           
-      
+
+
         }
-    
+
 
     }
 
@@ -87,25 +87,25 @@ export const HistoricoDeAnalise = (props) => {
 
 
     const filterfunction = (object, textToSearch) => {
-        if(actualFilter.length>1) {
+        if (actualFilter.length > 1) {
             setActualFilter([])
         }
-        
-            let hasMatch = false;
-           
-            for (var [key] of Object.entries(object)) {
-                //Se for string e comecar com o texto retorna true
-                if (typeof object[key] === 'string') {
-                    let acutalKeyToSearch = removeAccents(object[key].toLowerCase()).trim()
-                    if (acutalKeyToSearch.startsWith(textToSearch)) {
-                        setFiltersDisplay([key])
-                        hasMatch = true
-                    }
 
+        let hasMatch = false;
+
+        for (var [key] of Object.entries(object)) {
+            //Se for string e comecar com o texto retorna true
+            if (typeof object[key] === 'string') {
+                let acutalKeyToSearch = removeAccents(object[key].toLowerCase()).trim()
+                if (acutalKeyToSearch.startsWith(textToSearch)) {
+                    setFiltersDisplay([key])
+                    hasMatch = true
                 }
 
             }
-        
+
+        }
+
 
 
 
@@ -116,15 +116,15 @@ export const HistoricoDeAnalise = (props) => {
 
 
 
-    const dynamicFieldFilter =  async (valor,opsRef) =>  {
-                if(opsRef) {
-                    return await opsRef.filter(op => filterfunction(op, valor));
-                } else {
-                    return await options.filter(op => filterfunction(op, valor));
-                }
-           
-        
-       
+    const dynamicFieldFilter = (valor, opsRef) => {
+        if (opsRef) {
+            return opsRef.filter(op => filterfunction(op, valor));
+        } else {
+            return options.filter(op => filterfunction(op, valor));
+        }
+
+
+
 
     }
 
@@ -143,7 +143,7 @@ export const HistoricoDeAnalise = (props) => {
                         <td style={{ textAlign: "center" }}>{op.pMin}</td>
                         <td style={{ textAlign: "center" }}>{op.pMax}</td>
 
-                        <td style={{ textAlign: "center" }}><Button disabled={op.ocps.length === 0  ? true : false } onClick={() => { props.loadOcpView(op.id); props.showOcpView(true) }} >{op.ocps.length > 1 ?  `Ver ${op.ocps.length} Ocps` :  `Ver ${op.ocps.length === 0 ? '' : op.ocps.length } Ocp`  }</Button></td>
+                        <td style={{ textAlign: "center" }}><Button disabled={op.ocps.length === 0 ? true : false} onClick={() => { props.loadOcpView(op.id); props.showOcpView(true) }} >{op.ocps.length > 1 ? `Ver ${op.ocps.length} Ocps` : `Ver ${op.ocps.length === 0 ? '' : op.ocps.length} Ocp`}</Button></td>
                     </tr>)
                 })}
 
@@ -176,15 +176,15 @@ export const HistoricoDeAnalise = (props) => {
 
     const setFiltersDisplay = (key) => {
         let filterToAdd = key.toString().charAt(0).toUpperCase() + key.toString().replace(/([A-Z])/g, ' $1').trim().slice(1)
-        if(actualFilter.length === 0) {
+        if (actualFilter.length === 0) {
             setActualFilter([...actualFilter, filterToAdd])
         } else {
-            if(!actualFilter.includes(filterToAdd)){
+            if (!actualFilter.includes(filterToAdd)) {
                 setActualFilter([...actualFilter, filterToAdd])
             }
         }
-       
-      
+
+
 
 
     }
@@ -224,15 +224,17 @@ export const HistoricoDeAnalise = (props) => {
                     </Col>
                 </Form.Row>
                 <h3 style={{ textAlign: "center", margin: 20 }}> Historico de Analise</h3>
-                <Table>
-                    <TableHead>
-                        {getHeads()}
-                    </TableHead>
-                    <TableBody>
-                        {options && getRows()}
-                    </TableBody>
-                </Table>
+                <div className="table-responsive">
 
+                    <Table>
+                        <TableHead>
+                            {getHeads()}
+                        </TableHead>
+                        <TableBody>
+                            {options && getRows()}
+                        </TableBody>
+                    </Table>
+                </div>
             </Container>
         </>
     )
