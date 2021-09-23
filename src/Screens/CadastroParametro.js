@@ -37,7 +37,8 @@ class CadastroParametro extends React.Component {
             unidade: '',
             escalaTempo: '',
             frequenciaAnalise: '',
-            showChart : true
+            showChart : true,
+
         }
 
         this.titulaConfirm = this.titulaConfirm.bind(this)
@@ -100,6 +101,7 @@ class CadastroParametro extends React.Component {
             showChart: !prevState.showChart
         }));
     }
+    
 
 
 
@@ -108,6 +110,8 @@ class CadastroParametro extends React.Component {
         this.setState({ parametro: parametro, nome: parametro.nome, pMax: parametro.pMax, pMin: parametro.pMin, formula: parametro.formula, titula: false, etapaId: parametro.etapa.id }, () => console.log(this.state.parametro))
         this.loadEtapasFromLinha(parametro.linha.id)
     }
+
+    
 
 
 
@@ -151,7 +155,7 @@ class CadastroParametro extends React.Component {
             formula: '',
             unidade: '',
             escalaTempo: '',
-            frequenciaAnalise: ''
+            frequenciaAnalise: '',
         }, () => console.log(this.state))
         if (deleteMessage != null) {
             toastManager.add(deleteMessage, {
@@ -240,6 +244,7 @@ class CadastroParametro extends React.Component {
                             <Form.Check.Input type="checkbox" checked={!this.state.titula} onChange={this.titulaConfirm} />
                             <Form.Check.Label>Formulas ?</Form.Check.Label>
                         </Form.Check>
+
 
                         </Form.Row>
                         

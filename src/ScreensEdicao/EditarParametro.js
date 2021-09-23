@@ -38,6 +38,7 @@ const EditarParametro = (props) => {
     const [escalaTempo, setEscalaTempo] = useState()
     const [frequenciaAnalise, setFrequenciaAnalise] = useState()
     const [edited, setEdited] = useState(false)
+    const [habilitado ,  setHabilitado] = useState(true)
 
 
 
@@ -84,7 +85,7 @@ const EditarParametro = (props) => {
     
     const onSaveClick = () => {
 
-        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart}
+        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart,isHabilitado : habilitado}
 
         ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res, props,"Parametro",toastInfo,context, [dispatchers().loadParametros,dispatchers().loadOcps],))
         
@@ -167,6 +168,12 @@ const EditarParametro = (props) => {
                         <Form.Check.Input type="checkbox" checked={titula} onChange={(event) => setTitula(!titula)} />
                         <Form.Check.Label>Formulas ?</Form.Check.Label>
                     </Form.Check>
+
+                    
+                    <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkHabilitado">
+                            <Form.Check.Input type="checkbox" checked={habilitado} onChange={(event) => setHabilitado(event.target.checked)} />
+                            <Form.Check.Label>Habilitado</Form.Check.Label>
+                        </Form.Check>
 
                     </Form.Row>
                    
