@@ -21,7 +21,6 @@ const MultiRegistroAnalise = (props) => {
 
     const analiseForm = useSelector(state => state.analiseReducer)
     const processos = useSelector(state => state.options.processos)
-    const etapas = useSelector(state => state.options.etapas)
     const parametros = useSelector(state => state.options.parametros)
     const userName = useSelector(state => state.global.userName)
     const dispatcher = useDispatch()
@@ -135,10 +134,11 @@ const MultiRegistroAnalise = (props) => {
                     <Table >
                         <thead>
                             <tr>
+                                <th style={{ textAlign: "center" }}>Turno</th>
                                 <th style={{ textAlign: "center" }}>Etapa</th>
                                 <th style={{ textAlign: "center" }}>Parametro</th>
                                 <th style={{ textAlign: "center" }}>Valor</th>
-                                <th style={{ textAlign: "center" }} >Ação</th>
+                                <th style={{ textAlign: "center" }}>Ação</th>
                             </tr>
                         </thead>
 
@@ -146,6 +146,7 @@ const MultiRegistroAnalise = (props) => {
                             {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
                                 return (
                                     <tr key={analiseField.index} >
+                                        <td className="align-middle"><Form.Label>{analiseField.parametro.turno}</Form.Label></td>
                                         <td className="align-middle"><Form.Label>{analiseField.parametro.etapaNome}</Form.Label></td>
                                         <td className="align-middle"><Form.Label>{analiseField.parametro.nome}</Form.Label></td>
                                         <td className="align-middle">{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>

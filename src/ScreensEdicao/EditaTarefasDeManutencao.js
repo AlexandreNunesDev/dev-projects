@@ -7,6 +7,11 @@ import { withToastManager } from 'react-toast-notifications'
 import UnidadeSelect from '../Components/UnidadeSelect';
 import GenericSelect from '../Components/GenericSelect';
 import ModoEdicao from '../Components/ModoEdicao'
+import { responseHandler } from '../Services/responseHandler';
+import { toastInfo } from '../Services/toastType';
+import context from 'react-bootstrap/esm/AccordionContext';
+import { useDispatch } from 'react-redux';
+import dispatchers from '../mapDispatch/mapDispathToProps';
 
 const EditarTarefaDeManutencao = (props) => {
 
@@ -19,7 +24,7 @@ const EditarTarefaDeManutencao = (props) => {
     const [codigoDoDocumento, setCodigo] = useState()
     const [tarefa, setTarefa] = useState()
     const [dataPlenejada, setDataPlanejada] = useState()
-
+    const dispatcher = useDispatch()
     const [processos, setProcessos] = useState()
 
 
@@ -88,10 +93,8 @@ const EditarTarefaDeManutencao = (props) => {
                         <Button style={{ marginTop: 10, marginRight: 5 }} variant="primary" >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
                             const tarefaManutencao = {id:tarefa.id ,nome: nome, processoId: processoId, dataPlanejada : dataPlenejada, codigoDoDocumento: codigoDoDocumento, escala: escala, frequencia: frequencia }
-                            ScqApi.EditarTarefaDeManutencao(tarefaManutencao)
-                            props.toastManager.add(`Tarefa cadastrada com sucesso`, {
-                                appearance: 'success', autoDismiss: true
-                            })
+                            ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,props,"Tarefa",toastInfo,context,[dispatchers().loadTarefasDeManutencao]))
+                        
 
                         }} >Salvar</Button>
                     </Form.Group>

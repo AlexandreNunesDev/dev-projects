@@ -116,11 +116,11 @@ export const HistoricoDeAnalise = (props) => {
 
 
 
-    const dynamicFieldFilter = (valor,opsRef) => {
+    const dynamicFieldFilter =  async (valor,opsRef) =>  {
                 if(opsRef) {
-                    return opsRef.filter(op => filterfunction(op, valor));
+                    return await opsRef.filter(op => filterfunction(op, valor));
                 } else {
-                    return options.filter(op => filterfunction(op, valor));
+                    return await options.filter(op => filterfunction(op, valor));
                 }
            
         
