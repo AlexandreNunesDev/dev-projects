@@ -27,7 +27,7 @@ export const HistoricoDeAnalise = (props) => {
             let dataIn = new Date(dataInicial)
             let dataFi = new Date(dataFinal)
             if (dataIn.getTime() < dataFi.getTime()) {
-                ScqApi.LoadAnaliseHistocial(dataInicial, dataFinal).then(res => { setOptions(res); setSuggestionLi(res) })
+                ScqApi.LoadAnaliseHistocial(dataInicial, dataFinal).then(res => {setOptions(res); setSuggestionLi(res) })
             }
         }
 
@@ -133,7 +133,7 @@ export const HistoricoDeAnalise = (props) => {
         return (
             <>
                 {suggestionLi?.map(op => {
-                    return (<tr>
+                    return (<tr key={op.id}>
                         <td style={{ textAlign: "center" }}>{op.id}</td>
                         <td style={{ textAlign: "center" }}>{op.nomeProcesso}</td>
                         <td style={{ textAlign: "center" }}>{op.nomeEtapa}</td>
@@ -143,7 +143,7 @@ export const HistoricoDeAnalise = (props) => {
                         <td style={{ textAlign: "center" }}>{op.pMin}</td>
                         <td style={{ textAlign: "center" }}>{op.pMax}</td>
 
-                        <td><Button onClick={() => { props.loadOcpView(op.id); props.showOcpView(true) }} >Ver Ocps</Button></td>
+                        <td style={{ textAlign: "center" }}><Button disabled={op.ocps.length === 0  ? true : false } onClick={() => { props.loadOcpView(op.id); props.showOcpView(true) }} >{op.ocps.length > 1 ?  `Ver ${op.ocps.length} Ocps` :  `Ver ${op.ocps.length === 0 ? '' : op.ocps.length } Ocp`  }</Button></td>
                     </tr>)
                 })}
 
@@ -164,7 +164,7 @@ export const HistoricoDeAnalise = (props) => {
                     <th style={{ textAlign: "center" }}>Resultado</th>
                     <th style={{ textAlign: "center" }}>Min</th>
                     <th style={{ textAlign: "center" }}>Max</th>
-                    <th style={{ textAlign: "center" }}>Ação</th>
+                    <th style={{ textAlign: "center" }}>Ocps</th>
                 </tr>
 
 

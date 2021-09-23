@@ -1,36 +1,37 @@
 
-import {capitalize} from '../Services/stringUtils'
+import { capitalize } from '../Services/stringUtils'
 
-export const responseHandler = (response, props, type,toastType, context, dispatchersFunctions) => {
+export const responseHandler = (response, props, type, toastType, context, dispatchersFunctions) => {
     const { toastManager } = props;
-    
 
-    if(response.error){
-        
+
+    if (response.error) {
+
         response.data.forEach(erro => {
-            
-           toastManager && toastManager.add(`${(capitalize(transformField(erro.field)))} : ${erro.error}`, {
+
+            toastManager && toastManager.add(`${(capitalize(transformField(erro.field)))} : ${erro.error}`, {
                 appearance: 'error', autoDismiss: true
-              })});
-              return false;
+            })
+        });
+        return false;
     } else {
-        if(context){
-            notifyByWebSocket(context.ws,dispatchersFunctions)
+        if (context) {
+            notifyByWebSocket(context.ws, dispatchersFunctions)
         }
-       
-       toastManager && toastManager.add(buildMsg(type,response,toastType), {
-            appearance: toastType ||'success', autoDismiss: true
-          })
-          return true
+
+        toastManager && toastManager.add(buildMsg(type, response, toastType), {
+            appearance: toastType || 'success', autoDismiss: true
+        })
+        return true
     }
 }
 
 
 
 
-const notifyByWebSocket = (ws, functions)  => {
+const notifyByWebSocket = (ws, functions) => {
     functions.forEach((fuction) => ws.sendMessage(fuction))
-   
+
 }
 
 
@@ -39,75 +40,78 @@ const transformField = field => {
 
     let retorno
 
-    if(field==="mpQtds") {
+    if (field === "mpQtds") {
         retorno = "Adicoes"
     }
-    if(field==="processoId") {
+    if (field === "processoId") {
         retorno = "Processo"
     }
-    if(field==="etapaId") {
+    if (field === "etapaId") {
         retorno = "Etapa"
     }
-    if(field==="pMax") {
+    if (field === "pMax") {
         retorno = "Máximo Especificado"
     }
-    if(field==="pMin") {
+    if (field === "pMin") {
         retorno = "Mínimo Especificado"
     }
-    if(field==="pMaxT") {
+    if (field === "pMaxT") {
         retorno = "Máximo Trabalho"
     }
-    if(field==="pMinT") {
+    if (field === "pMinT") {
         retorno = "Mínimo Trabalho"
     }
-    if(retorno === null) {
+    if (retorno === null) {
         return field
     } else {
         return retorno
     }
-    
+
 }
 
 
 
 
-const buildMsg = (type,response,msgType) => {
-    
-let textByMsgType =  getTextByTostType(msgType)
+const buildMsg = (type, response, msgType) => {
 
-    switch(type) {
-        case "Processo" :
-            return `${type} ${response.nome} ${textByMsgType} com sucesso`  
-        case "Etapa" :
+    let textByMsgType = getTextByTostType(msgType)
+
+    switch (type) {
+        case "Processo":
             return `${type} ${response.nome} ${textByMsgType} com sucesso`
-        case "Parametro" :
+        case "Etapa":
             return `${type} ${response.nome} ${textByMsgType} com sucesso`
-        case "MateriaPrima" :
+        case "Parametro":
             return `${type} ${response.nome} ${textByMsgType} com sucesso`
-        case "OrdemDeCorrecao" :
+        case "MateriaPrima":
+            return `${type} ${response.nome} ${textByMsgType} com sucesso`
+        case "OrdemDeCorrecao":
             return `${type} ${textByMsgType} com sucesso`
-        case "OrdemDeManutencao" :
+        case "OrdemDeManutencao":
             return `${type} da ${response.nome} ${textByMsgType} com sucesso`
-        case "Analise" : 
+        case "Analise":
             return `${type} ${response.id} ${textByMsgType} com sucesso`
-        case "DeleteAnalise" :
+        case "Turno":
+            return `${type} ${textByMsgType} com sucesso`
+        case "DeleteAnalise":
             return `Analise ${textByMsgType} com sucesso`
-        default : 
+        default:
+
             return 'Dado processado com sucesso'
-        
+
     }
 }
 const getTextByTostType = (toastType) => {
-    switch(toastType) {
-        case "success" :
-            return  "criado"
-        case "error" :
-            return  "cancelado"
-        case "warning" :
-            return  "deletado"
-        case "info" :
-            return  "alterado"
-        default : 
+    switch (toastType) {
+        case "success":
+            return "criado"
+        case "error":
+            return "cancelado"
+        case "warning":
+            return "deletado"
+        case "info":
+            return "alterado"
+        default:
             return "processado"
     }
 }

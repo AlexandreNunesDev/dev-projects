@@ -32,6 +32,12 @@ export const actions = {
     clearCiclo : (data) => {return{type: "CLEAR_CICLO" , payload: data}},
     setTimeProcessId : (data) => {return{type: "TIME_PROCESSO_ID" , payload: data}},
     loadFieldTime : (data) => {return{type: "LOAD_FIELDTIME" , payload: data}},
+    loadTurnos : (data) => {return{type: "LOAD_TURNOS" , payload: data}},
+    updadteAnaliseField : (data) => {return{type: "UPDADTE_FIELDANALISE" , payload: data}},
+    loadFieldAnalise : (data) => {return{type: "LOAD_FIELDANALISE" , payload: data}},
+    setAnaliseToSave : (data) => {return{type: "ANALISE_TO_SAVE" , payload: data}},
+    setProcessoIdAnaliseForm : (data) => {return{type: "ANALISE_PROCESSO_ID" , payload: data}},
+    
 
 }
 

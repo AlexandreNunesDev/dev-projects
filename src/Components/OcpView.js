@@ -9,7 +9,8 @@ import { Modal, Table } from "react-bootstrap"
 
 const getRows = (ocp) => {
 
-    return (<tr>
+    return (
+    <tr key={ocp.id}>
         <td style={{ textAlign: "center" }}>{ocp.id}</td>
         <td style={{ textAlign: "center" }}>{ocp.processoNome}</td>
         <td style={{ textAlign: "center" }}>{ocp.etapaNome}</td>

@@ -38,7 +38,6 @@ const CadastroDeOcpLivre = (props) => {
         } else {
             ScqApi.CriarOcpAcao(newOcp).then((res) => responseHandler(res,props,"OrdemDeCorrecao",toastOk,context,[dispatchers().loadOcps]))
         }
-          
             history.push("/OrdensDeCorrecao")
         }
 

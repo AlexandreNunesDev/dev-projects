@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import CadastroEtapa from './Screens/CadastroEtapa';
 import CadastroParametro from './Screens/CadastroParametro';
+import CadastroTurno from './Screens/CadastrarTurno';
 import CadastroMateriaPrima from './Screens/CadastroMateriaPrima';
 import RegistroDeAnalise from './Screens/RegistroAnalise';
 import OrdensDeCorreção from './Screens/OrdensDeCorreção';
@@ -35,7 +36,7 @@ import AlgoDeuErrado from './Screens/algoDeuErrado';
 import ServidorError from './Screens/ServidorError';
 import EditarOcpAdicao from './ScreensEdicao/EditarOcpAdicao';
 import EditarOcpAcao from './ScreensEdicao/EditarOcpAcao';
-
+import MultiRegistroAnalise from './Screens/NovoRegistroAnalise'
 import dispatchers from './mapDispatch/mapDispathToProps';
 import { connect } from 'react-redux';
 import mapToStateProps from './mapStateProps/mapStateToProps'
@@ -43,6 +44,7 @@ import { WebSocketContext } from './websocket/wsProvider';
 import { optionsLoad } from './Services/storeService';
 import HistoricoDeAnalise from './Screens/HistoricoDeAnalise';
 import RegistroDetempos from './Screens/RegistroDeTempos';
+import RegistroAnalise from './Screens/RegistroAnalise';
 
 
 
@@ -76,8 +78,7 @@ class App extends React.Component {
           logout()
           this.props.setLogOut()
           this.props.history.push("/VoceFoiDesconectado")
-      
-  }
+    }
 }
 
 
@@ -113,7 +114,8 @@ class App extends React.Component {
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />
             <Route path='/Registrar' exact={true} component={Registrar} />
-            <Route path='/RegistroAnalise' exact={true} component={RegistroDeAnalise} />
+            <Route path='/RegistroAnalise' exact={true} component={RegistroAnalise} />
+            <Route path='/RegistroAnaliseMulti' exact={true} component={MultiRegistroAnalise} />
             <Route path='/RegistroTempo' exact={true} component={RegistroDetempos} />
             <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
             <Route path='/OMP' exact={true} component={Omp} />
@@ -145,7 +147,7 @@ class App extends React.Component {
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
             <Route path='/HistoricoDeAnalise' exact={true} component={HistoricoDeAnalise} />
-
+            <Route path='/CadastroTurno' exact={true} component={CadastroTurno} />
           </Switch>
         </>
 
@@ -163,7 +165,8 @@ class App extends React.Component {
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />
             <Route path='/Registrar' exact={true} component={Registrar} />
-            <Route path='/RegistroAnalise' exact={true} component={RegistroDeAnalise} />
+            <Route path='/RegistroAnalise' exact={true} component={RegistroAnalise} />
+            <Route path='/RegistroAnaliseMulti' exact={true} component={MultiRegistroAnalise} />
             <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
             <Route path='/OMP' exact={true} component={Omp} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
@@ -182,6 +185,7 @@ class App extends React.Component {
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
             <Route path='/HistoricoDeAnalise' exact={true} component={HistoricoDeAnalise} />
+            
           </Switch>
         </>
 

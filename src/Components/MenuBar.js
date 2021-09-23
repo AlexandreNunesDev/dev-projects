@@ -79,6 +79,7 @@ class MenuBar extends React.Component {
                   <Link className="nav-link" to={!this.props.global.isAuth ? "/Login" : "/Home"} onClick={() => this.props.global.isAuth && this.logUserOut()}>{!this.props.global.isAuth ? "Login" : "Logout"}</Link>
                   <NavDropdown title="Registros" id="basic-nav-dropdown">
                     <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                    <Link className="nav-link" to="/RegistroAnaliseMulti">Multi Registro de Analise</Link>
                     <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
                   </NavDropdown>
                   <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
@@ -94,9 +95,9 @@ class MenuBar extends React.Component {
                     <Link className="dropdown-item" to="/CadastroEtapa">Etapa</Link>
                     <Link className="dropdown-item" to="/CadastroParametro">Parametro</Link>
                     <Link className="dropdown-item" to="/CadastroMateriaPrima">Matéria Prima</Link>
-                    <Link className="dropdown-item" to="/CadastroTroca">Trocas</Link>
-                    <Link className="dropdown-item" to="/CadastroTarefasDeManutencao">Tarefas de Manutenção</Link>
-
+                    <Link className="dropdown-item" to="/CadastroTroca">Troca</Link>
+                    <Link className="dropdown-item" to="/CadastroTarefasDeManutencao">Tarefa de Manutenção</Link>
+                    <Link className="dropdown-item" to="/CadastroTurno">Turno</Link>
                     <Link className="dropdown-item" to="/Registrar">Novo usuario</Link>
                   </NavDropdown>
                 </Nav>
@@ -156,9 +157,10 @@ class MenuBar extends React.Component {
                 <Link className="nav-link" to="/Home">Home</Link>
                 <Link className="nav-link" to={!this.props.global.isAuth ? "/Login" : "/Home"} onClick={() => this.props.global.isAuth && this.logUserOut()}>{!this.props.global.isAuth ? "Login" : "Logout"}</Link>
                 <NavDropdown title="Registros" id="basic-nav-dropdown">
-                  <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
-                  <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
-                </NavDropdown>
+                    <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
+                    <Link className="nav-link" to="/RegistroAnaliseMulti">Multi Registro de Analise</Link>
+                    <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
+                  </NavDropdown>
                 <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
                 <Link className="nav-link" to='/Omp' >OMP</Link>
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>

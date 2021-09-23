@@ -10,8 +10,8 @@ const mapToStateProps = {
           ocp : state.ocp,
           global : state.global,
           notifications : state.notification.notifications,
-          timeForm : state.timeReducer
-
+          timeForm : state.timeReducer,
+          analiseForm : state.analiseReducer
         }
     },
 

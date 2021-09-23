@@ -184,6 +184,18 @@ const ScqApi = {
         return http.post("acao", acao)
 
     },
+    CriarTurno: (turno) => {
+        return http.post("turno", turno)
+
+    },
+    ListTurnos: () => {
+        return http.get("turnos")
+
+    },
+    EditarTurno: (turno) => {
+        return http.put(`turno/${turno.id}`, turno)
+
+    },
     CriarOcp: (ocp) => {
         return http.post("ocp", ocp)
     },

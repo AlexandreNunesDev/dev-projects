@@ -29,7 +29,7 @@ const saveOcp = (analise, mpQtds, responsavel, observacao, history ,props,contex
     ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm).then((res) => {
         loadOcps(props)
         responseHandler(res,props, "OrdemDeCorrecao",'success',context, [props.loadParametros,props.loadOcps])
-        
+        history.push("/OrdensDeCorrecao")
     }
     );
 

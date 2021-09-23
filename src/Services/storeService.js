@@ -13,6 +13,7 @@ export const optionsLoad = async (props, forceUpdade) => {
       loadOcps(props)
       loadNotifications(props)
       loadUnidades(props)
+      loadTurnos(props)
     }
 
   } else {
@@ -26,6 +27,10 @@ export const optionsLoad = async (props, forceUpdade) => {
 
 export const loadUnidades = (props) => {
   props.loadUnidades()
+}
+
+export const loadTurnos = (props) => {
+  props.loadTurnos()
 }
 
 export const loadProcessos = (props) => {

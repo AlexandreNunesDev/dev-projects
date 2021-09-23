@@ -52,7 +52,8 @@ class RegistroDeAnalise extends React.Component {
             analiseId: '',
             valorForm: null,
             data: null,
-            showData: false
+            showData: false,
+            observacao : null
 
         }
     }
@@ -128,12 +129,6 @@ class RegistroDeAnalise extends React.Component {
                             valorForm: valueForm({ onChange: this.setAnaliseStatus }),
 
                         })
-                    } else if (parametro.unidade === "tempo") {
-                        this.setState({
-                            parametro: parametro,
-                            valorForm: valueForm({ onChange: this.setAnaliseStatus }),
-
-                        })
                     } else {
                         this.setState({
                             parametro: parametro,
@@ -193,7 +188,7 @@ class RegistroDeAnalise extends React.Component {
                     nomeAnalista = analista;
                 }
     
-                const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data }
+                const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data,observacao : this.state.observacao }
     
                 ScqApi.CriarAnalise(analise).then(res => {
                     responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros, this.props.loadOcps])
@@ -209,7 +204,7 @@ class RegistroDeAnalise extends React.Component {
     salvarReanalise = () => {
 
         const { id } = this.state.analise
-        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId }
+        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId , observacao : this.state.observacao }
 
         ScqApi.EditarAnalise(analise).then((res) => responseHandler(res, this.props, "Analise", 'info', this.context, [this.props.loadParametros, this.props.loadOcps]))
 
@@ -221,7 +216,7 @@ class RegistroDeAnalise extends React.Component {
 
     gerarOcpReanalise = (history) => {
         const { id } = this.state.analise
-        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId }
+        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId ,observacao : this.state.observacao}
         history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
 
     }
@@ -229,7 +224,7 @@ class RegistroDeAnalise extends React.Component {
 
     gerarOcp = (history) => {
         const { analista, resultado, status } = this.state
-        const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: this.state.data }
+        const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: this.state.data,observacao : this.state.observacao }
         history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
     }
 
@@ -303,7 +298,7 @@ class RegistroDeAnalise extends React.Component {
 
 
                         <Form.Group style={{ marginTop: 20 }}>
-                            <CheckOutAnalise valid={!this.state.calcDisabled} resultado={this.state.resultado} parametro={this.state.parametro} status={this.state.status} salvarAnalise={this.salvarAnalise} salvarReanalise={this.salvarReanalise} gerarOcpReanalise={this.gerarOcpReanalise} gerarOcp={this.gerarOcp} analiseId={this.state.analise?.id}></CheckOutAnalise>
+                            <CheckOutAnalise onValueChange={(valor) => this.setState({observacao : valor})} valid={!this.state.calcDisabled} resultado={this.state.resultado} parametro={this.state.parametro} status={this.state.status} salvarAnalise={this.salvarAnalise} salvarReanalise={this.salvarReanalise} gerarOcpReanalise={this.gerarOcpReanalise} gerarOcp={this.gerarOcp} analiseId={this.state.analise?.id}></CheckOutAnalise>
                         </Form.Group>
 
                     </Form>

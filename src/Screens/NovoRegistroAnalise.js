@@ -1,0 +1,170 @@
+import { useDispatch, useSelector } from "react-redux"
+import GenericSelect from "../Components/GenericSelect"
+import React, { useContext, useEffect, useRef, useState } from "react"
+import { actions } from "../actions/actions"
+import { withMenuBar } from "../Hocs/withMenuBar"
+import { analiseFieldFactory, timefieldFactory } from "../models/fieldModels"
+import CheckoutAnalise from "../Components/CheckoutAnalise"
+import ScqApi from "../Http/ScqApi"
+import { responseHandler } from "../Services/responseHandler"
+import { formatIsoDate } from "../Services/stringUtils"
+import { WebSocketContext } from "../websocket/wsProvider"
+import dispatchers from "../mapDispatch/mapDispathToProps"
+import { withToastManager } from "react-toast-notifications/dist/ToastProvider"
+import { buildAnaliseInputMenu } from "../Services/analiseMenuBuilder"
+import { getAnaliseStatus } from "../Services/analiseMenuBuilder"
+import { useHistory } from "react-router"
+
+const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
+
+const MultiRegistroAnalise = (props) => {
+
+    const analiseForm = useSelector(state => state.analiseReducer)
+    const processos = useSelector(state => state.options.processos)
+    const etapas = useSelector(state => state.options.etapas)
+    const parametros = useSelector(state => state.options.parametros)
+    const userName = useSelector(state => state.global.userName)
+    const dispatcher = useDispatch()
+    const [analista, setAnalista] = useState()
+    const [showData, setShowData] = useState()
+    const [showCheckOut, setShowCheckOut] = useState()
+    const [checkOutAnaliseField, setCheckOutAnaliseField] = useState()
+    const [data, setData] = useState()
+    let dataFieldRef = useRef(null)
+    const context = useContext(WebSocketContext)
+    const reducerFunctions = dispatchers()
+    const history = useHistory()
+    const [analiseToCheckOut, setAnaliseToCheckOut] = useState(null)
+
+
+
+    const onProcessoIdChoose = (processoId) => {
+        let timeFields = parametros.filter(parametro => {
+            if ((Number(parametro.processoId) === Number(processoId))) {
+                return true
+            }
+        }).map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
+        dispatcher(actions.loadFieldAnalise(timeFields))
+        dispatcher(actions.setProcessoIdAnaliseForm(processoId))
+
+    }
+
+
+
+
+    const salvarAnalise = () => {
+        ScqApi.CriarAnalise(analiseToCheckOut).then(res => {
+            responseHandler(res, props, "Analise", 'success', context, [reducerFunctions.loadParametros, reducerFunctions.loadOcps])
+        })
+    }
+
+    const gerarOcp = () => {
+        history.push({pathname :`/CadastroOcp${checkOutAnaliseField.parametro.menuType}`, state : analiseToCheckOut})
+
+    }
+
+    const onchangeAnaliseField = (analiseField) => {
+        dispatcher(actions.updadteAnaliseField(analiseField))
+    }
+
+    const checkoutAnalise = (analiseField) => {
+        let nomeAnalista
+        if (analista) {
+            nomeAnalista = analista;
+        } else {
+            nomeAnalista = userName
+        }
+        let analiseFieldCheckOut = { ...analiseField }
+        analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, analiseFieldCheckOut.parametro)
+        setCheckOutAnaliseField(analiseFieldCheckOut)
+        setShowCheckOut(true)
+        setAnaliseToCheckOut({ id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data})
+    }
+
+    const closeCheckOut = () => {
+        setShowCheckOut(false)
+        setCheckOutAnaliseField(null)
+        setAnaliseToCheckOut(null)
+    }
+
+
+    const observacaoUpdate = (valor) => {
+        let analiseCheckOutWithObservacao = { ...analiseToCheckOut}
+        analiseCheckOutWithObservacao.observacaoAnalise = valor
+        setAnaliseToCheckOut(analiseCheckOutWithObservacao)
+    }
+
+
+
+
+
+
+    return (
+        <>
+
+
+
+            {analiseToCheckOut && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={checkOutAnaliseField.valor} parametro={checkOutAnaliseField.parametro} status={checkOutAnaliseField.analiseStatus} salvarAnalise={salvarAnalise} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
+            <Container style={{ marginTop: 20 }}>
+
+                <Row>
+                    <GenericSelect selection={analiseForm.processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
+                </Row>
+                <Row>
+                    <Form.Group>
+                        <Form.Control value={analista} placeholder={userName} onChange={(event) => setAnalista(event.target.value)}></Form.Control>
+                    </Form.Group>
+                </Row>
+                <Row>
+                    <Col style={{ marginBottom: 10 }}>
+                        <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => setShowData(event.target.checked)} />
+                        <Form.Group hidden={!showData}>
+                            <Form.Label>Data: </Form.Label>
+                            <Form.Control
+                                ref={dataFieldRef}
+                                type="datetime-local"
+                                defaultValue={data}
+                                onChange={event => setData(formatIsoDate(event.target.value))}>
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Container style={{ padding: 30 }}>
+                    <h3>Registro de Analises</h3>
+
+                    <Table >
+                        <thead>
+                            <tr>
+                                <th style={{ textAlign: "center" }}>Etapa</th>
+                                <th style={{ textAlign: "center" }}>Parametro</th>
+                                <th style={{ textAlign: "center" }}>Valor</th>
+                                <th style={{ textAlign: "center" }} >Ação</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
+                                return (
+                                    <tr key={analiseField.index} >
+                                        <td className="align-middle"><Form.Label>{analiseField.parametro.etapaNome}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label>{analiseField.parametro.nome}</Form.Label></td>
+                                        <td className="align-middle">{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
+                                        <td className="align-middle"><Button disabled={analiseField.valor  ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>CheckOut</Button></td>
+                                    </tr>
+                                )
+
+                            })}
+                        </tbody>
+
+
+                    </Table>
+
+                </Container>
+            </Container>
+        </>
+    )
+
+}
+
+
+export default withMenuBar(withToastManager(MultiRegistroAnalise))

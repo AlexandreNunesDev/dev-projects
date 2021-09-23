@@ -18,10 +18,13 @@ const redirectAnalise = (history, analise) => {
 
 
 
-const saveOcp = (analise, acao, prazo, responsavel, observacao, props,context) => {
+const saveOcp = (analise, acao, prazo, responsavel, observacao, props,context ,history) => {
     
     const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
-    ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm).then(() => context.ws.sendMessage(props.loadOcps, null, "OrdensDeCorrecao"))
+    ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm).then(() => { 
+        context.ws.sendMessage(props.loadOcps, null, "OrdensDeCorrecao");
+        history.push("/OrdensDeCorrecao")}
+    )
 }
 
 const CadastroDeOcp = (props) => {
@@ -123,7 +126,7 @@ const CadastroDeOcp = (props) => {
                              Cancelar
                                          </Button>
                          <Button style={{ margin: 2 }} type="reset" onClick={() => {
-                             saveOcp(analise, acao, prazo, responsavel,observacao, props,context)
+                             saveOcp(analise, acao, prazo, responsavel,observacao, props,context,history)
                  
                          }}>
                              Salvar

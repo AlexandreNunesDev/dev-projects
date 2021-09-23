@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Col, Button,Container, Form } from 'react-bootstrap';
+import { useHistory } from 'react-router';
 import { withToastManager } from 'react-toast-notifications';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import ScqApi from '../Http/ScqApi';
@@ -15,6 +16,7 @@ const EditarOcpAcao = (props) => {
     const [prazo, setPrazo] = useState(props.location.state.prazo)
     const [acao,setAcao] = useState(props.location.state.acao)
     const context = useContext(WebSocketContext)
+    const history = useHistory()
 
     const saveOcp = () => {
      
@@ -85,7 +87,7 @@ const EditarOcpAcao = (props) => {
             </Form.Row>
             <Form.Row style={{ margin: 10 }}>
                 <Form.Group >
-                    <Button style={{ margin: 2 }} >
+                    <Button onClick={() => history.push("/OrdensDeCorrecao")} style={{ margin: 2 }} >
                         Cancelar
                     </Button>
                     <Button style={{ margin: 2 }} type="reset" 

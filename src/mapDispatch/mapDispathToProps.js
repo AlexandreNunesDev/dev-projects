@@ -13,6 +13,7 @@ const dispatchers = (dispatch) => {
         loadTarefasDeManutencao: () => ScqApi.ListaTarefasDeManutencao().then(data => dispatch(actions.loadTarefasDeManutencao(data))) ,
         loadUnidades: () => ScqApi.GeatUnidades().then(data => dispatch(actions.loadUnidades(data))) ,
         loadOcps: () => ScqApi.ListaOcps().then(data => dispatch(actions.loadOcps(data))) ,
+        loadTurnos: () => ScqApi.ListTurnos().then(data => dispatch(actions.loadTurnos(data))) ,
         loadOcpView: data => dispatch(actions.loadOcpsView(data)) ,
         showOcpView: data => dispatch(actions.setOcpView(data)) ,
         loadPosition : (data) => dispatch({type: 'LOAD_POSITIONS' , payload : data}),
@@ -34,7 +35,11 @@ const dispatchers = (dispatch) => {
         updateTimeField : (data) => dispatch(actions.updateTimeField(data)),
         setCiclo : (data) => dispatch(actions.setCiclo(data)),
         setTimeProcessoId : (data) => dispatch(actions.setTimeProcessId(data)),
-        loadFieldTime : (data) => dispatch(actions.loadFieldTime)
+        loadFieldTime : (data) => dispatch(actions.loadFieldTime),
+        updadteAnaliseField : (data) => dispatch(actions.updadteAnaliseField),
+        loadFieldAnalise : (data) => dispatch(actions.loadFieldAnalise),
+        setAnaliseToSave: (data) => dispatch(actions.setAnaliseToSave),
+        setAnaliseProcessoId: (data) => dispatch(actions.setProcessoIdAnaliseForm),
 
        
     }
