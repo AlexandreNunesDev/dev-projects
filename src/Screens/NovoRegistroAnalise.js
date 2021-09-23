@@ -145,7 +145,7 @@ const MultiRegistroAnalise = (props) => {
                             <tbody>
                                 {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
                                     return (
-                                        <tr key={analiseField.index} >
+                                        <tr hidden={!analiseField.parametro.habilitado ||  !analiseField.parametro.analiseHoje} key={analiseField.index} >
                                             <td className="align-middle"><Form.Label>{analiseField.parametro.turno}</Form.Label></td>
                                             <td className="align-middle"><Form.Label>{analiseField.parametro.etapaNome}</Form.Label></td>
                                             <td className="align-middle"><Form.Label>{analiseField.parametro.nome}</Form.Label></td>

@@ -38,7 +38,7 @@ const EditarParametro = (props) => {
     const [escalaTempo, setEscalaTempo] = useState()
     const [frequenciaAnalise, setFrequenciaAnalise] = useState()
     const [edited, setEdited] = useState(false)
-    const [habilitado ,  setHabilitado] = useState(true)
+    const [habilitado ,  setHabilitado] = useState()
 
 
 
@@ -68,6 +68,7 @@ const EditarParametro = (props) => {
         setPmaxT(parametro.pMaxT)
         setPminT(parametro.pMinT)
         setFormula(parametro.formula)
+        setHabilitado(parametro.habilitado)
         if(parametro.formula.length>0){
             setTitula(true)
         }
@@ -81,6 +82,8 @@ const EditarParametro = (props) => {
     }
     },[parametro])
 
+    
+    useEffect(() => console.log(habilitado),[habilitado])
 
     
     const onSaveClick = () => {
