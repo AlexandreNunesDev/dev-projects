@@ -150,7 +150,7 @@ const MultiRegistroAnalise = (props) => {
                                         <td className="align-middle"><Form.Label>{analiseField.parametro.etapaNome}</Form.Label></td>
                                         <td className="align-middle"><Form.Label>{analiseField.parametro.nome}</Form.Label></td>
                                         <td className="align-middle">{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
-                                        <td className="align-middle"><Button disabled={analiseField.valor  ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>CheckOut</Button></td>
+                                        <td className="align-middle">{analiseField.parametro.analiseHoje ? <Button disabled={analiseField.valor  ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button> : <Button disabled={true} style={{ backgroundColor: "GRAY", borderColor: "GRAY", alignmentBaseline: "center" }}>Salvar</Button>}</td>
                                     </tr>
                                 )
 
