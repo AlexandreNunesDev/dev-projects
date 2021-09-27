@@ -38,17 +38,30 @@ const MultiRegistroAnalise = (props) => {
 
 
     const onProcessoIdChoose = (processoId) => {
-        let timeFields = parametros.filter(parametro => {
+        let analiseFields = parametros.filter(parametro => {
             if ((Number(parametro.processoId) === Number(processoId))) {
                 return true
             }
         }).map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
-        dispatcher(actions.loadFieldAnalise(timeFields))
+        dispatcher(actions.loadFieldAnalise(analiseFields))
         dispatcher(actions.setProcessoIdAnaliseForm(processoId))
 
     }
 
 
+    useEffect(() => {
+        let analiseFields = parametros.filter(parametro => {
+            if ((Number(parametro.processoId) === Number(analiseForm.processoId))) {
+                return true
+            }
+        }).map((parametro) => {
+            let analiseField = analiseForm.analiseFields.filter(analiseField => Number(analiseField.parametro.id) === Number(parametro.id))[0]
+            let analiseFieldUpdate = { ...analiseField }
+            analiseFieldUpdate.parametro = parametro;
+            return analiseFieldUpdate
+        })
+        dispatcher(actions.loadFieldAnalise(analiseFields))
+    }, [parametros])
 
 
     const salvarAnalise = () => {
@@ -145,10 +158,10 @@ const MultiRegistroAnalise = (props) => {
                             <tbody>
                                 {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
                                     return (
-                                        <tr hidden={!analiseField.parametro.habilitado ||  !analiseField.parametro.analiseHoje} key={analiseField.index} >
-                                            <td className="align-middle"><Form.Label>{analiseField.parametro.turno}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label>{analiseField.parametro.etapaNome}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label>{analiseField.parametro.nome}</Form.Label></td>
+                                        <tr hidden={!analiseField.parametro.habilitado || !analiseField.parametro.analiseHoje} key={analiseField.index} >
+                                            <td className="align-middle"><Form.Label style={{ fontWeight: analiseField.parametro.turno === "Atrasado" && "BOLD", color: analiseField.parametro.turno === "Atrasado" ? "RED" : "BLACK", textAlign: "center" }} >{analiseField.parametro.turno}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{analiseField.parametro.etapaNome}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.nome}</Form.Label></td>
                                             <td className="align-middle">{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
                                             <td className="align-middle">{analiseField.parametro.analiseHoje ? <Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button> : <Button disabled={true} style={{ backgroundColor: "GRAY", borderColor: "GRAY", alignmentBaseline: "center" }}>Salvar</Button>}</td>
                                         </tr>

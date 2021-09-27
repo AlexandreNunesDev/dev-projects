@@ -1,5 +1,6 @@
 import produce from "immer"
 
+
 const initialState = {
     processoId : null,
     analiseToSave: null,
@@ -29,6 +30,7 @@ const analiseReducer = produce(
             case "ANALISE_PROCESSO_ID":
                 draft.processoId = action.payload
                 break
+
         }
         return
     }, loadState()

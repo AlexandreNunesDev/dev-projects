@@ -35,11 +35,12 @@ const dispatchers = (dispatch) => {
         updateTimeField : (data) => dispatch(actions.updateTimeField(data)),
         setCiclo : (data) => dispatch(actions.setCiclo(data)),
         setTimeProcessoId : (data) => dispatch(actions.setTimeProcessId(data)),
-        loadFieldTime : (data) => dispatch(actions.loadFieldTime),
-        updadteAnaliseField : (data) => dispatch(actions.updadteAnaliseField),
-        loadFieldAnalise : (data) => dispatch(actions.loadFieldAnalise),
-        setAnaliseToSave: (data) => dispatch(actions.setAnaliseToSave),
-        setAnaliseProcessoId: (data) => dispatch(actions.setProcessoIdAnaliseForm),
+        loadFieldTime : () => dispatch(actions.loadFieldTime),
+        updadteAnaliseField : () => dispatch(actions.updadteAnaliseField),
+        loadFieldAnalise : () => dispatch(actions.loadFieldAnalise),
+        
+        setAnaliseToSave: () => dispatch(actions.setAnaliseToSave),
+        setAnaliseProcessoId: () => dispatch(actions.setProcessoIdAnaliseForm),
 
        
     }
