@@ -6,6 +6,8 @@ import globalConfig from './globalConfigReducer'
 import notificationsReducer from './notificationsReducer'
 import timeReducer from './timeReducers'
 import analiseReducer from './analisesReducers'
+import ordensDeManutencaoReducer from './ordensDeManutencaoReducer'
+
 
 
 
@@ -15,7 +17,8 @@ const appReducer = combineReducers({
    global : globalConfig,
    notification :notificationsReducer,
    timeReducer : timeReducer,
-   analiseReducer : analiseReducer
+   analiseReducer : analiseReducer,
+   ordensDeManutencao : ordensDeManutencaoReducer
 
   
 })
@@ -28,6 +31,7 @@ const rootReducer = (state, action) => {
     state.ocp = undefined
     state.global = undefined
     state.notification = undefined
+    state.historicoReducer = undefined
    }
  
    return appReducer(state, action);

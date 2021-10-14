@@ -88,7 +88,7 @@ const buildMsg = (type, response, msgType) => {
         case "OrdemDeCorrecao":
             return `${type} ${textByMsgType} com sucesso`
         case "OrdemDeManutencao":
-            return `${type} da ${response.nome} ${textByMsgType} com sucesso`
+            return `${type} ${textByMsgType} com sucesso`
         case "Analise":
             return `${type} ${response.id} ${textByMsgType} com sucesso`
         case "Turno":

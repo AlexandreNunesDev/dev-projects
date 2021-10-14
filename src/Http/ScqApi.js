@@ -3,7 +3,7 @@ import axios from "axios"
 
 import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
-const URL_TEST = "http://localhost:8080/"
+const URL_TEST = "https://scqapi.com/"
 const URL = "https://scqapi.com/"
 const http = axios.create({
      baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
@@ -54,6 +54,13 @@ const ScqApi = {
     },
     LoadAnaliseHistocial: (dataInicial, dataFinal) => {
         return http.get("analise/" + dataInicial + "/" + dataFinal)
+
+    },
+
+    LoadHistoricoAnaliseWithPage: (dataInicial, dataFinal,page,size) => {
+        
+        return http.get(`historicoAnalise?page=${page}&size=${size}`,{ params: { dataInicial,dataFinal }} ,
+          )
 
     },
 

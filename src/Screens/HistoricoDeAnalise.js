@@ -1,7 +1,7 @@
-import { Container, TableBody, TableHead } from "@material-ui/core"
-import React, { useEffect, useState } from "react"
+import { CircularProgress, Container, TableBody, TableHead } from "@material-ui/core"
+import React, { useEffect, useRef, useState } from "react"
 import { Button, Col, Form, Table } from "react-bootstrap"
-import { connect } from "react-redux"
+import { connect, useDispatch, useSelector } from "react-redux"
 import OcpView from "../Components/OcpView"
 import { withMenuBar } from "../Hocs/withMenuBar"
 import ScqApi from "../Http/ScqApi"
@@ -11,30 +11,77 @@ import { formatIsoDate } from "../Services/stringUtils"
 
 export const HistoricoDeAnalise = (props) => {
 
-    const [options, setOptions] = useState(null)
-    const [suggestionLi, setSuggestionLi] = useState(null)
-
+    const [options, setOptions] = useState([])
+    const [suggestionLi, setSuggestionLi] = useState([])
+    const [value, setValue] = useState('')
     const [actualFilter, setActualFilter] = useState([])
     const [dataInicial, setDataInicial] = useState(null)
     const [dataFinal, setDataFinal] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(1)
+    const dispatch = useDispatch()
+    console.log(page)
+
+    const ref = useRef();
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    const y = entry.boundingClientRect.y;
+                    console.log(this)
+                    setPage((oldNextPage) => oldNextPage + 1);
+                }
+            },
+            {
+                root: null,
+                rootMargin: "0px",
+                threshold: 1
+            }
+        );
+
+        const { current } = ref;
+        observer.observe(current);
+
+        return () => {
+            observer.unobserve(current);
+        };
+
+    }, [ref]);
 
 
 
     useEffect(() => {
-        // Verifica se as datas são diferente de null
+        fetchData()
+    }, [page])
+
+    useEffect(() => {
+        fetchData()
+    }, [dataFinal, dataInicial])
+
+
+
+    const fetchData = async () => {
+        setLoading(true)
         if ((dataInicial !== null) && (dataFinal !== null)) {
             //Verifico se a data incial é menor que a data final
             let dataIn = new Date(dataInicial)
             let dataFi = new Date(dataFinal)
             if (dataIn.getTime() < dataFi.getTime()) {
-                ScqApi.LoadAnaliseHistocial(dataInicial, dataFinal).then(res => { setOptions(res); setSuggestionLi(res) })
+                let response = await ScqApi.LoadHistoricoAnaliseWithPage(dataInicial, dataFinal, page, 50)
+                setLoading(false);
+                setOptions(response.content);
+                setSuggestionLi([...suggestionLi, ...response.content]);
             }
         }
+    }
 
-    }, [dataFinal, dataInicial])
 
-    const filter = (value, needFilter) => {
+    useEffect(() => {
+        filter(true)
+    }, [value])
 
+    const filter = (needFilter) => {
         const searchTokens = value.split(",")
         if (needFilter) {
             if (value.length !== 0) {
@@ -48,25 +95,18 @@ export const HistoricoDeAnalise = (props) => {
                         } else {
                             resultFilter = dynamicFieldFilter(textToSearch)
                         }
-
                         if (resultFilter.length !== 0) {
                             resultList = resultFilter
                         }
                     }
                 });
-
                 setSuggestionLi(resultList)
             } else {
                 setSuggestionLi(options)
-
             }
         } else {
             setSuggestionLi([])
-
-
         }
-
-
     }
 
 
@@ -90,9 +130,7 @@ export const HistoricoDeAnalise = (props) => {
         if (actualFilter.length > 1) {
             setActualFilter([])
         }
-
         let hasMatch = false;
-
         for (var [key] of Object.entries(object)) {
             //Se for string e comecar com o texto retorna true
             if (typeof object[key] === 'string') {
@@ -101,14 +139,8 @@ export const HistoricoDeAnalise = (props) => {
                     setFiltersDisplay([key])
                     hasMatch = true
                 }
-
             }
-
         }
-
-
-
-
         return hasMatch
 
     }
@@ -191,10 +223,11 @@ export const HistoricoDeAnalise = (props) => {
 
 
     return (
-        <>
+        <Container>
 
             <OcpView></OcpView>
-            <Container style={{ marginTop: 20 }}>
+                
+                 <h3 style={{ textAlign: "center", margin: 20 }}> Historico de Analise</h3>
                 <Form.Row style={{ marginTop: 10 }}>
                     <Form.Group as={Col}>
                         <Form.Label>Data Inicial</Form.Label>
@@ -217,26 +250,26 @@ export const HistoricoDeAnalise = (props) => {
                 </Form.Row>
                 <Form.Row>
                     <Col>
-                        <Form.Control placeholder="Filtrar por..." onChange={(event) => filter(event.target.value, true)}></Form.Control>
+                        <Form.Control placeholder="Filtrar por..." onChange={(event) => setValue(event.target.value)}></Form.Control>
                     </Col>
                     <Col>
                         <Form.Label>Filtrado por: <b>  {actualFilter.join(",") || ''}</b></Form.Label>
                     </Col>
                 </Form.Row>
-                <h3 style={{ textAlign: "center", margin: 20 }}> Historico de Analise</h3>
-                <div className="table-responsive">
-
-                    <Table>
+        
+                    <Table  >
                         <TableHead>
                             {getHeads()}
                         </TableHead>
-                        <TableBody>
+                        <TableBody >
                             {options && getRows()}
                         </TableBody>
                     </Table>
+                <div className={"text-center"} ref={ref}>
+                    {suggestionLi.length > 0 && loading && <CircularProgress />}
                 </div>
-            </Container>
-        </>
+                </Container>
+       
     )
 }
 

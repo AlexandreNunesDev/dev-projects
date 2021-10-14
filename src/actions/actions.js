@@ -11,6 +11,7 @@ export const actions = {
     loadUnidades: (data) => {return {type : 'LOAD_UNIDADES' , payload : data}},
     loadOcps: (data) => {return {type : 'LOAD_OCPS' , payload : data}},
     loadOcpsView: (data) => {return {type : 'LOAD_OCP_VIEW' , payload : data}},
+    loadOmps: (data) =>  {return {type: 'ordensDeManutencao/updateOrdem', payload : data }},
     setOcpView: (data) => {return {type : 'SET_OCP_VIEW' , payload : data}},
     loadPosition : (data) => {return {type: 'LOAD_POSITIONS' , payload : data}},
     addProcesso : (data) => {return {type: 'ADD_PROCESSO' , payload : data}},

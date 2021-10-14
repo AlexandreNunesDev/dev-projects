@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext, useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Button, Container, Col, Row, Form } from "react-bootstrap";
 import ScqApi from "../Http/ScqApi";
@@ -9,9 +9,14 @@ import { downloadOmp } from "../Services/documentsDownload";
 import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
 import { isMobile } from "react-device-detect";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import mapStateToProps from "../mapStateProps/mapStateToProps"
 import dispatchers from "../mapDispatch/mapDispathToProps";
+import { useHistory } from "react-router";
+import { updateOrdem } from "../Reducers/ordensDeManutencaoReducer";
+import { responseHandler } from "../Services/responseHandler";
+import { toastWarn } from "../Services/toastType";
+import { WebSocketContext } from "../websocket/wsProvider";
 
 
 const TableHead = () => {
@@ -114,116 +119,94 @@ const TableBody = props => {
 
 
 
-class Trocas extends React.Component {
+const OrdensDeManutencao = (props)  =>  {
+
+    const {ordens,toEditDeleteOrdem,toViewOrdem} = useSelector(state => state.ordensDeManutencao)
+    const [filteredOmps,setFiltered] = useState([])
+    const [ompToDelete,setOmpToDelete] = useState([])
+    const [showDeleteConfirm, setSowDeleteConfirm] = useState(false)
+    const [selection,setSelection] = useState('')
+    const [filterType, setFilterType] = useState('')
+    const context = useContext(WebSocketContext)
+    const dispatch = useDispatch()
+    const history = useHistory()
 
 
-    constructor(props) {
-        super()
-        this.state = {
-            omps: [],
-            filteredOmps: [],
-            showConfirm: false,
-            filterType: '',
-            trocasChoosedId: [],
-            trocasChoosed: [],
-            markAllHide: false,
-            ompToDelete: null,
-            showDeleteConfirm: false,
-            deleteRdy: true,
-            selection: ''
 
-        }
-    }
-
-    componentDidMount() {
-        let processoIdTarefaRef = this.props.global.processoIdTarefaRef
-        ScqApi.LoadOmps().then(res => this.setState({ omps: res, filteredOmps: res.filter(omp => Number(omp.processoId) === Number(processoIdTarefaRef) ) }))
-        
-        
-    }
-
-    encerrarOmp = (ompId) => {
-        const omp = this.state.omps.filter(ordem => {
+    const encerrarOmp = (ompId) => {
+        const omp = ordens.filter(ordem => {
             return ordem.id === ompId
         })
-        this.props.history.push("/FinalizarOmp", omp[0])
+        history.push("/FinalizarOmp", omp[0])
 
     }
 
-    verOmp = (ompId) => {
-        const omp = this.state.omps.filter(ordem => {
+    const verOmp = (ompId) => {
+        const omp = ordens.filter(ordem => {
             return ordem.id === ompId
         })
-        this.props.history.push("/VerOmp", omp[0])
-
+        history.push("/VerOmp", omp[0])
     }
 
-    confirmDeleteDiolog = (ompId) => {
-        const omp = this.state.omps.filter(ordem => {
+    useEffect(() => {
+        setFiltered(ordens.filter(omp => Number(omp.processoId) === Number(props.global.processoIdTarefaRef)))
+    },ordens)
+
+
+    const confirmDeleteDiolog = (ompId) => {
+        const omp = ordens.filter(ordem => {
             return ordem.id === ompId
         })
-
-        this.setState({ ompToDelete: omp[0], showDeleteConfirm: true }, () => this.setState({ deleteRdy: false }))
-
-
-
+        setOmpToDelete(omp[0])
+        setSowDeleteConfirm(true)
     }
 
-    deletarOmp = () => {
-        ScqApi.DeleteOmp(this.state.ompToDelete.id).then(() => ScqApi.LoadOmps().then(res => this.setState({ omps: res })))
-
+    const deletarOmp = () => {
+        ScqApi.DeleteOmp(ompToDelete.id).then(res => responseHandler(res, props,"OrdemDeManutencao",toastWarn,context,[props.loadOrdensDeManutencao]))
     }
 
 
-    filterAction = (filterText) => {
+    const filterAction = (filterText) => {
         if (filterText !== "") {
-            this.setState({
-                filteredOmps: this.state.omps.filter((omp) => {
-                    if (this.state.filterType === "Processo") {
-                        return String(omp.nomeProcesso).toLowerCase().includes(filterText.toLowerCase())
-                    }
-                    if (this.state.filterType === "Status") {
-                        return String(omp.status).toLowerCase().includes(filterText.toLowerCase())
-                    }
-                    return ""
-                }),
-                selection: filterText
-            })
+            setFiltered(ordens.filter((omp) => {
+                if (filterType === "Data") {
+                    let data = FormatDate(String(omp.dataPlanejada).substr(0, 10))
+                    return data.startsWith(filterText)
+                }
+                if (filterType === "Status") {
+                    return String(omp.status).toLowerCase().includes(filterText.toLowerCase())
+                }
+                return ""
+            }).filter(omp => Number(omp.processoId === Number(props.global.processoIdTarefaRef))))
+            setSelection(filterText)
         } else {
-            this.setState({
-                filteredOmps: this.state.omps
-            })
+            setFiltered(ordens.filter(omp => Number(omp.processoId === Number(props.global.processoIdTarefaRef))))
         }
 
     }
 
-    filterByGlobalProcesso = (processoId) => {
-        this.props.setProcessoIdTarefaRef(processoId)
-        let newFilteredOmps = this.state.omps.filter(omp => Number(omp.processoId === Number(processoId)))
-        this.setState({filteredOmps :newFilteredOmps  })
+    const filterByGlobalProcesso = (processoId) => {
+        props.setProcessoIdTarefaRef(processoId)
+        let newFilteredOmps = ordens.filter(omp => Number(omp.processoId === Number(processoId)))
+        setFiltered(newFilteredOmps)
 
     }
 
 
-
-
-
-    render() {
         return (
             <>
 
                 <Container >
-                    <DeleteOmpConfirm show={this.state.showDeleteConfirm} deletarOmp={this.deletarOmp} omp={this.state.ompToDelete} handleClose={() => { this.setState({ showDeleteConfirm: false }) }}></DeleteOmpConfirm>
+                    <DeleteOmpConfirm show={showDeleteConfirm} deletarOmp={deletarOmp} omp={ompToDelete} handleClose={() => setSowDeleteConfirm(false)}></DeleteOmpConfirm>
                     <Row className="justify-content-md-center">
                         <Col style={{paddingTop : 10}} >
-                            <GenericSelect selection={this.props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.filterByGlobalProcesso(processoId) } ops={this.props.processos}  ></GenericSelect>
+                            <GenericSelect selection={props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => filterByGlobalProcesso(processoId) } ops={props.processos}  ></GenericSelect>
                         </Col>
                         <Col>
-                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.filterAction(event.target.value)
-                            }></Form.Control>
+                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => filterAction(event.target.value)}></Form.Control>
                         </Col>
                         <Col md="auto">
-                            <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Status"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                            <GenericDropDown display={"Tipo"} margin={10} itens={["Data", "Status"]} onChoose={(item) => setFilterType(item)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
 
                     </Row>
@@ -232,7 +215,7 @@ class Trocas extends React.Component {
                     <Table >
                         <TableHead></TableHead>
                         <tbody>
-                            <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} filterType={this.state.filterType} selection={this.state.selection} omps={this.state.filteredOmps} encerrarOmp={this.encerrarOmp} verOmp={this.verOmp} confirmDeleteDiolog={this.confirmDeleteDiolog}  ></TableBody>
+                            <TableBody filterType={filterType} selection={selection} omps={filteredOmps} encerrarOmp={encerrarOmp} verOmp={verOmp} confirmDeleteDiolog={confirmDeleteDiolog}  ></TableBody>
                         </tbody>
 
 
@@ -243,8 +226,7 @@ class Trocas extends React.Component {
             </>
 
         )
-    }
 
 }
 
-export default withToastManager(withMenuBar(connect(mapStateToProps.toProps, dispatchers)(Trocas)))
+export default withToastManager(withMenuBar(connect(mapStateToProps.toProps, dispatchers)(OrdensDeManutencao)))
