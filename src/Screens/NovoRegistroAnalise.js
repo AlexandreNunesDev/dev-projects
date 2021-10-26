@@ -90,7 +90,7 @@ const MultiRegistroAnalise = (props) => {
         analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, analiseFieldCheckOut.parametro)
         setCheckOutAnaliseField(analiseFieldCheckOut)
         setShowCheckOut(true)
-        setAnaliseToCheckOut({ id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data })
+        setAnaliseToCheckOut({ id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data  })
     }
 
     const closeCheckOut = () => {

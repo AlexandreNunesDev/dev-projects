@@ -204,7 +204,7 @@ class RegistroDeAnalise extends React.Component {
     salvarReanalise = () => {
 
         const { id } = this.state.analise
-        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId , observacao : this.state.observacao }
+        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId , observacaoAnalise : this.state.observacao }
 
         ScqApi.EditarAnalise(analise).then((res) => responseHandler(res, this.props, "Analise", 'info', this.context, [this.props.loadParametros, this.props.loadOcps]))
 

@@ -13,7 +13,6 @@ export const subId = (s) => {
 
   
 export const formatIsoDate = (date) => {
-    
   return moment(date).format("yyyy-MM-DDTHH:mm:ss");
 };
 
