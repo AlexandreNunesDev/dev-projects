@@ -7,7 +7,7 @@ import AnaliseEdit from './AnaliseEdit';
 const CustomTooltip = ({ active, payload }) => {
     
     const analise = payload == null ? null : payload[0]?.payload
-   
+
 
     if (active && payload!= null) {
       return (

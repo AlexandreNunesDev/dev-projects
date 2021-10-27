@@ -188,7 +188,7 @@ class RegistroDeAnalise extends React.Component {
                     nomeAnalista = analista;
                 }
     
-                const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data,observacao : this.state.observacao }
+                const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data,observacaoAnalise : this.state.observacao }
     
                 ScqApi.CriarAnalise(analise).then(res => {
                     responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros, this.props.loadOcps])
@@ -216,7 +216,7 @@ class RegistroDeAnalise extends React.Component {
 
     gerarOcpReanalise = (history) => {
         const { id } = this.state.analise
-        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId ,observacao : this.state.observacao}
+        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId ,observacaoAnalise : this.state.observacao}
         history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
 
     }

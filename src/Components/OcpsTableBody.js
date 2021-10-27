@@ -24,19 +24,23 @@ const isSameDate = (actualDate, refDate) => {
 
 
 const buildAdicaoDetails = (ocp) => {
-    const lis =  ocp.adicoesDto.map(adicao => {
+    const showAnaliseObs = ocp.observacao.split(":")[0].trim() === "null"
+    const showOcpObs = ocp.observacao.split(":")[1].trim()  === "null"
+    const lis = ocp.adicoesDto.map(adicao => {
+       
 
         return (
-              <li className="text-nowrap" prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
-            )
+            <li className="text-nowrap" prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
+        )
 
     });
     return (
         <div >
-        <ul>
-        <li ><span style={{fontWeight : 'bold'}}>Observação: </span>{`${ocp.observacao}`}</li> 
-            {lis}
-        </ul>
+            <ul>
+                <li hidden={showAnaliseObs} ><span style={{ fontWeight: 'bold' }}>Observação Analise: </span>{`${ocp.observacao.split(":")[0]}`}</li>
+                <li hidden={showOcpObs} ><span style={{ fontWeight: 'bold' }}>Observação Ocp: </span>{`${ocp.observacao.split(":")[1]}`}</li>
+                {lis}
+            </ul>
         </div>
     )
 }
@@ -46,10 +50,10 @@ const buildAcaoDetails = (ocp) => {
     return (
         <div>
             <ul>
-            <li>{`${ocp.acao}`}</li>
-            <li  className="text-nowrap"><span style={{fontWeight : 'bold'}}>Prazo: </span>{`${OnlyDate(ocp.prazo)}`}</li>
+                <li>{`${ocp.acao}`}</li>
+                <li className="text-nowrap"><span style={{ fontWeight: 'bold' }}>Prazo: </span>{`${OnlyDate(ocp.prazo)}`}</li>
             </ul>
-           
+
         </div>)
 
 
