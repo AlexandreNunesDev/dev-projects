@@ -24,8 +24,9 @@ const isSameDate = (actualDate, refDate) => {
 
 
 const buildAdicaoDetails = (ocp) => {
-    const showAnaliseObs = ocp.observacao.split(":")[0].trim() === "null"
-    const showOcpObs = ocp.observacao.split(":")[1].trim()  === "null"
+    let showAnaliseObs = ocp.observacao.split(":")[0].trim() === "null" ?  true : false
+    let showOcpObs = ocp.observacao.split(":")[1].trim()  === "null" ?  true : false
+
     const lis = ocp.adicoesDto.map(adicao => {
        
 
@@ -46,11 +47,12 @@ const buildAdicaoDetails = (ocp) => {
 }
 
 const buildAcaoDetails = (ocp) => {
+    let showAcao = ocp.acao === null ?  true : false
 
     return (
         <div>
             <ul>
-                <li>{`${ocp.acao}`}</li>
+                <li hidden={showAcao} >{`${ocp.acao}`}</li>
                 <li className="text-nowrap"><span style={{ fontWeight: 'bold' }}>Prazo: </span>{`${OnlyDate(ocp.prazo)}`}</li>
             </ul>
 

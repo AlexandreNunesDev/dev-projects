@@ -44,7 +44,7 @@ const EditarOcpAdicao = (props) => {
 
     const deletarOcp = () => {
         ScqApi.DeleteOcp(props.ocp.ocpToEdit.id).then(res => { 
-            responseHandler(res,props,"OrdemDeCorrecao",toastWarn,context,[dispatchers().loadOcps])
+            responseHandler(res,props,"OrdemDeCorrecao",toastWarn,context,[dispatchers().loadOcps,dispatchers().loadParametros])
             history.push("/OrdensDeCorrecao")
         })
       

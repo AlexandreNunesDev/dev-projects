@@ -224,7 +224,7 @@ class RegistroDeAnalise extends React.Component {
 
     gerarOcp = (history) => {
         const { analista, resultado, status } = this.state
-        const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: this.state.data,observacao : this.state.observacao }
+        const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: this.state.data,observacaoAnalise : this.state.observacao }
         history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
     }
 
