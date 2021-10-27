@@ -23,18 +23,18 @@ const isSameDate = (actualDate, refDate) => {
 
 
 
-const buildAdicaoDetails = (adicoesDto) => {
-    const lis =  adicoesDto.map(adicao => {
+const buildAdicaoDetails = (ocp) => {
+    const lis =  ocp.adicoesDto.map(adicao => {
 
         return (
-           
-               <li prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
+              <li className="text-nowrap" prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
             )
 
     });
     return (
-        <div className="text-nowrap">
+        <div >
         <ul>
+        <li ><span style={{fontWeight : 'bold'}}>Observação: </span>{`${ocp.observacao}`}</li> 
             {lis}
         </ul>
         </div>
@@ -212,7 +212,7 @@ const OcpsTableBody = (props) => {
                     {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
                     {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
                     {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
-                    <td className="align-middle">{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
+                    <td className="align-middle">{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp)}</td>
                     <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                 </tr>
             )
@@ -235,7 +235,7 @@ const OcpsTableBody = (props) => {
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax} ${ocp.unidade}`}</td>}
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado} ${ocp.unidade}`}</td>}
-                        <td className="align-middle">{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp.adicoesDto)}</td>
+                        <td className="align-middle">{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp)}</td>
                         <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                     </tr>
                 </Fragment>
