@@ -11,27 +11,29 @@ import CredentialConfirm from './CredentialConfirm';
 const AnaliseEdit = (props) => {
 
 
-  const [dataPlanejada,setDataPlanejada] = useState()
-  const [showDelete,setShowDelete] = useState(false)
+  const [dataPlanejada, setDataPlanejada] = useState()
+  const [showDelete, setShowDelete] = useState(false)
   const toastManager = useToasts()
 
 
-  
+
   const closeCredentialConfirm = () => {
     setShowDelete(false)
   }
 
   const deleteAnalise = () => {
-    ScqApi.DeleteAnalise(props.analise.id).then(() =>  {props.handleClose(); toastManager.addToast("Analise deletada com sucesso", {
-      appearance: toastWarn , autoDismiss: true
-    }); props.reloadChart()})
+    ScqApi.DeleteAnalise(props.analise.id).then(() => {
+      props.handleClose(); toastManager.addToast("Analise deletada com sucesso", {
+        appearance: toastWarn, autoDismiss: true
+      }); props.reloadChart()
+    })
   }
 
   return (
     <>
 
-      <CredentialConfirm show={showDelete} closeCredentialConfirm={closeCredentialConfirm} 
-      aproveOcp={deleteAnalise}></CredentialConfirm>
+      <CredentialConfirm show={showDelete} closeCredentialConfirm={closeCredentialConfirm}
+        aproveOcp={deleteAnalise}></CredentialConfirm>
       <Modal size={"lg"} show={props.show} onHide={() => props.handleClose()}>
         <Modal.Header closeButton>
           <Modal.Title>Editor de Analise: Analise {props?.analise?.id}</Modal.Title>
@@ -44,20 +46,20 @@ const AnaliseEdit = (props) => {
                   {`Resultado: ${props?.analise?.Resultado} ${props?.analise?.unidade}`}
                 </Form.Label>
               </Col>
-            
+
             </Row>
             <Row>
-            <Col>
-              <Form.Label>Data Realizada : </Form.Label>
+              <Col>
+                <Form.Label>Data Realizada : </Form.Label>
                 <Form.Control
                   type="datetime-local"
                   defaultValue={props?.analise?.defaultData}
                   onChange={event => {
                     let data = new Date(event.target.value);
                     setDataPlanejada(formatIsoDate(data))
-                   }}>
+                  }}>
                 </Form.Control>
-                </Col>
+              </Col>
             </Row>
           </Form>
         </Modal.Body>
@@ -67,15 +69,15 @@ const AnaliseEdit = (props) => {
           <Button style={{ margin: 2 }} variant="secondary" onClick={() => props.handleClose(false)}>
             Cancelar
           </Button>
-          <Button onClick={() => {setShowDelete(true)}}> 
+          <Button onClick={() => { setShowDelete(true) }}>
             Excluir
           </Button>
-          <Button onClick={() => props.history.push("/CadastroOcpAdicao",props.analise)}>
+          <Button onClick={() => props.history.push("/CadastroOcpAdicao", props.analise)}>
             Gerar Ocp
           </Button>
-          <Button onClick={() => {ScqApi.UpdataAnaliseData(props.analise.id,dataPlanejada);props.handleClose()}}>
+          <Button onClick={() => { ScqApi.UpdataAnaliseData(props.analise.id, dataPlanejada); props.handleClose(false); props.reloadChart() }}>
             Salvar
-            </Button>
+          </Button>
         </Modal.Footer>
 
       </Modal>
