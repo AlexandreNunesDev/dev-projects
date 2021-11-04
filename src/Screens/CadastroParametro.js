@@ -37,7 +37,8 @@ class CadastroParametro extends React.Component {
             unidade: '',
             escalaTempo: '',
             frequenciaAnalise: '',
-            showChart : true,
+            showChart: true,
+            controlado: true
 
         }
 
@@ -46,10 +47,10 @@ class CadastroParametro extends React.Component {
 
 
     componentDidMount = () => {
-            this.setState({
-                processos: this.props.processos
-            })
-           
+        this.setState({
+            processos: this.props.processos
+        })
+
     }
 
 
@@ -84,15 +85,24 @@ class CadastroParametro extends React.Component {
     }
 
     loadEtapasFromLinha = (linhaId) => {
-       
-            this.setState({ etapas: this.props.etapas.filter(etapa => etapa.processoId === Number(linhaId)) })
-     
+
+        this.setState({ etapas: this.props.etapas.filter(etapa => etapa.processoId === Number(linhaId)) })
+
     }
 
     titulaConfirm = () => {
         this.setState(prevState => ({
             titula: !prevState.titula,
-            formula: ''
+    
+        }));
+    }
+
+    controladoCheck = () => {
+        this.setState(prevState => ({
+            controlado: !prevState.controlado,
+            escalaTempo:  "Dia",
+            frequenciaAnalise: 0,
+
         }));
     }
 
@@ -101,7 +111,7 @@ class CadastroParametro extends React.Component {
             showChart: !prevState.showChart
         }));
     }
-    
+
 
 
 
@@ -111,18 +121,18 @@ class CadastroParametro extends React.Component {
         this.loadEtapasFromLinha(parametro.linha.id)
     }
 
-    
+
 
 
 
     salvarParametro = () => {
 
         const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT, frequenciaAnalise, escalaTempo } = this.state
-        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise,showChart : this.state.showChart }
+        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise, showChart: this.state.showChart,isHabilitado : this.state.controlado }
 
         if (this.state.isNotEditable) {
-            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro",toastOk,this.context,[this.props.loadParametros,this.props.loadEtapas]); })
- 
+            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro", toastOk, this.context, [this.props.loadParametros, this.props.loadEtapas]) })
+
         }
     }
 
@@ -175,8 +185,8 @@ class CadastroParametro extends React.Component {
                             <Col>
                                 <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={this.state.processos} onChange={this.selectedLinhaListner} selection={this.state.parametro?.linha?.id}></GenericSelect>
                             </Col>
-                            </Form.Row>
-                            <Form.Row>
+                        </Form.Row>
+                        <Form.Row>
                             <Col>
                                 <GenericSelect title={"Etapa"} returnType={"id"} default={"Escolha uma Etapa"} ops={this.state.etapas} onChange={this.selectedEtapaListner} selection={this.state.parametro?.etapa?.id}></GenericSelect>
                             </Col>
@@ -191,66 +201,75 @@ class CadastroParametro extends React.Component {
 
                                 <SelectEditable getValue={(nome) => nome && this.setState({ nome: nome }, () => { console.log(this.state.nome) })} default={"selecione um nome"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão",]}></SelectEditable>
                             </Form.Group>
-                            </Form.Row>
-                            <Form.Row>
+                        </Form.Row>
+                        <Form.Row>
                             <Col >
                                 <UnidadeSelect title={"Escolha um unidade"} type={"parametros"} default={"Escolha um unidade"} onChange={unidade => { this.setState({ unidade: unidade }); console.log(unidade) }}></UnidadeSelect>
                             </Col>
-                            </Form.Row>
-                            <Form.Row>
-                            <Col  >
-                                <Form.Label>Analise a cada : </Form.Label>
-                                <Form.Control type="number" value={this.state.frequenciaAnalise} onChange={this.frequenciaAnalise} />
-                            </Col>
-                            </Form.Row>
-                            <Form.Row>
-                            <Col >
-                                <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={this.escalaTempoController} />
-                            </Col>
+                        </Form.Row>
+                        <h3>Controle</h3>
+                        <Form.Check type="checkbox" id="checkControlado">
+                                <Form.Check.Input type="checkbox" checked={this.state.controlado} onChange={this.controladoCheck} />
+                                <Form.Check.Label>Controlado ?</Form.Check.Label>
+                            </Form.Check>
+                        {this.state.controlado && <>
                             
+                            
+                            <Form.Row>
+                                <Col  >
+                                    <Form.Label>Analise a cada : </Form.Label>
+                                    <Form.Control type="number" value={this.state.frequenciaAnalise} onChange={this.frequenciaAnalise} />
+                                </Col>
+                            </Form.Row>
+                            <Form.Row>
+                                <Col >
+                                    <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} selection={this.state.escalaTempo} default={"Escolha a escala"} onChange={this.escalaTempoController} />
+                                </Col>
+                            </Form.Row> </>}
 
-                        </Form.Row>
+                        <>
+                            <h3>Faixas de Controle</h3>
+                            <Form.Row>
+                                <Form.Group sm as={Col} controlId="pMinParametroForm">
+                                    <Form.Label>Mínimo Especificado</Form.Label>
+                                    <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={this.state.pMin} onChange={event => this.setState({ pMin: event.target.value })} />
+                                </Form.Group>
+                                <Form.Group sm as={Col} controlId="pMinParametroForm">
+                                    <Form.Label>Mínimo Trabalho</Form.Label>
+                                    <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={this.state.pMinT} onChange={event => this.setState({ pMinT: event.target.value })} />
+                                </Form.Group>
+                                <Form.Group sm as={Col} controlId="pMaxParametroForm">
+                                    <Form.Label>Máximo Trabalho</Form.Label>
+                                    <Form.Control type="number" placeholder="Parametro Máximo" value={this.state.pMaxT} onChange={event => this.setState({ pMaxT: event.target.value })} />
+                                </Form.Group>
+                                <Form.Group sm as={Col} controlId="pMaxParametroForm">
+                                    <Form.Label>Máximo Especificado</Form.Label>
+                                    <Form.Control type="number" placeholder="Parametro Máximo" value={this.state.pMax} onChange={event => this.setState({ pMax: event.target.value })} />
+                                </Form.Group>
+
+
+                            </Form.Row>
+                        </>
+
+
 
                         <Form.Row>
-                            <Form.Group sm as={Col} controlId="pMinParametroForm">
-                                <Form.Label>Mínimo Especificado</Form.Label>
-                                <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={this.state.pMin} onChange={event => this.setState({ pMin: event.target.value })} />
-                            </Form.Group>
-                            <Form.Group sm as={Col} controlId="pMinParametroForm">
-                                <Form.Label>Mínimo Trabalho</Form.Label>
-                                <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={this.state.pMinT} onChange={event => this.setState({ pMinT: event.target.value })} />
-                            </Form.Group>
-                            <Form.Group sm as={Col} controlId="pMaxParametroForm">
-                                <Form.Label>Máximo Trabalho</Form.Label>
-                                <Form.Control type="number" placeholder="Parametro Máximo" value={this.state.pMaxT} onChange={event => this.setState({ pMaxT: event.target.value })} />
-                            </Form.Group>
-                            <Form.Group sm as={Col} controlId="pMaxParametroForm">
-                                <Form.Label>Máximo Especificado</Form.Label>
-                                <Form.Control type="number" placeholder="Parametro Máximo" value={this.state.pMax} onChange={event => this.setState({ pMax: event.target.value })} />
-                            </Form.Group>
+                            <Form.Check style={{ marginRight: 15 }} type="checkbox" id="checkTitula">
+                                <Form.Check.Input type="checkbox" checked={this.state.showChart} onChange={this.setShoweChart} />
+                                <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
+                            </Form.Check>
+
+                            <Form.Check style={{ marginRight: 15 }} type="checkbox" id="checkTitula">
+                                <Form.Check.Input type="checkbox" checked={!this.state.titula} onChange={this.titulaConfirm} />
+                                <Form.Check.Label>Formulas ?</Form.Check.Label>
+                            </Form.Check>
 
 
                         </Form.Row>
 
 
 
-                        <Form.Row>
-                        <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkTitula">
-                            <Form.Check.Input type="checkbox" checked={this.state.showChart} onChange={this.setShoweChart} />
-                            <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
-                        </Form.Check>
 
-                        <Form.Check type="checkbox" id="checkTitula">
-                            <Form.Check.Input type="checkbox" checked={!this.state.titula} onChange={this.titulaConfirm} />
-                            <Form.Check.Label>Formulas ?</Form.Check.Label>
-                        </Form.Check>
-
-
-                        </Form.Row>
-                        
-
-
-                     
 
 
                         <Form.Row hidden={this.state.titula}>
@@ -276,4 +295,4 @@ class CadastroParametro extends React.Component {
 
 }
 
-export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroParametro)))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps, dispatchers)(CadastroParametro)))

@@ -68,6 +68,7 @@ const MultiRegistroAnalise = (props) => {
         ScqApi.CriarAnalise(analiseToCheckOut).then(res => {
             responseHandler(res, props, "Analise", 'success', context, [reducerFunctions.loadParametros, reducerFunctions.loadOcps])
         })
+        setShowCheckOut(false)
     }
 
     const gerarOcp = () => {

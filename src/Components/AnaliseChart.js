@@ -16,7 +16,8 @@ const CustomTooltip = ({ active, payload }) => {
           <p className="label">{`Analista: ${analise.Analista}`}</p>
           <p className="intro">{`Data: ${analise.Data}`}</p>
           <p className="intro">{`Resultado: ${analise.Resultado} ${payload[0].unit}`}</p>
-          <p className="intro">{`Observacao: ${analise.observacoes}`}</p>
+          <p className="intro">{`Obs analise: ${analise.observacoesAnalise}`}</p>
+          <p className="intro">{`Obs ocp: ${analise.observacoesOcp}`}</p>
         </div>
       );
     }
@@ -43,7 +44,7 @@ const AnaliseChart = (props) => {
           
           let data = {"id" : props.data.analisesId[i], "Analista" : props.data.analistas[i],"Data" : `${dataFormatada} - ${dataTime[1]}`, "Resultado" : resultado[1].toFixed(2), "unidade" : props.data.unidade,
            "defaultData" : resultado[0], "processoId": props.data.processoId, "etapaId": props.data.etapaId,
-           "parametroId": props.data.parametroId, "observacoes" : props.data.observacoes[i] }
+           "parametroId": props.data.parametroId, "observacoesAnalise" : props.data.observacoesAnalise[i],"observacoesOcp" :  props.data.observacoesOcp[i]  }
           resultados.push(data)
           i = i + 1;
       }

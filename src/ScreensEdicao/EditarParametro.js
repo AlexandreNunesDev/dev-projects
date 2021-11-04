@@ -167,7 +167,7 @@ const EditarParametro = (props) => {
                         <Form.Check.Input  type="checkbox" checked={showChart} onChange={(event) =>  setShowChart(!showChart)} />
                         <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
                     </Form.Check>
-                    <Form.Check type="checkbox" id="checkTitula">
+                    <Form.Check style={{marginRight : 15}} type="checkbox" id="checkTitula">
                         <Form.Check.Input type="checkbox" checked={titula} onChange={(event) => setTitula(!titula)} />
                         <Form.Check.Label>Formulas ?</Form.Check.Label>
                     </Form.Check>

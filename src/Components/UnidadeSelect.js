@@ -1,6 +1,9 @@
 import React, { useEffect, useState} from 'react'
 import {Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import { connect } from 'react-redux';
 
 
 
@@ -10,7 +13,7 @@ const UnidadeSelect = (props) =>{
     const diasemana = ["Segunda","Terça","Quarta","Quinta","Sexta","Sabado","Domingo"]
     const frequenciaAnalise = ["Minuto","Hora","Dia","Mes"]
     const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
-    const parametros = ["g/l","%","ml/l","C°","s","uS","um","HV","pH","V","A","ppm"]
+    const parametros = props.unidades 
     const adicao = ["Kg","Lts","ml","gr"]
     
     
@@ -58,4 +61,4 @@ const UnidadeSelect = (props) =>{
 }
 
 
-export default UnidadeSelect
+export default  connect(mapToStateProps.toProps, dispatchers)(UnidadeSelect)

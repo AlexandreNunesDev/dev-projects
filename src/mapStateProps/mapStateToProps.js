@@ -6,6 +6,7 @@ const mapToStateProps = {
           parametros : state.options.parametros,
           materiasPrima : state.options.materiasPrima,
           trocas : state.options.trocas,
+          unidades : state.options.unidades,
           tarefasDeManutencao : state.options.tarefasDeManutencao,
           ocp : state.ocp,
           global : state.global,

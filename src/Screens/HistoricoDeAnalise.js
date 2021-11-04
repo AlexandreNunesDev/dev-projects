@@ -20,7 +20,7 @@ export const HistoricoDeAnalise = (props) => {
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
     const dispatch = useDispatch()
-    console.log(page)
+  
 
     const ref = useRef();
 
@@ -62,6 +62,7 @@ export const HistoricoDeAnalise = (props) => {
 
 
     const fetchData = async () => {
+        console.log(page)
         setLoading(true)
         if ((dataInicial !== null) && (dataFinal !== null)) {
             //Verifico se a data incial é menor que a data final
@@ -70,10 +71,12 @@ export const HistoricoDeAnalise = (props) => {
             if (dataIn.getTime() < dataFi.getTime()) {
                 let response = await ScqApi.LoadHistoricoAnaliseWithPage(dataInicial, dataFinal, page, 50)
                 setLoading(false);
-                setOptions(response.content);
-                setSuggestionLi([...suggestionLi, ...response.content]);
+                filter(true,[...options,...response.content])
+                setOptions([...options,...response.content]);
+                
             }
         }
+       
     }
 
 
@@ -81,11 +84,11 @@ export const HistoricoDeAnalise = (props) => {
         filter(true)
     }, [value])
 
-    const filter = (needFilter) => {
+    const filter = (needFilter,optionsToFilter) => {
         const searchTokens = value.split(",")
         if (needFilter) {
             if (value.length !== 0) {
-                let resultList = []
+                let resultList = optionsToFilter ? optionsToFilter : []
                 searchTokens.forEach(searchElement => {
                     if (searchElement.trim().length !== 0) {
                         let textToSearch = removeAccents(searchElement.toLowerCase()).trim()
@@ -216,7 +219,14 @@ export const HistoricoDeAnalise = (props) => {
             }
         }
 
+        
+        
 
+            
+
+         
+
+         
 
 
     }
@@ -274,3 +284,14 @@ export const HistoricoDeAnalise = (props) => {
 }
 
 export default withMenuBar(connect(mapToStateProps.toProps, dispatchers)(HistoricoDeAnalise))
+
+
+   
+
+   
+
+
+ 
+
+
+

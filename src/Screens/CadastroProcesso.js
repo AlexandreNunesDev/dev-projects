@@ -59,7 +59,7 @@ class CadastroProcesso extends Component {
 
 
         const processo = { id: null, nome: this.state.nome }
-        ScqApi.CriarProcesso(processo).then(response =>{this.props.addProcesso(response); responseHandler(response, this.props,"Processo",toastOk, [this.context,this.props.loadProcessos],)})
+        ScqApi.CriarProcesso(processo).then(response =>{this.props.addProcesso(response); responseHandler(response, this.props,"Processo",toastOk,this.context, [this.props.loadProcessos])})
         
 
 
