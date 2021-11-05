@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Navbar, Nav, NavDropdown, Badge, Button, Card, NavItem, Image, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from '../Http/ScqApi';
-import scqlogo from '../logoscq.png';
+import scqlogo from '../img/logoscq.png';
 import { withToastManager } from 'react-toast-notifications';
 import { logout } from '../Services/auth';
 import { connect } from 'react-redux';
