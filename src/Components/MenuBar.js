@@ -164,7 +164,6 @@ class MenuBar extends React.Component {
                 <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
                 <Link className="nav-link" to='/Omp' >OMP</Link>
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
-                <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                   <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>

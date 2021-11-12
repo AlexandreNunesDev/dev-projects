@@ -20,6 +20,7 @@ const TableHead = () => {
                 <th>Processo</th>
                 <th>Etapa</th>
                 <th>Data Planejada</th>
+                <th>Data Realizada</th>
                 <th>Produtos</th>
                 <th>Status</th>
                 <th>Selecionar</th>
@@ -39,7 +40,8 @@ const TableBody = props => {
 
     const trocaTd = props.trocas.map((troca, index) => {
         let check = props.markedTroca.includes(troca.id)
-        let data = String(troca.dataPlanejada).substr(0, 10)
+        let dataPlanejada = String(troca.dataPlanejada).substr(0, 10)
+        let dataRealizada = String(troca.ultimaTroca).substr(0, 10)
 
         return (
 
@@ -47,7 +49,8 @@ const TableBody = props => {
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
                 <td className="align-middle">{troca.etapaNome}</td>
-                <td className="align-middle">{`${FormatDate(data)}`}</td>
+                <td className="align-middle">{`${FormatDate(dataPlanejada)}`}</td>
+                <td className="align-middle">{`${FormatDate(dataRealizada)}`}</td>
                 <td className="align-middle" key={troca.id} >
                     {troca.listaMontagens.map((pair, index) => {
                         return <div key={index}>{`${pair[0]} : ${pair[1]} ${pair[2]}`} </div>

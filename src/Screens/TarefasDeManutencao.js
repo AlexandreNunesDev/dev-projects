@@ -19,6 +19,7 @@ const TableHead = () => {
                 <th>Nome</th>
                 <th>Instrução</th>
                 <th>Data Planejada</th>
+                <th>Data Realizada</th>
                 <th>Status</th>
                 <th>Selecionar</th>
             </tr>
@@ -39,14 +40,16 @@ const TableBody = props => {
     
     const trocaTd = filteredByProcessoId.map((tarefa, index) => {
         let check = props.markedTarefas.includes(tarefa.id)
-        let data = String(tarefa.dataPlanejada).substr(0, 10)
+        let dataPlanejada = String(tarefa.dataPlanejada).substr(0, 10)
+        let dataRealizada = String(tarefa.dataRealizada).substr(0, 10)
 
         return (
             <tr style={{ textAlign: "center" }} key={tarefa.id}>
                 <td className="align-middle">{tarefa.id}</td>
                 <td className="align-middle">{tarefa.nome}</td>
                 <td className="align-middle">{tarefa.codigo}</td>
-                <td className="align-middle">{`${FormatDate(data)}`}</td>
+                <td className="align-middle">{`${FormatDate(dataPlanejada)}`}</td>
+                <td className="align-middle">{`${FormatDate(dataRealizada)}`}</td>
                 <td className="align-middle">
                     <Form.Label style={{ color: tarefa.pendente ? 'red' : 'green', fontWeight: 'bolder' }} >{tarefa.pendente ? "Pendente" : 'Em dia'}</Form.Label>
                 </td>
@@ -125,13 +128,13 @@ class TarefasDeManutencao extends React.Component {
         this.setState({
             markedTarefas: []
         })
-        this.state.tarefas.forEach(tarefa => {
+        this.props.tarefasDeManutencao.forEach(tarefa => {
             this.addTarefaIdToList(true, tarefa)
         })
     }
 
     unmarkAll = () => {
-        this.state.tarefas.forEach(tarefa => {
+        this.props.tarefasDeManutencao.forEach(tarefa => {
             this.addTarefaIdToList(false, tarefa)
         })
     }

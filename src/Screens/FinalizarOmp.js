@@ -1,9 +1,15 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, Fragment, useContext } from 'react'
 import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
-import { useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import ScqApi from '../Http/ScqApi'
 import { withToastManager } from 'react-toast-notifications'
 import { withMenuBar } from '../Hocs/withMenuBar'
+import { responseHandler } from '../Services/responseHandler'
+import mapToStateProps from '../mapStateProps/mapStateToProps'
+import { connect } from 'react-redux'
+import dispatchers from '../mapDispatch/mapDispathToProps'
+import { WebSocketContext } from '../websocket/wsProvider'
+import { toastOk } from '../Services/toastType'
 
 const TableHeadTarefas = () => {
     return (
@@ -32,7 +38,7 @@ const TableBodyTarefas = props => {
                 <td className="align-middle"><Form.Label style={{ color: tarefa.pendente ? 'red' : 'green', fontWeight: 'bolder' }} >
                     {tarefa.pendente ? "Pendente" : 'Em dia'}</Form.Label></td>
                 <td className="align-middle" >
-                    <Form.Check.Input onChange={(event) => props.checkedElement(event.target.checked, tarefa.id, "tarefa")} type="checkbox" />
+                    <Form.Check.Input checked={props.checkedTarefas.includes(tarefa.id)} onChange={(event) => props.checkedElement(event.target.checked, tarefa.id, "tarefa")} type="checkbox" />
                     <Form.Check.Label>Executado ?</Form.Check.Label>
                 </td>
             </tr>
@@ -67,19 +73,19 @@ const TableBodyTrocas = props => {
             <tr style={{ textAlign: "center" }} key={troca.id}>
                 <td className="align-middle">{troca.etapaNome}</td>
                 <td className="align-middle">{troca.posicao}</td>
-                <td key={troca.id}  >
-                    {troca.listaMontagens.map((pair, index) => {
-                        return <div key={index}>{`${pair[0]}`} </div>
+                <td>
+                    {troca.listaMontagens.map((pair, indexy) => {
+                        return <div key={indexy}>{`${pair[0]}`} </div>
                     })}
                 </td>
-                <td key={index} >
-                    {troca.listaMontagens.map((pair, index) => {
-                        return <div key={index}>{`${pair[1]} ${pair[2]}`} </div>
+                <td>
+                    {troca.listaMontagens.map((pair, indexz) => {
+                        return <div key={indexz}>{`${pair[1]} ${pair[2]}`} </div>
                     })}
                 </td>
                 <td className="align-middle" >
-                    <Form.Check.Input onChange={(event) => props.checkedElement(event.target.checked, troca.id, "troca")} type="checkbox" />
-                    <Form.Check.Label>Executado ?</Form.Check.Label>
+                    <Form.Check.Input checked={props.checkedTrocas.includes(troca.id)} onChange={(event) => props.checkedElement(event.target.checked, troca.id, "troca")} type="checkbox" />
+                    <Form.Check.Label >Executado ?</Form.Check.Label>
                 </td>
             </tr>
         )
@@ -95,9 +101,12 @@ const FinalizarOmp = (props) => {
     const [omp] = useState(props.location.state)
     const [trocas, setTrocas] = useState([])
     const [tarefas, setTarefas] = useState([])
-    const [tarefasIdChecked,setTarefasChecked] = useState([])
+    const [tarefasIdChecked, setTarefasChecked] = useState([])
     const [trocasIdChecked, setTrocasIdChecked] = useState([])
     const histoy = useHistory()
+    const context = useContext(WebSocketContext)
+    const [markedTarefas, setmarkedTarefas] = useState(false)
+    const [markedTrocas, setmarkedTrocas] = useState(false)
     const [dataRealizada, setDataRealizada] = useState(new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0])
 
     useEffect(() => {
@@ -105,31 +114,36 @@ const FinalizarOmp = (props) => {
             setTrocas(res.trocas)
             setTarefas(res.tarefas)
         })
-    },[omp])
+    }, [omp])
 
     useEffect(() => {
         console.log(tarefasIdChecked)
-    },[tarefasIdChecked])
+    }, [tarefasIdChecked])
 
     useEffect(() => {
         console.log(trocasIdChecked)
-    },[trocasIdChecked])
+    }, [trocasIdChecked])
 
-    const checkedElement = (checked,id,type) => {
-       
-        if(checked){
-            if(type==="tarefa"){
+    const checkedElement = (checked, id, type) => {
+
+        if (checked) {
+            if (type === "tarefa") {
                 const newTarefaArray = tarefasIdChecked.concat(id)
-                setTarefasChecked(newTarefaArray)
+                if(!newTarefaArray.includes(id)) {
+                    setTarefasChecked(newTarefaArray)
+                }
 
             } else {
                 const newTrocasArray = trocasIdChecked.concat(id)
-                setTrocasIdChecked(newTrocasArray)
+                if(newTrocasArray.includes(id)) {
+                    setTrocasIdChecked(newTrocasArray)
+                }
+              
             }
-      
+
         } else {
 
-            if(type==="tarefa"){
+            if (type === "tarefa") {
                 const removedArray = tarefasIdChecked.filter((value) => {
                     return Number(value) !== Number(id)
                 })
@@ -140,13 +154,32 @@ const FinalizarOmp = (props) => {
                 })
                 setTrocasIdChecked(removedTrocaArray)
             }
-            
+
+        }
     }
-}
+
+    const markAllTrocas = () => {
+        if(markedTrocas){
+            setTrocasIdChecked([])
+        } else {
+            setTrocasIdChecked(trocas.map(troca => troca.id))
+        }
+        setmarkedTrocas(!markedTrocas)
+        
+    }
+
+    const markAllTarefas = () => {
+        if(markedTarefas){
+            setTarefasChecked([])
+        } else {
+            setTarefasChecked(tarefas.map(tarefa => tarefa.id))
+        }
+        setmarkedTarefas(!markedTarefas)
+    }
 
     return (
         <>
-     
+
 
 
             <Container style={{ marginTop: 20 }}>
@@ -155,44 +188,53 @@ const FinalizarOmp = (props) => {
 
                 </Row>
                 <Form.Row style={{ marginTop: 10 }}>
-                    
+
                     <Col md={4}>
                         <Form.Group>
                             <Form.Label>Realizado em: </Form.Label>
                             <Form.Control
                                 type="datetime-local"
                                 defaultValue={dataRealizada}
-                                onChange={event => { setDataRealizada(event.target.value)}}>
+                                onChange={event => { setDataRealizada(event.target.value) }}>
 
                             </Form.Control>
                         </Form.Group>
                     </Col>
-                 
+
                 </Form.Row>
                 <h4>Trocas</h4>
-                {trocas && <Table className="table table-hover">
-                    <TableHeadTrocas></TableHeadTrocas>
-                    <tbody>
-                        <TableBodyTrocas trocas={trocas} checkedElement={(checked,id,type) => checkedElement(checked,id,type)}></TableBodyTrocas>
-                    </tbody>
-                </Table>}
+
+                {trocas &&
+                    <>
+                        <Button style={{marginBottom : 15}}  onClick={() => markAllTrocas()}>{`${markedTrocas ? "Desmarcar" :  "Marcar"} todos`}</Button>
+                        <Table className="table table-hover">
+                            <TableHeadTrocas></TableHeadTrocas>
+                            <tbody>
+                                <TableBodyTrocas trocas={trocas} checkedTrocas={trocasIdChecked} checkedElement={(checked, id, type) => checkedElement(checked, id, type)}></TableBodyTrocas>
+                            </tbody>
+                        </Table>
+                    </>}
                 <Fragment>
                     <h4>Tarefas</h4>
-                    {tarefas && <Table>
-                        <TableHeadTarefas></TableHeadTarefas>
-                        <tbody>
-                        <TableBodyTarefas tarefas={tarefas} checkedElement={(checked,id,type) => checkedElement(checked,id,type)}></TableBodyTarefas>
-                        </tbody>
-                        
-                    </Table>}
+                    {tarefas &&
+                        <>
+                            <Button style={{marginBottom : 15}} onClick={() => markAllTarefas()}>{`${markedTarefas ? "Desmarcar" :  "Marcar"} todos`}</Button>
+                            <Table>
+                                <TableHeadTarefas></TableHeadTarefas>
+                                <tbody>
+                                    <TableBodyTarefas tarefas={tarefas} checkedTarefas={tarefasIdChecked} checkedElement={(checked, id, type) => checkedElement(checked, id, type)}></TableBodyTarefas>
+                                </tbody>
+
+                            </Table>
+                        </>}
                 </Fragment>
 
 
-                
-                        <Button onClick={() => {
-                            const OmpFinalizarForm = {id : omp.id, tarefasId : tarefasIdChecked , trocasId : trocasIdChecked, data : dataRealizada }
-                            ScqApi.FinalizarOmp(OmpFinalizarForm).then(() => histoy.push("/Omp"))
-                        }}>Confirmar</Button>
+
+                <Button onClick={() => {
+                    const OmpFinalizarForm = { id: omp.id, tarefasId: tarefasIdChecked, trocasId: trocasIdChecked, data: dataRealizada }
+                    ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, props, "OrdemDeManutencao", toastOk, context, [props.loadTarefasDeManutencao]); histoy.push("/Omp") })
+                }}>Confirmar</Button>
 
 
             </Container>
@@ -200,4 +242,4 @@ const FinalizarOmp = (props) => {
     )
 }
 
-export default withToastManager(withMenuBar(FinalizarOmp))
+export default withToastManager(withMenuBar(connect(mapToStateProps.toProps, dispatchers)(FinalizarOmp)))
