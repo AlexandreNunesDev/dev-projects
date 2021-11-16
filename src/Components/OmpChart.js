@@ -55,7 +55,7 @@ function OmpChart({ chartData, containerRef }) {
     }, [chartData])
 
     return <>
-        <h4>{chartData[0].processName}</h4>
+        <h4>Indicador de Omp</h4>
             <BarChart width={containerRef.current.offsetWidth} height={300}
                 data={entries}
                 margin={{ top: 20, right: 30, left: 50, bottom: 0 }}>
@@ -65,14 +65,11 @@ function OmpChart({ chartData, containerRef }) {
                 <YAxis unit={"%"} type={"number"} tickCount={10} />
                 <Tooltip content={(props) => CustomChartTooltip(props, ["trocaRate","tarefaRate"])} />
                 
-                <Bar fill="#2691fc" stackId={"tarefa"} dataKey="numberOfTarefasExecuted" >
-                </Bar>
-                <Bar fill="#ff3224" stackId={"tarefa"} dataKey="numberOfTarefasShouldBeExecuted" >
+                <Bar fill="#2691fc"  stackId={"tarefa"} dataKey="tarefaRate" >
                     <LabelList dataKey="tarefaRate" position="top" />
                 </Bar>
-                <Bar fill="#8cf55f"  stackId={"troca"} dataKey="numberOfTrocasExecuted" >
-                </Bar>
-                <Bar fill="#ff3224" stackId={"troca"} dataKey="numberOfTrocasShouldBeExecuted" >
+                
+                <Bar fill="#8cf55f" stackId={"troca"} dataKey="trocaRate" >
                     <LabelList dataKey="trocaRate" position="top" />
                 </Bar>
             </BarChart>
