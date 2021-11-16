@@ -88,6 +88,7 @@ class MenuBar extends React.Component {
 
                   <NavDropdown title="Consultas" id="basic-nav-dropdown">
                     <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
+                    <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
                     <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
                   </NavDropdown>
                   <NavDropdown title="Cadastros" id="basic-nav-dropdown">
@@ -166,7 +167,9 @@ class MenuBar extends React.Component {
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
+                  <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
                   <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
+
                 </NavDropdown>
 
               </Nav>

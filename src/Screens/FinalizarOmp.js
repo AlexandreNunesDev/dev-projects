@@ -129,13 +129,14 @@ const FinalizarOmp = (props) => {
         if (checked) {
             if (type === "tarefa") {
                 const newTarefaArray = tarefasIdChecked.concat(id)
-                if(!newTarefaArray.includes(id)) {
+                if(!tarefasIdChecked.includes(id)) {
+                  
                     setTarefasChecked(newTarefaArray)
                 }
 
             } else {
                 const newTrocasArray = trocasIdChecked.concat(id)
-                if(newTrocasArray.includes(id)) {
+                if(!trocasIdChecked.includes(id)) {
                     setTrocasIdChecked(newTrocasArray)
                 }
               

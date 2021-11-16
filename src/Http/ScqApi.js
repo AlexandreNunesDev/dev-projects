@@ -72,6 +72,9 @@ const ScqApi = {
         return http.get("fullEtapaAnalises/" + dataInicial + "/" + dataFinal + "/" + parametroId)
 
     },
+    LoadOmpChart : (fromDate,toDate) => {
+        return http.get(`ompChart/${fromDate}/${toDate}`)
+    },
 
    
     ListaParametros: () => {
