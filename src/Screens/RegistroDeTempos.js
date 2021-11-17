@@ -79,7 +79,9 @@ const RegistroDetempos = (props) => {
 
     const onProcessoIdChoose = (processoId) => {
         let cicloTimefield = timefieldFactory(0, "Ciclo", null, null, null, false)
-        let timeFields = parametros.filter(parametro => {
+        let sortedParametros =  [...parametros]
+        sortedParametros = sortedParametros.sort((a,b) => Number(a.posicao) - Number(b.posicao))
+        let timeFields = sortedParametros.filter(parametro => {
             if ((Number(parametro.processoId) === Number(processoId)) && (parametro.unidade === "s")) {
                 return true
             }
