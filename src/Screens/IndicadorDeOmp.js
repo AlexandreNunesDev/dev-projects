@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react"
 import { Button, Col, Container, Form } from "react-bootstrap"
+import { useToasts } from "react-toast-notifications/dist/ToastProvider"
 import OmpChart from "../Components/OmpChart"
 import { withMenuBar } from "../Hocs/withMenuBar"
 import ScqApi from "../Http/ScqApi"
@@ -11,11 +12,25 @@ const IndicadorDeOmp = () => {
     const [dataInicial, setDataInicial] = useState(null)
     const [dataFinal, setDataFinal] = useState(null)
     const [chartData, setChartData] = useState(null)
+    const toast = useToasts()
     const containerRef = useRef(null)
 
 
     const loadChart = () => {
-        ScqApi.LoadOmpChart(dataInicial, dataFinal).then(res => setChartData(res))
+        let datainicialtime  = new Date(dataInicial).getTime()
+        let datafinaltime  = new Date(dataFinal).getTime()
+        if((dataInicial == null) || (dataFinal == null)) {
+            toast.addToast("Deta icial e final devem ser definidas", {
+                appearance: 'error', autoDismiss: true
+            })
+        } else if(datainicialtime >  datafinaltime ) {
+            toast.addToast("Data incial precisa ser menor que data final", {
+                appearance: 'error', autoDismiss: true
+            })
+        } else {
+            ScqApi.LoadOmpChart(dataInicial, dataFinal).then(res => setChartData(res))
+        }
+       
     }
 
     return <>

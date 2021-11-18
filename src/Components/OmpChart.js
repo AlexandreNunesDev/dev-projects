@@ -66,11 +66,11 @@ function OmpChart({ chartData, containerRef }) {
                 <Tooltip content={(props) => CustomChartTooltip(props, ["trocaRate","tarefaRate"])} />
                 
                 <Bar fill="#2691fc"  stackId={"tarefa"} dataKey="tarefaRate" >
-                    <LabelList dataKey="tarefaRate" position="top" />
+                    <LabelList dataKey="tarefaRate" position="top" angle={-90}  />
                 </Bar>
                 
                 <Bar fill="#8cf55f" stackId={"troca"} dataKey="trocaRate" >
-                    <LabelList dataKey="trocaRate" position="top" />
+                    <LabelList dataKey="trocaRate" position="top"  angle={-90}  />
                 </Bar>
             </BarChart>
 
