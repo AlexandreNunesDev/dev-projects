@@ -226,6 +226,7 @@ class MenuBar extends React.Component {
               <Nav className="mr-auto">
                 <Link className="nav-link" to="/Home">Home</Link>
                 <Link className="nav-link" to={!this.props.global.isAuth ? "/Login" : "/Home"} onClick={() => this.props.global.isAuth && this.logUserOut()}>{!this.props.global.isAuth ? "Login" : "Logout"}</Link>
+                <Link className="nav-link" to="/Portal" >Portal Forms</Link>
               </Nav>
 
             </Navbar.Collapse>

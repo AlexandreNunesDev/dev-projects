@@ -11,7 +11,9 @@ const initialState = {
     tokenExpiration : '',
     userRole : '',
     userName : '',
-    userEnable : ''
+    userEnable : '',
+    googlKey : 'AIzaSyAwUkhGE3_YB8cT4706OKT-xi3RpvnL014',
+    portalSheetApi : 'https://sheets.googleapis.com/v4/spreadsheets/1_RVYwW2QaWfaq3Ib-SOs6jo9qbGEbqh01rHRBrS2ewY/values'
 }
 
 const loadState = () => {

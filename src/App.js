@@ -46,6 +46,7 @@ import HistoricoDeAnalise from './Screens/HistoricoDeAnalise';
 import RegistroDetempos from './Screens/RegistroDeTempos';
 import RegistroAnalise from './Screens/RegistroAnalise';
 import IndicadorDeOmp from './Screens/IndicadorDeOmp';
+import PortalFormularios from './Screens/PortalFormularios';
 
 
 
@@ -205,6 +206,7 @@ class App extends React.Component {
             <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />
+            <Route path='/Portal' exact={true} component={PortalFormularios} />
             <Route path='/Registrar' exact={true} component={Registrar} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />

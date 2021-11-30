@@ -7,7 +7,7 @@ import notificationsReducer from './notificationsReducer'
 import timeReducer from './timeReducers'
 import analiseReducer from './analisesReducers'
 import ordensDeManutencaoReducer from './ordensDeManutencaoReducer'
-
+import formularios from './formularioReducer'
 
 
 
@@ -18,7 +18,8 @@ const appReducer = combineReducers({
    notification :notificationsReducer,
    timeReducer : timeReducer,
    analiseReducer : analiseReducer,
-   ordensDeManutencao : ordensDeManutencaoReducer
+   ordensDeManutencao : ordensDeManutencaoReducer,
+   formulariosReducer : formularios
 
   
 })

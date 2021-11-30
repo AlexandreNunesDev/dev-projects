@@ -10,6 +10,12 @@ export const subId = (s) => {
     return s.replace("Id", "");
   };
 
+  
+
+export const addApiKey = (url,key) => {
+    return `${url}${key}`
+}
+
 
   
 export const formatIsoDate = (date) => {
