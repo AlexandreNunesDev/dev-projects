@@ -13,14 +13,13 @@ import { buildFormModel } from '../models/portalFormsModel';
 
 function PortalFormularios() {
 
-    const targetForm = useSelector(state => state.formulariosReducer.targetForm)
-    const formNames = useSelector(state => state.formulariosReducer.formularios)
-    const apiKey = useSelector(state => state.global.googlKey)
+    const [formNames,setFormNames] = useState([])
     const [fullFormTarget,setFullFormTarget] = useState()
-    const sheetBaseUrl = useSelector(state => state.global.portalSheetApi)
     const [targetRowIndex, setTargetRowIndex] = useState(0)
+
+    const apiKey =  'AIzaSyAwUkhGE3_YB8cT4706OKT-xi3RpvnL014'
+    const  sheetBaseUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1_RVYwW2QaWfaq3Ib-SOs6jo9qbGEbqh01rHRBrS2ewY/values'
     const httpClient = axios.create({ baseURL: sheetBaseUrl })
-    const dispatch = useDispatch()
     httpClient.interceptors.request.use(async config => {
         config.url = config.url + `&key=${apiKey}`;
         return config;
@@ -33,7 +32,7 @@ function PortalFormularios() {
         httpClient.get(":batchGet?ranges=dadosPortal!A:A").then(res => {
             let formListNames = res.data.valueRanges[0].values.map(value => value[0])
             formListNames.shift()
-            dispatch(updateFormularios(formListNames))
+            setFormNames(formListNames)
         })
         return () => {
 
