@@ -45,36 +45,41 @@ class IndicadorDeAnalise extends Component {
     }
 
     getGlobalsStats = () => {
-        let qtd =  this.state.fullProcessoAnaliseChartData.length
+        let qtd = this.state.fullProcessoAnaliseChartData.length
         let globalRed = 0
         let globalYellow = 0
         let globalGreen = 0
         let globalFreq = 0
         this.state.fullProcessoAnaliseChartData.forEach((processoChart) => { globalGreen += Number(processoChart.numbersOfGreen); globalRed += Number(processoChart.numbersOfRed); globalYellow += Number(processoChart.numbersOfYellow); globalFreq += Number(processoChart.numbersOfInsideFrequency) })
-        globalRed = globalRed/qtd
-        globalYellow = globalYellow/qtd
-        globalGreen = globalGreen/qtd
-        globalFreq = globalFreq/qtd
+        globalRed = globalRed / qtd
+        globalYellow = globalYellow / qtd
+        globalGreen = globalGreen / qtd
+        globalFreq = globalFreq / qtd
         return (
-            <div hidden={!this.state.showAnalitics} style={{ display: "grid", gridColumn: 2 }}>
-            <Table>
-                <thead>
-                    <th>Faixas vermelhas</th>
-                    <th>Faixas amarelas</th>
-                    <th>Faixas verdes</th>
-                    <th>Frequencia</th>
-                </thead>
-                <tbody>
-                    <td style={{backgroundColor : "#ed493e",textAlign: "center" }}>{globalRed.toFixed(2)} %</td>
-                    <td style={{backgroundColor : "#f0e06c",textAlign: "center" }}>{globalYellow.toFixed(2)} %</td>
-                    <td style={{backgroundColor : "#8ae364",textAlign: "center" }}>{globalGreen.toFixed(2)} %</td>
-                    <td style={{backgroundColor : "#7fb2f0",textAlign: "center" }}>{globalFreq.toFixed(2)} %</td>
-                </tbody>
-            </Table>
+            <div hidden={!this.state.showAnalitics} >
+                <h3>Indice Global</h3>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th style={{textAlign: "center" }}>Faixas vermelhas</th>
+                            <th style={{textAlign: "center" }}>Faixas amarelas</th>
+                            <th style={{textAlign: "center" }}>Faixas verdes</th>
+                            <th style={{textAlign: "center" }}>Frequencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style={{ backgroundColor: "#ed493e", textAlign: "center" }}>{globalRed.toFixed(2)} %</td>
+                            <td style={{ backgroundColor: "#f0e06c", textAlign: "center" }}>{globalYellow.toFixed(2)} %</td>
+                            <td style={{ backgroundColor: "#8ae364", textAlign: "center" }}>{globalGreen.toFixed(2)} %</td>
+                            <td style={{ backgroundColor: "#7fb2f0", textAlign: "center" }}>{globalFreq.toFixed(2)} %</td>
+                        </tr>
+                    </tbody>
+                </Table>
             </div>
-            
-            
-            )
+
+
+        )
 
 
     }
@@ -211,9 +216,7 @@ class IndicadorDeAnalise extends Component {
 
                             </Col>
                         </Form.Row>
-                        <Form.Row>
                             {this.state.fullProcessoAnaliseChartData && this.getGlobalsStats()}
-                        </Form.Row>
 
                         <Form.Row hidden={!this.state.personalizarIntervalo} style={{ marginTop: 10 }}>
                             <Form.Group as={Col}>
@@ -239,7 +242,7 @@ class IndicadorDeAnalise extends Component {
                         <Form.Group style={{ marginTop: 20 }}>
                             <Button style={{ margin: 5 }} variant="primary" onClick={() => { this.setState({ fullProcessoAnaliseChartData: [], fullEtapaAnaliseChartData: [], analiseChartData: null }, () => this.loadChart()) }}>Carregar Grafico</Button>
                         </Form.Group>
-                       
+
                     </Form>
                 </Container>
 

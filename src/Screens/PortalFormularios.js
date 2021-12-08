@@ -1,14 +1,8 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import GenericSelect from '../Components/GenericSelect';
-import { withMenuBar } from '../Hocs/withMenuBar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
-import dispatchers from '../mapDispatch/mapDispathToProps';
-import { updateFormularios } from '../Reducers/formularioReducer';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import { arrayExpression } from '@babel/types';
+import { withMenuBar } from '../Hocs/withMenuBar';
 import { buildFormModel } from '../models/portalFormsModel';
 
 function PortalFormularios() {
@@ -62,7 +56,6 @@ function PortalFormularios() {
         })
     }
 
-    useEffect(() => console.log(targetRowIndex), [targetRowIndex])
 
 
     const enviarParaWahts = async () => {

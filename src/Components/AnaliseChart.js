@@ -1,17 +1,32 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-
-import { LineChart, XAxis, CartesianGrid, Line, YAxis,ReferenceLine ,Tooltip} from 'recharts'
+import { Table } from 'react-bootstrap';
+import { LineChart, XAxis, CartesianGrid, Line, YAxis, ReferenceLine, Tooltip } from 'recharts'
 import AnaliseEdit from './AnaliseEdit';
+import { CustomDot } from './CustomLineDot';
 
-const CustomTooltip = ({ active, payload }) => {
-    
+
+
+const AnaliseChart = (props) => {
+
+  const [entries, setEntries] = useState()
+  const [selectedAnalise, setSelectedAnalise] = useState()
+  const [show, setShow] = useState(false)
+
+  const handleClose = () => {
+    setShow(false)
+  }
+
+  const CustomTooltip = ({ active, payload }) => {
+
     const analise = payload == null ? null : payload[0]?.payload
 
 
-    if (active && payload!= null) {
+
+    if (active && payload != null) {
+
       return (
-        <div  style={{backgroundColor : "white" ,opacity : 0.65 }} className="custom-tooltip">
+        <div style={{ backgroundColor: "white", opacity: 0.65, }} className="custom-tooltip">
           <p className="label">{`Id: ${analise.id}`}</p>
           <p className="label">{`Analista: ${analise.Analista}`}</p>
           <p className="intro">{`Data: ${analise.Data}`}</p>
@@ -21,97 +36,117 @@ const CustomTooltip = ({ active, payload }) => {
         </div>
       );
     }
-  
+
+
+
+
     return null;
   };
 
-const AnaliseChart = (props) => {
+  useEffect(() => {
+    const resultados = []
+    let i = 0;
+    for (const resultado of Object.entries(props.data.resultados)) {
+      let dataTime = resultado[0].split("T")
+      let dataFormatada = moment(dataTime[0]).format("DD-MM-yy")
 
-    const [entries, setEntries] = useState()
-    const [selectedAnalise, setSelectedAnalise] = useState()
-    const [show,setShow] = useState(false)
-
-    const handleClose = () => {
-      setShow(false)
-    }
-
-    useEffect(() => {
-      const resultados = []
-      let i = 0;
-      for (const resultado of Object.entries(props.data.resultados)) {
-          let dataTime = resultado[0].split("T")
-          let dataFormatada = moment(dataTime[0]).format("DD-MM-yy")
-          
-          let data = {"id" : props.data.analisesId[i], "Analista" : props.data.analistas[i],"Data" : `${dataFormatada} - ${dataTime[1]}`, "Resultado" : resultado[1].toFixed(2), "unidade" : props.data.unidade,
-           "defaultData" : resultado[0], "processoId": props.data.processoId, "etapaId": props.data.etapaId,
-           "parametroId": props.data.parametroId, "observacoesAnalise" : props.data.observacoesAnalise[i],"observacoesOcp" :  props.data.observacoesOcp[i]  }
-          resultados.push(data)
-          i = i + 1;
+      let data = {
+        "id": props.data.analisesId[i], "Analista": props.data.analistas[i], "Data": `${dataFormatada} - ${dataTime[1]}`, "Resultado": resultado[1].toFixed(2), "unidade": props.data.unidade,
+        "defaultData": resultado[0], "processoId": props.data.processoId, "etapaId": props.data.etapaId,
+        "parametroId": props.data.parametroId, "observacoesAnalise": props.data.observacoesAnalise[i], "observacoesOcp": props.data.observacoesOcp[i]
       }
- 
-  
-    
-    setEntries(resultados)},[props.data])
-
-      const handleClick = (event,payload) => {
-      
-      setSelectedAnalise(payload.payload)
-      setShow(true)
+      resultados.push(data)
+      i = i + 1;
     }
 
 
 
+    setEntries(resultados)
+  }, [props.data])
 
-    const buildDomain = () => {
-      let yMax
-      let yMin
-        if(props.data.limiteMax) {
-         yMax = props.data.limiteMax > props.data.yRangeMax ? props.data.limiteMax :  props.data.yRangeMax
-        } else {
-          yMax = props.data.pMax
-        }
+  const handleClick = (event, payload) => {
 
-        if(props.data.limiteMin) {
-          yMin = props.data.limiteMin < props.data.yRangeMin ? props.data.limiteMin :  props.data.yRangeMin
-         } else {
-           yMin = props.data.pMin
-         }
-         
-        return [yMin,yMax] 
+    setSelectedAnalise(payload.payload)
+    setShow(true)
+  }
+
+  const buildDomain = () => {
+    let yMax
+    let yMin
+    if (props.data.limiteMax) {
+      yMax = props.data.limiteMax > props.data.yRangeMax ? props.data.limiteMax : props.data.yRangeMax
+    } else {
+      yMax = props.data.pMax
     }
 
-  
+    if (props.data.limiteMin) {
+      yMin = props.data.limiteMin < props.data.yRangeMin ? props.data.limiteMin : props.data.yRangeMin
+    } else {
+      yMin = props.data.pMin
+    }
 
-    return (
-        <>
-        <h4 style={{alignContent:"center"}}>{`Grafico de Analise  ${props.data.nomeParam} ${props.data.nomeEtapa} ${props.data.nomeProcesso} `}</h4>
-      
-        <AnaliseEdit show={show} handleClose={handleClose} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
-        <div  style={{display : "flex"}}>
-        <LineChart  width={props.containerRef.current.offsetWidth} height={250}  
+    return [yMin, yMax]
+  }
 
-            data={entries}
-            margin={{ top: 20, right: 30, left: 30, bottom: 0 }}>
-            <ReferenceLine y={props.data.pMax} label={props.data.pMax}  stroke="red" strokeWidth={2} />
-            <ReferenceLine y={props.data.pMaxT} label={props.data.pMaxT}  stroke="yellow"  strokeWidth={2} />
-            <ReferenceLine y={props.data.pMinT} label={props.data.pMinT} stroke="yellow" strokeWidth={2}  />
-            <ReferenceLine y={props.data.pMin} label={props.data.pMin} stroke="red"  strokeWidth={2} />
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis height={50} tickMargin={20} dataKey="Data" interval="preserveStartEnd" />
-            <YAxis  unit={props.data.unidade} type={"number"} domain={buildDomain()} tickCount={10}/>
-            <Tooltip content={<CustomTooltip ></CustomTooltip>} />
-            <Line  type="monotone"  unit={props.data.unidade} dataKey="Resultado" activeDot={{ onClick: handleClick }}  strokeWidth={1.5} stroke="cyan" />
+
+
+  return (
+    <>
+      <h4 style={{ alignContent: "center" }}>{`Grafico de Analise  ${props.data.nomeParam} ${props.data.nomeEtapa} ${props.data.nomeProcesso} `}</h4>
+
+      <AnaliseEdit show={show} handleClose={handleClose} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
+      <div style={{ display: "flex-auto" }}>
+        <LineChart width={props.containerRef.current.offsetWidth} height={250}
+
+          data={entries}
+          margin={{ top: 20, right: 30, left: 30, bottom: 0 }}>
+          <ReferenceLine y={props.data.pMax} label={props.data.pMax} stroke="red" strokeWidth={2} />
+          <ReferenceLine y={props.data.pMaxT} label={props.data.pMaxT} stroke="yellow" strokeWidth={2} />
+          <ReferenceLine y={props.data.pMinT} label={props.data.pMinT} stroke="yellow" strokeWidth={2} />
+          <ReferenceLine y={props.data.pMin} label={props.data.pMin} stroke="red" strokeWidth={2} />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis height={50} tickMargin={20} dataKey="Data" interval="preserveStartEnd" />
+          <YAxis unit={props.data.unidade} type={"number"} domain={buildDomain()} tickCount={10} />
+          <Tooltip position={{ y: -80}} content={<CustomTooltip  ></CustomTooltip>} />
+          <Line type="monotone" unit={props.data.unidade} activeDot={{ onClick: handleClick }}   dataKey="Resultado" dot={<CustomDot />} strokeWidth={1.5} stroke="cyan" />
         </LineChart>
-        <div  hidden={!props.showAnalitics} style={{display : "grid",gridColumn : 1}}>
-            <h2 style={{color : "#ed493e"}} >{props.data.numbersOfRed}</h2>
-            <h2 style={{color : "#f0e06c"}}>{props.data.numbersOfYellow}</h2>
-            <h2 style={{color : "#8ae364"}}>{props.data.numbersOfGreen}</h2>
-            <h2 style={{color : "#7fb2f0"}}>{props.data.numbersOfInsideFrequency}</h2>
+        <div >
+          <Table hidden={!props.showAnalitics}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: "center" }}>Mínimo</th>
+                <th style={{ textAlign: "center" }}>Máximo</th>
+                <th style={{ textAlign: "center" }}>Média</th>
+                <th style={{ textAlign: "center" }}>Desvio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ backgroundColor: "#dce1e3", textAlign: "center" }}>{`${props.data.statisticas[0]} ${props.data.unidade}`} </td>
+                <td style={{ backgroundColor: "#dce1e3", textAlign: "center" }}>{`${props.data.statisticas[1]} ${props.data.unidade}`}</td>
+                <td style={{ backgroundColor: "#dce1e3", textAlign: "center" }}>{`${props.data.statisticas[2]} ${props.data.unidade}`}</td>
+                <td style={{ backgroundColor: "#dce1e3", textAlign: "center" }}>{`${props.data.statisticas[3]}`}</td>
+              </tr>
+              <tr >
+                <th style={{ textAlign: "center" }}>Fora Specificicado</th>
+                <th style={{ textAlign: "center" }}>Fora Faixa Trabalho</th>
+                <th style={{ textAlign: "center" }}>Dentro Faixa Trabalho</th>
+                <th style={{ textAlign: "center" }}>Dentro da Frequencia</th>
+              </tr>
+              <tr >
+                <td style={{ backgroundColor: "#ed493e", textAlign: "center"  }} >{props.data.numbersOfRed}</td>
+                <td style={{ backgroundColor: "#f0e06c", textAlign: "center"  }}>{props.data.numbersOfYellow}</td>
+                <td style={{ backgroundColor: "#8ae364", textAlign: "center"  }}>{props.data.numbersOfGreen}</td>
+                <td style={{ backgroundColor: "#7fb2f0", textAlign: "center"  }}>{props.data.numbersOfInsideFrequency}</td>
+              </tr>
+            </tbody>
+          </Table>
         </div>
-        </div>
-      
-   
-        </>
-    )
+
+      </div>
+
+
+    </>
+  )
 }
 export default AnaliseChart
