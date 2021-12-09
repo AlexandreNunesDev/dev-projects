@@ -15,8 +15,8 @@ const getRows = (ocp) => {
         <td style={{ textAlign: "center" }}>{ocp.processoNome}</td>
         <td style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
         <td style={{ textAlign: "center" }}>{ocp.parametroNome}</td>
-        <td style={{ textAlign: "center" }}>{ocp.isAdicao ? ocp.adicoesDto[0].data : ocp.dataAcao}  </td>
-        <td style={{ textAlign: "center" }}>{ocp.isAdicao ?  ocp.adicoesDto.map(adicao => <li prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>) : ocp.acao}</td>
+        <td style={{ textAlign: "center" }}>{ocp.adicoesDto.length > 0 && ocp.isAdicao ?  ocp.adicoesDto[0].data : ocp.dataAcao}  </td>
+        <td style={{ textAlign: "center" }}>{ocp.adicoesDto.length > 0 && ocp.isAdicao ?  ocp.adicoesDto.map(adicao => <li prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>) : ocp.acao}</td>
         <td style={{ textAlign: "center" }}>{ocp.responsavel}</td>
     </tr>)
 
@@ -45,11 +45,17 @@ const getHeads = () => {
 
 
 
+
+
 const OcpView = (props) => {
+    const onCloseOcpView = () => {
+        props.showOcpView(false)
+        props.loadOcpView([]) 
+    }
     return (
-    <Modal size={"xl"} show={props.ocp.showOcpView} onHide={() => props.showOcpView(false) }>
+    <Modal size={"xl"} show={props.ocp.showOcpView} onHide={() => onCloseOcpView() }>
         <Modal.Header closeButton>
-            <Modal.Title>Ocps da analise {props.ocp.ocpsView[0]?.analiseId}</Modal.Title>
+            <Modal.Title>Ocps da analise</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Table striped bordered hover>

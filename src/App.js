@@ -1,52 +1,50 @@
-import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import CadastroEtapa from './Screens/CadastroEtapa';
-import CadastroParametro from './Screens/CadastroParametro';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import dispatchers from './mapDispatch/mapDispathToProps';
+import mapToStateProps from './mapStateProps/mapStateToProps';
+import AlgoDeuErrado from './Screens/algoDeuErrado';
 import CadastroTurno from './Screens/CadastrarTurno';
+import CadastroDeTarefasDeManutencao from './Screens/CadastroDeTarefasDeManutencao';
+import CadastroEtapa from './Screens/CadastroEtapa';
 import CadastroMateriaPrima from './Screens/CadastroMateriaPrima';
-import RegistroDeAnalise from './Screens/RegistroAnalise';
-import OrdensDeCorreção from './Screens/OrdensDeCorreção';
-import IndicadorDeAnalise from './Screens/IndicadorDeAnalise';
-import Home from './Screens/Home';
-import CadastroDeOcpAdicao from './Screens/CadastroOcpWithAdicao';
 import CadastroDeOcpAcao from './Screens/CadastroOcpWithAcao';
+import CadastroDeOcpAdicao from './Screens/CadastroOcpWithAdicao';
+import CadastroDeOcpLivre from './Screens/CadastroOcpWithLivre';
+import CadastroOmp from './Screens/CadastroOmp';
+import CadastroParametro from './Screens/CadastroParametro';
 import CadastroProcesso from './Screens/CadastroProcesso';
 import CadastroTroca from './Screens/CadastroTroca';
-import CadastroDeTarefasDeManutencao from './Screens/CadastroDeTarefasDeManutencao';
-import CadastroDeOcpLivre from './Screens/CadastroOcpWithLivre'
-import CadastroOmp from './Screens/CadastroOmp';
-import OrdensDeManutencao from './Screens/OrdensDeManutencao';
+import ConfirmMailPage from './Screens/ConfirmYourMail';
 import FinalizarOmp from './Screens/FinalizarOmp';
+import Home from './Screens/Home';
+import IndicadorDeAnalise from './Screens/IndicadorDeAnalise';
+import IndicadorDeOmp from './Screens/IndicadorDeOmp';
+import Login from './Screens/Login';
+import MultiRegistroAnalise from './Screens/NovoRegistroAnalise';
+import Omp from './Screens/Omp';
+import OrdensDeCorreção from './Screens/OrdensDeCorreção';
+import OrdensDeManutencao from './Screens/OrdensDeManutencao';
+import PortalFormularios from './Screens/PortalFormularios';
+import Registrar from './Screens/Registrar';
+import RegistroAnalise from './Screens/RegistroAnalise';
+import RegistroDetempos from './Screens/RegistroDeTempos';
+import ServidorError from './Screens/ServidorError';
+import TarefasDeManutencao from './Screens/TarefasDeManutencao';
 import VerOmp from './Screens/VerOmp';
-import EditarProcesso from './ScreensEdicao/EditarProcesso';
+import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
 import EditarEtapa from './ScreensEdicao/EditarEtapa';
-import EditarParametro from './ScreensEdicao/EditarParametro';
 import EditarMateriaPrima from './ScreensEdicao/EditarMateriaPrima';
+import EditarOcpAcao from './ScreensEdicao/EditarOcpAcao';
+import EditarOcpAdicao from './ScreensEdicao/EditarOcpAdicao';
+import EditarParametro from './ScreensEdicao/EditarParametro';
+import EditarProcesso from './ScreensEdicao/EditarProcesso';
 import EditarTroca from './ScreensEdicao/EditarTroca';
 import EditaTarefasDeManutencao from './ScreensEdicao/EditaTarefasDeManutencao';
-import Omp from './Screens/Omp';
-import TarefasDeManutencao from './Screens/TarefasDeManutencao';
-import Login from './Screens/Login';
-import ConfirmMailPage from './Screens/ConfirmYourMail';
-import {  isAuthenticated, isTokenExpired, logout } from './Services/auth';
-import Registrar from './Screens/Registrar';
-import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
-import AlgoDeuErrado from './Screens/algoDeuErrado';
-import ServidorError from './Screens/ServidorError';
-import EditarOcpAdicao from './ScreensEdicao/EditarOcpAdicao';
-import EditarOcpAcao from './ScreensEdicao/EditarOcpAcao';
-import MultiRegistroAnalise from './Screens/NovoRegistroAnalise'
-import dispatchers from './mapDispatch/mapDispathToProps';
-import { connect } from 'react-redux';
-import mapToStateProps from './mapStateProps/mapStateToProps'
-import { WebSocketContext } from './websocket/wsProvider';
+import { isAuthenticated, isTokenExpired, logout } from './Services/auth';
 import { optionsLoad } from './Services/storeService';
-import HistoricoDeAnalise from './Screens/HistoricoDeAnalise';
-import RegistroDetempos from './Screens/RegistroDeTempos';
-import RegistroAnalise from './Screens/RegistroAnalise';
-import IndicadorDeOmp from './Screens/IndicadorDeOmp';
-import PortalFormularios from './Screens/PortalFormularios';
+import { WebSocketContext } from './websocket/wsProvider';
 
 
 
@@ -149,7 +147,7 @@ class App extends React.Component {
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
-            <Route path='/HistoricoDeAnalise' exact={true} component={HistoricoDeAnalise} />
+           
             <Route path='/CadastroTurno' exact={true} component={CadastroTurno} />
           </Switch>
         </>
@@ -189,7 +187,7 @@ class App extends React.Component {
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
-            <Route path='/HistoricoDeAnalise' exact={true} component={HistoricoDeAnalise} />
+           
             
           </Switch>
         </>

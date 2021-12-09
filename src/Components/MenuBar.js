@@ -1,15 +1,15 @@
-import React from 'react'
-import { Modal, Navbar, Nav, NavDropdown, Badge, Button, Card, NavItem, Image, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import { Badge, Button, Card, Image, Modal, Nav, Navbar, NavDropdown, NavItem, Row } from 'react-bootstrap';
+import { isMobile } from 'react-device-detect';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { withToastManager } from 'react-toast-notifications';
 import ScqApi from '../Http/ScqApi';
 import scqlogo from '../img/logoscq.png';
-import { withToastManager } from 'react-toast-notifications';
-import { logout } from '../Services/auth';
-import { connect } from 'react-redux';
-import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from "../mapDispatch/mapDispathToProps";
-import { isMobile } from 'react-device-detect';
-import { Link } from 'react-router-dom';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import { logout } from '../Services/auth';
 
 class MenuBar extends React.Component {
 
@@ -89,7 +89,6 @@ class MenuBar extends React.Component {
                   <NavDropdown title="Consultas" id="basic-nav-dropdown">
                     <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                     <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
-                    <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
                   </NavDropdown>
                   <NavDropdown title="Cadastros" id="basic-nav-dropdown">
                     <Link className="dropdown-item" to="/CadastroProcesso">Processo</Link>
@@ -168,8 +167,6 @@ class MenuBar extends React.Component {
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                   <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
-                  <Link className="nav-link" to="/HistoricoDeAnalise">Historico de Analises</Link>
-
                 </NavDropdown>
 
               </Nav>

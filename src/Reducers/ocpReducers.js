@@ -25,9 +25,7 @@ const ocpsReducer = produce(
         draft.ocps.splice(0, maxIndexOcps, ...action.payload)
         break
       case "LOAD_OCP_VIEW":
-        const maxIndexOcpToView = draft.ocpsView.length
-        const ocpsToView = draft.ocps.filter(ocp => Number(ocp.analiseId) === Number(action.payload))
-        draft.ocpsView.splice(0, maxIndexOcpToView, ...ocpsToView)
+        draft.ocpsView = action.payload
         break
       case "ADD_OCP":
         draft.ocps.push(action.payload)

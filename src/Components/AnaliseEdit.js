@@ -1,14 +1,19 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications/dist/ToastProvider';
 import ScqApi from '../Http/ScqApi';
+import dispatchers from '../mapDispatch/mapDispathToProps';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
+import ocpsReducer from '../Reducers/ocpReducers';
 import { formatIsoDate } from '../Services/stringUtils';
 import { toastWarn } from '../Services/toastType';
 import CredentialConfirm from './CredentialConfirm';
 
 
 const AnaliseEdit = (props) => {
+
 
 
   const [dataPlanejada, setDataPlanejada] = useState()
@@ -72,6 +77,10 @@ const AnaliseEdit = (props) => {
           <Button onClick={() => { setShowDelete(true) }}>
             Excluir
           </Button>
+          {props.ocps && <Button onClick={() => {props.showOcps(true)}}>
+           {props.ocps.length > 1 ? `Ver ${props.ocps.length} ocps` : `Ver ${props.ocps.length == 0 ? "" :props.ocps.length} ocp` } 
+          </Button> }
+          
           <Button onClick={() => props.history.push("/CadastroOcpAdicao", props.analise)}>
             Gerar Ocp
           </Button>
@@ -87,4 +96,4 @@ const AnaliseEdit = (props) => {
 }
 
 
-export default withRouter(AnaliseEdit);
+export default withRouter(connect(mapToStateProps.toProps, dispatchers)(AnaliseEdit));
