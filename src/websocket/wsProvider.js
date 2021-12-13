@@ -46,7 +46,9 @@ export default ({ children }) => {
        
         socket.subscribe("/reducer/return", (message) => {
             
-            if((store.getState().global.isAuth) &&  (!isTokenExpired(store.getState().global.tokenExpiration))){
+            if((store.getState().global.isAuth) &&  (isTokenExpired(store.getState().global.tokenExpiration))){
+                history.push("/VoceFoiDesconectado")
+            } else  {
                 const bodyMsg = JSON.parse(message.body)
             
                 if(bodyMsg.type === 'action'){
@@ -58,8 +60,6 @@ export default ({ children }) => {
                     dispatchers(dispatch)[functionName]()
                    
                 }
-            } else {
-                history.push("/VoceFoiDesconectado")
             }
            
            

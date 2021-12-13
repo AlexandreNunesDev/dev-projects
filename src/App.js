@@ -26,7 +26,7 @@ import MultiRegistroAnalise from './Screens/NovoRegistroAnalise';
 import Omp from './Screens/Omp';
 import OrdensDeCorreção from './Screens/OrdensDeCorreção';
 import OrdensDeManutencao from './Screens/OrdensDeManutencao';
-import PortalFormularios from './Screens/PortalFormularios';
+import PortalFormularios from './portalForms/PortalFormularios';
 import Registrar from './Screens/Registrar';
 import RegistroAnalise from './Screens/RegistroAnalise';
 import RegistroDetempos from './Screens/RegistroDeTempos';

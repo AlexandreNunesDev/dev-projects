@@ -2,17 +2,23 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { useDispatch, useSelector } from 'react-redux';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { buildFormModel } from '../models/portalFormsModel';
+import { setFormNameChoosed, setFullFormTarget, setSpreadSheetId } from '../Reducers/dyanamicForms';
+import DynamicVizualization from './dynamicVisualizer';
 
 function PortalFormularios() {
 
     const [formNames,setFormNames] = useState([])
-    const [fullFormTarget,setFullFormTarget] = useState()
     const [targetRowIndex, setTargetRowIndex] = useState(0)
-
     const apiKey =  'AIzaSyAwUkhGE3_YB8cT4706OKT-xi3RpvnL014'
-    const  sheetBaseUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1_RVYwW2QaWfaq3Ib-SOs6jo9qbGEbqh01rHRBrS2ewY/values'
+    const sheetBaseUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1_RVYwW2QaWfaq3Ib-SOs6jo9qbGEbqh01rHRBrS2ewY/values'
+    const dispatch = useDispatch()
+    const fullFormTarget = useSelector(state => state.formsReducer.fullFormTarget)
+    const spreadSheetId = useSelector(state => state.formsReducer.spreadSheetId)
+    const formNameChoosed = useSelector(state => state.formsReducer.formNameChoosed)
+
     const httpClient = axios.create({ baseURL: sheetBaseUrl })
     httpClient.interceptors.request.use(async config => {
         config.url = config.url + `&key=${apiKey}`;
@@ -40,12 +46,13 @@ function PortalFormularios() {
 
 
     const setTargetForm = (selected) => {
+        dispatch(setFormNameChoosed(selected))
         let index = formNames.findIndex(forms => forms == selected)
         setTargetRowIndex(index+2)
         httpClient.get(`:batchGet?ranges=dadosPortal!B${index+2}:D${index+2}`).then(async res => {
             let valueRanges = getValueRange(res)
             let fullFormsModel = buildFormModel(valueRanges[0].values[0])
-            setFullFormTarget(fullFormsModel)
+            dispatch(setFullFormTarget(fullFormsModel))
         })
     }
 
@@ -66,14 +73,27 @@ function PortalFormularios() {
         })
     }
 
+    const linkGrafico = async () => {
+        httpClient.get(`:batchGet?ranges=dadosPortal!C${targetRowIndex}`).then(async res => {
+            let idSpreadSheet = getValueRange(res)[0].values[0]
+            console.log(idSpreadSheet)
+            dispatch(setSpreadSheetId(idSpreadSheet))
+        })
+    }
+
 
 return (
     <>
         <Container style={{marginTop : 24}}>
             <h2>Portal formularios</h2>
-            <Typeahead id={"serachForm"} clearButton onChange={(selected) => setTargetForm(selected)} options={formNames} />
+            <Typeahead id={"serachForm"}  clearButton onChange={(selected) => setTargetForm(selected)} options={formNames} />
             {fullFormTarget && <Button hidden={fullFormTarget.link == null} style={{margin : 16}} onClick={() => enviarParaWahts()}>Enviar para Whats App</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => openForm()}>Abrir Formulario</Button>}
+            {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => linkGrafico()}>Visualizar</Button>}
+            {fullFormTarget && <><input type="checkbox" ></input><label style={{marginLeft : 15}}>Marcar todos</label></>}
+            {formNameChoosed && <h2>{formNameChoosed}</h2>}
+            {spreadSheetId  && <DynamicVizualization selectedSpreadSheetUri={spreadSheetId}></DynamicVizualization>}
+            
         </Container>
     </>
 );

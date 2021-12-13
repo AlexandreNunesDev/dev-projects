@@ -8,6 +8,7 @@ import timeReducer from './timeReducers'
 import analiseReducer from './analisesReducers'
 import ordensDeManutencaoReducer from './ordensDeManutencaoReducer'
 import formularios from './formularioReducer'
+import dynamicFormsReducer from './dyanamicForms'
 
 
 
@@ -19,7 +20,8 @@ const appReducer = combineReducers({
    timeReducer : timeReducer,
    analiseReducer : analiseReducer,
    ordensDeManutencao : ordensDeManutencaoReducer,
-   formulariosReducer : formularios
+   formulariosReducer : formularios,
+   formsReducer : dynamicFormsReducer
 
   
 })
