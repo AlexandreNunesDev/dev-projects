@@ -5,8 +5,9 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { useDispatch, useSelector } from 'react-redux';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { buildFormModel } from '../models/portalFormsModel';
-import { setFormNameChoosed, setFullFormTarget, setSpreadSheetId } from '../Reducers/dyanamicForms';
+import { clear, setFormNameChoosed, setFullFormTarget, setSpreadSheetId } from '../Reducers/dyanamicForms';
 import DynamicVizualization from './dynamicVisualizer';
+
 
 function PortalFormularios() {
 
@@ -29,6 +30,7 @@ function PortalFormularios() {
 
     useEffect(() => {
 
+        
         httpClient.get(":batchGet?ranges=dadosPortal!A:A").then(res => {
             let formListNames = res.data.valueRanges[0].values.map(value => value[0])
             formListNames.shift()
@@ -46,6 +48,7 @@ function PortalFormularios() {
 
 
     const setTargetForm = (selected) => {
+        dispatch(clear())
         dispatch(setFormNameChoosed(selected))
         let index = formNames.findIndex(forms => forms == selected)
         setTargetRowIndex(index+2)
@@ -86,7 +89,7 @@ return (
     <>
         <Container style={{marginTop : 24}}>
             <h2>Portal formularios</h2>
-            <Typeahead id={"serachForm"}  clearButton onChange={(selected) => setTargetForm(selected)} options={formNames} />
+            <Typeahead id={"serachForm"}   clearButton onChange={(selected) => setTargetForm(selected)} options={formNames} />
             {fullFormTarget && <Button hidden={fullFormTarget.link == null} style={{margin : 16}} onClick={() => enviarParaWahts()}>Enviar para Whats App</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => openForm()}>Abrir Formulario</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => linkGrafico()}>Visualizar</Button>}

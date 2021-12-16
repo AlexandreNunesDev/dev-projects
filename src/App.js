@@ -93,7 +93,6 @@ class App extends React.Component {
    
   
     componentWillUnmount () {
-      console.log("Limpou refresher")
       clearInterval(this.reloadStore)
     }
 

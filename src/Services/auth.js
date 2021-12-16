@@ -9,7 +9,7 @@ export const plusDate = () => {
 
   return expTime
 }
-export const isAuthenticated = (tokenInfo) => tokenInfo !== '';
+export const isAuthenticated = (tokenInfo) => tokenInfo.length > 0;
 export const isTokenExpired = (tokenExp) => tokenExp < new Date().getTime()
 export const getToken = () => localStorage.getItem(TOKEN_INFO);
 export const getUserRole = () => localStorage.getItem(USER_ROLE);

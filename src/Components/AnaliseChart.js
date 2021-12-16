@@ -99,8 +99,10 @@ const AnaliseChart = (props) => {
   const getCpkBgColor = (cpk) => {
     if(cpk < 1) {
       return "#ed493e"
+    }else if(cpk >= 1 && cpk < 1.33) {
+        return "#f0e06c"
     } else if(cpk >= 1.33) {
-      return "#f0e06c"
+      return "#9cf078"
     } else if(cpk > 1.66) {
       return  "#8ae364"
     } else {

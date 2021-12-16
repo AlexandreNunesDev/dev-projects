@@ -17,8 +17,6 @@ export const optionsLoad = async (props, forceUpdade) => {
       loadOrdensDeManutencao(props)
     }
 
-  } else {
-    props.history.push("/VoceFoiDesconectado")
   }
 
 

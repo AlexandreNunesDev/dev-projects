@@ -42,13 +42,13 @@ export default ({ children }) => {
 
     const onConnect = () => {
         
-
+   
        
         socket.subscribe("/reducer/return", (message) => {
             
             if((store.getState().global.isAuth) &&  (isTokenExpired(store.getState().global.tokenExpiration))){
                 history.push("/VoceFoiDesconectado")
-            } else  {
+            } else {
                 const bodyMsg = JSON.parse(message.body)
             
                 if(bodyMsg.type === 'action'){
@@ -88,7 +88,10 @@ export default ({ children }) => {
          
             
           });
-          socket.activate()  
+          if(store.getState().global.isAuth) {
+            socket.activate()  
+          }
+         
     }
 
 

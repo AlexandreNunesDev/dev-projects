@@ -1,0 +1,19 @@
+.tableFixHead          { overflow: auto; height: 50vw; }
+.tableFixHead thead tr th { position: sticky; top: 0; }
+
+/* Just common table stuff. Really. */
+table  { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px 16px; border: 2px solid rgb(231, 228, 228); }
+th     { background:#eee; }
+
+td:first-child, th:first-child {
+    position: sticky;
+    left:0;
+    z-index:0;
+    background-color:rgb(192, 189, 189);
+  }
+
+
+th:first-child {z-index:1;}
+  
+  
