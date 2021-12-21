@@ -8,9 +8,10 @@ import { responseHandler } from '../Services/responseHandler'
 import { withToastManager } from 'react-toast-notifications/dist/ToastProvider'
 import { toastOk } from '../Services/toastType'
 import { WebSocketContext } from '../websocket/wsProvider'
-import { connect } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps'
+import { UpdateTarefasChoosed } from '../Reducers/ompReducer'
 
 
 
@@ -26,7 +27,7 @@ const TableHeadTarefas = (props) => {
                 <th>Código Instrução</th>
                 <th>Data Planejada</th>
                 <th>Status</th>
-                {!props.tarefasChecked && <th>Ação</th>}
+                <th>Ação</th>
             </tr>
         </thead>
 
@@ -41,7 +42,20 @@ const FormatDate = (data) => {
 
 const TableBodyTarefas = props => {
 
-    const tarefaTd = props.tarefas?.map((tarefa, index) => {
+    const dispatch = useDispatch()
+    const tarefasChoosed = useSelector(state => state.cadastroOmpReducer.tarefas)
+
+    const choosedTarefaClick = (tarefa) => {
+        const tarefasUpdadated = tarefasChoosed.filter(terefaChoosed => {
+            return terefaChoosed.id !== tarefa.id
+        })
+
+        dispatch(UpdateTarefasChoosed(tarefasUpdadated))
+
+
+    }
+
+    const tarefaTd = props.tarefasChecked?.map((tarefa, index) => {
         let data = String(tarefa.dataPlanejada).substr(0, 10)
 
         return (
@@ -52,9 +66,11 @@ const TableBodyTarefas = props => {
                 <td className="align-middle">{`${FormatDate(data)}`}</td>
                 <td className="align-middle"><Form.Label style={{ color: tarefa.pendente ? 'red' : 'green', fontWeight: 'bolder' }} >
                     {tarefa.pendente ? "Pendente" : 'Em dia'}</Form.Label></td>
-                {!props.tarefasChecked && <td className="align-middle" >
-                    <Form.Check.Input onChange={(event) => props.choosedTarefaClick(event.target.checked, tarefa.id)} type="checkbox" />
-                    <Form.Check.Label>Executar ?</Form.Check.Label>
+                {<td className="align-middle" >
+                    <Button onClick={(event) => choosedTarefaClick(tarefa)} type="checkbox" >
+                        Remover
+                    </Button>
+
                 </td>}
             </tr>
         )
@@ -111,9 +127,11 @@ const CadastroOmp = (props) => {
 
     const [dataPlanejada, setDataPlanejada] = useState(new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0])
     const location = useLocation()
-    const [trocas] = useState(location.state.trocas || [])
     const [emitidoPor, setEmitidoPor] = useState()
-    const [tarefas, setTarefas] = useState(location.state.tarefas || [])
+    const tarefasChoosed = useSelector(state => state.cadastroOmpReducer.tarefas)
+    const trocasChoosed = useSelector(state => state.cadastroOmpReducer.trocas)
+    const tarefas = useSelector(state => state.options.trocas)
+    const trocas = useSelector(state => state.options.trocas)
     const [tarefasChoosedId, setTarefasChoosedId] = useState([])
     const history = useHistory()
     const context = useContext(WebSocketContext)
@@ -145,20 +163,7 @@ const CadastroOmp = (props) => {
 
     }
 
-    useEffect(() => {
-        console.log(tarefasChoosedId)
-    }, [tarefasChoosedId])
 
-
-    useEffect(() => {
-        if (trocas.length !== 0) {
-            ScqApi.ListaTarefasByProcesso(trocas[0]?.processoId || tarefas[0].processoId).then(res => setTarefas(res))
-        }
-
-    }, [trocas])
-
-
-    console.log(tarefasChoosedId)
 
     return (
         <>
@@ -187,23 +192,29 @@ const CadastroOmp = (props) => {
                         </Form.Group>
                     </Col>
                 </Form.Row>
-                {trocas.length !== 0 &&
+                {trocasChoosed.length !== 0 &&
                     <>
                         <h4>Trocas Selecionadas</h4>
                         <Table className="table table-hover">
                             <TableHead></TableHead>
                             <tbody>
-                                <TableBody trocas={trocas} ></TableBody>
+                                <TableBody trocas={trocasChoosed} ></TableBody>
                             </tbody>
                         </Table> </>}
 
                 {tarefas &&
                     <Fragment>
-                        <h4>{`${location.state.tarefasChecked ? '' : 'Escolha as '}Tarefas de Manutencao`}</h4>
+                        <Row className="d-flex align-items-center">
+                        <h4>Tarefas de Manutencao</h4>
+                        <Button style={{margin : 12}} onClick={(event) => history.push("/TarefasDeManutencao")} type="checkbox" >
+                            Adicionar Tarefas
+                        </Button>
+                        </Row>
+                       
                         <Table>
-                            <TableHeadTarefas tarefasChecked={location.state.tarefasChecked} ></TableHeadTarefas>
+                            <TableHeadTarefas tarefasChecked={tarefasChoosed} ></TableHeadTarefas>
                             <tbody>
-                                <TableBodyTarefas tarefasChecked={location.state.tarefasChecked} choosedTarefaClick={setTarefaToList} tarefas={tarefas}></TableBodyTarefas>
+                                <TableBodyTarefas tarefasChecked={tarefasChoosed} tarefas={tarefas}></TableBodyTarefas>
                             </tbody>
 
                         </Table>
@@ -212,18 +223,22 @@ const CadastroOmp = (props) => {
 
                 <Button style={{ marginLeft: 20 }} onClick={
                     () => {
-                        const trocasId = trocas.map((troca, index) => {
+                        const trocasId = trocasChoosed.map((troca, index) => {
                             return troca.id
                         })
 
-                        if (trocas.length === 0) {
-                            const omp = { processoId: tarefas[0].processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasChoosedId }
-                            ScqApi.GerarOmp(omp).then(res => responseHandler(res, props, "OrdemDeManutencao",toastOk,context,[props.loadOrdensDeManutencao]))
+                        const tarefasId = tarefasChoosed.map((tarefa, index) => {
+                            return tarefa.id
+                        })
+
+                        if (trocasChoosed.length === 0) {
+                            const omp = { processoId: tarefasChoosed[0].processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
+                            ScqApi.GerarOmp(omp).then(res => responseHandler(res, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]))
                         } else {
-                            const omp = { processoId: trocas[0]?.processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasChoosedId }
-                            ScqApi.GerarOmp(omp).then(res => responseHandler(res, props,"OrdemDeManutencao",toastOk,context,[props.loadOrdensDeManutencao]))
+                            const omp = { processoId: trocasChoosed[0]?.processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
+                            ScqApi.GerarOmp(omp).then(res => responseHandler(res, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]))
                         }
-                      
+
                         history.push("OrdensDeManutencao")
                     }
                 }>Gerar Documento</Button>
@@ -239,4 +254,4 @@ const CadastroOmp = (props) => {
 
 }
 
-export default withMenuBar(withToastManager(connect(mapToStateProps.toProps,dispatchers)(CadastroOmp)))
+export default withMenuBar(withToastManager(connect(mapToStateProps.toProps, dispatchers)(CadastroOmp)))

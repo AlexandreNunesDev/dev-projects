@@ -1,13 +1,14 @@
-import React from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button, Container, Col, Form } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Form, Table } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { withToastManager } from "react-toast-notifications";
-import GenericSelect from "../Components/GenericSelect";
 import GenericDropDown from "../Components/GenericDropDown";
+import GenericSelect from "../Components/GenericSelect";
 import { withMenuBar } from "../Hocs/withMenuBar";
-import { connect } from "react-redux";
-import mapToStateProps from "../mapStateProps/mapStateToProps";
-import dispatchers from "../mapDispatch/mapDispathToProps";
+import { setProcessoTarefaRef } from "../Reducers/globalConfigReducer";
+import { UpdateTarefasChoosed, UpdateTarefasFiltered } from "../Reducers/ompReducer";
 
 
 const TableHead = () => {
@@ -35,11 +36,11 @@ const FormatDate = (data) => {
 }
 
 const TableBody = props => {
-    
-    const filteredByProcessoId = props.tarefasDeManutencao.filter((tarefa) => Number(tarefa.processoId) === Number(props.global.processoIdTarefaRef))
-    
-    const trocaTd = filteredByProcessoId.map((tarefa, index) => {
-        let check = props.markedTarefas.includes(tarefa.id)
+    const toBuilTarefasList = props.filteredTarefas.length == 0 ? props.tarefas : props.filteredTarefas
+   
+    const trocaTd = toBuilTarefasList.map((tarefa, index) => {
+        
+        const check = props.tarefasChoosed.find(tarefaChoosed => tarefa.id === tarefaChoosed.id )
         let dataPlanejada = String(tarefa.dataPlanejada).substr(0, 10)
         let dataRealizada = String(tarefa.dataRealizada).substr(0, 10)
 
@@ -71,97 +72,78 @@ const TableBody = props => {
 
 
 
-class TarefasDeManutencao extends React.Component {
+const TarefasDeManutencao = (props) => {
+
+    const dispatch = useDispatch()
+    const tarefasChoosed = useSelector(state => state.cadastroOmpReducer.tarefas)
+    const processoIdTarefaRef = useSelector(state => state.global.processoIdTarefaRef)
+    const tarefas = useSelector(state => state.options.tarefasDeManutencao)
+    const processos = useSelector(state => state.options.processos)
+    const filteredTarefas = useSelector(state => state.cadastroOmpReducer.tarefasFiltered)
+    const history = useHistory()
+    const [filterType,setFilterType] = useState('')
 
 
-    constructor(props) {
-        super()
-        this.state = {
-            processoId:null,
-            tarefas: [],
-            filteredTarefas: [],
-            filterType: "",
-            markedTarefas: []
 
 
-        }
-    }
-
-    addTarefaIdToList = (checked, tarefa) => {
+    const addTarefa = (checked, tarefa) => {
 
         if (checked) {
-            this.setState((prevState) => ({
-                markedTarefas: [...prevState.markedTarefas, ...[tarefa.id]]
-            }), () => console.log(this.state.markedTarefas));
-
+            dispatch(UpdateTarefasChoosed([...tarefasChoosed,tarefa]))
         } else {
 
-            const removedMarkedId = this.state.markedTarefas.filter((value) => {
-                return Number(value) !== Number(tarefa.id)
+            const newTarefasChoosed = tarefasChoosed.filter((tarefasChoos) => {
+                return Number(tarefasChoos.id) !== Number(tarefa.id)
             })
 
-            this.setState({
-                markedTarefas: removedMarkedId
-
-            }, () => console.log(this.state.markedTarefas))
+            dispatch(UpdateTarefasChoosed(newTarefasChoosed))
         }
 
     }
 
-
-    pushWithSelectedTarefas = () => {
-        let choosedTarefas = []
-
-
-
-        for (const tarefaId of this.state.markedTarefas) {
-            choosedTarefas = [...choosedTarefas, ...this.state.tarefas.filter(value => Number(value.id) === Number(tarefaId))]
-        }
+    useEffect(() => {
+        const tarefasFiltered = tarefas.filter(tarefa => {
+            return Number(tarefa.processoId) === Number(processoIdTarefaRef)
+        })
+        dispatch(UpdateTarefasFiltered(tarefasFiltered))
+    }, [processoIdTarefaRef])
 
 
-        this.props.history.push("/CadastroOmp", { tarefasChecked: true, tarefas: choosedTarefas, markedIds: this.state.markedTarefasId })
 
+
+    const markAll = () => {
+        dispatch(UpdateTarefasChoosed(filteredTarefas))
+    
     }
 
-
-    markAll = () => {
-        this.setState({
-            markedTarefas: []
-        })
-        this.props.tarefasDeManutencao.forEach(tarefa => {
-            this.addTarefaIdToList(true, tarefa)
-        })
-    }
-
-    unmarkAll = () => {
-        this.props.tarefasDeManutencao.forEach(tarefa => {
-            this.addTarefaIdToList(false, tarefa)
-        })
+    const unmarkAll = () => {
+        dispatch(UpdateTarefasChoosed([]))
     }
 
 
 
-    filterAction = (filterText) => {
-        if (filterText !== "" && this.state.filterType !== "") {
-            this.setState({
-                filteredTarefas: this.state.tarefas.filter((tarefa) => {
-                    if (this.state.filterType === "Nome") {
+    const filterAction = (filterText) => {
+        if (filterText !== "" && filterType !== "") {
+            
+               dispatch(UpdateTarefasFiltered(tarefas.filter((tarefa) => {
+                    if (filterType === "Nome") {
                         return String(tarefa.nome).includes(filterText)
                     }
-                    if (this.state.filterType === "Status") {
+                    if (filterType === "Status") {
                         return String(tarefa.status).includes(filterText)
                     }
-                    if (this.state.filterType === "Data") {
+                    if (filterType === "Data") {
                         return String(tarefa.dataPlanejada).includes(filterText)
                     }
                     return ""
 
-                })
-            })
+                })))
+            
         } else {
-            this.setState({
-                filteredTroca: this.state.trocas
-            })
+
+            dispatch(UpdateTarefasFiltered([]))
+
+          
         }
 
     }
@@ -169,31 +151,30 @@ class TarefasDeManutencao extends React.Component {
 
 
 
-    render() {
         return (
             <>
 
                 <Container>
                     <Form.Row style={{ padding: 10 }}>
                         <Col >
-                            <GenericSelect selection={this.props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => this.props.setProcessoIdTarefaRef(processoId)} ops={this.props.processos}  ></GenericSelect>
+                            <GenericSelect selection={processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) =>  dispatch(setProcessoTarefaRef(processoId))} ops={processos}  ></GenericSelect>
                         </Col>
                         <Col>
 
-                            <Form.Control placeholder="buscar por nome..." onChange={(event) => this.filterAction(event.target.value)}></Form.Control>
+                            <Form.Control placeholder="buscar por nome..." onChange={(event) => filterAction(event.target.value)}></Form.Control>
                         </Col>
 
                         <Col md="auto" >
-                            <GenericDropDown display={"Tipo"} itens={["Nome", "Status", "Data"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                            <GenericDropDown display={"Tipo"} itens={["Nome", "Status", "Data"]} onChoose={(item) => setFilterType(item)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
                         <Col>
                             <Button onClick={() => {
-                                this.pushWithSelectedTarefas()
+                                history.push("CadastroOmp")
                             }} >Gerar OMP</Button>
                         </Col>
                         <Col md="auto">
-                            <Button hidden={this.state.markAllHide} onClick={() => { this.markAll(); this.setState({ markAllHide: true }) }}>Selecionar Todos</Button>
-                            <Button hidden={!this.state.markAllHide} onClick={() => { this.unmarkAll(); this.setState({ markedTarefas: [], markAllHide: false }) }}>Desmarcar Todos</Button>
+                            <Button onClick={() => markAll()}>Selecionar Todos</Button>
+                            <Button  onClick={() => unmarkAll()}>Desmarcar Todos</Button>
                         </Col>
                     </Form.Row>
 
@@ -202,7 +183,7 @@ class TarefasDeManutencao extends React.Component {
                     <Table className="table table-hover">
                         <TableHead></TableHead>
                         <tbody>
-                            <TableBody {...this.props} setTarefaToList={this.addTarefaIdToList}  markedTarefas={this.state.markedTarefas} tarefasChoosed={this.state.tarefasChoosed} ></TableBody>
+                            <TableBody tarefas={tarefas} tarefasChoosed={tarefasChoosed} setTarefaToList={addTarefa} filteredTarefas={filteredTarefas} processoIdTarefaRef={processoIdTarefaRef}  ></TableBody>
                         </tbody>
 
 
@@ -215,6 +196,6 @@ class TarefasDeManutencao extends React.Component {
         )
     }
 
-}
 
-export default withToastManager(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(TarefasDeManutencao)))
+
+export default withToastManager(withMenuBar(TarefasDeManutencao))

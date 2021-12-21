@@ -143,8 +143,8 @@ const FilterDynamic = ({ headerName, headers, header }) => {
 
 
         <Modal.Footer>
-          <Button style={{ margin: 2 }} variant="secondary" onClick={() => saveFilter()}>
-            Salvar
+          <Button style={{ margin: 2 }} variant="secondary" onClick={() => dispatch(setDynamicOpenFilter())}>
+            Confirmar
           </Button>
         </Modal.Footer>
 

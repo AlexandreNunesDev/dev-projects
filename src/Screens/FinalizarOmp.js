@@ -38,8 +38,11 @@ const TableBodyTarefas = props => {
                 <td className="align-middle"><Form.Label style={{ color: tarefa.pendente ? 'red' : 'green', fontWeight: 'bolder' }} >
                     {tarefa.pendente ? "Pendente" : 'Em dia'}</Form.Label></td>
                 <td className="align-middle" >
-                    <Form.Check.Input checked={props.checkedTarefas.includes(tarefa.id)} onChange={(event) => props.checkedElement(event.target.checked, tarefa.id, "tarefa")} type="checkbox" />
-                    <Form.Check.Label>Executado ?</Form.Check.Label>
+                    <div className="form-check">
+                        <input type="checkbox" checked={props.checkedTarefas.includes(tarefa.id)} onChange={(event) => props.checkedElement(event.target.checked, tarefa.id, "tarefa")} className="form-check-input" />
+                        <label className="form-check-label" >Executado</label>
+                    </div>
+
                 </td>
             </tr>
         )
@@ -84,8 +87,10 @@ const TableBodyTrocas = props => {
                     })}
                 </td>
                 <td className="align-middle" >
-                    <Form.Check.Input checked={props.checkedTrocas.includes(troca.id)} onChange={(event) => props.checkedElement(event.target.checked, troca.id, "troca")} type="checkbox" />
-                    <Form.Check.Label >Executado ?</Form.Check.Label>
+                <div className="form-check">
+                        <input type="checkbox" checked={props.checkedTrocas.includes(troca.id)} onChange={(event) => props.checkedElement(event.target.checked, troca.id, "troca")} className="form-check-input" />
+                        <label className="form-check-label" >Executado</label>
+                    </div>
                 </td>
             </tr>
         )
@@ -129,17 +134,17 @@ const FinalizarOmp = (props) => {
         if (checked) {
             if (type === "tarefa") {
                 const newTarefaArray = tarefasIdChecked.concat(id)
-                if(!tarefasIdChecked.includes(id)) {
-                  
+                if (!tarefasIdChecked.includes(id)) {
+
                     setTarefasChecked(newTarefaArray)
                 }
 
             } else {
                 const newTrocasArray = trocasIdChecked.concat(id)
-                if(!trocasIdChecked.includes(id)) {
+                if (!trocasIdChecked.includes(id)) {
                     setTrocasIdChecked(newTrocasArray)
                 }
-              
+
             }
 
         } else {
@@ -160,17 +165,17 @@ const FinalizarOmp = (props) => {
     }
 
     const markAllTrocas = () => {
-        if(markedTrocas){
+        if (markedTrocas) {
             setTrocasIdChecked([])
         } else {
             setTrocasIdChecked(trocas.map(troca => troca.id))
         }
         setmarkedTrocas(!markedTrocas)
-        
+
     }
 
     const markAllTarefas = () => {
-        if(markedTarefas){
+        if (markedTarefas) {
             setTarefasChecked([])
         } else {
             setTarefasChecked(tarefas.map(tarefa => tarefa.id))
@@ -207,7 +212,7 @@ const FinalizarOmp = (props) => {
 
                 {trocas &&
                     <>
-                        <Button style={{marginBottom : 15}}  onClick={() => markAllTrocas()}>{`${markedTrocas ? "Desmarcar" :  "Marcar"} todos`}</Button>
+                        <Button style={{ marginBottom: 15 }} onClick={() => markAllTrocas()}>{`${markedTrocas ? "Desmarcar" : "Marcar"} todos`}</Button>
                         <Table className="table table-hover">
                             <TableHeadTrocas></TableHeadTrocas>
                             <tbody>
@@ -219,7 +224,7 @@ const FinalizarOmp = (props) => {
                     <h4>Tarefas</h4>
                     {tarefas &&
                         <>
-                            <Button style={{marginBottom : 15}} onClick={() => markAllTarefas()}>{`${markedTarefas ? "Desmarcar" :  "Marcar"} todos`}</Button>
+                            <Button style={{ marginBottom: 15 }} onClick={() => markAllTarefas()}>{`${markedTarefas ? "Desmarcar" : "Marcar"} todos`}</Button>
                             <Table>
                                 <TableHeadTarefas></TableHeadTarefas>
                                 <tbody>
@@ -234,7 +239,7 @@ const FinalizarOmp = (props) => {
 
                 <Button onClick={() => {
                     const OmpFinalizarForm = { id: omp.id, tarefasId: tarefasIdChecked, trocasId: trocasIdChecked, data: dataRealizada }
-                    ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, props, "OrdemDeManutencao", toastOk, context, [props.loadTarefasDeManutencao]); histoy.push("/Omp") })
+                    ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]); histoy.push("/Omp") })
                 }}>Confirmar</Button>
 
 

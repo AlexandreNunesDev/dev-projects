@@ -9,7 +9,7 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 
 const WebSocketContext = createContext(null)
 const SOCKET_URL = 'wss://scqapi.com/gs-guide-websocket'
-const SOCKET_URL_TEST = 'ws://localhost:8080/gs-guide-websocket'
+const SOCKET_URL_TEST = 'wss://scqapi.com/gs-guide-websocket'
 
 
 export { WebSocketContext }

@@ -1,37 +1,38 @@
-import produce from "immer"
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  choosedTrocasId: [],
-  choosedTarefasId: [],
+  trocas: [],
+  tarefas: [],
+  tarefasFiltered: [],
+  trocasFiltered: [],
+
 }
-const loadState = () => {
-  return initialState;
-};
 
+const cadastroOmp = createSlice({
+  name: 'cadastroOmp',
+  initialState,
+  reducers: {
+    UpdateTarefasChoosed(state, action) {
+      state.tarefas = action.payload
+    },
+    UpdateTrocasChoosed(state, action) {
+      state.trocas = action.payload
+    },
+    UpdateTarefasFiltered(state, action) {
+      state.tarefasFiltered = action.payload
+    },
+    UpdateTrocasFiltered(state, action) {
+      state.trocasFiltered = action.payload
+    },
+    clear(state) {
+      state.tarefas = []
+      state.trocas = []
+      state.tarefasFiltered = []
+      state.trocasFiltered = []
+    },
 
-const ompReducer = produce(
-  (draft, action) => {
-    switch (action.type) {
-      case "ADD_CHOOSED_TAREFA":
-        draft.omp.choosedTarefasId.push(action.payload)
-        break
-      case "ADD_CHOOSED_TROCA":
-        draft.omp.choosedTrocasId.push(action.payload)
-        break
-      case "REMOVE_CHOOSED_TAREFA":
-        const tarefaIndexToRemove = draft.omp.choosedTarefasId.findIndex(id => id === action.payload)
-        if (tarefaIndexToRemove !== -1) draft.choosedTarefasId.splice(tarefaIndexToRemove, 1)
-        break
-      case "REMOVE_CHOOSED_TROCA":
-        const trocaIndexToRemove = draft.omp.choosedTrocasId.findIndex(id => id === action.payload)
-        if (trocaIndexToRemove !== -1) draft.choosedTrocasId.splice(trocaIndexToRemove, 1)
-        break
-    
+  },
+})
 
-
-    }
-    return
-  }, loadState()
-
-)
-export default ocpsReducer;
+export const { UpdateTarefasChoosed,UpdateTarefasFiltered,UpdateTrocasFiltered, UpdateTrocasChoosed, clear } = cadastroOmp.actions
+export default cadastroOmp.reducer

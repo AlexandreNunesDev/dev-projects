@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { useDispatch, useSelector } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { buildFormModel } from '../models/portalFormsModel';
 import { clear, setFormNameChoosed, setFullFormTarget, setSpreadSheetId } from '../Reducers/dyanamicForms';
@@ -19,6 +20,7 @@ function PortalFormularios() {
     const fullFormTarget = useSelector(state => state.formsReducer.fullFormTarget)
     const spreadSheetId = useSelector(state => state.formsReducer.spreadSheetId)
     const formNameChoosed = useSelector(state => state.formsReducer.formNameChoosed)
+    const toast =  useToasts()
 
     const httpClient = axios.create({ baseURL: sheetBaseUrl })
     httpClient.interceptors.request.use(async config => {
@@ -54,8 +56,14 @@ function PortalFormularios() {
         setTargetRowIndex(index+2)
         httpClient.get(`:batchGet?ranges=dadosPortal!B${index+2}:D${index+2}`).then(async res => {
             let valueRanges = getValueRange(res)
-            let fullFormsModel = buildFormModel(valueRanges[0].values[0])
-            dispatch(setFullFormTarget(fullFormsModel))
+            let values = valueRanges[0].values
+            if(values) {
+                let fullFormsModel = buildFormModel(valueRanges[0].values[0])
+                dispatch(setFullFormTarget(fullFormsModel))
+            } else {
+                toast.addToast("Formulario não existente",{ appearance: 'warning' })
+            }
+            
         })
     }
 
@@ -93,7 +101,6 @@ return (
             {fullFormTarget && <Button hidden={fullFormTarget.link == null} style={{margin : 16}} onClick={() => enviarParaWahts()}>Enviar para Whats App</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => openForm()}>Abrir Formulario</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => linkGrafico()}>Visualizar</Button>}
-            {fullFormTarget && <><input type="checkbox" ></input><label style={{marginLeft : 15}}>Marcar todos</label></>}
             {formNameChoosed && <h2>{formNameChoosed}</h2>}
             {spreadSheetId  && <DynamicVizualization selectedSpreadSheetUri={spreadSheetId}></DynamicVizualization>}
             

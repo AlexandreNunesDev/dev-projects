@@ -1,14 +1,15 @@
-import React from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button, Col, Row, Form } from "react-bootstrap";
-import ScqApi from "../Http/ScqApi";
-import GenericDropDown from "../Components/GenericDropDown";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { withToastManager } from "react-toast-notifications";
-import { withMenuBar } from "../Hocs/withMenuBar";
+import { useToasts } from "react-toast-notifications/dist/ToastProvider";
+import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
-import { connect } from "react-redux";
-import mapToStateProps from "../mapStateProps/mapStateToProps";
-import dispatchers from "../mapDispatch/mapDispathToProps";
+import { withMenuBar } from "../Hocs/withMenuBar";
+import { setProcessoTarefaRef } from "../Reducers/globalConfigReducer";
+import { UpdateTarefasFiltered, UpdateTrocasChoosed, UpdateTrocasFiltered } from "../Reducers/ompReducer";
 
 
 const TableHead = () => {
@@ -38,8 +39,9 @@ const FormatDate = (data) => {
 
 const TableBody = props => {
 
-    const trocaTd = props.trocas.map((troca, index) => {
-        let check = props.markedTroca.includes(troca.id)
+    const trocasToBuilder = props.trocasFiltered.length == 0 ? props.trocas : props.trocasFiltered
+    const trocaTd = trocasToBuilder.map((troca, index) => {
+        let check = props.trocasChoosed.find(trocaChoosed => trocaChoosed.id === troca.id)
         let dataPlanejada = String(troca.dataPlanejada).substr(0, 10)
         let dataRealizada = String(troca.ultimaTroca).substr(0, 10)
 
@@ -61,7 +63,7 @@ const TableBody = props => {
                 </td>
                 <td className="align-middle" >
 
-                    <Form.Check checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca.id)} type="checkbox" />
+                    <Form.Check checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
                     <Form.Label>Trocar ?</Form.Label>
 
 
@@ -77,52 +79,34 @@ const TableBody = props => {
 
 
 
-class Omp extends React.Component {
+const Omp = () => {
+
+    const [markAllHide, setMarkAllHide] = useState()
+    const dispatch = useDispatch()
+    const processoIdTarefaRef = useSelector(state => state.global.processoIdTarefaRef)
+    const trocasChoosed = useSelector(state => state.cadastroOmpReducer.trocas)
+    const trocasFiltered = useSelector(state => state.cadastroOmpReducer.trocasFiltered)
+    const processos = useSelector(state => state.options.processos)
+    const trocas = useSelector(state => state.options.trocas)
+    const toastManager = useToasts()
+    const history = useHistory()
 
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            trocas: [],
-            filteredTroca: [],
-            showConfirm: false,
-            filterType: '',
-            trocasChoosedId: [],
-            trocasChoosed: [],
-            markAllHide: false,
-            filterText: '',
-            processoId: null
+    const addTrocaIdToChoosedIdList = (checked, clickedTroca) => {
 
-
-        }
-    }
-
-    componentDidMount() {
-        this.loadTrocas()
-    }
-
-    addTrocaIdToChoosedIdList = (checked, clickeTroca) => {
-
-        if (!clickeTroca.programada) {
+        if (!clickedTroca.programada) {
             if (checked) {
-
-
-                this.setState((prevState) => ({
-                    trocasChoosedId: [...prevState.trocasChoosedId, ...[clickeTroca]]
-                }), () => console.log(this.state.trocasChoosedId));
+                dispatch(UpdateTrocasChoosed([...trocasChoosed, clickedTroca]))
 
             } else {
 
-                const removedArray = this.state.trocasChoosedId.filter((value) => {
-                    return Number(value) !== Number(clickeTroca)
+                const removedArray = trocasChoosed.filter((value) => {
+                    return Number(value) !== Number(clickedTroca)
                 })
-                this.setState({
-                    trocasChoosedId: removedArray
-                }, () => console.log(this.state.trocasChoosedId))
+                dispatch(UpdateTrocasChoosed([removedArray]))
             }
         } else {
-            const { toastManager } = this.props
-            toastManager.add("Esta troca ja foi programada", {
+            toastManager.addToast("Esta troca ja foi programada", {
                 appearance: 'warning', autoDismiss: true
             })
         }
@@ -131,44 +115,27 @@ class Omp extends React.Component {
 
     }
 
-    buildTrocasChoosedArray = () => {
-        const TrocasChoosedArray = this.state.trocasChoosedId.map(id => {
-            const trocaChoosed = this.state.trocas.filter(troca => {
-                return Number(troca.id) === Number(id)
-            })
-
-            return trocaChoosed[0];
-        })
-
-
-        if (this.validateTrocasByProcesso(TrocasChoosedArray)) {
-
-            this.props.history.push("/CadastroOmp", { trocas: TrocasChoosedArray })
-
+    const buildTrocasChoosedArray = () => {
+        if (validateTrocasByProcesso(trocasChoosed)) {
+            history.push("/CadastroOmp")
         } else {
-            const { toastManager } = this.props
-            toastManager.add("Voce não pode gerar uma OMP de diferentes processos", {
+            toastManager.addToast("Voce não pode gerar uma OMP de diferentes processos", {
                 appearance: 'error', autoDismiss: true
             })
         }
-
-
     }
 
-    validateTrocasByProcesso = (TrocasChoosedArray) => {
+    const validateTrocasByProcesso = (trocasChoosedArray) => {
         let isEquals = true;
         let beforeId = 0;
 
-        TrocasChoosedArray.forEach(element => {
+        trocasChoosedArray.forEach(element => {
             if (beforeId === 0) {
                 beforeId = Number(element.processoId)
             } else {
                 Number(element.processoId) === beforeId ? isEquals = true : isEquals = false
             }
-
         });
-
-
         if (isEquals) {
             return true;
         } else {
@@ -176,31 +143,26 @@ class Omp extends React.Component {
         }
     }
 
-    loadTrocas = () => {
-        ScqApi.ListaTrocas().then(res => {
-            this.setState({
-                trocas: res,
-                filteredTroca: res
-            })
+
+    useEffect(() => {
+        const trocasFiltered = trocas.filter(troca => {
+            return Number(troca.processoId) === Number(processoIdTarefaRef)
         })
+        dispatch(UpdateTarefasFiltered(trocasFiltered))
+    }, [processoIdTarefaRef])
+
+
+
+    const markAll = () => {
+        dispatch(UpdateTrocasChoosed(trocasFiltered))
+    
     }
 
-    markAll = () => {
-        this.setState({
-            trocasChoosedId: []
-        })
-        this.state.filteredTroca.forEach(troca => {
-            this.addTrocaIdToChoosedIdList(true, troca.id)
-        })
+    const unmarkAll = () => {
+        dispatch(UpdateTrocasChoosed([]))
     }
 
-    unmarkAll = () => {
-        this.state.trocas.forEach(troca => {
-            this.addTrocaIdToChoosedIdList(false, troca.id)
-        })
-    }
-
-    showPendentes = (checked) => {
+    const showPendentes = (checked) => {
 
         if (checked) {
             this.setState({
@@ -216,7 +178,7 @@ class Omp extends React.Component {
 
     }
 
-    filterAction = (filterText) => {
+    const filterAction = (filterText) => {
         let tofilterTrocas = this.state.processoId ? this.filterByGlobalProcesso(this.state.processoId) : this.state.trocas
         if (filterText !== "") {
             this.setState({
@@ -252,74 +214,65 @@ class Omp extends React.Component {
     }
 
 
-    filterByGlobalProcesso = (processoId) => {
-        let filteredTrocas = this.state.trocas.filter(troca => Number(troca.processoId) === Number(processoId))
-        this.setState({
-            processoId: processoId,
-            filteredTroca: filteredTrocas
-        })
+    const filterByGlobalProcesso = (processoId) => {
+        let filteredTrocas = trocas.filter(troca => Number(troca.processoId) === Number(processoId))
+        dispatch(setProcessoTarefaRef(processoId))
+        dispatch(UpdateTrocasFiltered(filteredTrocas))
+
         return filteredTrocas
     }
 
+    return (
+        <>
+
+
+            <Row className="align-items-center">
+
+                <Col md="auto">
+                    <Button disabled={trocasChoosed.length !== 0 ? false : true} style={{ margin: 10 }} onClick={() => {
+                        buildTrocasChoosedArray()
+                    }}>Gerar OMP</Button>
+                </Col>
+
+                <Col style={{ paddingTop: 20 }} md="auto">
+                    <GenericSelect noLabel={true} default={"--Selecione um Processo--"} selection={processoIdTarefaRef} onChange={(processoId) => filterByGlobalProcesso(processoId)} ops={processos} displayType={"nome"} returnType={"id"}></GenericSelect>
+                </Col>
+
+                <Col md="auto">
+                    <Button  style={{ margin: 10 }} onClick={() => { markAll(); setMarkAllHide(true) }}>Selecionar Todos</Button>
+                    <Button style={{ margin: 10 }} onClick={() => { unmarkAll(); setMarkAllHide(false) }}>Desmarcar Todos</Button>
+                </Col>
+
+                <Col>
+                    <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => filterAction(event.target.value)}></Form.Control>
+                </Col>
+                <Col md="auto">
+                    <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Status"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                </Col>
+                <Col md="auto">
+                    <Button style={{ margin: 10 }} onClick={() => history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
+                </Col>
+            </Row>
+            <div className="table-responsive">
+
+
+                <Table className="table table-hover" >
+                    <TableHead></TableHead>
+                    <tbody>
+                        <TableBody setTrocaToList={addTrocaIdToChoosedIdList} trocas={trocas} trocasChoosed={trocasChoosed} trocasFiltered={trocasFiltered} ></TableBody>
+                    </tbody>
+
+
+                </Table>
+            </div>
 
 
 
 
+        </>
 
-    render() {
-        return (
-            <>
-
-
-                <Row className="align-items-center">
-
-                    <Col md="auto">
-                        <Button disabled={this.state.trocasChoosedId.length !== 0 ? false : true} style={{ margin: 10 }} onClick={() => {
-                            this.buildTrocasChoosedArray()
-                        }}>Gerar OMP</Button>
-                    </Col>
-
-                    <Col style={{paddingTop : 20}} md="auto">
-                        <GenericSelect noLabel={true} default={"--Selecione um Processo--"} onChange={(processoId) => this.filterByGlobalProcesso(processoId)} ops={this.props.processos} displayType={"nome"} returnType={"id"}></GenericSelect>
-                    </Col>
-
-                    <Col md="auto">
-                        <Button hidden={this.state.markAllHide} style={{ margin: 10 }} onClick={() => { this.markAll(); this.setState({ markAllHide: true }) }}>Selecionar Todos</Button>
-                        <Button hidden={!this.state.markAllHide} style={{ margin: 10 }} onClick={() => { this.unmarkAll(); this.setState({ trocasChoosedId: [], markAllHide: false }) }}>Desmarcar Todos</Button>
-                    </Col>
-
-                    <Col>
-                        <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => this.filterAction(event.target.value)
-                        }></Form.Control>
-                    </Col>
-                    <Col md="auto">
-                        <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Status"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
-                    </Col>
-                    <Col md="auto">
-                        <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
-                    </Col>
-                </Row>
-                <div className="table-responsive">
-
-
-                    <Table className="table table-hover" >
-                        <TableHead></TableHead>
-                        <tbody>
-                            <TableBody setTrocaToList={this.addTrocaIdToChoosedIdList} trocas={this.state.filteredTroca} markedTroca={this.state.trocasChoosedId}></TableBody>
-                        </tbody>
-
-
-                    </Table>
-                </div>
-
-
-
-
-            </>
-
-        )
-    }
+    )
 
 }
 
-export default withToastManager(withMenuBar(connect(mapToStateProps.toProps, dispatchers)(Omp)))
+export default withToastManager(withMenuBar(Omp))

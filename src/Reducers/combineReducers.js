@@ -9,6 +9,9 @@ import analiseReducer from './analisesReducers'
 import ordensDeManutencaoReducer from './ordensDeManutencaoReducer'
 import formularios from './formularioReducer'
 import dynamicFormsReducer from './dyanamicForms'
+import ompReducer from './ompReducer'
+
+
 
 
 
@@ -19,22 +22,22 @@ const appReducer = combineReducers({
    notification :notificationsReducer,
    timeReducer : timeReducer,
    analiseReducer : analiseReducer,
+   cadastroOmpReducer : ompReducer,
    ordensDeManutencao : ordensDeManutencaoReducer,
    formulariosReducer : formularios,
    formsReducer : dynamicFormsReducer
-
-  
 })
 
 
 const rootReducer = (state, action) => {
    // when a logout action is dispatched it will reset redux state
-   if (action.type === 'LOGOUT') {
+   if (action.type === 'eraseStore') {
     state.options = undefined
     state.ocp = undefined
     state.global = undefined
     state.notification = undefined
     state.historicoReducer = undefined
+    state.cadastroOmpReducer = undefined
    }
  
    return appReducer(state, action);

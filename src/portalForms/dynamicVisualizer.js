@@ -7,6 +7,7 @@ import './fixedTables.css'
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { HiFilter } from 'react-icons/hi'
 import FilterDynamic, { calcValues } from "../Components/FilterDynamic";
+import { Button } from "react-bootstrap";
 
 function DynamicVizualization({ selectedSpreadSheetUri }) {
     const apiKey = 'AIzaSyAwUkhGE3_YB8cT4706OKT-xi3RpvnL014'
@@ -121,46 +122,9 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                     <HiFilter onClick={() => dispatch(setDynamicOpenFilter(added))} />
                 </div>
 
-
-            </div>
+              
+            </div>  
         })
-
-    }
-
-
-
-
-
-    const processRegraByCalc = (regra) => {
-        const { values, headerRef } = regra
-        let total = 0
-        let newBodyLine = []
-        body.forEach(bLine => {
-            let valor = +bLine[headerRef.index]
-            if ((typeof valor == "number") && (!Number.isNaN(valor))) {
-                total += valor
-                newBodyLine.push(valor)
-            }
-        });
-
-        newBodyLine.sort((a, b) => a - b)
-        let max = newBodyLine[newBodyLine.length - 1]
-        let min = newBodyLine[0]
-        let media = total / newBodyLine.length
-        let calcs = [total, min, media, max]
-        let regraCopy = { ...regra }
-        regraCopy.calc = calcs
-        let regrasCopy = [...regras]
-        let indexToUpdadte = regrasCopy.findIndex(reegra => reegra.headerRef.index === regra.headerRef.index)
-        regrasCopy[indexToUpdadte] = regra
-        setRegrasResult(regrasCopy)
-    }
-
-    const processRegraByFilter = (regra) => {
-
-    }
-
-    const processRegraByRelacao = (regra) => {
 
     }
 
@@ -200,16 +164,20 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
 
         let regrasCopy = [...regras]
         let calcsHeader = []
-        let regrasResult
+        let regrasResult = []
         let regraSortedByOrder = regrasCopy.sort((regra1, regra2) => regra1.order - regra2.order)
+        let indexToUpdadte = 0
         for (const regra of regraSortedByOrder) {
+
             if (regra.type === "calc") {
                 const { values, headerRef } = regra
                 let total = 0
                 let newBodyLine = []
                 body.forEach(bLine => {
-                    let valor = +bLine[headerRef.index].replace(/[,.]/,"")
-                    if ((typeof valor == "number") && (!Number.isNaN(valor)) && (valor != 0) &&  (valor != "")) {
+                    let thenum = bLine[headerRef.index].match(/\d+[,.]*\d+/)
+                    
+                    if ((thenum!= null) && (thenum.length >= 1)  && (!Number.isNaN(thenum[0]))) {
+                        let valor = +thenum[0].replace(/[,.]/, "")
                         total += valor
                         newBodyLine.push(valor)
                     }
@@ -222,35 +190,28 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                 let calcs = [total, media, max, min]
                 let regraCopy = { ...regra }
                 regraCopy.calc = calcs
-                let regrasCopy = [...regras]
-                let indexToUpdadte = regrasCopy.findIndex(reegra => reegra.headerRef.index === regra.headerRef.index)
+
+
                 regrasCopy[indexToUpdadte] = regraCopy
                 regrasResult = regrasCopy
+
             }
-
+            indexToUpdadte++
         }
 
-        if (regrasResult) {
-
-        }
+    
 
 
-        return <>
-            {calcsHeader && <tr>
-
-                    {fullFilteredHeader.map(addedHeader => {
-                        
-                        let filteredByHeader = regrasResult.filter(regra => regra.headerRef.index === addedHeader.index)
-                        return <th>{filteredByHeader.map((regraFiltered, index) => {
-                            let indexForValue = calcValues.findIndex(calcValue => calcValue === regraFiltered.values[0])
-                            return <li key={index} style={{ textAlign: "center" }} >{`${regraFiltered.values[0]} ${Math.floor(regraFiltered.calc[indexForValue])}`}</li>
-                        })} </th>  
-                    })}
-            </tr>}
-            <tr> {fullFilteredHeader.map((header, index) => {
-                return <th key={index} style={{ textAlign: "center" }} >{header.header} </th>
+        return <thead>
+            <tr>{fullFilteredHeader.map((header, index) => {
+                 let filteredByHeader = regrasResult.filter(regra => regra.headerRef.index === header.index)
+                return <th key={index} style={{ textAlign: "center" }} >{header.header} { filteredByHeader.map((regraFiltered, index) => {
+                    let indexForValue = calcValues.findIndex(calcValue => calcValue === regraFiltered.values[0])
+                    return <li key={index} style={{ textAlign: "center" }} >{`${regraFiltered.values[0]} ${Math.floor(regraFiltered.calc[indexForValue])}`}</li>
+                })} </th>
             })} </tr>
-        </>
+
+        </thead>
     }
 
     const buildTable = () => {
@@ -258,9 +219,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
             <h3>Tabela de Dados</h3>
             <div className="tableFixHead" >
                 <table >
-                    <thead >
-                        {filterHeaders()}
-                    </thead>
+                    {filterHeaders()}
                     <tbody >
                         {filterBody()}
                     </tbody>
@@ -270,6 +229,10 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
         </>
     }
 
+
+    const openRuleSaver = () => {
+        
+    } 
 
 
 
@@ -291,6 +254,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                         <div className="overflow-auto" style={{ height: 400, padding: 12 }}>
                             {addedHeaders && buildFilterHeaders()}
                         </div>
+                        <Button onClick={() => openRuleSaver()}>Salvar Regra</Button>
                     </div>
                 </div>
             </div>
