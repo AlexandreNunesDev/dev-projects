@@ -1,13 +1,13 @@
 import axios from "axios";
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from "react-redux";
-import { setSpreadSheetMetadata, setChoosedHeaders, updadteHeaders, updateBody, clear, loadOptionsHeaders, setDynamicOpenFilter, updateRegras } from "../Reducers/dyanamicForms";
-import { getBatchRanges, getHeaders, getMaxColumns, getMaxRows } from "./spreadSheetApi";
-import './fixedTables.css'
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
-import { HiFilter } from 'react-icons/hi'
-import FilterDynamic, { calcValues } from "../Components/FilterDynamic";
+import React, { useEffect, useState } from 'react';
 import { Button } from "react-bootstrap";
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+import { HiFilter } from 'react-icons/hi';
+import { useDispatch, useSelector } from "react-redux";
+import FilterDynamic, { calcValues } from "../Components/FilterDynamic";
+import { clear, loadOptionsHeaders, setChoosedHeaders, setDynamicOpenFilter, setSpreadSheetMetadata, updadteHeaders, updateBody } from "../Reducers/dyanamicForms";
+import './fixedTables.css';
+import { getBatchRanges, getHeaders, getMaxColumns, getMaxRows } from "./spreadSheetApi";
 
 function DynamicVizualization({ selectedSpreadSheetUri }) {
     const apiKey = 'AIzaSyAwUkhGE3_YB8cT4706OKT-xi3RpvnL014'
@@ -21,20 +21,13 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
         return config;
     });
 
-    const [data, setData] = useState()
-    const [selectedIndex, setSelectedIndex] = useState([])
-    const [actualSpreadsheet, setActualSpreadSheet] = useState()
     const dispatch = useDispatch()
     const headers = useSelector(state => state.formsReducer.headers)
     const addedHeaders = useSelector(state => state.formsReducer.addedHeaders)
     const optionsHeaders = useSelector(state => state.formsReducer.optionsHeaders)
     const toEditHeader = useSelector(state => state.formsReducer.toEditHeader)
-    const spreadSheetMetaData = useSelector(state => state.formsReducer.spreadSheetMetaData)
     const body = useSelector(state => state.formsReducer.body)
     const regras = useSelector(state => state.formsReducer.regras)
-    const [regrasResult, setRegrasResult] = useState()
-
-
 
 
     useEffect(() => {
@@ -66,11 +59,6 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
         }
     }, [selectedSpreadSheetUri])
 
-    useEffect(() => {
-        body.filter((bLine => {
-
-        }))
-    })
 
 
 
@@ -122,8 +110,8 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                     <HiFilter onClick={() => dispatch(setDynamicOpenFilter(added))} />
                 </div>
 
-              
-            </div>  
+
+            </div>
         })
 
     }
@@ -156,6 +144,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
 
     const filterHeaders = () => {
         let fullFilteredHeader = []
+       
         if (addedHeaders.length == 0) {
             fullFilteredHeader = [...headers]
         } else {
@@ -163,7 +152,6 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
         }
 
         let regrasCopy = [...regras]
-        let calcsHeader = []
         let regrasResult = []
         let regraSortedByOrder = regrasCopy.sort((regra1, regra2) => regra1.order - regra2.order)
         let indexToUpdadte = 0
@@ -175,8 +163,8 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                 let newBodyLine = []
                 body.forEach(bLine => {
                     let thenum = bLine[headerRef.index].match(/\d+[,.]*\d+/)
-                    
-                    if ((thenum!= null) && (thenum.length >= 1)  && (!Number.isNaN(thenum[0]))) {
+
+                    if ((thenum != null) && (thenum.length >= 1) && (!Number.isNaN(thenum[0]))) {
                         let valor = +thenum[0].replace(/[,.]/, "")
                         total += valor
                         newBodyLine.push(valor)
@@ -199,13 +187,13 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
             indexToUpdadte++
         }
 
-    
+
 
 
         return <thead>
             <tr>{fullFilteredHeader.map((header, index) => {
-                 let filteredByHeader = regrasResult.filter(regra => regra.headerRef.index === header.index)
-                return <th key={index} style={{ textAlign: "center" }} >{header.header} { filteredByHeader.map((regraFiltered, index) => {
+                let filteredByHeader = regrasResult.filter(regra => regra.headerRef.index === header.index)
+                return <th key={index} style={{ textAlign: "center" }} >{header.header} {filteredByHeader.map((regraFiltered, index) => {
                     let indexForValue = calcValues.findIndex(calcValue => calcValue === regraFiltered.values[0])
                     return <li key={index} style={{ textAlign: "center" }} >{`${regraFiltered.values[0]} ${Math.floor(regraFiltered.calc[indexForValue])}`}</li>
                 })} </th>
@@ -219,9 +207,9 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
             <h3>Tabela de Dados</h3>
             <div className="tableFixHead" >
                 <table >
-                    {filterHeaders()}
+                    {addedHeaders && filterHeaders()}
                     <tbody >
-                        {filterBody()}
+                        {addedHeaders && filterBody()}
                     </tbody>
                 </table>
             </div>
@@ -231,8 +219,8 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
 
 
     const openRuleSaver = () => {
-        
-    } 
+
+    }
 
 
 

@@ -7,7 +7,6 @@ import notificationsReducer from './notificationsReducer'
 import timeReducer from './timeReducers'
 import analiseReducer from './analisesReducers'
 import ordensDeManutencaoReducer from './ordensDeManutencaoReducer'
-import formularios from './formularioReducer'
 import dynamicFormsReducer from './dyanamicForms'
 import ompReducer from './ompReducer'
 
@@ -24,7 +23,6 @@ const appReducer = combineReducers({
    analiseReducer : analiseReducer,
    cadastroOmpReducer : ompReducer,
    ordensDeManutencao : ordensDeManutencaoReducer,
-   formulariosReducer : formularios,
    formsReducer : dynamicFormsReducer
 })
 
@@ -38,6 +36,7 @@ const rootReducer = (state, action) => {
     state.notification = undefined
     state.historicoReducer = undefined
     state.cadastroOmpReducer = undefined
+    state.formsReducer = undefined
    }
  
    return appReducer(state, action);

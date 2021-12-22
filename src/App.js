@@ -45,6 +45,7 @@ import EditaTarefasDeManutencao from './ScreensEdicao/EditaTarefasDeManutencao';
 import { isAuthenticated, isTokenExpired, logout } from './Services/auth';
 import { optionsLoad } from './Services/storeService';
 import { WebSocketContext } from './websocket/wsProvider';
+import { reloadState } from './store';
 
 
 
@@ -74,6 +75,7 @@ class App extends React.Component {
 
 
   initiate()  {
+    reloadState()
     if ((isAuthenticated(this.props.global.tokenInfo)) && (isTokenExpired(this.props.global.tokenExpiration))) {
           logout()
           this.props.setLogOut()

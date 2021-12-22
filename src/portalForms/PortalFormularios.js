@@ -32,15 +32,13 @@ function PortalFormularios() {
 
     useEffect(() => {
 
-        
+    
         httpClient.get(":batchGet?ranges=dadosPortal!A:A").then(res => {
             let formListNames = res.data.valueRanges[0].values.map(value => value[0])
             formListNames.shift()
             setFormNames(formListNames)
         })
-        return () => {
-
-        }
+   
     }, [])
 
     const getValueRange = (response) => {
