@@ -101,9 +101,9 @@ const Omp = () => {
             } else {
 
                 const removedArray = trocasChoosed.filter((value) => {
-                    return Number(value) !== Number(clickedTroca)
+                    return Number(value.id) !== Number(clickedTroca.id)
                 })
-                dispatch(UpdateTrocasChoosed([removedArray]))
+                dispatch(UpdateTrocasChoosed([...removedArray]))
             }
         } else {
             toastManager.addToast("Esta troca ja foi programada", {
@@ -240,7 +240,7 @@ const Omp = () => {
 
                 <Col md="auto">
                     <Button  style={{ margin: 10 }} onClick={() => { markAll(); setMarkAllHide(true) }}>Selecionar Todos</Button>
-                    <Button style={{ margin: 10 }} onClick={() => { unmarkAll(); setMarkAllHide(false) }}>Desmarcar Todos</Button>
+                    <Button style={{marginLeft : 12 }} onClick={() => { unmarkAll(); setMarkAllHide(false) }}>Desmarcar Todos</Button>
                 </Col>
 
                 <Col>

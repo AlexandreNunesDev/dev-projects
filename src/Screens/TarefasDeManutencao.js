@@ -37,10 +37,10 @@ const FormatDate = (data) => {
 
 const TableBody = props => {
     const toBuilTarefasList = props.filteredTarefas.length == 0 ? props.tarefas : props.filteredTarefas
-   
+
     const trocaTd = toBuilTarefasList.map((tarefa, index) => {
-        
-        const check = props.tarefasChoosed.find(tarefaChoosed => tarefa.id === tarefaChoosed.id )
+
+        const check = props.tarefasChoosed.find(tarefaChoosed => tarefa.id === tarefaChoosed.id)
         let dataPlanejada = String(tarefa.dataPlanejada).substr(0, 10)
         let dataRealizada = String(tarefa.dataRealizada).substr(0, 10)
 
@@ -81,7 +81,7 @@ const TarefasDeManutencao = (props) => {
     const processos = useSelector(state => state.options.processos)
     const filteredTarefas = useSelector(state => state.cadastroOmpReducer.tarefasFiltered)
     const history = useHistory()
-    const [filterType,setFilterType] = useState('')
+    const [filterType, setFilterType] = useState('')
 
 
 
@@ -89,7 +89,7 @@ const TarefasDeManutencao = (props) => {
     const addTarefa = (checked, tarefa) => {
 
         if (checked) {
-            dispatch(UpdateTarefasChoosed([...tarefasChoosed,tarefa]))
+            dispatch(UpdateTarefasChoosed([...tarefasChoosed, tarefa]))
         } else {
 
             const newTarefasChoosed = tarefasChoosed.filter((tarefasChoos) => {
@@ -113,7 +113,7 @@ const TarefasDeManutencao = (props) => {
 
     const markAll = () => {
         dispatch(UpdateTarefasChoosed(filteredTarefas))
-    
+
     }
 
     const unmarkAll = () => {
@@ -124,26 +124,26 @@ const TarefasDeManutencao = (props) => {
 
     const filterAction = (filterText) => {
         if (filterText !== "" && filterType !== "") {
-            
-               dispatch(UpdateTarefasFiltered(tarefas.filter((tarefa) => {
-                    if (filterType === "Nome") {
-                        return String(tarefa.nome).includes(filterText)
-                    }
-                    if (filterType === "Status") {
-                        return String(tarefa.status).includes(filterText)
-                    }
-                    if (filterType === "Data") {
-                        return String(tarefa.dataPlanejada).includes(filterText)
-                    }
-                    return ""
 
-                })))
-            
+            dispatch(UpdateTarefasFiltered(tarefas.filter((tarefa) => {
+                if (filterType === "Nome") {
+                    return String(tarefa.nome).includes(filterText)
+                }
+                if (filterType === "Status") {
+                    return String(tarefa.status).includes(filterText)
+                }
+                if (filterType === "Data") {
+                    return String(tarefa.dataPlanejada).includes(filterText)
+                }
+                return ""
+
+            })))
+
         } else {
 
             dispatch(UpdateTarefasFiltered([]))
 
-          
+
         }
 
     }
@@ -151,50 +151,53 @@ const TarefasDeManutencao = (props) => {
 
 
 
-        return (
-            <>
+    return (
+        <>
 
-                <Container>
-                    <Form.Row style={{ padding: 10 }}>
-                        <Col >
-                            <GenericSelect selection={processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) =>  dispatch(setProcessoTarefaRef(processoId))} ops={processos}  ></GenericSelect>
-                        </Col>
-                        <Col>
+            <Container>
+                <Form.Row style={{ padding: 10 }}>
+                    <Col >
+                        <GenericSelect selection={processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => dispatch(setProcessoTarefaRef(processoId))} ops={processos}  ></GenericSelect>
+                    </Col>
+                    <Col>
 
-                            <Form.Control placeholder="buscar por nome..." onChange={(event) => filterAction(event.target.value)}></Form.Control>
-                        </Col>
+                        <Form.Control placeholder="buscar por nome..." onChange={(event) => filterAction(event.target.value)}></Form.Control>
+                    </Col>
 
-                        <Col md="auto" >
-                            <GenericDropDown display={"Tipo"} itens={["Nome", "Status", "Data"]} onChoose={(item) => setFilterType(item)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
-                        </Col>
-                        <Col>
-                            <Button onClick={() => {
-                                history.push("CadastroOmp")
-                            }} >Gerar OMP</Button>
-                        </Col>
-                        <Col md="auto">
-                            <Button onClick={() => markAll()}>Selecionar Todos</Button>
-                            <Button  onClick={() => unmarkAll()}>Desmarcar Todos</Button>
-                        </Col>
-                    </Form.Row>
+                    <Col md="auto" >
+                        <GenericDropDown display={"Tipo"} itens={["Nome", "Status", "Data"]} onChoose={(item) => setFilterType(item)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                    </Col>
+                    <Col>
+                        <Button onClick={() => {
+                            history.push("CadastroOmp")
+                        }} >Gerar OMP</Button>
+                    </Col>
+                    <Col md="auto">
+                        <Button onClick={() => markAll()}>Selecionar Todos</Button>
+                        <Button style={{marginLeft : 12}} onClick={() => unmarkAll()}>Desmarcar Todos</Button>
+                    </Col>
+                    <Col md="auto">
+                        <Button onClick={() => history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
+                    </Col>
+                </Form.Row>
 
-                </Container>
-                <div className="table-responsive">
-                    <Table className="table table-hover">
-                        <TableHead></TableHead>
-                        <tbody>
-                            <TableBody tarefas={tarefas} tarefasChoosed={tarefasChoosed} setTarefaToList={addTarefa} filteredTarefas={filteredTarefas} processoIdTarefaRef={processoIdTarefaRef}  ></TableBody>
-                        </tbody>
+            </Container>
+            <div className="table-responsive">
+                <Table className="table table-hover">
+                    <TableHead></TableHead>
+                    <tbody>
+                        <TableBody tarefas={tarefas} tarefasChoosed={tarefasChoosed} setTarefaToList={addTarefa} filteredTarefas={filteredTarefas} processoIdTarefaRef={processoIdTarefaRef}  ></TableBody>
+                    </tbody>
 
 
-                    </Table>
-                </div>
+                </Table>
+            </div>
 
 
-            </>
+        </>
 
-        )
-    }
+    )
+}
 
 
 
