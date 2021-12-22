@@ -9,7 +9,7 @@ import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
 import { withMenuBar } from "../Hocs/withMenuBar";
 import { setProcessoTarefaRef } from "../Reducers/globalConfigReducer";
-import { UpdateTarefasFiltered, UpdateTrocasChoosed, UpdateTrocasFiltered } from "../Reducers/ompReducer";
+import { setTrocasFilterType, UpdateTarefasFiltered, UpdateTrocasChoosed, UpdateTrocasFiltered } from "../Reducers/ompReducer";
 
 
 const TableHead = () => {
@@ -86,6 +86,7 @@ const Omp = () => {
     const processoIdTarefaRef = useSelector(state => state.global.processoIdTarefaRef)
     const trocasChoosed = useSelector(state => state.cadastroOmpReducer.trocas)
     const trocasFiltered = useSelector(state => state.cadastroOmpReducer.trocasFiltered)
+    const filterType = useSelector(state => state.cadastroOmpReducer.trocasFilterType)
     const processos = useSelector(state => state.options.processos)
     const trocas = useSelector(state => state.options.trocas)
     const toastManager = useToasts()
@@ -162,34 +163,15 @@ const Omp = () => {
         dispatch(UpdateTrocasChoosed([]))
     }
 
-    const showPendentes = (checked) => {
-
-        if (checked) {
-            this.setState({
-                filteredTroca: this.state.trocas.filter((troca) => {
-                    return troca.pendente === true
-                })
-            })
-        } else {
-            this.setState({
-                filteredTroca: this.state.trocas
-            })
-        }
-
-    }
-
     const filterAction = (filterText) => {
-        let tofilterTrocas = this.state.processoId ? this.filterByGlobalProcesso(this.state.processoId) : this.state.trocas
+        let tofilterTrocas = processoIdTarefaRef ? filterByGlobalProcesso(processoIdTarefaRef) : trocas
         if (filterText !== "") {
-            this.setState({
-                filteredTroca: tofilterTrocas.filter((troca) => {
-                    if (this.state.filterType === "Processo") {
-                        return String(troca.processoNome).toLowerCase().includes(filterText.toLowerCase())
-                    }
-                    if (this.state.filterType === "Etapa") {
+            dispatch(UpdateTrocasFiltered(
+                tofilterTrocas.filter((troca) => {
+                    if (filterType === "Etapa") {
                         return String(troca.etapaNome).toLowerCase().includes(filterText.toLowerCase())
                     }
-                    if (this.state.filterType === "Status") {
+                    if (filterType === "Status") {
                         if (String("Pendente").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())) {
                             return troca.pendente === true
                         }
@@ -203,11 +185,12 @@ const Omp = () => {
                     return ""
 
                 })
-            })
+            ))
+
+        
+            
         } else {
-            this.state.processoId ? this.filterByGlobalProcesso(this.state.processoId) : this.setState({
-                filteredTroca: this.state.trocas
-            })
+            processoIdTarefaRef ? filterByGlobalProcesso(processoIdTarefaRef) : dispatch(UpdateTrocasFiltered(trocas))
 
         }
 
@@ -247,7 +230,7 @@ const Omp = () => {
                     <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => filterAction(event.target.value)}></Form.Control>
                 </Col>
                 <Col md="auto">
-                    <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Status"]} onChoose={(item) => this.setState({ filterType: item })} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                    <GenericDropDown display={"Tipo"} margin={10} itens={["Etapa", "Status"]} onChoose={(item) => dispatch(setTrocasFilterType(item))} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                 </Col>
                 <Col md="auto">
                     <Button style={{ margin: 10 }} onClick={() => history.push("/OrdensDeManutencao")}>Ver Ordens</Button>

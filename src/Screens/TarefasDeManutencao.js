@@ -8,7 +8,7 @@ import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
 import { withMenuBar } from "../Hocs/withMenuBar";
 import { setProcessoTarefaRef } from "../Reducers/globalConfigReducer";
-import { UpdateTarefasChoosed, UpdateTarefasFiltered } from "../Reducers/ompReducer";
+import { setTarefasFilterType, UpdateTarefasChoosed, UpdateTarefasFiltered } from "../Reducers/ompReducer";
 
 
 const TableHead = () => {
@@ -80,8 +80,9 @@ const TarefasDeManutencao = (props) => {
     const tarefas = useSelector(state => state.options.tarefasDeManutencao)
     const processos = useSelector(state => state.options.processos)
     const filteredTarefas = useSelector(state => state.cadastroOmpReducer.tarefasFiltered)
+    const filterType = useSelector(state => state.cadastroOmpReducer.tarefasFilterType)
     const history = useHistory()
-    const [filterType, setFilterType] = useState('')
+
 
 
 
@@ -120,22 +121,37 @@ const TarefasDeManutencao = (props) => {
         dispatch(UpdateTarefasChoosed([]))
     }
 
+    const filterByGlobalProcesso = () => {
+        let filteredTrocas = tarefas.filter(tarefa => Number(tarefa.processoId) === Number(processoIdTarefaRef))
+        dispatch(UpdateTarefasFiltered(filteredTrocas))
+        return filteredTrocas
+    }
+
 
 
     const filterAction = (filterText) => {
+        let toFilterTarefas = processoIdTarefaRef ? filterByGlobalProcesso() : tarefas
         if (filterText !== "" && filterType !== "") {
 
-            dispatch(UpdateTarefasFiltered(tarefas.filter((tarefa) => {
+            dispatch(UpdateTarefasFiltered(toFilterTarefas.filter((tarefa) => {
                 if (filterType === "Nome") {
                     return String(tarefa.nome).includes(filterText)
                 }
                 if (filterType === "Status") {
-                    return String(tarefa.status).includes(filterText)
+                    if (String("Pendente").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())) {
+                        let returnType = tarefa.pendente === true
+                        return returnType
+                    }
+
+                    if (String("Em dia").toLowerCase().trim().startsWith(filterText.toLowerCase().trim())) {
+                        let returnType =  tarefa.pendente === false
+                        return returnType
+                    }
                 }
                 if (filterType === "Data") {
                     return String(tarefa.dataPlanejada).includes(filterText)
                 }
-                return ""
+                return true
 
             })))
 
@@ -165,7 +181,7 @@ const TarefasDeManutencao = (props) => {
                     </Col>
 
                     <Col md="auto" >
-                        <GenericDropDown display={"Tipo"} itens={["Nome", "Status", "Data"]} onChoose={(item) => setFilterType(item)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                        <GenericDropDown display={"Tipo"} itens={["Nome", "Status", "Data"]} onChoose={(item) => dispatch(setTarefasFilterType(item))} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                     </Col>
                     <Col>
                         <Button onClick={() => {

@@ -5,6 +5,8 @@ const initialState = {
   tarefas: [],
   tarefasFiltered: [],
   trocasFiltered: [],
+  trocasFilterType : '',
+  tarefasFilterType : ''
 
 }
 
@@ -24,6 +26,12 @@ const cadastroOmp = createSlice({
     UpdateTrocasFiltered(state, action) {
       state.trocasFiltered = action.payload
     },
+    setTrocasFilterType(state,action) {
+      state.trocasFilterType = action.payload
+    },
+    setTarefasFilterType(state,action) {
+      state.tarefasFilterType = action.payload
+    },
     clear(state) {
       state.tarefas = []
       state.trocas = []
@@ -34,5 +42,5 @@ const cadastroOmp = createSlice({
   },
 })
 
-export const { UpdateTarefasChoosed,UpdateTarefasFiltered,UpdateTrocasFiltered, UpdateTrocasChoosed, clear } = cadastroOmp.actions
+export const { UpdateTarefasChoosed,setTrocasFilterType,setTarefasFilterType,UpdateTarefasFiltered,UpdateTrocasFiltered, UpdateTrocasChoosed, clear } = cadastroOmp.actions
 export default cadastroOmp.reducer
