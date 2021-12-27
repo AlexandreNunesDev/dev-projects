@@ -15,7 +15,7 @@ const EditarProcesso = (props) => {
 
     const [id , setId] = useState()
     const context =  useContext(WebSocketContext)
-    const [nome, setNome] = useState()
+    const [nome, setNome] = useState('')
     const [isEditableSelected, setIsEditableSelected] = useState(false)
     const [edited, setEdited] = useState(false)
     const {toastManager} = props 

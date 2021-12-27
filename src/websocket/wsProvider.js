@@ -9,7 +9,7 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 
 const WebSocketContext = createContext(null)
 const SOCKET_URL = 'wss://scqapi.com/gs-guide-websocket'
-const SOCKET_URL_TEST = 'wss://scqapi.com/gs-guide-websocket'
+const SOCKET_URL_TEST = 'ws://localhost:8080/gs-guide-websocket'
 
 
 export { WebSocketContext }
@@ -26,7 +26,7 @@ export default ({ children }) => {
 
 
     const sendMessage = (clickedReducerFunction,action,route) => {
-        const message = clickedReducerFunction == null ? {type : 'action' , action : action,route : route } :  {type: 'function',function : clickedReducerFunction.name, route : route}
+        const message = clickedReducerFunction == null ? {type : 'action' , action : action,route : route } :  {type: 'function',functions : clickedReducerFunction.name, route : route}
    
      
         socket.publish({
@@ -49,15 +49,20 @@ export default ({ children }) => {
             if((store.getState().global.isAuth) &&  (isTokenExpired(store.getState().global.tokenExpiration))){
                 history.push("/VoceFoiDesconectado")
             } else {
+                
                 const bodyMsg = JSON.parse(message.body)
-            
+                console.log(bodyMsg)
                 if(bodyMsg.type === 'action'){
                     const actionObj = bodyMsg.action
                     dispatch(actionObj)
                   
                 } else {
-                    const functionName = bodyMsg.function
-                    dispatchers(dispatch)[functionName]()
+                    const functionsName =  bodyMsg.functions
+                    functionsName.forEach(functionName => dispatchers(dispatch)[functionName]() )
+                    
+
+
+                    
                    
                 }
             }

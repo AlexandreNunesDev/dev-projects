@@ -3,7 +3,7 @@ import axios from "axios"
 
 import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
-const URL_TEST =  "https://scqapi.com/"//  http://localhost:8080"
+const URL_TEST =  "http://localhost:8080"//https://scqapi.com/"
 const URL = "https://scqapi.com/"
 const http = axios.create({
      baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
@@ -315,6 +315,10 @@ const ScqApi = {
     },
     DeleteTroca: (trocaId) => {
         return http.delete("delete/troca/" + trocaId)
+
+    },
+    DeleteTarefa: (trocaId) => {
+        return http.delete("tarefa/" + trocaId)
 
     },
     Calcular: (formula, viragem) => {

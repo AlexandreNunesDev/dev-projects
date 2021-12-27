@@ -12,20 +12,24 @@ import { toastInfo } from '../Services/toastType';
 import context from 'react-bootstrap/esm/AccordionContext';
 import { useDispatch } from 'react-redux';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { useHistory } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications/dist/ToastProvider';
 
 const EditarTarefaDeManutencao = (props) => {
 
 
     const [processoId, setProcessoId] = useState()
-    const [nome, setNome] = useState()
+    const [nome, setNome] = useState('')
 
-    const [frequencia, setFrequencia] = useState()
+    const [frequencia, setFrequencia] = useState('')
     const [escala, setEscala] = useState()
-    const [codigoDoDocumento, setCodigo] = useState()
+    const [codigoDoDocumento, setCodigo] = useState('')
     const [tarefa, setTarefa] = useState()
     const [dataPlenejada, setDataPlanejada] = useState()
     const dispatcher = useDispatch()
     const [processos, setProcessos] = useState()
+    const history = useHistory()
+    const toastManager = useToasts()
 
 
     useEffect(() => {
@@ -52,7 +56,7 @@ const EditarTarefaDeManutencao = (props) => {
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar Tarefa de Manutencao</h1>
                 <Form>
-                    <ModoEdicao type={"tarefa"} getSelectedTarefa={(tarefa) => setTarefa(tarefa)}></ModoEdicao>
+                    <ModoEdicao type={"tarefa"} getSelectedTarefa={(tarefa) => setTarefa(tarefa)}  onDelete={(deleteMessage) => {toastManager.addToast(`${deleteMessage}`, {appearance: 'success', autoDismiss: true,onDismiss: () => { history.push("/CadastroTarefasDeManutencao")}})}}></ModoEdicao>
                     {tarefa && <Form.Group style={{ marginTop: 20 }} >
                         <Form.Label style={{ color: "RED", fontWeight: "bold" }} >Tarefa Id: {tarefa.id} || Data Planejada : {tarefa?.dataPlanejada}</Form.Label>
                     </Form.Group>}
@@ -93,7 +97,7 @@ const EditarTarefaDeManutencao = (props) => {
                         <Button style={{ marginTop: 10, marginRight: 5 }} variant="primary" >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
                             const tarefaManutencao = {id:tarefa.id ,nome: nome, processoId: processoId, dataPlanejada : dataPlenejada, codigoDoDocumento: codigoDoDocumento, escala: escala, frequencia: frequencia }
-                            ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,props,"Tarefa",toastInfo,context,[dispatchers().loadTrocas]))
+                            ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,props,"Tarefa",toastInfo,context,[dispatchers().loadTarefasDeManutencao]))
                         
 
                         }} >Salvar</Button>

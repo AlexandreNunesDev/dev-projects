@@ -34,10 +34,10 @@ import dispatchers from '../mapDispatch/mapDispathToProps'
         
     }
 
-    /*if((tarefa != null) && type==="tarefa") {
-        return ScqApi.DeleteTarefa(troca.id).then(msg => onDelete(msg))
+    if((tarefa != null) && type==="tarefa") {
+        return ScqApi.DeleteTarefa(tarefa.id).then(msg => onDelete(msg))
         
-    }*/
+    }
    
 }
 
@@ -232,7 +232,7 @@ const ModoEdicao = (props) => {
                             break;
                         case 'troca' : setConfirmDetails(troca ?  `Voce deseja deletar Troca da etapa ${troca?.etapaNome}` : "Escolha uma troca" )
                             break;
-                        case 'tarefa' : setConfirmDetails(tarefa ?  `Voce deseja deletar Tarefa ${troca?.etapaNome}` : "Escolha uma troca" )
+                        case 'tarefa' : setConfirmDetails(tarefa ?  `Voce deseja deletar Tarefa ${tarefa?.nome}` : "Escolha uma troca" )
                             break;
                          default : return 'nada foi selecionado';
                           
