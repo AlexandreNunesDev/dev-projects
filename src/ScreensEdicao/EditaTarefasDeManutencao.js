@@ -93,7 +93,7 @@ const EditarTarefaDeManutencao = (props) => {
                         <Button style={{ marginTop: 10, marginRight: 5 }} variant="primary" >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
                             const tarefaManutencao = {id:tarefa.id ,nome: nome, processoId: processoId, dataPlanejada : dataPlenejada, codigoDoDocumento: codigoDoDocumento, escala: escala, frequencia: frequencia }
-                            ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,props,"Tarefa",toastInfo,context,[props.loadTarefasDeManutencao]))
+                            ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,props,"Tarefa",toastInfo,context,[dispatchers().loadTrocas]))
                         
 
                         }} >Salvar</Button>
