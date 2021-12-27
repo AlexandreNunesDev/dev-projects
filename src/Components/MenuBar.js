@@ -165,7 +165,7 @@ const MenuBar = () => {
           {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {global.userName}</NavItem>}
 
 
-          <NavItem>{isMobile ? <Button onClick={() => setShow(true)}  ><Badge variant="light">{notifications.length}</Badge></Button> : <Button onClick={() => setShow(true)}  >Notificacoes <Badge variant="light">{this.props.notifications.length}</Badge></Button>}</NavItem>
+          <NavItem>{isMobile ? <Button onClick={() => setShow(true)}  ><Badge variant="light">{notifications.length}</Badge></Button> : <Button onClick={() => setShow(true)}  >Notificacoes <Badge variant="light">{notifications.length}</Badge></Button>}</NavItem>
 
           <Modal show={show} onHide={() => setShow(false)}>
             <Modal.Body>
