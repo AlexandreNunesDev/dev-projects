@@ -13,6 +13,9 @@ import { connect } from "react-redux";
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import { WebSocketContext } from "../websocket/wsProvider";
 import OcpsTableBody from "../Components/OcpsTableBody";
+import { responseHandler } from "../Services/responseHandler";
+import { toastOk } from "../Services/toastType";
+import { store } from "../store";
 
 
 
@@ -91,8 +94,9 @@ class OrdensDeCorreção extends Component {
     }
 
     redirectAnalise = (history, analise, ocpId) => {
-
-        history.push("/RegistroAnalise", [analise, ocpId])
+        const analiseToSave = { id: analise.id, analista: analise.analista, resultado: analise.resultado, status: '', parametroId: analise.parametroId, ocpId: ocpId, observacaoAnalise: analise.observacao, processoId : analise.processoId, etapaId : analise.etapaId }
+        this.props.setSingleAnalise(analiseToSave)
+        history.push("/RegistroAnalise", {reanalise : true})
     }
 
     getAproveDetails = (ocp) => {
@@ -107,19 +111,14 @@ class OrdensDeCorreção extends Component {
     correcaoConfirm = (isOcp, ocpId, isAdicao) => {
         if (isOcp) {
             if (isAdicao) {
-                ScqApi.AdicaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps))
-
-
+                ScqApi.AdicaoCorrigir(ocpId, [this.props.loadOcps]).then(res => responseHandler(res, this.state.toastManager, "Correcao", toastOk))
             } else {
-                ScqApi.AcaoCorrigir(ocpId).then(() => this.context.ws.sendMessage(this.props.loadOcps))
+                ScqApi.AcaoCorrigir(ocpId, [this.props.loadOcps]).then(res => responseHandler(res, this.state.toastManager, "Correcao", toastOk))
 
             }
-
-
         } else {
             this.state.toastManager.add("Codigo OCP inserido estado errado", {
                 appearance: 'error', autoDismiss: true
-
             })
         }
 
@@ -128,7 +127,7 @@ class OrdensDeCorreção extends Component {
 
 
     aprovarOcp = () => {
-        ScqApi.AprovarOcp(this.state.ocpToAprove.id).then(() => this.context.ws.sendMessage(this.props.loadOcps))
+        ScqApi.AprovarOcp(this.state.ocpToAprove.id, [this.props.loadOcps]).then(res => responseHandler(res, this.state.toastManager, "Correcao", toastOk))
     }
 
 
@@ -237,18 +236,11 @@ class OrdensDeCorreção extends Component {
                         </Col>
 
                         <Col md="auto" className="text-center text-md-right"  >
-
-
                             <Form.Check checked={this.props.ocp.showEncerradas} label={"Encerradas?"} onChange={(event) => this.props.showEncerradas(event.target.checked)} ></Form.Check>
-
-
                         </Col>
-
-
                         <Col md="auto">
                             <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Parametro", "Status"]} onChoose={(filterType) => this.props.setFilterType(filterType)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
-
                     </Row>
                 </Container>
 

@@ -9,6 +9,7 @@ import analiseReducer from './analisesReducers'
 import ordensDeManutencaoReducer from './ordensDeManutencaoReducer'
 import dynamicFormsReducer from './dyanamicForms'
 import ompReducer from './ompReducer'
+import singleAnaliseReducer from './singleAnaliseReducer'
 
 
 
@@ -23,7 +24,8 @@ const appReducer = combineReducers({
    analiseReducer : analiseReducer,
    cadastroOmpReducer : ompReducer,
    ordensDeManutencao : ordensDeManutencaoReducer,
-   formsReducer : dynamicFormsReducer
+   formsReducer : dynamicFormsReducer,
+   singleAnalise : singleAnaliseReducer
 })
 
 

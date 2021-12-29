@@ -239,7 +239,7 @@ const FinalizarOmp = (props) => {
 
                 <Button onClick={() => {
                     const OmpFinalizarForm = { id: omp.id, tarefasId: tarefasIdChecked, trocasId: trocasIdChecked, data: dataRealizada }
-                    ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]); histoy.push("/Omp") })
+                    ScqApi.FinalizarOmp(OmpFinalizarForm,[props.loadOrdensDeManutencao])//.then((response) => { responseHandler(response, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]); histoy.push("/Omp") })
                 }}>Confirmar</Button>
 
 

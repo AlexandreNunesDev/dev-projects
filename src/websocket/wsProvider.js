@@ -26,7 +26,7 @@ export default ({ children }) => {
 
 
     const sendMessage = (clickedReducerFunction,action,route) => {
-        const message = clickedReducerFunction == null ? {type : 'action' , action : action,route : route } :  {type: 'function',functions : clickedReducerFunction.name, route : route}
+        const message = clickedReducerFunction == null ? {type : 'action' , action : action,route : route } :  {type: 'function',functions : clickedReducerFunction, route : route}
    
      
         socket.publish({

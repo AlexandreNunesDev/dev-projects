@@ -126,12 +126,12 @@ class CadastroParametro extends React.Component {
 
 
     salvarParametro = () => {
-
+        const { toastManager } = this.props;
         const { etapaId, nome, pMax, pMin, formula, unidade, pMaxT, pMinT, frequenciaAnalise, escalaTempo } = this.state
         const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise, showChart: this.state.showChart,isHabilitado : this.state.controlado }
 
         if (this.state.isNotEditable) {
-            ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, this.props, "Parametro", toastOk, this.context, [this.props.loadParametros, this.props.loadEtapas]) })
+            ScqApi.CriarParametro(parametro,[this.props.loadParametros, this.props.loadEtapas]).then(res => { responseHandler(res, toastManager, "Parametro", toastOk) })
 
         }
     }

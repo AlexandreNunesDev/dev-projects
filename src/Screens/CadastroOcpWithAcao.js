@@ -4,10 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
 import { withMenuBar } from '../Hocs/withMenuBar';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
+import {responseHandler} from '../Services/responseHandler'
+import {toastOk} from '../Services/toastType'
+import { useToasts } from 'react-toast-notifications/dist/ToastProvider';
 
 
 
@@ -18,14 +21,7 @@ const redirectAnalise = (history, analise) => {
 
 
 
-const saveOcp = (analise, acao, prazo, responsavel, observacao, props,context ,history) => {
-    
-    const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
-    ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm).then(() => { 
-        context.ws.sendMessage(props.loadOcps, null, "OrdensDeCorrecao");
-        history.push("/OrdensDeCorrecao")}
-    )
-}
+
 
 const CadastroDeOcp = (props) => {
     let context = useContext(WebSocketContext)
@@ -38,8 +34,15 @@ const CadastroDeOcp = (props) => {
     const [responsavel, setResponsavel] = useState('')
     const [loading] = useState(false)
     const [etapa, setEtapa] = useState()
+    const etapas = useSelector(state => state.options.etapas)
+    const toastManager = useToasts()
 
-
+    const saveOcp = () => {
+    
+        const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
+        ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm,[props.loadOcps]).then((res) => responseHandler(res,toastManager,"Ocp", toastOk))
+        history.push("/OrdensDeCorrecao")
+    }
 
 
     useEffect(() => {
@@ -52,7 +55,7 @@ const CadastroDeOcp = (props) => {
 
 
     useEffect(() => {
-        parametro && ScqApi.FindEtapa(parametro.etapaId).then(res => setEtapa(res))
+        parametro && setEtapa(etapas.filter(etapa => etapa.parametrosId.includes(parametro.id))[0])
     }, [parametro])
 
 

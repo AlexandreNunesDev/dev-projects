@@ -46,12 +46,13 @@ class CadastroMateriaPrima extends React.Component {
 
 
     salvarMateriaPrima = () => {
+        const { toastManager } = this.props;
         let {nome,fornecedor,fatorTitulometrico, preco, unidade } = this.state
         if(fatorTitulometrico===''){
             fatorTitulometrico=1
         }
         const materiaPrima = {nome,fornecedor,fatorTitulometrico,preco,unidade}
-            ScqApi.CriarMateriaPrima(materiaPrima).then(res => responseHandler(res,this.props,"MateriaPrima",toastOk,this.context,[this.props.loadMateriasPrima]))
+            ScqApi.CriarMateriaPrima(materiaPrima,[this.props.loadMateriasPrima]).then(res => responseHandler(res,toastManager,"MateriaPrima",toastOk))
             this.cleanState()
             
       

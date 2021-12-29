@@ -28,6 +28,7 @@ const TableHead = () => {
                 <th>Download</th>
                 <th>Processo</th>
                 <th>Data Planejada</th>
+                <th>Data Realizada</th>
                 <th>Emitido por</th>
                 <th>Status</th>
                 <th>Encerrar</th>
@@ -91,7 +92,8 @@ const TableBody = props => {
 
     const ompTd = props.omps.map((omp, index) => {
 
-        let data = String(omp.dataPlanejada).substr(0, 10)
+        let dataPlanejada = String(omp.dataPlanejada).substr(0, 10)
+        let dataRealizada = String(omp.dataRealizada).substr(0, 10)
         let statusToken = omp.status.split(":")
         return (
 
@@ -100,8 +102,9 @@ const TableBody = props => {
                 <td className="align-middle"><Button size={20} onClick={() => downloadOmp(omp)}>Download</Button></td>
                 <td className="align-middle" >{omp.nomeProcesso}</td>
 
-
-                <td className="align-middle">{`${FormatDate(data)}`}</td>
+                <td className="align-middle">{`${FormatDate(dataPlanejada)}`}</td>
+                <td className="align-middle">{`${FormatDate(dataRealizada)}`}</td>
+             
                 <td className="align-middle">{omp.emitidoPor}</td>
                 <td className="align-middle">
                     <Form.Label style={{ color: statusToken[1], fontWeight: 'bolder' }} >{statusToken[0]}</Form.Label>

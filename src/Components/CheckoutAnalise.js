@@ -14,7 +14,7 @@ const CheckOutAnalise = (props) => {
 
 
   const checkOpen = () => {
-    if (props.parametro?.cantBeUsed) {
+    if ((props.parametro?.cantBeUsed) && (!props.analiseId)) {
       const { toastManager } = props
       toastManager.add("Este parametro possui correcoes pendentes", {
         appearance: 'warning', autoDismiss: true

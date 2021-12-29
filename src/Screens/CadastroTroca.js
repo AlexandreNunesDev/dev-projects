@@ -25,13 +25,14 @@ const CadastroTroca = (props) => {
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
     const [unidade, setUnidade] = useState()
+
    
 
 
     const salvarTroca = () => {
         const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade }
-    
-        ScqApi.CriarTroca(troca).then(res => responseHandler(res,props,'Troca',toastOk,context,[props.loadTrocas]))
+        const {toastManager} = props
+        ScqApi.CriarTroca(troca,[props.loadTrocas]).then(res => responseHandler(res,toastManager,'Troca',toastOk))
     
      
     }

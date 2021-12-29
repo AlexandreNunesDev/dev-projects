@@ -8,10 +8,10 @@ import AdicaopH from '../Components/AdicaopH';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
-import {loadOcps} from '../Services/storeService'
+import { loadOcps } from '../Services/storeService'
 import { WebSocketContext } from '../websocket/wsProvider';
 
 
@@ -22,24 +22,9 @@ const redirectAnalise = (history, analise) => {
 }
 
 
-const saveOcp = (analise, mpQtds, responsavel, observacao, history ,props,context) => {
-
-    const fullAnaliseForm = { ...analise, responsavel: responsavel, observacao: observacao, mpQtds: mpQtds }
-
-    ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm).then((res) => {
-        loadOcps(props)
-        responseHandler(res,props, "OrdemDeCorrecao",'success',context, [props.loadParametros,props.loadOcps])
-        history.push("/OrdensDeCorrecao")
-    }
-    );
-
-
-
-}
 
 const CadastroDeOcpAdicao = (props) => {
     let history = useHistory();
-    const [analise, setAnalise] = useState()
     const [parametro, setParametro] = useState()
     const context = useContext(WebSocketContext)
     const [materiasPrima, setMateriasPrima] = useState()
@@ -50,31 +35,26 @@ const CadastroDeOcpAdicao = (props) => {
     const [correcaoArray, setCorrecaoArray] = useState([])
     const [adicaoMenu, setAdicaoMenu] = useState()
     const [loading] = useState(false)
+    const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
+    const parametros = useSelector(state => state.options.parametros)
+    const etapas = useSelector(state => state.options.etapas)
+    const materiasPrim = useSelector(state => state.options.materiasPrima)
     let unidade = ""
 
 
 
     useEffect(() => {
-        const analise = props.location.state
-        setAnalise(analise)
-        ScqApi.FindParametro(analise.parametroId).then(res => setParametro(res))
-
-
-    }, [props.location.state])
-
-    useEffect(() => {
-        parametro && ScqApi.FindEtapa(parametro.etapaId).then(res => { parametro.unidade === "pH" ? unidade = "" : unidade = parametro.unidade; setEtapa(res) })
-
-    }, [parametro])
-
-    useEffect(() => {
-        etapa && ScqApi.FindMateriaPrimaByEtapaId(etapa.id).then(res => setMateriasPrima(res))
-    }, [etapa])
+        const param = parametros.filter(param => String(param.id) === String(analiseToSave.parametroId))[0]
+        const etapa = etapas.filter(etap => etap.parametrosId.includes(param.id))[0]
+        const materiasPrima = etapa.mpIds.map(mpId => materiasPrim.find(mp => String(mp.id) === String(mpId)))
+        param.unidade === "pH" ? unidade = "" : unidade = param.unidade
+        setEtapa(etapa)
+        setParametro(param)
+        setMateriasPrima(materiasPrima)
+    }, [])
 
     useEffect(() => {
         materiasPrima && calcularCorrecaoArray()
-
-
     }, [materiasPrima])
 
     useEffect(() => {
@@ -90,18 +70,18 @@ const CadastroDeOcpAdicao = (props) => {
 
     const saveMpQtd = (quantidade, mpId, unidade, index) => {
         let tempoMpQtd = mpQtds
-        if(Number(quantidade) > 0) {
+        if (Number(quantidade) > 0) {
             console.log(quantidade, mpId, unidade)
-          
+
             tempoMpQtd.splice(index, 1, `${mpId}:${quantidade}:${unidade}`)
-    
+
             setMpQtd(tempoMpQtd)
-    
+
         } else {
-            tempoMpQtd.splice(index,1)
+            tempoMpQtd.splice(index, 1)
             setMpQtd(tempoMpQtd)
         }
-       
+
     }
 
     const calcularCorrecaoArray = () => {
@@ -113,10 +93,10 @@ const CadastroDeOcpAdicao = (props) => {
         materiasPrima && materiasPrima.forEach((mp => {
             //Se a formula do parametro contem o fator titulometrico da materia prima sera gerado analise com base no resultado da concentracao
             if (String(parametro.formula).includes(mp.fatorTitulometrico)) {
-                
+
                 let valorCorrecao = 0
-                if (analise.resultado < nominal) {
-                    valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
+                if (analiseToSave.resultado < nominal) {
+                    valorCorrecao = (etapa.volume * (nominal - analiseToSave.resultado)) / 1000
                     correcaoTotal = correcaoTotal + valorCorrecao
                 }
                 let pairCorrecaoMp = `${mp.id}:${Math.round(valorCorrecao * 100) / 100}`
@@ -133,33 +113,44 @@ const CadastroDeOcpAdicao = (props) => {
                     //Verifican se a materia prima é a mesma da do token de proporçao de montagem
                     if (String(mp.id) === String(pair[0])) {
                         //Se sim verifica se a proporcao é igual a 1.0 , o que quer dizer que so existe essa materia prima
-                            valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
-                            valorCorrecao = valorCorrecao * pair[1]
-                            pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-/*                         if (Number(pair[1] === 1.0)) {
-                            valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
-                            //Adiciona à correcao total o valor da correcao 
-                            correcaoTotal = correcaoTotal + valorCorrecao
-                            pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-                        } else {
-                            valorCorrecao = correcaoTotal * pair[1]
-                            //Adiciona à correcao total o valor da correcao 
-                            correcaoTotal = correcaoTotal + valorCorrecao
-                            pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-                        } */
+                        valorCorrecao = (etapa.volume * (nominal - analiseToSave.resultado)) / 1000
+                        valorCorrecao = valorCorrecao * pair[1]
+                        pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
+                        /*                         if (Number(pair[1] === 1.0)) {
+                                                    valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
+                                                    //Adiciona à correcao total o valor da correcao 
+                                                    correcaoTotal = correcaoTotal + valorCorrecao
+                                                    pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
+                                                } else {
+                                                    valorCorrecao = correcaoTotal * pair[1]
+                                                    //Adiciona à correcao total o valor da correcao 
+                                                    correcaoTotal = correcaoTotal + valorCorrecao
+                                                    pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
+                                                } */
 
                         //Se o valor da correcao for 0 , não adiciona ao  array de Correcao
-                        if(Number(valorCorrecao) > 0) {
+                        if (Number(valorCorrecao) > 0) {
                             tempCorrecaoArray = tempCorrecaoArray.concat(pairCorreMp)
                             setCorrecaoArray(tempCorrecaoArray)
                         }
-                        
+
                     }
                 })
 
 
             }
         }))
+
+    }
+
+
+
+    const saveOcp = () => {
+        const { toastManager } = props
+        const fullAnaliseForm = { ...analiseToSave, responsavel: responsavel, observacao: observacao, mpQtds: mpQtds }
+        ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm, [props.loadParametros, props.loadOcps]).then((res) => { responseHandler(res, toastManager, "OrdemDeCorrecao", 'success')
+        }
+        );
 
     }
 
@@ -194,7 +185,7 @@ const CadastroDeOcpAdicao = (props) => {
                                         <Form.Label>Faixa Máxima : {`${parametro.pMax} ${unidade}`}</Form.Label>
                                     </Form.Group>
                                     <Form.Group xs={2} as={Col} >
-                                        <Form.Label style={{ color: analise.status === "fofe" ? 'red' : 'black' }}>Resultado: {`${analise.resultado} ${unidade}`}</Form.Label>
+                                        <Form.Label style={{ color: analiseToSave.status === "fofe" ? 'red' : 'black' }}>Resultado: {`${analiseToSave.resultado} ${unidade}`}</Form.Label>
                                     </Form.Group>
 
                                 </Form.Row>
@@ -216,19 +207,19 @@ const CadastroDeOcpAdicao = (props) => {
                             <Form.Row>
                                 <Form.Group >
                                     <Button style={{ margin: 2 }} onClick={() => {
-                                        redirectAnalise(history, analise)
+                                        redirectAnalise(history, analiseToSave)
                                         redirectAnalise(history)
                                     }}>
                                         Cancelar
-                        </Button>
+                                    </Button>
                                     <Button style={{ margin: 2 }} type="reset" onClick={() => {
 
-                                        saveOcp(analise, mpQtds, responsavel, observacao, history,props,context)
+                                        saveOcp(analiseToSave, mpQtds, responsavel, observacao, history, props, context)
 
 
                                     }}>
                                         Salvar
-                        </Button>
+                                    </Button>
                                 </Form.Group>
                             </Form.Row>
                         </Form>
@@ -244,4 +235,4 @@ const CadastroDeOcpAdicao = (props) => {
 
 
 
-export default withToastManager(withRouter(withMenuBar(connect(mapToStateProps.toProps,dispatchers)(CadastroDeOcpAdicao))))
+export default withToastManager(withRouter(withMenuBar(connect(mapToStateProps.toProps, dispatchers)(CadastroDeOcpAdicao))))

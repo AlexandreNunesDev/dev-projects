@@ -7,7 +7,7 @@ import UnidadeSelect from '../Components/UnidadeSelect';
 import GenericSelect from '../Components/GenericSelect';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { toastOk } from '../Services/toastType';
@@ -23,15 +23,10 @@ const CadastroDeTarefasDeManutencao = (props) => {
     const [repetirAcada, setRepetirAcada] = useState()
     const [escala , setEscala] = useState()
     const [codigoDoDocumento , setCodigo] = useState()
-   
-    const [processos, setProcessos] = useState()
+    const processos = useSelector(state => state.options.processos)
+ 
     
 
-    useEffect(() => {
-        ScqApi.ListaProcessos().then(res => setProcessos(res))
-        
-    }, []
-    )
 
    
 
@@ -85,8 +80,9 @@ const CadastroDeTarefasDeManutencao = (props) => {
                             props.history.push("/EditarTarefa")
                         }} >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
+                            const {toastManager} = props
                             const tarefaManutencao = {nome,processoId,codigoDoDocumento,dataExecutada: dataExecutada,escala: escala ,frequencia : repetirAcada}
-                            ScqApi.CriarTarefaManutencao(tarefaManutencao).then(res => responseHandler(res,props,null,toastOk,context,[props.loadTarefasDeManutencao]))
+                            ScqApi.CriarTarefaManutencao(tarefaManutencao,[props.loadTarefasDeManutencao]).then(res => responseHandler(res,toastManager,null,toastOk))
                      
                         }} >Salvar</Button>
                     </Form.Group>

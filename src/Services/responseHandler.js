@@ -1,38 +1,26 @@
 
 import { capitalize } from '../Services/stringUtils'
 
-export const responseHandler = (response, props, type, toastType, context, dispatchersFunctions) => {
-    const { toastManager } = props;
+export const responseHandler = (response, toastManager, type, toastType) => {
 
+    const toastCall = 'add' in toastManager ? toastManager.add : toastManager.addToast
 
     if (response.error) {
 
         response.data.forEach(erro => {
-
-            toastManager && toastManager.add(`${(capitalize(transformField(erro.field)))} : ${erro.error}`, {
+            toastManager && toastCall(`${(capitalize(transformField(erro.field)))} : ${erro.error}`, {
                 appearance: 'error', autoDismiss: true
             })
         });
         return false;
     } else {
-        if (context) {
-            notifyByWebSocket(context.ws, dispatchersFunctions)
-        }
-
-        toastManager && toastManager.add(buildMsg(type, response, toastType), {
+        toastManager && toastCall(buildMsg(type, response, toastType), {
             appearance: toastType || 'success', autoDismiss: true
         })
         return true
     }
 }
 
-
-
-
-const notifyByWebSocket = (ws, functions) => {
-    functions.forEach((fuction) => ws.sendMessage(fuction))
-
-}
 
 
 

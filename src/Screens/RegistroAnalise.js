@@ -1,5 +1,5 @@
-import React from 'react'
-import { Form, Container, Col } from 'react-bootstrap';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Form, Container, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GenericSelect from '../Components/GenericSelect';
 import ScqApi from '../Http/ScqApi';
@@ -8,309 +8,275 @@ import { withToastManager } from 'react-toast-notifications';
 import TitulaForm from './TitulaForm';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { formatIsoDate } from '../Services/stringUtils';
-
-
-const valueForm = (props) => {
-    return (
-        <>
-            <Form.Label>
-                Valor
-            </Form.Label>
-            <Form.Control type="number" placeholder={"0.00"} onChange={(event) => props.onChange(event.target.value)} />
-        </>
-    )
-}
+import { clear, setAnaliseToSave } from '../Reducers/singleAnaliseReducer';
 
 
 
 
 
-class RegistroDeAnalise extends React.Component {
-    static contextType = WebSocketContext
 
-    constructor(props) {
-        super(props)
-        this.dataFieldRef = React.createRef();
 
-        this.state = {
-            processos: [],
-            etapas: [],
-            parametros: [],
-            processo: null,
-            etapa: null,
-            parametro: null,
-            analista: '',
-            analise: null,
-            resultado: '',
-            status: false,
-            calcDisabled: false,
-            analiseId: '',
-            valorForm: null,
-            data: null,
-            showData: false,
-            observacao : null
 
+const RegistroDeAnalise = (props) => {
+
+    const context = useContext(WebSocketContext)
+    const processos = useSelector(state => state.options.processos)
+    const etapas = useSelector(state => state.options.etapas)
+    const parametros = useSelector(state => state.options.parametros)
+    const userName = useSelector(state => state.global.userName)
+    const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
+    const [processo, setprocesso] = useState('')
+    const [etapa, setetapa] = useState('')
+    const [parametro, setparametro] = useState('')
+    const [etapas_, setetapas] = useState('')
+    const [parametros_, setparametros] = useState('')
+    const [data, setdata] = useState('')
+    const [menuType, setMenuTypeName] = useState(null)
+    const [showData, setShowData] = useState(false)
+    const [showCheckOut, setShowCheckOut] = useState(false)
+    const [calcDisabled, setCalcDisabled] = useState(true)
+    const dispatch = useDispatch()
+    const dataFieldRef = useRef(null)
+
+
+
+
+    useEffect(() => {
+        let analise = { ...analiseToSave }
+        analise.analista = userName
+        if (props.location.state?.reanalise) {
+            onLinhaSelect(analiseToSave.processoId)
+            onEtapaSelect(analiseToSave.etapaId)
+            onParametroSelect(analiseToSave.parametroId)
+            dispatch(setAnaliseToSave(analise))
+        } else {
+            dispatch(setAnaliseToSave({ id:'', analista: analise.analista, resultado: '', status: '', parametroId: '', ocpId: '', observacaoAnalise: ''}))
         }
-    }
+
+    }, [])
 
 
 
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.parametros !== this.props.parametros) {
-            this.onEtapaSelect(this.state.etapaId)
-        }
-    }
-
-
-
-    componentDidMount() {
-        const analise = this.props.location.state && this.props.location.state[0]
-        const ocpId = this.props.location.state && this.props.location.state[1]
-        if (analise) {
-            const processo = { id: analise.processoId, nome: analise.processoNome }
-            const etapa = { id: analise.etapaId, nome: analise.etapaNome }
-            const parametro = { id: analise.parametroId, nome: analise.parametroNome, menuType: analise.menuType, pMin: analise.pMin, pMax: analise.pMax, pMaxT: analise.pMaxT, pMinT: analise.pMinT, formula: analise.formula, unidade: analise.unidade }
-            this.setState({
-                processos: [processo],
-                processo: processo,
-                etapa: etapa,
-                etapas: [etapa],
-                parametro: parametro,
-                parametros: [parametro],
-                analista: analise.analista,
-                analise: analise,
-                ocpId: ocpId
-            }, () => this.onParametroSelect(analise.parametroId))
-
-        }
-    }
-
-    onLinhaSelect = (linhaId) => {
-        this.setState({
-            etapas: this.props.etapas.filter(etapa => {
-                if ((etapa.processoId === Number(linhaId)) && (!etapa.hasNoParam)) {
-                    return true
-                } else {
-                    return false
-                }
-
-            })
-        })
-    }
-
-    onEtapaSelect = (etapaId) => {
-        this.setState({
-            etapaId: etapaId,
-            parametros: this.props.parametros.filter(parametro => parametro.etapaId === Number(etapaId))
-        })
-    }
-
-
-    onParametroSelect = (parametroId) => {
-        this.state.parametros.forEach(parametro => {
-            if (Number(parametro.id) === Number(parametroId)) {
-                if (parametro.menuType === "Acao") {
-                    this.setState({
-                        parametro: parametro,
-                        valorForm: valueForm({ onChange: this.setAnaliseStatus }),
-
-                    })
-
-                } else {
-                    if (parametro.unidade === "pH") {
-                        this.setState({
-                            parametro: parametro,
-                            valorForm: valueForm({ onChange: this.setAnaliseStatus }),
-
-                        })
-                    } else {
-                        this.setState({
-                            parametro: parametro,
-                            valorForm: <TitulaForm onCalculaResultado={this.setAnaliseStatus} formula={parametro.formula}></TitulaForm>,
-
-                        })
-                    }
-
-                }
+    const onLinhaSelect = (linhaId) => {
+        setprocesso(processos.filter(processo => Number(processo.id) === Number(linhaId))[0])
+        setetapas(etapas.filter(etapa => {
+            if ((etapa.processoId === Number(linhaId)) && (!etapa.hasNoParam)) {
+                return true
+            } else {
+                return false
             }
-        });
-
+        }))
     }
 
-    nomeAnalistaListner = (event) => {
-        this.setState({
-            analista: event.target.value
-        })
-    }
-
-
-    setAnaliseStatus = (resultado) => {
-        if (resultado < this.state.parametro?.pMin || resultado > this.state.parametro?.pMax) {
-            this.setState({
-                resultado: resultado,
-                status: 'fofe',
-                calcDisabled: true
-            })
-        } else if ((resultado > this.state.parametro?.pMinT && resultado < this.state.parametro?.pMaxT)) {
-            this.setState({
-                resultado: resultado,
-                status: 'deft',
-                calcDisabled: true
-            })
-        } else {
-            this.setState({
-                resultado: resultado,
-                status: 'foft',
-                calcDisabled: true
-            })
-        }
+    const onEtapaSelect = (etapaId) => {
+        setetapa(etapas.filter(etapa => Number(etapa.id) === Number(etapaId))[0])
+        setparametros(parametros.filter(parametro => parametro.etapaId === Number(etapaId)))
     }
 
 
 
-
-    salvarAnalise = () => {
-        if (this.state.analise) {
-            this.salvarReanalise()
-        } else {
-            
-                const { analista, resultado, status } = this.state
-                let nomeAnalista
-                if (analista === '') {
-                    nomeAnalista = this.props.global.userName
-                } else {
-                    nomeAnalista = analista;
-                }
-    
-                const analise = { id: null, parametroId: this.state.parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: this.state.data,observacaoAnalise : this.state.observacao }
-    
-                ScqApi.CriarAnalise(analise).then(res => {
-                    responseHandler(res, this.props, "Analise", 'success', this.context, [this.props.loadParametros, this.props.loadOcps])
-                })
-            
-
-
-            
-        }
-
-    }
-
-    salvarReanalise = () => {
-
-        const { id } = this.state.analise
-        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId , observacaoAnalise : this.state.observacao }
-
-        ScqApi.EditarAnalise(analise).then((res) => responseHandler(res, this.props, "Analise", 'info', this.context, [this.props.loadParametros, this.props.loadOcps]))
-
-
-
-
-    }
-
-
-    gerarOcpReanalise = (history) => {
-        const { id } = this.state.analise
-        const analise = { id: id, analista: this.state.analista, resultado: this.state.resultado, status: this.state.status, parametroId: this.state.parametro.id, ocpId: this.state.ocpId ,observacaoAnalise : this.state.observacao}
-        history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
-
-    }
-
-
-    gerarOcp = (history) => {
-        const { analista, resultado, status } = this.state
-        const analise = { id: null, parametroId: this.state.parametro.id, analista: analista, resultado: resultado, status: status, data: this.state.data,observacaoAnalise : this.state.observacao }
-        history.push('/CadastroOcp' + this.state.parametro.menuType, analise)
-    }
-
-
-    showData = (checked) => {
-        if(checked === true) {
-            this.setState({ showData: checked })
-        } else {
-            this.dataFieldRef.current.value = null
-            this.setState({ showData: checked, data : null })
-        }
-         
-    }
-
-    render() {
+    const valueForm = () => {
         return (
             <>
-
-
-                <Container style={{ marginTop: 20 }}>
-                    <h1>Registro de Analise</h1>
-                    <Form>
-                        <Form.Row>
-                            <Col style={{ marginBottom: 10 }}>
-                               
-                                <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => this.showData(event.target.checked)  } />
-                                <Form.Group hidden={!this.state.showData}>
-                                <Form.Label>Data: </Form.Label>
-                                <Form.Control
-                                    ref={this.dataFieldRef}
-                                    type="datetime-local"
-                                    defaultValue={this.state.data}
-                                    onChange={event => { this.setState({ data: formatIsoDate(event.target.value)})}}>
-
-                                </Form.Control>
-                                </Form.Group>
-                            </Col>
-                        </Form.Row>
-
-                        <Form.Row>
-                            <Col>
-                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={this.props.processos} onChange={this.onLinhaSelect} selection={this.state.processo?.id}></GenericSelect>
-                            </Col>
-                        </Form.Row>
-                        <Form.Row>
-                            <Col>
-                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={this.state.etapas} onChange={this.onEtapaSelect} selection={this.state.etapa?.id} ></GenericSelect>
-                            </Col>
-                        </Form.Row>
-                        <Form.Row>
-                            <Col>
-                                <GenericSelect displayType={"nome"} returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"} ops={this.state.parametros} onChange={(parametroId) => this.onParametroSelect(parametroId)} selection={this.state.parametro?.id} ></GenericSelect>
-                            </Col>
-                        </Form.Row>
-                        <Form.Row>
-                            <Col>
-                                <Form.Label>
-                                    Nome do Analista:
-                                </Form.Label>
-                                <Form.Control type="text" placeholder={this.props.global.userName} value={this.state.analista} onChange={this.nomeAnalistaListner} />
-                            </Col>
-
-                        </Form.Row>
-                        <Form.Row>
-
-                            <Col>
-
-                                {this.state?.valorForm}
-                            </Col>
-                        </Form.Row>
-
-
-                        <Form.Group style={{ marginTop: 20 }}>
-                            <CheckOutAnalise onValueChange={(valor) => this.setState({observacao : valor})} valid={!this.state.calcDisabled} resultado={this.state.resultado} parametro={this.state.parametro} status={this.state.status} salvarAnalise={this.salvarAnalise} salvarReanalise={this.salvarReanalise} gerarOcpReanalise={this.gerarOcpReanalise} gerarOcp={this.gerarOcp} analiseId={this.state.analise?.id}></CheckOutAnalise>
-                        </Form.Group>
-
-                    </Form>
-
-                </Container>
-
-
+                <Form.Label>
+                    Valor
+                </Form.Label>
+                <Form.Control type="number" placeholder={"0.00"} onChange={(event) => setAnaliseStatus(event.target.value)} />
             </>
         )
+    }
+
+    const titulaForm = () => {
+        return (
+            <>
+                <TitulaForm onCalculaResultado={setAnaliseStatus} formula={parametro.formula}></TitulaForm>
+            </>
+        )
+    }
+
+
+
+
+
+    const onParametroSelect = (parametroId) => {
+        const parametroRef = parametros.filter(parametro => String(parametro.id) === String(parametroId))[0]
+        let analise = { ...analiseToSave }
+        analise.parametroId = parametroId
+        setparametro(parametroRef)
+        dispatch(setAnaliseToSave(analise))
 
     }
 
+
+
+    const setAnaliseStatus = (resultado) => {
+        resultado = +resultado
+        let analise = { ...analiseToSave }
+        analise.resultado = resultado
+        const parametroRef = parametros.filter(parametro => +parametro.id === +analiseToSave.parametroId)[0]
+        if (resultado == 0) {
+            setCalcDisabled(true)
+            analise.status = ''
+        } else {
+            setCalcDisabled(false)
+            if (resultado < parametroRef?.pMin || resultado > parametroRef?.pMax) {
+                analise.status = 'fofe'
+            } else if ((resultado > parametroRef?.pMinT && resultado < parametroRef?.pMaxT)) {
+                analise.status = 'deft'
+            } else {
+                analise.status = 'foft'
+            }
+        }
+
+        dispatch(setAnaliseToSave(analise))
+    }
+
+
+    useEffect(() => {
+        if (parametro) {
+            if (parametro.menuType === "Acao") {
+                setMenuTypeName(valueForm)
+
+            } else {
+                if (parametro.unidade === "pH") {
+                    setMenuTypeName(valueForm)
+
+                } else {
+                    setMenuTypeName(titulaForm)
+                }
+            }
+        }
+
+    }, [parametro])
+
+
+
+
+    const salvarAnalise = () => {
+        const { toastManager } = props
+        ScqApi.CriarAnalise(analiseToSave, [dispatchers().loadParametros, dispatchers().loadOcps]).then(res => {
+            responseHandler(res, toastManager, "Analise", 'success')
+        })
+    }
+
+
+
+    const salvarReanalise = () => {
+        const { toastManager } = props
+        ScqApi.EditarAnalise(analiseToSave, [dispatchers().loadParametros, dispatchers().loadOcps]).then((res) => responseHandler(res, toastManager, "Analise", 'info'))
+
+    }
+
+    const setObservacao = (observacao) => {
+        let analise = { ...analiseToSave }
+        analise.observacao = observacao
+        dispatch(setAnaliseToSave(analise))
+
+    }
+
+    const setanalista = (analista) => {
+        let analise = { ...analiseToSave }
+        analise.analista = analista
+        dispatch(setAnaliseToSave(analise))
+
+    }
+
+
+    const gerarOcpReanalise = (history) => {
+        history.push('/CadastroOcp' + parametro.menuType)
+
+    }
+
+
+    const gerarOcp = (history) => {
+        history.push('/CadastroOcp' + parametro.menuType)
+    }
+
+
+    const setDataSelect = (checked) => {
+        if (checked === true) {
+            setShowData(checked)
+        } else {
+            dataFieldRef.current.value = null
+            setShowData(false)
+            setdata(null)
+        }
+
+    }
+
+    return (
+        <>
+
+
+            <Container style={{ marginTop: 20 }}>
+                <h1>{analiseToSave.id ? `Registro de Reanalise Id: ${analiseToSave.id}` : "Registro de Analise"} </h1>
+                <Form>
+                    <Form.Row>
+                        <Col style={{ marginBottom: 10 }}>
+
+                            <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => setDataSelect(event.target.checked)} />
+                            <Form.Group hidden={!showData}>
+                                <Form.Label>Data: </Form.Label>
+                                <Form.Control
+                                    ref={dataFieldRef}
+                                    type="datetime-local"
+                                    defaultValue={data}
+                                    onChange={event => setdata(formatIsoDate(event.target.value))}>
+
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                    </Form.Row>
+
+                    <Form.Row>
+                        <Col>
+                            <GenericSelect displayType={"nome"} returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(value) => onLinhaSelect(value)} selection={processo.id}></GenericSelect>
+                        </Col>
+                    </Form.Row>
+                    <Form.Row>
+                        <Col>
+                            <GenericSelect displayType={"nome"} returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas_} onChange={(value) => onEtapaSelect(value)} selection={etapa.id} ></GenericSelect>
+                        </Col>
+                    </Form.Row>
+                    <Form.Row>
+                        <Col>
+                            <GenericSelect displayType={"nome"} returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"} ops={parametros_} onChange={(value) => onParametroSelect(value)} selection={analiseToSave.parametroId} ></GenericSelect>
+                        </Col>
+                    </Form.Row>
+                    <Form.Row>
+                        <Col>
+                            <Form.Label>
+                                Nome do Analista:
+                            </Form.Label>
+                            <Form.Control type="text" placeholder={userName} value={analiseToSave.analista} onChange={(event) => setanalista(event.target.value)} />
+                        </Col>
+
+                    </Form.Row>
+                    <Form.Row>
+
+                        <Col>
+                            {menuType && menuType}
+                        </Col>
+                    </Form.Row>
+
+
+                    <Form.Group style={{ marginTop: 20 }}>
+                        <CheckOutAnalise showCheckOut={showCheckOut} onValueChange={(valor) => setObservacao(valor)} valid={calcDisabled} resultado={analiseToSave.resultado} parametro={parametro} status={analiseToSave.status} salvarAnalise={salvarAnalise} salvarReanalise={salvarReanalise} gerarOcpReanalise={gerarOcpReanalise} gerarOcp={gerarOcp} analiseId={analiseToSave?.id}></CheckOutAnalise>
+                    </Form.Group>
+
+                </Form>
+
+            </Container>
+
+
+        </>
+    )
+
 }
 
-export default withToastManager(withMenuBar(connect(mapToStateProps.toProps, dispatchers)(RegistroDeAnalise)))
+export default withToastManager(withMenuBar(RegistroDeAnalise))

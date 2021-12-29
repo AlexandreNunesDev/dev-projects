@@ -1,7 +1,7 @@
 import React, { Fragment, Component } from 'react'
 import { Button, Form, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ScqApi from '../Http/ScqApi';
+import ScqApi, { callWithRedux } from '../Http/ScqApi';
 import { withToastManager } from 'react-toast-notifications'
 import { responseHandler } from '../Services/responseHandler';
 import { withMenuBar } from '../Hocs/withMenuBar';
@@ -56,14 +56,12 @@ class CadastroProcesso extends Component {
 
 
     submitForm = () => {
-
+        const { toastManager } = this.props;
 
         const processo = { id: null, nome: this.state.nome }
-        ScqApi.CriarProcesso(processo).then(response =>{this.props.addProcesso(response); responseHandler(response, this.props,"Processo",toastOk,this.context, [this.props.loadProcessos])})
+
+        ScqApi.CriarProcesso(processo,[this.props.loadProcessos]).then(response =>{this.props.addProcesso(response); responseHandler(response, toastManager,"Processo",toastOk)})
         
-
-
-
 
     }
 
