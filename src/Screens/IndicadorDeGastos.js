@@ -7,9 +7,10 @@ import ScqApi from "../Http/ScqApi"
 import { formatIsoDate } from "../Services/stringUtils"
 import GenericSelect from "../Components/GenericSelect"
 import { useSelector } from "react-redux"
+import AdicaoChart from "../Components/AdicoesChart"
 
 
-const IndicadorDeOmp = () => {
+const IndicadorDeGastos = () => {
 
     const [dataInicial, setDataInicial] = useState(null)
     const [dataFinal, setDataFinal] = useState(null)
@@ -33,9 +34,9 @@ const IndicadorDeOmp = () => {
             })
         } else {
             if(processoId == ''){
-                ScqApi.LoadOmpChart(dataInicial, dataFinal).then(res => setChartData(res))
+                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res => setChartData(res))
             } else {
-                ScqApi.LoadOmpChart(dataInicial, dataFinal).then(res => setChartData(res.filter(ompChartDto => ompChartDto.processId == processoId)))
+                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res => setChartData(res.filter(ompChartDto => ompChartDto.processId == processoId)))
             }
 
            
@@ -46,15 +47,7 @@ const IndicadorDeOmp = () => {
     return <>
 
         <Container style={{ marginTop: 20 }}>
-            <h2>Indicador de Omp</h2>
-            <div className="row flex">
-                <Col>
-                    <GenericSelect default={"Selecione um Processo"} selection={processoId} returnType={"id"} title={"Processo"} showType={"nome"} ops={processos} onChange={(idProcesso) => setProcessoId(idProcesso)}></GenericSelect>
-                </Col>
-                <Col>
-                    <Button style={{position : "absolute", bottom : 17, margin : 0}} onClick={() => setProcessoId('')}>Limpar processo</Button>
-                </Col>
-            </div>
+            <h2>Indicador de Gastos</h2>
             <Form.Row style={{ marginTop: 10 }}>
                 <Form.Group as={Col}>
                     <Form.Label>Data Inicial</Form.Label>
@@ -80,7 +73,7 @@ const IndicadorDeOmp = () => {
         </Container>
 
         <Container ref={containerRef}>
-            {chartData && <OmpChart chartData={chartData} containerRef={containerRef}></OmpChart>}
+            {chartData && <AdicaoChart chartData={chartData} containerRef={containerRef}></AdicaoChart>}
         </Container>
 
     </>
@@ -89,4 +82,4 @@ const IndicadorDeOmp = () => {
 }
 
 
-export default withMenuBar(IndicadorDeOmp)
+export default withMenuBar(IndicadorDeGastos)

@@ -52,6 +52,10 @@ const ScqApi = {
         return http.get("analise/" + dataInicial + "/" + dataFinal + "/" + parametroId)
 
     },
+    LoadGastosChart: (dataInicial, dataFinal) => {
+        return http.get("materiaPrima/" + dataInicial + "/" + dataFinal)
+
+    },
     LoadAnaliseHistocial: (dataInicial, dataFinal) => {
         return http.get("analise/" + dataInicial + "/" + dataFinal)
 

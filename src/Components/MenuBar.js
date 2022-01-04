@@ -77,6 +77,7 @@ const MenuBar = () => {
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                   <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
+                  <Link className="nav-link" to="/IndicadorDeGastos">Indicador de Gastos</Link>
                 </NavDropdown>
                 <NavDropdown title="Cadastros" id="basic-nav-dropdown">
                   <Link className="dropdown-item" to="/CadastroProcesso">Processo</Link>

@@ -209,6 +209,13 @@ const RegistroDeAnalise = (props) => {
 
     }
 
+
+    const setDataDaAnalise = (data) => {
+        let analise = { ...analiseToSave }
+        analise.data = data
+        dispatch(setAnaliseToSave(analise))
+    }
+
     return (
         <>
 
@@ -226,7 +233,7 @@ const RegistroDeAnalise = (props) => {
                                     ref={dataFieldRef}
                                     type="datetime-local"
                                     defaultValue={data}
-                                    onChange={event => setdata(formatIsoDate(event.target.value))}>
+                                    onChange={event => setDataDaAnalise(formatIsoDate(event.target.value))}>
 
                                 </Form.Control>
                             </Form.Group>

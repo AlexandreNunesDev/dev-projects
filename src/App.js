@@ -46,6 +46,7 @@ import { isAuthenticated, isTokenExpired, logout } from './Services/auth';
 import { optionsLoad } from './Services/storeService';
 import { WebSocketContext } from './websocket/wsProvider';
 import { reloadState } from './store';
+import IndicadorDeGastos from './Screens/IndicadorDeGastos';
 
 
 
@@ -122,6 +123,7 @@ class App extends React.Component {
             <Route path='/OMP' exact={true} component={Omp} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
             <Route path='/IndicadorDeOmp' exact={true} component={IndicadorDeOmp} />
+            <Route path='/IndicadorDeGastos' exact={true} component={IndicadorDeGastos} />
             <Route path='/CadastroProcesso' exact={true} component={CadastroProcesso} />
             <Route path='/CadastroEtapa' exact={true} component={CadastroEtapa} />
             <Route path='/CadastroParametro' exact={true} component={CadastroParametro} />
