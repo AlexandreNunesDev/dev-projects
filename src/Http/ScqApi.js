@@ -367,8 +367,8 @@ const ScqApi = {
     },
 
 
-    GerarOmp: (ompForm) => {
-        return http.post("omp", ompForm)
+    GerarOmp: (ompForm,reduxFunctions) => {
+        return http.post("omp", ompForm, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
 
     },
 

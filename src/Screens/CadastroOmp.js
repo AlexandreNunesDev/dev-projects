@@ -5,7 +5,7 @@ import ScqApi from '../Http/ScqApi'
 import { useHistory } from "react-router"
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { responseHandler } from '../Services/responseHandler'
-import { withToastManager } from 'react-toast-notifications/dist/ToastProvider'
+import { useToasts, withToastManager } from 'react-toast-notifications/dist/ToastProvider'
 import { toastOk } from '../Services/toastType'
 import { WebSocketContext } from '../websocket/wsProvider'
 import { connect, useDispatch, useSelector } from 'react-redux'
@@ -135,6 +135,7 @@ const CadastroOmp = (props) => {
     const [tarefasChoosedId, setTarefasChoosedId] = useState([])
     const history = useHistory()
     const context = useContext(WebSocketContext)
+    const toastManager = useToasts()
 
 
 
@@ -233,10 +234,10 @@ const CadastroOmp = (props) => {
 
                         if (trocasChoosed.length === 0) {
                             const omp = { processoId: tarefasChoosed[0].processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
-                            ScqApi.GerarOmp(omp).then(res => responseHandler(res, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]))
+                            ScqApi.GerarOmp(omp,[props.loadOrdensDeManutencao]).then(res => responseHandler(res, toastManager, "OrdemDeManutencao", toastOk))
                         } else {
                             const omp = { processoId: trocasChoosed[0]?.processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
-                            ScqApi.GerarOmp(omp).then(res => responseHandler(res, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]))
+                            ScqApi.GerarOmp(omp,[props.loadOrdensDeManutencao]).then(res => responseHandler(res, toastManager, "OrdemDeManutencao", toastOk))
                         }
 
                         history.push("OrdensDeManutencao")

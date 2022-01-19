@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import dispatchers from '../mapDispatch/mapDispathToProps'
 import { WebSocketContext } from '../websocket/wsProvider'
 import { toastOk } from '../Services/toastType'
+import { useToasts } from 'react-toast-notifications/dist/ToastProvider'
 
 const TableHeadTarefas = () => {
     return (
@@ -109,6 +110,7 @@ const FinalizarOmp = (props) => {
     const [tarefasIdChecked, setTarefasChecked] = useState([])
     const [trocasIdChecked, setTrocasIdChecked] = useState([])
     const histoy = useHistory()
+    const toastManager = useToasts()
     const context = useContext(WebSocketContext)
     const [markedTarefas, setmarkedTarefas] = useState(false)
     const [markedTrocas, setmarkedTrocas] = useState(false)
@@ -239,7 +241,7 @@ const FinalizarOmp = (props) => {
 
                 <Button onClick={() => {
                     const OmpFinalizarForm = { id: omp.id, tarefasId: tarefasIdChecked, trocasId: trocasIdChecked, data: dataRealizada }
-                    ScqApi.FinalizarOmp(OmpFinalizarForm,[props.loadOrdensDeManutencao])//.then((response) => { responseHandler(response, props, "OrdemDeManutencao", toastOk, context, [props.loadOrdensDeManutencao]); histoy.push("/Omp") })
+                    ScqApi.FinalizarOmp(OmpFinalizarForm,[props.loadOrdensDeManutencao]).then((response) => { responseHandler(response, toastManager, "OrdemDeManutencao", toastOk);  }).then(() => histoy.push("/omp"))
                 }}>Confirmar</Button>
 
 
