@@ -63,7 +63,7 @@ const TableBody = props => {
                 </td>
                 <td className="align-middle" >
 
-                    <Form.Check checked={check} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
+                    <Form.Check checked={check || false} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
                     <Form.Label>Trocar ?</Form.Label>
 
 
@@ -91,6 +91,17 @@ const Omp = () => {
     const trocas = useSelector(state => state.options.trocas)
     const toastManager = useToasts()
     const history = useHistory()
+
+
+
+    useEffect(() => {
+        const trocasFiltered = trocas.filter(troca => {
+            return Number(troca.processoId) === Number(processoIdTarefaRef)
+        })
+        dispatch(UpdateTarefasFiltered(trocasFiltered))
+        
+    }, [processoIdTarefaRef,trocas])
+
 
 
     const addTrocaIdToChoosedIdList = (checked, clickedTroca) => {
@@ -144,13 +155,6 @@ const Omp = () => {
         }
     }
 
-
-    useEffect(() => {
-        const trocasFiltered = trocas.filter(troca => {
-            return Number(troca.processoId) === Number(processoIdTarefaRef)
-        })
-        dispatch(UpdateTarefasFiltered(trocasFiltered))
-    }, [processoIdTarefaRef])
 
 
 

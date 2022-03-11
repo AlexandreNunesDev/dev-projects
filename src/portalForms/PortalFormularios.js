@@ -7,6 +7,8 @@ import { useToasts } from 'react-toast-notifications';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { buildFormModel } from '../models/portalFormsModel';
 import { clear, setFormNameChoosed, setFullFormTarget, setSpreadSheetId } from '../Reducers/dyanamicForms';
+import { getToken } from '../Services/auth';
+import { getOauthToken } from '../Services/googleTokenService';
 import DynamicVizualization from './dynamicVisualizer';
 
 
@@ -21,6 +23,7 @@ function PortalFormularios() {
     const spreadSheetId = useSelector(state => state.formsReducer.spreadSheetId)
     const formNameChoosed = useSelector(state => state.formsReducer.formNameChoosed)
     const toast =  useToasts()
+    const [oauthClient,setOAuthClient] = useState()
 
     const httpClient = axios.create({ baseURL: sheetBaseUrl })
     httpClient.interceptors.request.use(async config => {
@@ -31,28 +34,28 @@ function PortalFormularios() {
 
 
     useEffect(() => {
-
-    
         httpClient.get(":batchGet?ranges=dadosPortal!A:A").then(res => {
             let formListNames = res.data.valueRanges[0].values.map(value => value[0])
             formListNames.shift()
             setFormNames(formListNames)
         })
-   
+        setOAuthClient(getOauthToken())
     }, [])
 
     const getValueRange = (response) => {
         return response.data.valueRanges
     }
 
-
+    useEffect(() => {
+        console.log(oauthClient)
+    },[oauthClient])
 
     const setTargetForm = (selected) => {
         dispatch(clear())
         dispatch(setFormNameChoosed(selected))
         let index = formNames.findIndex(forms => forms == selected)
         setTargetRowIndex(index+2)
-        httpClient.get(`:batchGet?ranges=dadosPortal!B${index+2}:D${index+2}`).then(async res => {
+        httpClient.get(`:batchGet?ranges=dadosPortal!B${index+2}:E${index+2}`).then(async res => {
             let valueRanges = getValueRange(res)
             let values = valueRanges[0].values
             if(values) {
@@ -82,6 +85,14 @@ function PortalFormularios() {
         })
     }
 
+    const abreDrive = async () => {
+        httpClient.get(`:batchGet?ranges=dadosPortal!E${targetRowIndex}`).then(async res => {
+            let likeDrive = await axios.get(getValueRange(res)[0].values[0][0])
+            likeDrive = likeDrive.data.values[0][0]
+            window.open(likeDrive)
+        })
+    }
+
     const linkGrafico = async () => {
         httpClient.get(`:batchGet?ranges=dadosPortal!C${targetRowIndex}`).then(async res => {
             let idSpreadSheet = getValueRange(res)[0].values[0]
@@ -98,7 +109,8 @@ return (
             <Typeahead id={"serachForm"}   clearButton onChange={(selected) => setTargetForm(selected)} options={formNames} />
             {fullFormTarget && <Button hidden={fullFormTarget.link == null} style={{margin : 16}} onClick={() => enviarParaWahts()}>Enviar para Whats App</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => openForm()}>Abrir Formulario</Button>}
-            {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => linkGrafico()}>Visualizar</Button>}
+            {fullFormTarget && <Button hidden={fullFormTarget.drive == null} style={{margin : 16}} onClick={() => abreDrive()}>Abrir Arquivos Drive</Button>}
+            {fullFormTarget && <Button hidden={fullFormTarget.idPlanilha == null} style={{margin : 16}} onClick={() => linkGrafico()}>Visualizar</Button>}
             {formNameChoosed && <h2>{formNameChoosed}</h2>}
             {spreadSheetId  && <DynamicVizualization selectedSpreadSheetUri={spreadSheetId}></DynamicVizualization>}
             

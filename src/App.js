@@ -150,12 +150,9 @@ class App extends React.Component {
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
-           
             <Route path='/CadastroTurno' exact={true} component={CadastroTurno} />
           </Switch>
         </>
-
-
 
       )
     } else if (this.props.global.userRole === "USER_ROLE") {

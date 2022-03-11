@@ -25,6 +25,7 @@ const CadastroTroca = (props) => {
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
     const [unidade, setUnidade] = useState()
+    const [area, setArea] = useState()
 
    
 
@@ -82,6 +83,18 @@ const CadastroTroca = (props) => {
                     <Form.Row>
                         <Col>
                             <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a unidade de Tempo"} onChange={unidade => setUnidade(unidade)} />
+                        </Col>
+                    </Form.Row>
+                    <Form.Row style={{ marginBottom: 16 }}>
+                        <Col>
+                            <Form.Label>Trocar a cada (metros quadrados) : </Form.Label>
+                            <Form.Control type="number" value={area} onChange={event => setArea(event.target.value)} />
+                        </Col>
+                    </Form.Row>
+                    <Form.Row style={{ marginBottom: 16 }}>
+                        <Col>
+                            <Form.Label>Numero grupo area : </Form.Label>
+                            <Form.Control type="number" value={area} onChange={event => setArea(event.target.value)} />
                         </Col>
                     </Form.Row>
                     <Form.Row>
