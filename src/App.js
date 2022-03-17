@@ -47,6 +47,7 @@ import { optionsLoad } from './Services/storeService';
 import { WebSocketContext } from './websocket/wsProvider';
 import { reloadState } from './store';
 import IndicadorDeGastos from './Screens/IndicadorDeGastos';
+import RegistroDeArea from './Screens/RegistroDeArea';
 
 
 
@@ -151,6 +152,7 @@ class App extends React.Component {
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
             <Route path='/CadastroTurno' exact={true} component={CadastroTurno} />
+            <Route path='/RegistroDeArea' exact={true} component={RegistroDeArea} />
           </Switch>
         </>
 
@@ -187,7 +189,7 @@ class App extends React.Component {
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
-           
+            <Route path='/RegistroDeArea' exact={true} component={RegistroDeArea} />
             
           </Switch>
         </>
@@ -208,7 +210,7 @@ class App extends React.Component {
             <Route path='/Registrar' exact={true} component={Registrar} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
-            
+            <Route path='/RegistroDeArea' exact={true} component={RegistroDeArea} />
           </Switch>
         </>)
     }

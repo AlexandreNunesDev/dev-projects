@@ -49,11 +49,7 @@ const transformField = field => {
     if (field === "pMinT") {
         retorno = "Mínimo Trabalho"
     }
-    if (retorno === null) {
-        return field
-    } else {
-        return retorno
-    }
+    return field
 
 }
 

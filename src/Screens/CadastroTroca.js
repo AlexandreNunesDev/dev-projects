@@ -25,13 +25,14 @@ const CadastroTroca = (props) => {
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
     const [unidade, setUnidade] = useState()
-    const [area, setArea] = useState()
+    const [areaPlanejada, setAreaPlanejada] = useState('')
+    const [numeroGrupoArea, setNumeroGrupoArea] = useState('')
 
    
 
 
     const salvarTroca = () => {
-        const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade }
+        const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade, areaPlanejada : areaPlanejada, numeroGrupoArea : numeroGrupoArea }
         const {toastManager} = props
         ScqApi.CriarTroca(troca,[props.loadTrocas]).then(res => responseHandler(res,toastManager,'Troca',toastOk))
     
@@ -88,13 +89,13 @@ const CadastroTroca = (props) => {
                     <Form.Row style={{ marginBottom: 16 }}>
                         <Col>
                             <Form.Label>Trocar a cada (metros quadrados) : </Form.Label>
-                            <Form.Control type="number" value={area} onChange={event => setArea(event.target.value)} />
+                            <Form.Control type="number" value={areaPlanejada} onChange={event => setAreaPlanejada(event.target.value)} />
                         </Col>
                     </Form.Row>
                     <Form.Row style={{ marginBottom: 16 }}>
                         <Col>
                             <Form.Label>Numero grupo area : </Form.Label>
-                            <Form.Control type="number" value={area} onChange={event => setArea(event.target.value)} />
+                            <Form.Control type="number" value={numeroGrupoArea} onChange={event => setNumeroGrupoArea(event.target.value)} />
                         </Col>
                     </Form.Row>
                     <Form.Row>

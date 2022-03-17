@@ -389,9 +389,12 @@ const ScqApi = {
     },
 
     Register: (loginForm) => {
-        
         return http.post("user/registration", loginForm)
 
+    },
+
+    UpLoadAreaWithExcel : (dInicial,dFinal,form) => {
+        return http.post(`uploadArea/${dInicial}/${dFinal}`, form, { headers: {"Content-Type": "multipart/form-data" } }).then((response) => { return response});
     },
 
     DownloadOcp : (ocpId) => {

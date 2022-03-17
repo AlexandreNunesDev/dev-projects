@@ -20,8 +20,8 @@ const TableHead = () => {
                 <th>Id</th>
                 <th>Processo</th>
                 <th>Etapa</th>
-                <th>Data Planejada</th>
-                <th>Data Realizada</th>
+                <th><div>Data Planejada</div><div>Area Planejada</div></th>
+                <th><div>Data Realizada</div><div>Area Realizada</div></th>
                 <th>Produtos</th>
                 <th>Status</th>
                 <th>Selecionar</th>
@@ -51,8 +51,8 @@ const TableBody = props => {
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
                 <td className="align-middle">{troca.etapaNome}</td>
-                <td className="align-middle">{`${FormatDate(dataPlanejada)}`}</td>
-                <td className="align-middle">{`${FormatDate(dataRealizada)}`}</td>
+                <td className="align-middle"><div>{`${FormatDate(dataPlanejada)}`}</div><div>{troca.areaPlanejada}</div></td>
+                <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div><div>{troca.areaRealizada}</div></td>
                 <td className="align-middle" key={troca.id} >
                     {troca.listaMontagens.map((pair, index) => {
                         return <div key={index}>{`${pair[0]} : ${pair[1]} ${pair[2]}`} </div>

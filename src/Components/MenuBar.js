@@ -69,6 +69,7 @@ const MenuBar = () => {
                   <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
                   <Link className="nav-link" to="/RegistroAnaliseMulti">Multi Registro de Analise</Link>
                   <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
+                  <Link className="nav-link" to="/RegistroDeArea">Registro de Area</Link>
                 </NavDropdown>
                 <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
                 <Link className="nav-link" to='/Omp' >OMP</Link>

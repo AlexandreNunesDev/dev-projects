@@ -22,6 +22,8 @@ const EditarTroca = (props) => {
     const [etapaId, setEtapaId] = useState()
     const [etapas, setEtapas] = useState()
     const [processos, setProcessos] = useState()
+    const [numeroGrupoArea, setNumeroGrupoArea] = useState('')
+    const [areaPlanejada, setAreaPlanejada] = useState('')
     const [processoId, setProcessoId] = useState()
     const [escalaFrequencia, setEscalaFrequencia] = useState()
     const [troca, setTroca] = useState()
@@ -46,13 +48,14 @@ const EditarTroca = (props) => {
         setEtapaId(troca.etapaId)
         setProcessoId(troca.processoId)
         setEscalaFrequencia(troca.escalaFrequencia)
+        setNumeroGrupoArea(troca.numeroGrupoArea)
+        let area = +troca.areaPlanejada
+        setAreaPlanejada(area)
     }
 
    
 
     const salvarTroca = (troca,toastManager) => {
-    
-   
         ScqApi.EditarTroca(troca).then(res => responseHandler(res, props,"Troca",toastInfo,context, [dispatchers().loadTrocas,dispatchers().loadOcps]))
     }
     
@@ -91,11 +94,23 @@ const EditarTroca = (props) => {
                             <UnidadeSelect selection={escalaFrequencia} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => setEscalaFrequencia(escala)} />
                         </Col>
                     </Form.Row>
+                    <Form.Row style={{ marginBottom: 16 }}>
+                        <Col>
+                            <Form.Label>Trocar a cada (metros quadrados) : </Form.Label>
+                            <Form.Control type="text" value={areaPlanejada} onChange={event => setAreaPlanejada(event.target.value)} />
+                        </Col>
+                    </Form.Row>
+                    <Form.Row style={{ marginBottom: 16 }}>
+                        <Col>
+                            <Form.Label>Numero grupo area : </Form.Label>
+                            <Form.Control type="number" value={numeroGrupoArea} onChange={event => setNumeroGrupoArea(event.target.value)} />
+                        </Col>
+                    </Form.Row>
 
                     <Form.Group >
 
                         
-                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca({id : troca.id, frequencia : frequencia, escala : escalaFrequencia, etapaId: troca.etapaId, dataPlanejada : troca.dataPlanejada}, props.toastManager)} >Salvar</Button>
+                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca({id : troca.id, frequencia : frequencia, escala : escalaFrequencia, etapaId: troca.etapaId, dataPlanejada : troca.dataPlanejada, areaPlanejada : areaPlanejada, numeroGrupoArea : numeroGrupoArea}, props.toastManager)} >Salvar</Button>
                     </Form.Group>
 
                 </Form>
