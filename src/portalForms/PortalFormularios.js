@@ -88,7 +88,7 @@ function PortalFormularios() {
     const abreDrive = async () => {
         httpClient.get(`:batchGet?ranges=dadosPortal!E${targetRowIndex}`).then(async res => {
             let likeDrive = await axios.get(getValueRange(res)[0].values[0][0])
-            likeDrive = likeDrive.data.values[0][0]
+            likeDrive = likeDrive.config.url
             window.open(likeDrive)
         })
     }
