@@ -22,7 +22,7 @@ import Home from './Screens/Home';
 import IndicadorDeAnalise from './Screens/IndicadorDeAnalise';
 import IndicadorDeOmp from './Screens/IndicadorDeOmp';
 import Login from './Screens/Login';
-import MultiRegistroAnalise from './Screens/NovoRegistroAnalise';
+import MultiRegistroAnalise from './Screens/MultiRegistroAnalise';
 import Omp from './Screens/Omp';
 import OrdensDeCorreção from './Screens/OrdensDeCorreção';
 import OrdensDeManutencao from './Screens/OrdensDeManutencao';

@@ -65,8 +65,9 @@ const MultiRegistroAnalise = (props) => {
 
 
     const salvarAnalise = () => {
-        ScqApi.CriarAnalise(analiseToCheckOut).then(res => {
-            responseHandler(res, props, "Analise", 'success', context, [reducerFunctions.loadParametros, reducerFunctions.loadOcps])
+        const { toastManager } = props
+        ScqApi.CriarAnalise(analiseToCheckOut, [dispatchers().loadParametros, dispatchers().loadOcps]).then(res => {
+            responseHandler(res, toastManager, "Analise", 'success')
         })
         setShowCheckOut(false)
     }
