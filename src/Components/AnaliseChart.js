@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { LineChart, XAxis, CartesianGrid, Line, YAxis, ReferenceLine, Tooltip } from 'recharts'
@@ -113,11 +113,11 @@ const AnaliseChart = (props) => {
 
 
   return (
-    <>
+    <Fragment  key={props.chave}>
       <h4 style={{ alignContent: "center" }}>{`Grafico de Analise  ${props.data.nomeParam} ${props.data.nomeEtapa} ${props.data.nomeProcesso} `}</h4>
 
       <OcpView></OcpView>
-      <AnaliseEdit show={show} handleClose={handleClose} showOcps={() => props.showOcpView(true)} ocps={ocps} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
+      <AnaliseEdit  show={show} handleClose={handleClose} showOcps={() => props.showOcpView(true)} ocps={ocps} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
       <div style={{ display: "flex-auto" }}>
         <LineChart width={props.containerRef.current.offsetWidth} height={250}
 
@@ -169,7 +169,7 @@ const AnaliseChart = (props) => {
       </div>
 
 
-    </>
+    </Fragment>
   )
 }
 export default connect(mapToStateProps.toProps, dispatchers)(AnaliseChart)

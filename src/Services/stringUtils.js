@@ -34,3 +34,7 @@ export const OnlyDate = (data) => {
   return `${onlyDate[2] + "-" + onlyDate[1] + "-" + onlyDate[0]}`
 
 }
+
+export const parseExcelDateToDate = (excelDate) => {
+  return moment(excelDate,"dd/MM/yyyy HH:mm:ss").toDate()
+}

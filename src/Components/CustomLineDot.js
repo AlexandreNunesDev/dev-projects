@@ -8,7 +8,7 @@ export const CustomDot = (props) => {
         let hasOcp = false
        
        
-        if(props.ocps[payload.id].length > 0 ){
+        if((props.ocps[payload.id] != undefined) && (props.ocps[payload.id].length > 0 )){
             hasOcp = true
         }
 

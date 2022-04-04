@@ -41,7 +41,7 @@ class IndicadorDeAnalise extends Component {
     }
 
     getFullEtapaAnaliseChart = () => {
-        return this.state.fullEtapaAnaliseChartData.map((etapaChart, index) => <Fragment key={index} ><AnaliseChart showAnalitics={this.state.showAnalitics} chave={etapaChart.analiseId} containerRef={this.containerChartRef} data={etapaChart} reloadChart={this.reloadChart}></AnaliseChart></Fragment>)
+        return this.state.fullEtapaAnaliseChartData.map((etapaChart, index) => <Fragment key={index} ><AnaliseChart showAnalitics={this.state.showAnalitics} chave={etapaChart.etapaId} containerRef={this.containerChartRef} data={etapaChart} reloadChart={this.reloadChart}></AnaliseChart></Fragment>)
     }
 
     getGlobalsStats = () => {
@@ -85,7 +85,7 @@ class IndicadorDeAnalise extends Component {
     }
 
     getFullProcessoAnaliseChart = () => {
-        return this.state.fullProcessoAnaliseChartData.map((processoChart, index) => <Fragment key={index}><AnaliseChart showAnalitics={this.state.showAnalitics} chave={processoChart.analisesId} containerRef={this.containerChartRef} data={processoChart} reloadChart={this.reloadChart}></AnaliseChart> </Fragment>)
+        return this.state.fullProcessoAnaliseChartData.map((processoChart, index) => <AnaliseChart showAnalitics={this.state.showAnalitics} chave={processoChart.etapaId} containerRef={this.containerChartRef} data={processoChart} reloadChart={this.reloadChart}></AnaliseChart>)
 
     }
 

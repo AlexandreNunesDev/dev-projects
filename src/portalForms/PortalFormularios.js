@@ -110,8 +110,7 @@ return (
             {fullFormTarget && <Button hidden={fullFormTarget.link == null} style={{margin : 16}} onClick={() => enviarParaWahts()}>Enviar para Whats App</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.idFormulario == null} style={{margin : 16}} onClick={() => openForm()}>Abrir Formulario</Button>}
             {fullFormTarget && <Button hidden={fullFormTarget.drive == null} style={{margin : 16}} onClick={() => abreDrive()}>Abrir Arquivos Drive</Button>}
-            {fullFormTarget && <Button hidden={fullFormTarget.idPlanilha == null} style={{margin : 16}} onClick={() => linkGrafico()}>Visualizar</Button>}
-            {formNameChoosed && <h2>{formNameChoosed}</h2>}
+            {fullFormTarget && <Button hidden={fullFormTarget.idPlanilha == null} style={{margin : 16}} onClick={() => linkGrafico()}>Ver dados</Button>}
             {spreadSheetId  && <DynamicVizualization selectedSpreadSheetUri={spreadSheetId}></DynamicVizualization>}
             
         </Container>
