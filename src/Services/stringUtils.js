@@ -35,6 +35,13 @@ export const OnlyDate = (data) => {
 
 }
 
+/**@param {string} excelDate */
 export const parseExcelDateToDate = (excelDate) => {
-  return moment(excelDate,"dd/MM/yyyy HH:mm:ss").toDate()
+  let dateTimeTokens = Array.isArray(excelDate) ? excelDate[0].split(" ") : excelDate.split(" ")
+  let data = dateTimeTokens[0]
+  let tempo = dateTimeTokens[1]
+  let dataTokens =  data.split("/")
+  let tempoTokens = tempo.split(":")
+  let dataTranformada = new Date(dataTokens[2],dataTokens[1]-1,dataTokens[0],tempoTokens[0],tempoTokens[1],tempoTokens[2])
+  return dataTranformada
 }

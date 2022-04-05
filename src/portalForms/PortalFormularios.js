@@ -20,7 +20,7 @@ function PortalFormularios() {
     const sheetBaseUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1_RVYwW2QaWfaq3Ib-SOs6jo9qbGEbqh01rHRBrS2ewY/values'
     const dispatch = useDispatch()
     const fullFormTarget = useSelector(state => state.formsReducer.fullFormTarget)
-    const spreadSheetId = useSelector(state => state.formsReducer.spreadSheetId)
+    const [spreadSheetId,setSpreadSheetId] = useState()
     const formNameChoosed = useSelector(state => state.formsReducer.formNameChoosed)
     const toast =  useToasts()
     const [oauthClient,setOAuthClient] = useState()
@@ -97,7 +97,7 @@ function PortalFormularios() {
         httpClient.get(`:batchGet?ranges=dadosPortal!C${targetRowIndex}`).then(async res => {
             let idSpreadSheet = getValueRange(res)[0].values[0]
             console.log(idSpreadSheet)
-            dispatch(setSpreadSheetId(idSpreadSheet))
+            setSpreadSheetId(idSpreadSheet)
         })
     }
 

@@ -1,4 +1,5 @@
 import moment from "moment"
+import { parseExcelDateToDate } from "../Services/stringUtils"
 import { Cell, Row } from "./portalModels"
 
 
@@ -24,7 +25,7 @@ export const getHeaders = (response) => {
 
     /** @returns {Array<Row>} row */
 export const buildModels = (spreadSheetData,maxCol) => {
-   return spreadSheetData.map(
+   let models =  spreadSheetData.map(
        /** @param {Array} row */
       (row,rowIndex) => {
          let cells = []
@@ -37,8 +38,10 @@ export const buildModels = (spreadSheetData,maxCol) => {
   
       }
       let cellsModel = cells.map((cellValue,index) =>new Cell(index+1,rowIndex+2,cellValue) )
-      return new Row(moment(row[0],"dd/MM/yyyy HH:mm:ss").toDate(),cellsModel)
+      return new Row(parseExcelDateToDate(row[0]),cellsModel)
    });
+
+   return models
    
    
 }

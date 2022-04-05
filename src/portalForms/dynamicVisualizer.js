@@ -65,14 +65,17 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
     function loadCarimbos() {
         if (maxCol && maxRow && dataInicial && dataFinal) {
             httpClient.get(`/values/:batchGet?ranges=R2C1:R${maxRow}C1&`).then(res => {
-                let carimbos = res.data.valueRanges[0].values.map((carimbo, index) => {
+                let carimbosResponse = res.data.valueRanges[0].values
+                let carimbos = carimbosResponse.map((carimbo, index) => {
                     return parseExcelDateToDate(carimbo)
                 })
 
                 let carimbosIndexados = []
                 carimbos.filter((carimbo, index) => {
-                    if (carimbo.getTime() > dataInicial.getTime() && carimbo.getTime() < dataFinal.getTime()) {
-                        carimbosIndexados.push(new Cell(1, index + 2, carimbos))
+                    
+                    if ((carimbo.getTime() > dataInicial.getTime()) && (carimbo.getTime() < dataFinal.getTime())) {
+                        
+                        carimbosIndexados.push(new Cell(1, index + 2, carimbo))
                         return true
                     } else {
                         return false
@@ -82,7 +85,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                 setCarimbos(carimbosIndexados)
             })
         } else {
-            toatManager.addToast("Necessario selecionar range de datas", { appearance: "warning" })
+            toatManager.addToast("Necessario selecionar range de datas", { appearance: "warning", autoDismiss :true })
         }
 
     }
@@ -162,6 +165,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
             <ChartBuilder setShow={setShowChartBuilder} show={showChartBuilder} headers={headers} rows={body} setEixoX={(xData) => setEixoX(xData)} setEixoY={(yData) => setEixoY(yData)}></ChartBuilder>
             {
                 maxCol && maxRow && <>
+                <h3>{`Dados - ${formNameChoosed} - carregado`}</h3>
                     <Form.Row style={{ marginTop: 10 }}>
                         <Form.Group as={Col}>
                             <Form.Label>Data Inicial</Form.Label>
@@ -189,7 +193,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                     </Form.Row>
                 </>
             }
-            <h3>{formNameChoosed}</h3>
+            
             <div className="tableFixHead" >
                 <table>
                     <thead>{headers && buildHeaders(headers)}</thead>
