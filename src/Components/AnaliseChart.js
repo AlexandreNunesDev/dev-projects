@@ -1,10 +1,12 @@
 import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { LineChart, XAxis, CartesianGrid, Line, YAxis, ReferenceLine, Tooltip } from 'recharts'
+import ScqApi from '../Http/ScqApi';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
+import { setAnaliseToSave } from '../Reducers/singleAnaliseReducer';
 import AnaliseEdit from './AnaliseEdit';
 import { CustomDot } from './CustomLineDot';
 import OcpView from './OcpView';
@@ -14,9 +16,10 @@ import OcpView from './OcpView';
 const AnaliseChart = (props) => {
 
   const [entries, setEntries] = useState()
-  const [selectedAnalise, setSelectedAnalise] = useState()
+  const selectedAnalise = useSelector(state => state.singleAnalise.analiseToSave)
   const [ocps, setOcps] = useState()
   const [show, setShow] = useState(false)
+  const dispatcher = useDispatch()
 
   const handleClose = () => {
     setShow(false)
@@ -33,9 +36,9 @@ const AnaliseChart = (props) => {
       return (
         <div style={{ backgroundColor: "white", opacity: 0.65, }} className="custom-tooltip">
           <p className="label">{`Id: ${analise.id}`}</p>
-          <p className="label">{`Analista: ${analise.Analista}`}</p>
-          <p className="intro">{`Data: ${analise.Data}`}</p>
-          <p className="intro">{`Resultado: ${analise.Resultado} ${payload[0].unit}`}</p>
+          <p className="label">{`Analista: ${analise.analista}`}</p>
+          <p className="intro">{`Data: ${analise.data}`}</p>
+          <p className="intro">{`Resultado: ${analise.resultado} ${payload[0].unit}`}</p>
           <p className="intro">{`Obs analise: ${analise.observacoesAnalise}`}</p>
           <p className="intro">{`Obs ocp: ${analise.observacoesOcp}`}</p>
         </div>
@@ -56,7 +59,7 @@ const AnaliseChart = (props) => {
       let dataFormatada = moment(dataTime[0]).format("DD-MM-yy")
 
       let data = {
-        "id": props.data.analisesId[i], "Analista": props.data.analistas[i], "Data": `${dataFormatada} - ${dataTime[1]}`, "Resultado": resultado[1].toFixed(2), "unidade": props.data.unidade,
+        "id": props.data.analisesId[i], "analista": props.data.analistas[i], "data": `${dataFormatada} - ${dataTime[1]}`, "resultado": resultado[1].toFixed(2), "unidade": props.data.unidade,
         "defaultData": resultado[0], "processoId": props.data.processoId, "etapaId": props.data.etapaId,
         "parametroId": props.data.parametroId, "observacoesAnalise": props.data.observacoesAnalise[i], "observacoesOcp": props.data.observacoesOcp[i]
       }
@@ -73,10 +76,13 @@ const AnaliseChart = (props) => {
     let ocpsFromAnalise  = props.data.ocps[payload.payload.id]
     setOcps(ocpsFromAnalise)
     props.loadOcpView(ocpsFromAnalise) 
-    setSelectedAnalise(payload.payload)
+    ScqApi.FindAnalise(payload.payload.id).then(res => {dispatcher(setAnaliseToSave(res));setShow(true); }  )
+    
 
-    setShow(true)
+    
   }
+  
+  useEffect(() => {console.log(selectedAnalise)}  , [selectedAnalise])
 
   const buildDomain = () => {
     let yMax
@@ -128,10 +134,10 @@ const AnaliseChart = (props) => {
           <ReferenceLine y={props.data.pMinT} label={props.data.pMinT} stroke="yellow" strokeWidth={2} />
           <ReferenceLine y={props.data.pMin} label={props.data.pMin} stroke="red" strokeWidth={2} />
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis height={50} tickMargin={20} dataKey="Data" interval="preserveStartEnd" />
+          <XAxis height={50} tickMargin={20} dataKey="data" interval="preserveStartEnd" />
           <YAxis unit={props.data.unidade} type={"number"} domain={buildDomain()} tickCount={10} />
           <Tooltip position={{ y: -80 }} content={<CustomTooltip  ></CustomTooltip>} />
-          <Line type="monotone" unit={props.data.unidade} activeDot={{ onClick: handleClick }} dataKey="Resultado" dot={<CustomDot ocps={props.data.ocps} />} strokeWidth={1.5} stroke="cyan" />
+          <Line type="monotone" unit={props.data.unidade} activeDot={{ onClick: handleClick }} dataKey="resultado" dot={<CustomDot ocps={props.data.ocps} />} strokeWidth={1.5} stroke="cyan" />
         </LineChart>
         <div >
           <Table hidden={!props.showAnalitics}>

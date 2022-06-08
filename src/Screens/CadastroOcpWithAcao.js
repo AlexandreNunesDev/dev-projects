@@ -34,29 +34,35 @@ const CadastroDeOcp = (props) => {
     const [responsavel, setResponsavel] = useState('')
     const [loading] = useState(false)
     const [etapa, setEtapa] = useState()
+    const parametros = useSelector(state => state.options.parametros)
     const etapas = useSelector(state => state.options.etapas)
+    const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
     const toastManager = useToasts()
+    let unidade = ""
 
     const saveOcp = () => {
-    
-        const fullAnaliseForm = {...analise,responsavel: responsavel, observacao: observacao,acao,prazo}
-        ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm,[props.loadOcps]).then((res) => responseHandler(res,toastManager,"Ocp", toastOk))
+        let analiseCopy = {...analiseToSave}
+        if (analiseCopy.resultado < parametro?.pMin || analiseCopy.resultado > parametro?.pMax) {
+            analiseCopy.status = 'fofe'
+        } else if ((analiseCopy.resultado > parametro?.pMinT && analiseCopy.resultado < parametro?.pMaxT)) {
+            analiseCopy.status = 'deft'
+        } else {
+            analiseCopy.status = 'foft'
+        }
+        const fullAnaliseForm = {...analiseCopy,responsavel: responsavel, observacao: observacao,acao,prazo}
+        ScqApi.CriarAnaliseComOcpAcao(fullAnaliseForm,[props.loadOcps]).then((res) => responseHandler(res, toastManager, "OrdemDeCorrecao", 'success'))
         history.push("/OrdensDeCorrecao")
     }
 
-
     useEffect(() => {
-        const analise = props.location.state
-        setAnalise(analise)
-        ScqApi.FindParametro(analise.parametroId).then(res => setParametro(res))
+        const param = parametros.filter(param => String(param.id) === String(analiseToSave.parametroId))[0]
+        const etapa = etapas.filter(etap => etap.parametrosId.includes(param.id))[0]
+        param.unidade === "pH" ? unidade = "" : unidade = param.unidade
+        setEtapa(etapa)
+        setParametro(param)
+    }, [])
 
 
-    }, [props.location.state])
-
-
-    useEffect(() => {
-        parametro && setEtapa(etapas.filter(etapa => etapa.parametrosId.includes(parametro.id))[0])
-    }, [parametro])
 
 
     return (
@@ -69,7 +75,7 @@ const CadastroDeOcp = (props) => {
              <h1>Cadastro de Ordem de Correção</h1>
              <Form style={{ marginTop: 20 }}>
 
-                 {etapa && parametro && analise && <Form.Row>
+                 {etapa && parametro && analiseToSave && <Form.Row>
                      <Form.Group xs={3} as={Col}>
                          <Form.Label>Etapa : {etapa.nome}</Form.Label>
                      </Form.Group>
@@ -85,7 +91,7 @@ const CadastroDeOcp = (props) => {
                          <Form.Label>Faixa Máxima : {`${parametro.pMax} ${parametro.unidade}`}</Form.Label>
                      </Form.Group>
                      <Form.Group xs={2} as={Col} >
-                         <Form.Label style={{ color: analise.status ? 'red' : 'black' }}>Resultado: {`${analise.resultado} ${parametro.unidade}`}</Form.Label>
+                         <Form.Label style={{ color: analiseToSave.status ? 'red' : 'black' }}>Resultado: {`${analiseToSave.resultado} ${parametro.unidade}`}</Form.Label>
                      </Form.Group>
                  </Form.Row>}
 

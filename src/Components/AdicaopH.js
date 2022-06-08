@@ -24,6 +24,7 @@ const AdicaopH = (props) => {
         }))
     }, [materiasPrima])
 
+    
 
     const selectedMpHandler = (selectedMpNome) => {
         const filtered = materiasPrima.filter((mp, index) => {

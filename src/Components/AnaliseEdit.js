@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications/dist/ToastProvider';
 import ScqApi from '../Http/ScqApi';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
-import ocpsReducer from '../Reducers/ocpReducers';
 import { formatIsoDate } from '../Services/stringUtils';
 import { toastWarn } from '../Services/toastType';
 import CredentialConfirm from './CredentialConfirm';
+import { clear, setAnaliseToSave } from '../Reducers/singleAnaliseReducer';
 
 
 const AnaliseEdit = (props) => {
@@ -18,8 +18,9 @@ const AnaliseEdit = (props) => {
 
   const [dataPlanejada, setDataPlanejada] = useState()
   const [showDelete, setShowDelete] = useState(false)
+  const dispatcher = useDispatch()
   const toastManager = useToasts()
-
+  const analise = useSelector(state => state.singleAnalise.analiseToSave)
 
 
   const closeCredentialConfirm = () => {
@@ -27,7 +28,7 @@ const AnaliseEdit = (props) => {
   }
 
   const deleteAnalise = () => {
-    ScqApi.DeleteAnalise(props.analise.id).then(() => {
+    ScqApi.DeleteAnalise(analise.id).then(() => {
       props.handleClose(); toastManager.addToast("Analise deletada com sucesso", {
         appearance: toastWarn, autoDismiss: true
       }); props.reloadChart()
@@ -41,14 +42,14 @@ const AnaliseEdit = (props) => {
         aproveOcp={deleteAnalise}></CredentialConfirm>
       <Modal size={"lg"} show={props.show} onHide={() => props.handleClose()}>
         <Modal.Header closeButton>
-          <Modal.Title>Editor de Analise: Analise {props?.analise?.id}</Modal.Title>
+          <Modal.Title>Editor de Analise: Analise {analise?.id}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Row>
               <Col>
                 <Form.Label>
-                  {`Resultado: ${props?.analise?.Resultado} ${props?.analise?.unidade}`}
+                  {`Resultado: ${analise?.resultado} ${analise?.unidade}`}
                 </Form.Label>
               </Col>
 
@@ -58,7 +59,7 @@ const AnaliseEdit = (props) => {
                 <Form.Label>Data Realizada : </Form.Label>
                 <Form.Control
                   type="datetime-local"
-                  defaultValue={props?.analise?.defaultData}
+                  defaultValue={formatIsoDate(analise?.data)}
                   onChange={event => {
                     let data = new Date(event.target.value);
                     setDataPlanejada(formatIsoDate(data))
@@ -77,14 +78,22 @@ const AnaliseEdit = (props) => {
           <Button onClick={() => { setShowDelete(true) }}>
             Excluir
           </Button>
-          {props.ocps && <Button onClick={() => {props.showOcps(true)}}>
-           {props.ocps.length > 1 ? `Ver ${props.ocps.length} ocps` : `Ver ${props.ocps.length == 0 ? "" :props.ocps.length} ocp` } 
-          </Button> }
-          
-          <Button onClick={() => props.history.push("/CadastroOcpAdicao", props.analise)}>
+          {props.ocps && <Button onClick={() => { props.showOcps(true) }}>
+            {props.ocps.length > 1 ? `Ver ${props.ocps.length} ocps` : `Ver ${props.ocps.length == 0 ? "" : props.ocps.length} ocp`}
+          </Button>}
+
+          <Button onClick={() => {
+            if(analise.type == "Adicao") {
+              props.history.push("/CadastroOcpAdicao")
+            } else {
+              props.history.push("/CadastroOcpAcao")
+            }
+           
+           
+          }}>
             Gerar Ocp
           </Button>
-          <Button onClick={() => { ScqApi.UpdataAnaliseData(props.analise.id, dataPlanejada); props.handleClose(false); props.reloadChart() }}>
+          <Button onClick={() => { ScqApi.UpdataAnaliseData(analise.id, dataPlanejada); props.handleClose(false); props.reloadChart() }}>
             Salvar
           </Button>
         </Modal.Footer>

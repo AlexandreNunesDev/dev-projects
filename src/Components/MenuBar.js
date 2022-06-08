@@ -210,6 +210,7 @@ const MenuBar = () => {
               <Link className="nav-link" to="/Home">Home</Link>
               <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
               <Link className="nav-link" to="/Portal" >Portal Forms</Link>
+              <Link className="dropdown-item" to="/Registrar">Registrar Conta</Link>
             </Nav>
 
           </Navbar.Collapse>

@@ -210,12 +210,12 @@ const ScqApi = {
         return http.put(`turno/${turno.id}`, turno)
 
     },
-    CriarOcp: (ocp,reduxFunctions) => {
-        return http.post("ocp", ocp, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarOcp: (ocp) => {
+        return http.post("ocp", ocp)
     },
 
-    CriarOcpAcao: (ocp,reduxFunctions) => {
-        return http.post("ocpAcao", ocp, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarOcpAcao: (ocp) => {
+        return http.post("ocpAcao", ocp)
     },
     ListaEtapasByProcesso: (processoId) => {
         return http.get("etapas/" + processoId)

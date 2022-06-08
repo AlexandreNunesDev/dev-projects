@@ -33,10 +33,11 @@ const CadastroDeOcpLivre = (props) => {
 
 
     const saveOcp = () => {
+        const { toastManager } = props;
         if(menuType==="Adicao") {
-            ScqApi.CriarOcp(newOcp).then((res) => responseHandler(res,props,"OrdemDeCorrecao",toastOk,context,[dispatchers().loadOcps]))
+            ScqApi.CriarOcp(newOcp).then((res) => responseHandler(res,toastManager ,"OrdemDeCorrecao",toastOk))
         } else {
-            ScqApi.CriarOcpAcao(newOcp).then((res) => responseHandler(res,props,"OrdemDeCorrecao",toastOk,context,[dispatchers().loadOcps]))
+            ScqApi.CriarOcpAcao(newOcp).then((res) => responseHandler(res,toastManager,"OrdemDeCorrecao",toastOk))
         }
             history.push("/OrdensDeCorrecao")
         }

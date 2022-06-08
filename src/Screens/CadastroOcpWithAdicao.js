@@ -116,19 +116,6 @@ const CadastroDeOcpAdicao = (props) => {
                         valorCorrecao = (etapa.volume * (nominal - analiseToSave.resultado)) / 1000
                         valorCorrecao = valorCorrecao * pair[1]
                         pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-                        /*                         if (Number(pair[1] === 1.0)) {
-                                                    valorCorrecao = (etapa.volume * (nominal - analise.resultado)) / 1000
-                                                    //Adiciona à correcao total o valor da correcao 
-                                                    correcaoTotal = correcaoTotal + valorCorrecao
-                                                    pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-                                                } else {
-                                                    valorCorrecao = correcaoTotal * pair[1]
-                                                    //Adiciona à correcao total o valor da correcao 
-                                                    correcaoTotal = correcaoTotal + valorCorrecao
-                                                    pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-                                                } */
-
-                        //Se o valor da correcao for 0 , não adiciona ao  array de Correcao
                         if (Number(valorCorrecao) > 0) {
                             tempCorrecaoArray = tempCorrecaoArray.concat(pairCorreMp)
                             setCorrecaoArray(tempCorrecaoArray)
@@ -146,11 +133,21 @@ const CadastroDeOcpAdicao = (props) => {
 
 
     const saveOcp = () => {
+        let analiseCopy = {...analiseToSave}
+        if (analiseCopy.resultado < parametro?.pMin || analiseCopy.resultado > parametro?.pMax) {
+            analiseCopy.status = 'fofe'
+        } else if ((analiseCopy.resultado > parametro?.pMinT && analiseCopy.resultado < parametro?.pMaxT)) {
+            analiseCopy.status = 'deft'
+        } else {
+            analiseCopy.status = 'foft'
+        }
         const { toastManager } = props
-        const fullAnaliseForm = { ...analiseToSave, responsavel: responsavel, observacao: observacao, mpQtds: mpQtds }
+        const fullAnaliseForm = { ...analiseCopy, responsavel: responsavel, observacao: observacao, mpQtds: mpQtds }
         ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm, [props.loadParametros, props.loadOcps]).then((res) => { responseHandler(res, toastManager, "OrdemDeCorrecao", 'success')
         }
         );
+
+        history.push("/OrdensDeCorrecao")
 
     }
 
@@ -213,10 +210,7 @@ const CadastroDeOcpAdicao = (props) => {
                                         Cancelar
                                     </Button>
                                     <Button style={{ margin: 2 }} type="reset" onClick={() => {
-
                                         saveOcp(analiseToSave, mpQtds, responsavel, observacao, history, props, context)
-
-
                                     }}>
                                         Salvar
                                     </Button>
