@@ -90,12 +90,11 @@ class OrdensDeCorreção extends Component {
     }
 
     goToReanalise = (analiseId, ocpId) => {
-        ScqApi.LoadReanalise(analiseId).then(res => this.redirectAnalise(this.props.history, res, ocpId))
+        ScqApi.FindAnalise(analiseId).then(res => this.redirectAnalise(this.props.history, res, ocpId))
     }
 
     redirectAnalise = (history, analise, ocpId) => {
-        const analiseToSave = { id: analise.id, analista: analise.analista, resultado: analise.resultado, status: '', parametroId: analise.parametroId, ocpId: ocpId, observacaoAnalise: analise.observacao, processoId : analise.processoId, etapaId : analise.etapaId }
-        this.props.setSingleAnalise(analiseToSave)
+        this.props.setSingleAnalise(analise)
         history.push("/RegistroAnalise", {reanalise : true})
     }
 
