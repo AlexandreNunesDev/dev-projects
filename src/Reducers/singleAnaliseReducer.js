@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    analiseToSave : { id: '', analista: '', resultado: '', status: '', parametroId: '', ocpId: null, observacaoAnalise: '' }
+    analiseToSave : { id: '', analista: '', resultado: '', status: '', parametroId: '', ocpId: null, observacaoAnalise: '', data: '' }
 
 }
 

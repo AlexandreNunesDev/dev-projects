@@ -14,6 +14,7 @@ import { withToastManager } from "react-toast-notifications/dist/ToastProvider"
 import { buildAnaliseInputMenu } from "../Services/analiseMenuBuilder"
 import { getAnaliseStatus } from "../Services/analiseMenuBuilder"
 import { useHistory } from "react-router"
+import { clear, setAnaliseToSave } from "../Reducers/singleAnaliseReducer"
 
 const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
 
@@ -23,17 +24,16 @@ const MultiRegistroAnalise = (props) => {
     const processos = useSelector(state => state.options.processos)
     const parametros = useSelector(state => state.options.parametros)
     const userName = useSelector(state => state.global.userName)
+    const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
     const dispatcher = useDispatch()
     const [analista, setAnalista] = useState()
     const [showData, setShowData] = useState()
     const [showCheckOut, setShowCheckOut] = useState()
-    const [checkOutAnaliseField, setCheckOutAnaliseField] = useState()
     const [data, setData] = useState()
     let dataFieldRef = useRef(null)
     const context = useContext(WebSocketContext)
     const reducerFunctions = dispatchers()
     const history = useHistory()
-    const [analiseToCheckOut, setAnaliseToCheckOut] = useState(null)
 
 
 
@@ -66,14 +66,14 @@ const MultiRegistroAnalise = (props) => {
 
     const salvarAnalise = () => {
         const { toastManager } = props
-        ScqApi.CriarAnalise(analiseToCheckOut, [dispatchers().loadParametros, dispatchers().loadOcps]).then(res => {
+        ScqApi.CriarAnalise(analiseToSave, [dispatchers().loadParametros, dispatchers().loadOcps]).then(res => {
             responseHandler(res, toastManager, "Analise", 'success')
         })
         setShowCheckOut(false)
     }
 
     const gerarOcp = () => {
-        history.push({ pathname: `/CadastroOcp${checkOutAnaliseField.parametro.menuType}`, state: analiseToCheckOut })
+        history.push({ pathname: `/CadastroOcp${analiseToSave.parametro.menuType}`, state: analiseToSave })
 
     }
 
@@ -90,22 +90,22 @@ const MultiRegistroAnalise = (props) => {
         }
         let analiseFieldCheckOut = { ...analiseField }
         analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, analiseFieldCheckOut.parametro)
-        setCheckOutAnaliseField(analiseFieldCheckOut)
+
         setShowCheckOut(true)
-        setAnaliseToCheckOut({ id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data  })
+        let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data,ocpId: null, observacaoAnalise: '', parametro : analiseFieldCheckOut.parametro  }
+        dispatcher(setAnaliseToSave(analiseCheckout))
     }
 
     const closeCheckOut = () => {
         setShowCheckOut(false)
-        setCheckOutAnaliseField(null)
-        setAnaliseToCheckOut(null)
+        dispatcher(clear())
     }
 
 
     const observacaoUpdate = (valor) => {
-        let analiseCheckOutWithObservacao = { ...analiseToCheckOut }
+        let analiseCheckOutWithObservacao = { ...analiseToSave }
         analiseCheckOutWithObservacao.observacaoAnalise = valor
-        setAnaliseToCheckOut(analiseCheckOutWithObservacao)
+        dispatcher(setAnaliseToSave(analiseCheckOutWithObservacao))
     }
 
 
@@ -118,7 +118,7 @@ const MultiRegistroAnalise = (props) => {
 
 
 
-            {analiseToCheckOut && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={checkOutAnaliseField.valor} parametro={checkOutAnaliseField.parametro} status={checkOutAnaliseField.analiseStatus} salvarAnalise={salvarAnalise} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
+            {analiseToSave && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={analiseToSave.resultado} parametro={analiseToSave.parametro} status={analiseToSave.status} salvarAnalise={() => salvarAnalise()} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
             <Container style={{ marginTop: 20 }}>
 
                 <Row>

@@ -331,12 +331,12 @@ const ScqApi = {
         return http.get(encodedUrl)
 
     },
-    AdicaoCorrigir: (ocpId,reduxFunctions) => {
-        return http.put("adicao/corrigir/" + ocpId, null,{ headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    AdicaoCorrigir: (ocpId) => {
+        return http.put("adicao/corrigir/" + ocpId, null)
 
     },
-    AcaoCorrigir: (ocpId,reduxFunctions) => {
-        return http.put("acao/corrigir/" + ocpId,null,{ headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    AcaoCorrigir: (ocpId) => {
+        return http.put("acao/corrigir/" + ocpId,null)
 
     },
     LoadFullOmpDetails: (omp) => {
