@@ -168,14 +168,14 @@ const MultiRegistroAnalise = (props) => {
                                         <tr hidden={!analiseField.parametro.habilitado} key={analiseField.index} >
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.parametro.frequencia} / ${analiseField.parametro.escalaFrequencia}`}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.parametro.dataPlanejada)}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ fontWeight: analiseField.parametro.analiseHoje && "BOLD" , color: analiseField.parametro.analiseHoje ? "RED" : "BLACK", textAlign: "center" }} >{analiseField.parametro.analiseHoje ? "Atrasado" : analiseField.parametro.turno}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ fontWeight: !analiseField.parametro.analiseHoje && "BOLD" , color: !analiseField.parametro.analiseHoje ? "RED" : "BLACK", textAlign: "center" }} >{!analiseField.parametro.analiseHoje ? "Atrasado" : analiseField.parametro.turno}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{analiseField.parametro.etapaNome}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.nome}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMin}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMax}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.unidade}</Form.Label></td>
                                             <td>{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
-                                            <td className="align-middle">{analiseField.parametro.analiseHoje ? <Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button> : <Button disabled={true} style={{ backgroundColor: "GRAY", borderColor: "GRAY", alignmentBaseline: "center" }}>Salvar</Button>}</td>
+                                            <td className="align-middle">{!analiseField.parametro.analiseHoje ? <Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button> : <Button disabled={true} style={{ backgroundColor: "GRAY", borderColor: "GRAY", alignmentBaseline: "center" }}>Salvar</Button>}</td>
                                         </tr>
                                     )
 
