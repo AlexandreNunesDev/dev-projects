@@ -1,7 +1,7 @@
 import ScqApi from "../Http/ScqApi"
 import React, { useEffect, useRef, useState } from 'react'
 
-const { Form, Button, Col } = require("react-bootstrap")
+const { Form, Button, Col, Container } = require("react-bootstrap")
 
 const TitulaForm = (props) => {
 

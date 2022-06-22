@@ -7,7 +7,7 @@ import { analiseFieldFactory, timefieldFactory } from "../models/fieldModels"
 import CheckoutAnalise from "../Components/CheckoutAnalise"
 import ScqApi from "../Http/ScqApi"
 import { responseHandler } from "../Services/responseHandler"
-import { formatIsoDate } from "../Services/stringUtils"
+import { formatIsoDate, OnlyDate } from "../Services/stringUtils"
 import { WebSocketContext } from "../websocket/wsProvider"
 import dispatchers from "../mapDispatch/mapDispathToProps"
 import { withToastManager } from "react-toast-notifications/dist/ToastProvider"
@@ -146,12 +146,17 @@ const MultiRegistroAnalise = (props) => {
                 <Container style={{ padding: 30 }}>
                     <h3>Registro de Analises</h3>
                     <div className="table-responsive">
-                        <Table >
+                        <table>
                             <thead>
                                 <tr>
+                                    <th style={{ textAlign: "center" }}>Frequencia</th>
+                                    <th style={{ textAlign: "center" }}>Data Plenejada</th>
                                     <th style={{ textAlign: "center" }}>Turno</th>
                                     <th style={{ textAlign: "center" }}>Etapa</th>
                                     <th style={{ textAlign: "center" }}>Parametro</th>
+                                    <th style={{ textAlign: "center" }}>Minimo</th>
+                                    <th style={{ textAlign: "center" }}>Maximo</th>
+                                    <th style={{ textAlign: "center" }}>Unidade</th>
                                     <th style={{ textAlign: "center" }}>Valor</th>
                                     <th style={{ textAlign: "center" }}>Ação</th>
                                 </tr>
@@ -160,11 +165,16 @@ const MultiRegistroAnalise = (props) => {
                             <tbody>
                                 {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
                                     return (
-                                        <tr hidden={!analiseField.parametro.habilitado || !analiseField.parametro.analiseHoje} key={analiseField.index} >
-                                            <td className="align-middle"><Form.Label style={{ fontWeight: analiseField.parametro.turno === "Atrasado" && "BOLD", color: analiseField.parametro.turno === "Atrasado" ? "RED" : "BLACK", textAlign: "center" }} >{analiseField.parametro.turno}</Form.Label></td>
+                                        <tr hidden={!analiseField.parametro.habilitado} key={analiseField.index} >
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.parametro.frequencia} / ${analiseField.parametro.escalaFrequencia}`}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.parametro.dataPlanejada)}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ fontWeight: analiseField.parametro.analiseHoje && "BOLD" , color: analiseField.parametro.analiseHoje ? "RED" : "BLACK", textAlign: "center" }} >{analiseField.parametro.analiseHoje ? "Atrasado" : analiseField.parametro.turno}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{analiseField.parametro.etapaNome}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.nome}</Form.Label></td>
-                                            <td className="align-middle">{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMin}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMax}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.unidade}</Form.Label></td>
+                                            <td>{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
                                             <td className="align-middle">{analiseField.parametro.analiseHoje ? <Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button> : <Button disabled={true} style={{ backgroundColor: "GRAY", borderColor: "GRAY", alignmentBaseline: "center" }}>Salvar</Button>}</td>
                                         </tr>
                                     )
@@ -173,7 +183,7 @@ const MultiRegistroAnalise = (props) => {
                             </tbody>
 
 
-                        </Table>
+                        </table>
                     </div>
                 </Container>
             </Container>

@@ -41,6 +41,7 @@ export default ({ children }) => {
 
 
     const onConnect = () => {
+        console.log("Socket conectado")
         
    
        

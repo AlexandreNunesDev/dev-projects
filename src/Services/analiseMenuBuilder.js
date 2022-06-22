@@ -1,5 +1,5 @@
 import React from "react"
-import { Form } from "react-bootstrap"
+import { Col, Container, Form } from "react-bootstrap"
 import TitulaForm from "../Screens/TitulaForm"
 
 const analiseFieldChange = (value, analiseField, onChange) => {
@@ -17,10 +17,10 @@ const analiseFieldChange = (value, analiseField, onChange) => {
 const valueForm = (analiseField,{ onValueChange, hideLabel }) => {
 
     return (
-        <>
+        <Form.Group>
             <Form.Label hidden={hideLabel}>Valor</Form.Label>
-            <Form.Control value={analiseField.valor} style={{width : "69%"}} type="number" placeholder={"0.00"} onChange={(event) => analiseFieldChange(event.target.value,analiseField,onValueChange)} />
-        </>
+            <Form.Control value={analiseField.valor} type="number" placeholder={"0.00"} onChange={(event) => analiseFieldChange(event.target.value,analiseField,onValueChange)} />           
+        </Form.Group>
     )
 }
 
