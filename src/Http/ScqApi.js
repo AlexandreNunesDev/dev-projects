@@ -90,18 +90,18 @@ const ScqApi = {
     ListaNotificacoes: () => {
         return http.get("notificacoes")
     },
-    CriarProcesso: (processo,reduxFunctions) => {
-        return http.post("processo", processo, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarProcesso: (processo) => {
+        return http.post("processo", processo)
 
     },
     CriarFrequenciaAnalise: (frequencia) => {
         return http.post("frequencia", frequencia)
     },
-    CriarTroca: (troca,reduxFunctions) => {
-        return http.post("troca", troca,{ headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarTroca: (troca) => {
+        return http.post("troca", troca)
     },
-    CriarTarefaManutencao: (tarefa,reduxFunctions) => {
-        return http.post("tarefa", tarefa,{ headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarTarefaManutencao: (tarefa) => {
+        return http.post("tarefa", tarefa)
 
     },
     EditarProcesso: (processo) => {
@@ -124,8 +124,8 @@ const ScqApi = {
         return http.put("materiaPrima/" + materiaPrima.id, materiaPrima)
 
     },
-    EditarAnalise: (analise,reduxFunctions) => {
-        return http.put("analise/" + analise.id, analise,{ headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    EditarAnalise: (analise) => {
+        return http.put("analise/" + analise.id, analise)
 
     },
     EditarFrequenciaAnalise: (frequencia) => {
@@ -164,16 +164,16 @@ const ScqApi = {
         return http.put("analise/"+data+"/"+ analiseId)
 
     },
-    CriarEtapa: (etapa,reduxFunctions) => {
-        return http.post("etapa", etapa, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarEtapa: (etapa) => {
+        return http.post("etapa", etapa)
 
     },
-    CriarParametro: (parametro,reduxFunctions) => {
-        return http.post("parametro", parametro, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarParametro: (parametro) => {
+        return http.post("parametro", parametro)
 
     },
-    CriarMateriaPrima: (materiaPrima,reduxFunctions) => {
-        return http.post("materiaPrima", materiaPrima, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarMateriaPrima: (materiaPrima) => {
+        return http.post("materiaPrima", materiaPrima)
 
     },
     
@@ -194,16 +194,16 @@ const ScqApi = {
         return http.post("montagem", montagem)
 
     },
-    CriarAdicao: (adicao,reduxFunctions) => {
-        return http.post("adicao", adicao, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarAdicao: (adicao) => {
+        return http.post("adicao", adicao)
 
     },
-    CriarAcao: (acao,reduxFunctions) => {
-        return http.post("acao", acao, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarAcao: (acao) => {
+        return http.post("acao", acao)
 
     },
-    CriarTurno: (turno,reduxFunctions) => {
-        return http.post("turno", turno, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarTurno: (turno) => {
+        return http.post("turno", turno)
 
     },
     ListTurnos: () => {
@@ -283,8 +283,8 @@ const ScqApi = {
         return http.put("tarefa/update/" + tarefa.id, tarefa)
 
     },
-    AprovarOcp: (ocpId,reduxFunctions) => {
-        return http.put("ocp/aprovar/" + ocpId,{ headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    AprovarOcp: (ocpId) => {
+        return http.put("ocp/aprovar/" + ocpId)
 
     },
 
@@ -371,12 +371,12 @@ const ScqApi = {
     },
 
 
-    GerarOmp: (ompForm,reduxFunctions) => {
-        return http.post("omp", ompForm, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    GerarOmp: (ompForm) => {
+        return http.post("omp", ompForm)
 
     },
 
-    FinalizarOmp: (omp,reduxFunctions ) => {
+    FinalizarOmp: (omp ) => {
         return http.post("omp/finalizar", omp)
 
     },
