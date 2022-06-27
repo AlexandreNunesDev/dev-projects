@@ -8,6 +8,7 @@ import { downloadOcp } from "../Services/documentsDownload";
 import { Fragment } from 'react';
 import { useHistory } from 'react-router';
 import { OnlyDate } from '../Services/stringUtils';
+import { useDispatch, useSelector } from 'react-redux'
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -24,22 +25,18 @@ const isSameDate = (actualDate, refDate) => {
 
 
 const buildAdicaoDetails = (ocp) => {
-    let showAnaliseObs = ocp.observacao.split(":")[0].trim() === "null" ?  true : false
-    let showOcpObs = ocp.observacao.split(":")[1].trim()  === "null" ?  true : false
-
-    const lis = ocp.adicoesDto.map(adicao => {
+    const lis = ocp.adicoesDto.map((adicao,index) => {
        
 
         return (
-            <li className="text-nowrap" prefix>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
+            <li key={index} className="text-nowrap">{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
         )
 
     });
     return (
         <div >
             <ul>
-                <li hidden={showAnaliseObs} ><span style={{ fontWeight: 'bold' }}>Observação Analise: </span>{`${ocp.observacao.split(":")[0]}`}</li>
-                <li hidden={showOcpObs} ><span style={{ fontWeight: 'bold' }}>Observação Ocp: </span>{`${ocp.observacao.split(":")[1]}`}</li>
+                <li><span style={{ fontWeight: 'bold' }}>Observação Ocp: </span>{`${ocp.observacao}`}</li>
                 {lis}
             </ul>
         </div>
@@ -66,13 +63,15 @@ const OcpsTableBody = (props) => {
 
 
     const history = useHistory()
+    const ocpState = useSelector(state => state.ocp)
+    
 
     const editOcp = (ocp) => {
         props.ocpToEdit(ocp)
         if (ocp.isAdicao) {
-            history.push("/EditarOcpAdicao", ocp)
+            history.push("/EditarOcpAdicao")
         } else {
-            history.push("/EditarOcpAcao", ocp)
+            history.push("/EditarOcpAcao")
         }
 
     }
@@ -104,29 +103,26 @@ const OcpsTableBody = (props) => {
         } else {
             return getEncerradaOcpButton()
         }
-
-
-
     }
 
     const filterHandler = () => {
         let filteredByFilterType = []
 
-        if (props.ocp.actualfilter === '') {
-            filteredByFilterType = props.ocp.ocps
+        if (ocpState.actualfilter === '') {
+            filteredByFilterType = ocpState.ocps
         } else {
-            filteredByFilterType = props.ocp.ocps.filter((ocp) => {
-                if (props.ocp.filterType === "Processo") {
-                    return String(ocp.processoNome).toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())
+            filteredByFilterType = ocpState.ocps.filter((ocp) => {
+                if (ocpState.filterType === "Processo") {
+                    return String(ocp.processoNome).toLowerCase().startsWith(ocpState.actualFilter.toLowerCase())
                 }
-                if (props.ocp.filterType === "Etapa") {
-                    return String(ocp.etapaNome).toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())
+                if (ocpState.filterType === "Etapa") {
+                    return String(ocp.etapaNome).toLowerCase().startsWith(ocpState.actualFilter.toLowerCase())
                 }
-                if (props.ocp.filterType === "Parametro") {
-                    return String(ocp.parametroNome).toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())
+                if (ocpState.filterType === "Parametro") {
+                    return String(ocp.parametroNome).toLowerCase().startsWith(ocpState.actualFilter.toLowerCase())
                 }
-                if (props.ocp.filterType === "Status") {
-                    if (String("Corrigir").toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())) {
+                if (ocpState.filterType === "Status") {
+                    if (String("Corrigir").toLowerCase().startsWith(ocpState.actualFilter.toLowerCase())) {
                         if (!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
                             return true
                         } else {
@@ -134,7 +130,7 @@ const OcpsTableBody = (props) => {
                         }
 
                     }
-                    if (String("Reanalisar").toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())) {
+                    if (String("Reanalisar").toLowerCase().startsWith(ocpState.actualFilter.toLowerCase())) {
                         if (ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
                             return true
                         } else {
@@ -142,7 +138,7 @@ const OcpsTableBody = (props) => {
                         }
 
                     }
-                    if (String("Aprovar").toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())) {
+                    if (String("Aprovar").toLowerCase().startsWith(ocpState.actualFilter.toLowerCase())) {
                         if (ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP) {
                             return true
                         } else {
@@ -151,7 +147,7 @@ const OcpsTableBody = (props) => {
 
 
                     }
-                    if (String("Encerrada").toLowerCase().startsWith(props.ocp.actualFilter.toLowerCase())) {
+                    if (String("Encerrada").toLowerCase().startsWith(ocpState.actualFilter.toLowerCase())) {
                         if (ocp.statusCorrecao && !ocp.analiseStatus && ocp.statusOCP) {
                             return true
                         } else {
@@ -168,7 +164,7 @@ const OcpsTableBody = (props) => {
         }
 
 
-        if (!props.ocp.showEncerradas) {
+        if (!ocpState.showEncerradas) {
             return filteredByFilterType.filter((ocp) => {
                 return ocp.statusOCP === false
             })
@@ -183,10 +179,10 @@ const OcpsTableBody = (props) => {
 
 
     let firstDateLineCounter = 0
-    let firstDate = new Date(props.ocp.ocps[0]?.prazo)
+    let firstDate = new Date(ocpState.ocps[0]?.prazo)
 
     //Pega a data damprimeira OCP da lista de OCPS enviadas pelo servidor
-    let refDate = new Date(props.ocp.ocps[0]?.prazo)
+    let refDate = new Date(ocpState.ocps[0]?.prazo)
 
     let ocpTd = filterHandler().map((ocp, index) => {
         let buttonKey = ocp.statucOcp ? 1 : !ocp.analiseStatus ? 2 : 3
@@ -255,8 +251,8 @@ const OcpsTableBody = (props) => {
 
     })
 
-    if (props.ocp.ocps.length === 0) {
-        return <h1>Voce não possui conrreçoes</h1>
+    if (ocpState.ocps.length === 0) {
+        return <h1>Voce não possui correçoes</h1>
     } else {
         return (
 

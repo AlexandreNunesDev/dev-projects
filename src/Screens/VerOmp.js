@@ -112,7 +112,7 @@ const VerOmp = (props) => {
 
             <Container style={{ marginTop: 20 }}>
                 <Row>
-                    <h2>Ordem de Manutencao Finalizada</h2>
+                    <h2>{`Ordem de Manutencao ${props.location.state.id} Finalizada`}</h2>
 
                 </Row>
                 

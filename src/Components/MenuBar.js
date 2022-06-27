@@ -1,17 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
-import { Badge, Button, Card, Image, Modal, Nav, Navbar, NavDropdown, NavItem, Row } from 'react-bootstrap';
+import { useState } from 'react';
+import { Image, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
 import { isMobile } from 'react-device-detect';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { withToastManager } from 'react-toast-notifications';
 import ScqApi from '../Http/ScqApi';
 import scqlogo from '../img/logoscq.png';
-import mapDispatchToProps from '../mapDispatch/mapDispathToProps';
-import mapToStateProps from '../mapStateProps/mapStateToProps';
+import { version } from '../models/constantes';
 import { logOut } from '../Reducers/globalConfigReducer';
-import { logout } from '../Services/auth';
-
+import { BiUserCircle } from 'react-icons/bi'
 const MenuBar = () => {
 
 
@@ -48,7 +45,7 @@ const MenuBar = () => {
 
   const logUserOut = () => {
     dispatch(logOut())
-    dispatch({type : "eraseStore"})
+    dispatch({ type: "eraseStore" })
   }
 
   if (global.userRole === "ADMIN_ROLE") {
@@ -58,6 +55,7 @@ const MenuBar = () => {
         <div className='App tc f3'>
           <Navbar bg="light" expand="lg" >
             {/* <Navbar.Brand href="/home"  >S.C.Q</Navbar.Brand> */}
+            {<NavItem style={{ marginRight: 20 }}>{version}</NavItem>}
             <Image height={50} width={80} src={scqlogo} rounded />
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -72,7 +70,7 @@ const MenuBar = () => {
                   <Link className="nav-link" to="/RegistroDeArea">Registro de Area</Link>
                 </NavDropdown>
                 <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
-                <Link className="nav-link" to='/Omp' >OMP</Link>
+                <Link className="nav-link" to='/Trocas' >Trocas</Link>
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
 
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
@@ -94,39 +92,7 @@ const MenuBar = () => {
 
             </Navbar.Collapse>
 
-            {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {global.userName}</NavItem>}
-
-
-            <NavItem>{isMobile ? <Button onClick={() => this.setState((prevState, props) => ({
-              show: true
-            }))}  ><Badge variant="light">{notifications.length}</Badge></Button> : <Button onClick={() => this.setState((prevState, props) => ({
-              show: true
-            }))}  >Notificacoes <Badge variant="light">{notifications.length}</Badge></Button>}</NavItem>
-
-            <Modal show={show} onHide={() => this.setState({ show: false })}>
-              <Modal.Body>
-                {notifications.map((notificacao, index) => {
-                  let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
-                  return (
-                    <Row key={index} >
-                      <Card  >
-                        <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
-                        <Card.Body>
-                          <Card.Text>
-                            {notificacao.messagem}
-                          </Card.Text>
-                        </Card.Body>
-                      </Card>
-                    </Row>
-
-                  )
-                })}
-              </Modal.Body>
-            </Modal>
-
-
-
-
+            {!isMobile && <NavItem style={{ marginRight: 20 }}><BiUserCircle size={24} /> Usuario: {global.userName}</NavItem>}
           </Navbar>
 
         </div>
@@ -137,6 +103,7 @@ const MenuBar = () => {
       <>
 
         <Navbar bg="light" expand="lg">
+        {<NavItem style={{ marginRight: 20 }}>{version}</NavItem>}
           <Image height={50} width={80} src={scqlogo} rounded />
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -152,7 +119,7 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
               </NavDropdown>
               <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
-              <Link className="nav-link" to='/Omp' >OMP</Link>
+              <Link className="nav-link" to='/Trocas' >Trocas</Link>
               <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
               <NavDropdown title="Consultas" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
@@ -164,31 +131,9 @@ const MenuBar = () => {
           </Navbar.Collapse>
 
 
-          {!isMobile && <NavItem style={{ marginRight: 20 }}>Usuario: {global.userName}</NavItem>}
+          {!isMobile && <NavItem style={{ marginRight: 20 }}> <BiUserCircle size={24} /> Usuario: {global.userName}</NavItem>}
 
 
-          <NavItem>{isMobile ? <Button onClick={() => setShow(true)}  ><Badge variant="light">{notifications.length}</Badge></Button> : <Button onClick={() => setShow(true)}  >Notificacoes <Badge variant="light">{notifications.length}</Badge></Button>}</NavItem>
-
-          <Modal show={show} onHide={() => setShow(false)}>
-            <Modal.Body>
-              {notifications.map((notificacao, index) => {
-                let firstWord = notificacao.messagem.substr(0, notificacao.messagem.indexOf(":"));
-                return (
-                  <Row key={index} >
-                    <Card  >
-                      <Card.Header>{notificacao.id} Notificacao de {firstWord}</Card.Header>
-                      <Card.Body>
-                        <Card.Text>
-                          {notificacao.messagem}
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </Row>
-
-                )
-              })}
-            </Modal.Body>
-          </Modal>
 
         </Navbar>
 
@@ -202,6 +147,7 @@ const MenuBar = () => {
     return (
       <>
         <Navbar bg="light" expand="lg">
+          {<NavItem style={{ marginRight: 20 }}>{version}</NavItem>}
           <Image height={50} width={80} src={scqlogo} rounded />
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -210,9 +156,11 @@ const MenuBar = () => {
               <Link className="nav-link" to="/Home">Home</Link>
               <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
               <Link className="nav-link" to="/Portal" >Portal Forms</Link>
+
             </Nav>
 
           </Navbar.Collapse>
+
         </Navbar>
       </>)
   }

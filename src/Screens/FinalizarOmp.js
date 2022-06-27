@@ -6,11 +6,13 @@ import { withToastManager } from 'react-toast-notifications'
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { responseHandler } from '../Services/responseHandler'
 import mapToStateProps from '../mapStateProps/mapStateToProps'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import dispatchers from '../mapDispatch/mapDispathToProps'
 import { WebSocketContext } from '../websocket/wsProvider'
 import { toastOk } from '../Services/toastType'
 import { useToasts } from 'react-toast-notifications/dist/ToastProvider'
+import { paths } from '../models/constantes'
+import { UpdateTarefasChoosed, UpdateTrocasChoosed } from '../Reducers/ompReducer'
 
 const TableHeadTarefas = () => {
     return (
@@ -111,6 +113,7 @@ const FinalizarOmp = (props) => {
     const [trocasIdChecked, setTrocasIdChecked] = useState([])
     const histoy = useHistory()
     const toastManager = useToasts()
+    const dispatch = useDispatch()
     const context = useContext(WebSocketContext)
     const [markedTarefas, setmarkedTarefas] = useState(false)
     const [markedTrocas, setmarkedTrocas] = useState(false)
@@ -185,6 +188,12 @@ const FinalizarOmp = (props) => {
         setmarkedTarefas(!markedTarefas)
     }
 
+    const finalizar = (OmpFinalizarForm) => {
+        dispatch(UpdateTrocasChoosed([]))
+        dispatch(UpdateTarefasChoosed([]))
+        ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, toastManager, "OrdemDeManutencao", toastOk);  }).then(() => histoy.push(paths.trocas))
+    }
+
     return (
         <>
 
@@ -192,7 +201,7 @@ const FinalizarOmp = (props) => {
 
             <Container style={{ marginTop: 20 }}>
                 <Row>
-                    <h2>{'Finalizar Omp'}</h2>
+                    <h2>{`Finalizar Omp ${omp.id}`}</h2>
 
                 </Row>
                 <Form.Row style={{ marginTop: 10 }}>
@@ -241,7 +250,7 @@ const FinalizarOmp = (props) => {
 
                 <Button onClick={() => {
                     const OmpFinalizarForm = { id: omp.id, tarefasId: tarefasIdChecked, trocasId: trocasIdChecked, data: dataRealizada }
-                    ScqApi.FinalizarOmp(OmpFinalizarForm,[props.loadOrdensDeManutencao]).then((response) => { responseHandler(response, toastManager, "OrdemDeManutencao", toastOk);  }).then(() => histoy.push("/omp"))
+                    finalizar(OmpFinalizarForm)
                 }}>Confirmar</Button>
 
 

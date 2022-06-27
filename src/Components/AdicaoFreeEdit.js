@@ -41,9 +41,10 @@ const AdicaoFreeEdit = (props) => {
                 </Col>
 
             </Row>
+            
           
           
-            {props.ocp.ocpToEdit.adicoesDto.length > 0 &&
+      
                 <Table >
                     <thead>
 
@@ -85,7 +86,7 @@ const AdicaoFreeEdit = (props) => {
 
                     </tbody>
 
-                </Table>}
+                </Table>
 
         </>
     )

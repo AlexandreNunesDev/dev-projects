@@ -143,82 +143,8 @@ class OrdensDeCorreção extends Component {
         return mostHeight;
     }
 
-    filterHandler = () => {
-        let filteredByFilterType = []
-        filteredByFilterType = this.props.ocps.filter((ocp) => {
-            if (this.state.filterType === "Processo") {
-                return String(ocp.processoNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
-            }
-            if (this.state.filterType === "Etapa") {
-                return String(ocp.etapaNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
-            }
-            if (this.state.filterType === "Parametro") {
-                return String(ocp.parametroNome).toLowerCase().startsWith(this.state.actualFilter.toLowerCase())
-            }
-            if (this.state.filterType === "Status") {
-                if (String("Corrigir").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
-                    if (!ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
-                        return true
-                    } else {
-                        return false
-                    }
 
-                }
-                if (String("Reanalisar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
-                    if (ocp.statusCorrecao && ocp.analiseStatus && !ocp.statusOCP) {
-                        return true
-                    } else {
-                        return false
-                    }
-
-                }
-                if (String("Aprovar").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
-                    if (ocp.statusCorrecao && !ocp.analiseStatus && !ocp.statusOCP) {
-                        return true
-                    } else {
-                        return false
-                    }
-
-
-                }
-                if (String("Encerrada").toLowerCase().startsWith(this.state.actualFilter.toLowerCase())) {
-                    if (ocp.statusCorrecao && !ocp.analiseStatus && ocp.statusOCP) {
-                        return true
-                    } else {
-                        return false
-                    }
-
-
-                }
-
-            }
-            return true
-
-        })
-
-        if (!this.state.showEncerradas) {
-            this.setState({
-                filteredOcps: filteredByFilterType.filter((ocp) => {
-                    return ocp.statusOCP === false
-                })
-            })
-        } else {
-            this.setState({
-                filteredOcps: filteredByFilterType
-            })
-        }
-
-
-    }
-
-
-
-
-
-
-
-
-
+    
 
     render() {
 
@@ -238,7 +164,7 @@ class OrdensDeCorreção extends Component {
                             <Form.Check checked={this.props.ocp.showEncerradas} label={"Encerradas?"} onChange={(event) => this.props.showEncerradas(event.target.checked)} ></Form.Check>
                         </Col>
                         <Col md="auto">
-                            <GenericDropDown display={"Tipo"} margin={10} itens={["Processo", "Etapa", "Parametro", "Status"]} onChoose={(filterType) => this.props.setFilterType(filterType)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                            <GenericDropDown display={ this.props.ocp.filterType|| "Tipo"} margin={10} va itens={["Processo", "Etapa", "Parametro"]} onChoose={(filterType) => this.props.setFilterType(filterType)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
                     </Row>
                 </Container>

@@ -23,7 +23,7 @@ import IndicadorDeAnalise from './Screens/IndicadorDeAnalise';
 import IndicadorDeOmp from './Screens/IndicadorDeOmp';
 import Login from './Screens/Login';
 import MultiRegistroAnalise from './Screens/MultiRegistroAnalise';
-import Omp from './Screens/Omp';
+import Trocas from './Screens/Trocas';
 import OrdensDeCorreção from './Screens/OrdensDeCorreção';
 import OrdensDeManutencao from './Screens/OrdensDeManutencao';
 import PortalFormularios from './portalForms/PortalFormularios';
@@ -121,7 +121,7 @@ class App extends React.Component {
             <Route path='/RegistroAnaliseMulti' exact={true} component={MultiRegistroAnalise} />
             <Route path='/RegistroTempo' exact={true} component={RegistroDetempos} />
             <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
-            <Route path='/OMP' exact={true} component={Omp} />
+            <Route path='/Trocas' exact={true} component={Trocas} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
             <Route path='/IndicadorDeOmp' exact={true} component={IndicadorDeOmp} />
             <Route path='/IndicadorDeGastos' exact={true} component={IndicadorDeGastos} />
@@ -172,7 +172,7 @@ class App extends React.Component {
             <Route path='/RegistroAnaliseMulti' exact={true} component={MultiRegistroAnalise} />
             <Route path='/RegistroTempo' exact={true} component={RegistroDetempos} />
             <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
-            <Route path='/OMP' exact={true} component={Omp} />
+            <Route path='/Trocas' exact={true} component={Trocas} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
             <Route path='/IndicadorDeOmp' exact={true} component={IndicadorDeOmp} />
             <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao } />

@@ -20,8 +20,9 @@ const TableHead = () => {
                 <th>Id</th>
                 <th>Processo</th>
                 <th>Etapa</th>
-                <th><div>Data Planejada</div><div>Area Planejada</div></th>
                 <th><div>Data Realizada</div><div>Area Realizada</div></th>
+                <th><div>Data Planejada</div><div>Area Planejada</div></th>
+                <th>Frenquencia</th>
                 <th>Produtos</th>
                 <th>Status</th>
                 <th>Selecionar</th>
@@ -51,8 +52,9 @@ const TableBody = props => {
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
                 <td className="align-middle">{troca.etapaNome}</td>
-                <td className="align-middle"><div>{`${FormatDate(dataPlanejada)}`}</div><div>{troca.areaPlanejada}</div></td>
                 <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div><div>{troca.areaRealizada}</div></td>
+                <td className="align-middle"><div>{`${FormatDate(dataPlanejada)}`}</div><div>{troca.areaPlanejada}</div></td>
+                <td className="align-middle"><div>{`A cada ${troca.frequencia} ${troca.frequencia > 1 ? troca.escalaFrequencia + "s" : troca.escalaFrequencia} `}</div></td>
                 <td className="align-middle" key={troca.id} >
                     {troca.listaMontagens.map((pair, index) => {
                         return <div key={index}>{`${pair[0]} : ${pair[1]} ${pair[2]}`} </div>
@@ -79,7 +81,7 @@ const TableBody = props => {
 
 
 
-const Omp = () => {
+const Trocas = () => {
 
     const [markAllHide, setMarkAllHide] = useState()
     const dispatch = useDispatch()
@@ -99,6 +101,7 @@ const Omp = () => {
             return Number(troca.processoId) === Number(processoIdTarefaRef)
         })
         dispatch(UpdateTarefasFiltered(trocasFiltered))
+        filterByGlobalProcesso(processoIdTarefaRef)
         
     }, [processoIdTarefaRef,trocas])
 
@@ -246,7 +249,7 @@ const Omp = () => {
                 <Table className="table table-hover" >
                     <TableHead></TableHead>
                     <tbody>
-                        <TableBody setTrocaToList={addTrocaIdToChoosedIdList} trocas={trocas} trocasChoosed={trocasChoosed} trocasFiltered={trocasFiltered} ></TableBody>
+                     {TableBody({setTrocaToList: addTrocaIdToChoosedIdList,trocas,trocasChoosed,trocasFiltered})}
                     </tbody>
 
 
@@ -262,4 +265,4 @@ const Omp = () => {
 
 }
 
-export default withToastManager(withMenuBar(Omp))
+export default withToastManager(withMenuBar(Trocas))

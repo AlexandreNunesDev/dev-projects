@@ -156,6 +156,10 @@ const ScqApi = {
         return http.delete("analise/" + analiseId)
 
     },
+    deleteAdicao: (id) => {
+        return http.delete(`/adicao/${id}`)
+
+    },
     UpdataAnaliseData: (analiseId,data) => {
         return http.put("analise/"+data+"/"+ analiseId)
 
@@ -173,17 +177,17 @@ const ScqApi = {
 
     },
     
-    CriarAnalise: (analise,reduxFunctions) => {
-        return http.post("analise", analise, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarAnalise: (analise) => {
+        return http.post("analise", analise)
 
     },
-    CriarAnaliseComOcpAdicao: (analise,reduxFunctions) => {
-        return http.post("analiseComOcpAdicao", analise, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarAnaliseComOcpAdicao: (analise,) => {
+        return http.post("analiseComOcpAdicao", analise)
 
     },
 
-    CriarAnaliseComOcpAcao: (analise,reduxFunctions) => {
-        return http.post("analiseComOcpAcao", analise, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+    CriarAnaliseComOcpAcao: (analise) => {
+        return http.post("analiseComOcpAcao", analise)
 
     },
     CriarMontagem: (montagem) => {
@@ -373,7 +377,7 @@ const ScqApi = {
     },
 
     FinalizarOmp: (omp,reduxFunctions ) => {
-        return http.post("omp/finalizar", omp, { headers: { "reduxFunctions": reduxFunctions.map(func=> func.name) } })
+        return http.post("omp/finalizar", omp)
 
     },
     GenerateOmp: () => {
@@ -396,6 +400,7 @@ const ScqApi = {
     UpLoadAreaWithExcel : (dInicial,dFinal,form) => {
         return http.post(`uploadArea/${dInicial}/${dFinal}`, form, { headers: {"Content-Type": "multipart/form-data" } }).then((response) => { return response});
     },
+    
 
     DownloadOcp : (ocpId) => {
         http.interceptors.response.eject(respInter);

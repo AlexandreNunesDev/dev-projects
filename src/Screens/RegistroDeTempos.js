@@ -11,6 +11,7 @@ import { formatIsoDate } from "../Services/stringUtils"
 import { WebSocketContext } from "../websocket/wsProvider"
 import dispatchers from "../mapDispatch/mapDispathToProps"
 import { withToastManager } from "react-toast-notifications/dist/ToastProvider"
+import { toastOk } from "../Services/toastType"
 
 const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
 
@@ -30,9 +31,12 @@ const RegistroDetempos = (props) => {
     const [resultado, setResultado] = useState()
     const [status, setStatus] = useState()
     const [data, setData] = useState()
+    const [indexToReset,setIndexToReset] = useState()
+    const [timeFieldToReset,setTimeFieldToReset] = useState()
     let dataFieldRef = useRef(null)
     const context = useContext(WebSocketContext)
     const dispatch = useDispatch()
+    let {toastManager} = props
     const reducerFunctions = dispatchers()
 
 
@@ -92,13 +96,15 @@ const RegistroDetempos = (props) => {
     }
 
 
-    const onTimeSaveClick = (timeField) => {
+    const onTimeSaveClick = (timeField,index) => {
         const resultadoAtual = calculateResultado(timeField)
         const parametroAtual = parametros.filter(parametro => String(parametro.id) === String(timeField.parametroId))[0]
         setResultado(calculateResultado(timeField))
         setStatus(getAnaliseStatus(resultadoAtual, parametroAtual))
         setParametro(parametroAtual)
         setShowCheckOut(true)
+        setIndexToReset(index)
+        setTimeFieldToReset(timeField)
 
     }
 
@@ -122,16 +128,18 @@ const RegistroDetempos = (props) => {
         if (analista) {
             nomeAnalista = analista;
         } else {
-
             nomeAnalista = userName
         }
-
         const analise = { id: null, parametroId: parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: data }
-
         ScqApi.CriarAnalise(analise).then(res => {
-            responseHandler(res, props, "Analise", 'success', context, [reducerFunctions.loadParametros, reducerFunctions.loadOcps])
+            responseHandler(res,toastManager ,"Analise",toastOk,resetClick(indexToReset,timeFieldToReset))
         })
+        setShowCheckOut(false)
 
+    }
+
+    const resetClick = (index, timeField) => {
+        dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))
     }
 
     const getAnaliseStatus = (resultado, parametro) => {
@@ -218,7 +226,7 @@ const RegistroDetempos = (props) => {
                                                 <td className="align-middle"><Form.Label>{timeField.label}</Form.Label></td>
                                                 <td className="align-middle"><Form.Control value={timeField.isMeasuring ? `${(timeTick.getTime() / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos` : `${(new Date(timeField.finalTime) / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos`}></Form.Control></td>
                                                 <td className="align-middle">{timeField.isMeasuring ? <Button style={{ backgroundColor: "ORANGE", borderColor: "ORANGE", alignmentBaseline: "center" }} onClick={() => startStopMeasureProcess(timeField, false)}>Parar</Button> : <Button style={{ borderColor: intervaloProcesso ? "BLUE" : "BLUE" }} onClick={() => startStopMeasureProcess(timeField, true)}>Iniciar</Button>}</td>
-                                                <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
+                                                <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => resetClick(index, timeField)}>Resetar</Button></td>
                                                 <td className="align-middle"><Button disabled={true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => console.log("Abrir Checkout analise")}>Salvar</Button></td>
                                             </tr>
                                         )
@@ -229,7 +237,7 @@ const RegistroDetempos = (props) => {
                                                 <td className="align-middle"><Form.Control value={timeField.isMeasuring ? `${(timeTick.getTime() / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos` : `${(new Date(timeField.finalTime) / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos`}></Form.Control></td>
                                                 <td className="align-middle">{timeField.isMeasuring ? <Button style={{ backgroundColor: "ORANGE", borderColor: "ORANGE", alignmentBaseline: "center" }} onClick={() => startStopMeasureProcess(timeField, false)}>Parar</Button> : <Button style={{ borderColor: intervaloProcesso ? "BLUE" : "BLUE" }} onClick={() => startStopMeasureProcess(timeField, true)}>Iniciar</Button>}</td>
                                                 <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
-                                                <td className="align-middle"><Button disabled={isFinished(timeField) ? false : true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => onTimeSaveClick(timeField)}>Salvar</Button></td>
+                                                <td className="align-middle"><Button disabled={isFinished(timeField) ? false : true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => onTimeSaveClick(timeField,index)}>Salvar</Button></td>
                                             </tr>
                                         )
                                     }

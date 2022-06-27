@@ -1,7 +1,7 @@
 
 import { capitalize } from '../Services/stringUtils'
 
-export const responseHandler = (response, toastManager, type, toastType) => {
+export const responseHandler = (response, toastManager, type, toastType,dimissCallBack) => {
 
     const toastCall = 'add' in toastManager ? toastManager.add : toastManager.addToast
 
@@ -15,7 +15,7 @@ export const responseHandler = (response, toastManager, type, toastType) => {
         return false;
     } else {
         toastManager && toastCall(buildMsg(type, response, toastType), {
-            appearance: toastType || 'success', autoDismiss: true
+            appearance: toastType || 'success', autoDismiss: true , onDismiss : dimissCallBack
         })
         return true
     }

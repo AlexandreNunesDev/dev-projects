@@ -1,7 +1,7 @@
 
 import { combineReducers } from 'redux'
 import optionsReducer from './baseSelectionsReducer'
-import ocpsReducer from './ocpReducers'
+import ocpsReducer from './ocpsReducers'
 import globalConfig from './globalConfigReducer'
 import notificationsReducer from './notificationsReducer'
 import timeReducer from './timeReducers'
@@ -10,6 +10,7 @@ import ordensDeManutencaoReducer from './ordensDeManutencaoReducer'
 import dynamicFormsReducer from './dyanamicForms'
 import ompReducer from './ompReducer'
 import singleAnaliseReducer from './singleAnaliseReducer'
+import adicaoReducer from './adicaoReducer'
 
 
 
@@ -25,7 +26,9 @@ const appReducer = combineReducers({
    cadastroOmpReducer : ompReducer,
    ordensDeManutencao : ordensDeManutencaoReducer,
    formsReducer : dynamicFormsReducer,
-   singleAnalise : singleAnaliseReducer
+   singleAnalise : singleAnaliseReducer,
+   adicaoForm : adicaoReducer
+
 })
 
 
@@ -36,9 +39,9 @@ const rootReducer = (state, action) => {
     state.ocp = undefined
     state.global = undefined
     state.notification = undefined
-    state.historicoReducer = undefined
     state.cadastroOmpReducer = undefined
     state.formsReducer = undefined
+    state.adicaoForm = undefined
    }
  
    return appReducer(state, action);
