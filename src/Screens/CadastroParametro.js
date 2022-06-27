@@ -9,7 +9,6 @@ import FormulaBuilder from '../Components/FormulaBuilder';
 import { withToastManager } from 'react-toast-notifications';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import { withMenuBar } from '../Hocs/withMenuBar';
-
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { connect } from 'react-redux';

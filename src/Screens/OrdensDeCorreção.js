@@ -153,15 +153,8 @@ class OrdensDeCorreção extends Component {
             <>
                 <Container >
                     <Row className="align-items-center">
-                        <Col md="auto">
-                            <Button style={{ margin: 10 }} onClick={() => this.props.history.push("/CadastroOcpLivre")} >Gerar OCP</Button>
-                        </Col>
                         <Col>
                             <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} value={this.props.ocp.actualFilter} onChange={(event) => this.props.setActualFilter(event.target.value)}></Form.Control>
-                        </Col>
-
-                        <Col md="auto" className="text-center text-md-right"  >
-                            <Form.Check checked={this.props.ocp.showEncerradas} label={"Encerradas?"} onChange={(event) => this.props.showEncerradas(event.target.checked)} ></Form.Check>
                         </Col>
                         <Col md="auto">
                             <GenericDropDown display={ this.props.ocp.filterType|| "Tipo"} margin={10} va itens={["Processo", "Etapa", "Parametro"]} onChoose={(filterType) => this.props.setFilterType(filterType)} style={{ margin: 10 }}>Filtrar </GenericDropDown>

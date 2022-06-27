@@ -9,9 +9,7 @@ import CadastroTurno from './Screens/CadastrarTurno';
 import CadastroDeTarefasDeManutencao from './Screens/CadastroDeTarefasDeManutencao';
 import CadastroEtapa from './Screens/CadastroEtapa';
 import CadastroMateriaPrima from './Screens/CadastroMateriaPrima';
-import CadastroDeOcpAcao from './Screens/CadastroOcpWithAcao';
 import CadastroDeOcpAdicao from './Screens/CadastroOcpWithAdicao';
-import CadastroDeOcpLivre from './Screens/CadastroOcpWithLivre';
 import CadastroOmp from './Screens/CadastroOmp';
 import CadastroParametro from './Screens/CadastroParametro';
 import CadastroProcesso from './Screens/CadastroProcesso';
@@ -36,8 +34,7 @@ import VerOmp from './Screens/VerOmp';
 import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
 import EditarEtapa from './ScreensEdicao/EditarEtapa';
 import EditarMateriaPrima from './ScreensEdicao/EditarMateriaPrima';
-import EditarOcpAcao from './ScreensEdicao/EditarOcpAcao';
-import EditarOcpAdicao from './ScreensEdicao/EditarOcpAdicao';
+import EditarOcpAdicao from './ScreensEdicao/EditarOcp';
 import EditarParametro from './ScreensEdicao/EditarParametro';
 import EditarProcesso from './ScreensEdicao/EditarProcesso';
 import EditarTroca from './ScreensEdicao/EditarTroca';
@@ -129,9 +126,7 @@ class App extends React.Component {
             <Route path='/CadastroEtapa' exact={true} component={CadastroEtapa} />
             <Route path='/CadastroParametro' exact={true} component={CadastroParametro} />
             <Route path='/CadastroMateriaPrima' exact={true} component={CadastroMateriaPrima} />
-            <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao } />
-            <Route path='/CadastroOcpLivre' exact={true} component={CadastroDeOcpLivre} />
-            <Route path='/CadastroOcpAcao' exact={true} component={CadastroDeOcpAcao} />
+            <Route path='/CadastroOcp' exact={true} component={CadastroDeOcpAdicao } />
             <Route path='/CadastroTroca' exact={true} component={CadastroTroca} />
             <Route path='/CadastroTarefasDeManutencao' exact={true} component={CadastroDeTarefasDeManutencao} />
             <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
@@ -145,8 +140,7 @@ class App extends React.Component {
             <Route path='/EditarTroca' exact={true} component={EditarTroca} />
             <Route path='/EditarTarefa' exact={true} component={EditaTarefasDeManutencao} />
             <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
-            <Route path='/EditarOcpAdicao' exact={true} component={EditarOcpAdicao} />
-            <Route path='/EditarOcpAcao' exact={true} component={EditarOcpAcao} />
+            <Route path='/EditarOcp' exact={true} component={EditarOcpAdicao} />
             <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
@@ -176,15 +170,12 @@ class App extends React.Component {
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
             <Route path='/IndicadorDeOmp' exact={true} component={IndicadorDeOmp} />
             <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao } />
-            <Route path='/CadastroOcpLivre' exact={true} component={CadastroDeOcpLivre} />
-            <Route path='/CadastroOcpAcao' exact={true} component={CadastroDeOcpAcao} />
             <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
             <Route path='/OrdensDeManutencao' exact={true} component={OrdensDeManutencao} />
             <Route path='/FinalizarOmp' exact={true} component={FinalizarOmp} />
             <Route path='/VerOmp' exact={true} component={VerOmp} />
             <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
-            <Route path='/EditarOcpAdicao' exact={true} component={EditarOcpAdicao} />
-            <Route path='/EditarOcpAcao' exact={true} component={EditarOcpAcao} />
+            <Route path='/EditarOcp' exact={true} component={EditarOcpAdicao} />
             <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />

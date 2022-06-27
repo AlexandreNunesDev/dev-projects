@@ -73,7 +73,7 @@ const MultiRegistroAnalise = (props) => {
     }
 
     const gerarOcp = () => {
-        history.push({ pathname: `/CadastroOcp${analiseToSave.parametro.menuType}`, state: analiseToSave })
+        history.push({ pathname: '/CadastroOcp' })
 
     }
 
@@ -117,10 +117,8 @@ const MultiRegistroAnalise = (props) => {
         <>
 
 
-
+            <Container>
             {analiseToSave && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={analiseToSave.resultado} parametro={analiseToSave.parametro} status={analiseToSave.status} salvarAnalise={() => salvarAnalise()} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
-            <Container style={{ marginTop: 20 }}>
-
                 <Row>
                     <GenericSelect selection={analiseForm.processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
                 </Row>
@@ -143,9 +141,10 @@ const MultiRegistroAnalise = (props) => {
                         </Form.Group>
                     </Col>
                 </Row>
-                <Container style={{ padding: 30 }}>
+                </Container>
+                    <div style={{padding : 12}}>
                     <h3>Registro de Analises</h3>
-                    <div className="table-responsive">
+                    <div className="table-responsive" >
                         <table>
                             <thead>
                                 <tr>
@@ -184,9 +183,10 @@ const MultiRegistroAnalise = (props) => {
 
 
                         </table>
+                        </div>
                     </div>
-                </Container>
-            </Container>
+                    
+                  
         </>
     )
 

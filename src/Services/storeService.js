@@ -4,13 +4,13 @@ export const optionsLoad = async (props, forceUpdade) => {
   if ((props.global.isAuth) && (!isTokenExpired(props.global.tokenExpiration))) {
     if (forceUpdade) {
       props.firstReload(false)
+      loadOcps(props)
       loadProcessos(props)
       loadEtapas(props)
       loadParametros(props)
       loadMateriasPrima(props)
       loadTrocas(props)
       loadTarefas(props)
-      loadOcps(props)
       loadNotifications(props)
       loadUnidades(props)
       loadTurnos(props)

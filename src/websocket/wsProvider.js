@@ -91,6 +91,7 @@ export default ({ children }) => {
             heartbeatOutgoing: 4000,
             onConnect: onConnect,
             onDisconnect: onDisconnect,
+            onWebSocketError : () =>  dispatchers(dispatch).setLogOut()
          
             
           });

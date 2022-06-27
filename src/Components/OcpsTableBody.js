@@ -1,14 +1,12 @@
-import React from 'react'
-import { connect } from "react-redux"
-import dispatchers from "../mapDispatch/mapDispathToProps"
-import mapToStateProps from "../mapStateProps/mapStateToProps"
-import { isMobile } from 'react-device-detect';
-import { Button } from 'react-bootstrap';
-import { downloadOcp } from "../Services/documentsDownload";
 import { Fragment } from 'react';
+import { Button } from 'react-bootstrap';
+import { isMobile } from 'react-device-detect';
+import { connect, useSelector } from "react-redux";
 import { useHistory } from 'react-router';
+import dispatchers from "../mapDispatch/mapDispathToProps";
+import mapToStateProps from "../mapStateProps/mapStateToProps";
+import { downloadOcp } from "../Services/documentsDownload";
 import { OnlyDate } from '../Services/stringUtils';
-import { useDispatch, useSelector } from 'react-redux'
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -25,8 +23,8 @@ const isSameDate = (actualDate, refDate) => {
 
 
 const buildAdicaoDetails = (ocp) => {
-    const lis = ocp.adicoesDto.map((adicao,index) => {
-       
+    const lis = ocp.adicoesDto.map((adicao, index) => {
+
 
         return (
             <li key={index} className="text-nowrap">{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
@@ -44,7 +42,7 @@ const buildAdicaoDetails = (ocp) => {
 }
 
 const buildAcaoDetails = (ocp) => {
-    let showAcao = ocp.acao === null ?  true : false
+    let showAcao = ocp.acao === null ? true : false
 
     return (
         <div>
@@ -64,15 +62,13 @@ const OcpsTableBody = (props) => {
 
     const history = useHistory()
     const ocpState = useSelector(state => state.ocp)
-    
+
 
     const editOcp = (ocp) => {
         props.ocpToEdit(ocp)
-        if (ocp.isAdicao) {
-            history.push("/EditarOcpAdicao")
-        } else {
-            history.push("/EditarOcpAcao")
-        }
+
+        history.push("/EditarOcp")
+
 
     }
 
@@ -198,7 +194,7 @@ const OcpsTableBody = (props) => {
 
                 <tr key={ocp.id}>
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                    {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
+                    {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
                     {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></th>}
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                     {
@@ -214,7 +210,7 @@ const OcpsTableBody = (props) => {
                     {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
                     {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
                     {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
-                    <td className="align-middle">{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp)}</td>
+                    <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
                     <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                 </tr>
             )
@@ -227,7 +223,7 @@ const OcpsTableBody = (props) => {
                     </tr>
                     <tr>
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button disabled={!ocp.isAdicao} size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></td>}
+                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></td>}
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                         {!isMobile ? <><td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
@@ -237,7 +233,7 @@ const OcpsTableBody = (props) => {
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax} ${ocp.unidade}`}</td>}
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado} ${ocp.unidade}`}</td>}
-                        <td className="align-middle">{ocp.adicoesDto.length === 0 ? buildAcaoDetails(ocp) : buildAdicaoDetails(ocp)}</td>
+                        <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
                         <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                     </tr>
                 </Fragment>
@@ -252,7 +248,7 @@ const OcpsTableBody = (props) => {
     })
 
     if (ocpState.ocps.length === 0) {
-        return <h1>Voce não possui correçoes</h1>
+        return <></>
     } else {
         return (
 

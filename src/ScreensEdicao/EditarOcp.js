@@ -33,7 +33,7 @@ const EditarOcpAdicao = (props) => {
     const { toastManager } = props
 
     useEffect(() => {
-        if (adicoes.length == 0) {
+        if (adicoes.length === 0) {
             let adicoesDtoToAdicoes = ocp.ocpToEdit.adicoesDto.map(adicaoDto => new Adicao(adicaoDto.id, adicaoDto.quantidade, adicaoDto.ocpId, adicaoDto.idMp, adicaoDto.unidade, adicaoDto.nomeMp))
             dispatcher(updateAdicoes([...adicoesDtoToAdicoes, ...adicoes]))
         }
@@ -73,7 +73,7 @@ const EditarOcpAdicao = (props) => {
     return (
         <>
             <Container style={{ marginTop: 20 }}>
-                <h1>{`Editar Ordem de Correcao : ${ocp.id}`}</h1>
+                <h1>{`Editar Ordem de Correcao : ${ocp.ocpToEdit.id}`}</h1>
                 <Form style={{ marginTop: 20 }}>
 
                     <Form.Row>

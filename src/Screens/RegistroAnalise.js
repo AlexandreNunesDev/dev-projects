@@ -54,7 +54,7 @@ const RegistroDeAnalise = (props) => {
             onParametroSelect(analiseToSave.parametroId)
             dispatch(setAnaliseToSave(analise))
         } else {
-            dispatch(setAnaliseToSave({ id:'', analista: analise.analista, resultado: '', status: '', parametroId: '', ocpId: '', observacaoAnalise: ''}))
+            dispatch(setAnaliseToSave({ id: '', analista: analise.analista, resultado: '', status: '', parametroId: '', ocpId: '', observacaoAnalise: '' }))
         }
 
     }, [])
@@ -138,16 +138,10 @@ const RegistroDeAnalise = (props) => {
 
     useEffect(() => {
         if (parametro) {
-            if (parametro.menuType === "Acao") {
-                setMenuTypeName(valueForm)
-
+            if (parametro.needCalculo) {
+                setMenuTypeName(titulaForm)
             } else {
-                if (parametro.unidade === "pH") {
-                    setMenuTypeName(valueForm)
-
-                } else {
-                    setMenuTypeName(titulaForm)
-                }
+                setMenuTypeName(valueForm)
             }
         }
 
@@ -187,13 +181,13 @@ const RegistroDeAnalise = (props) => {
 
 
     const gerarOcpReanalise = (history) => {
-        history.push('/CadastroOcp' + parametro.menuType)
+        history.push('/CadastroOcp')
 
     }
 
 
     const gerarOcp = (history) => {
-        history.push('/CadastroOcp' + parametro.menuType)
+        history.push('/CadastroOcp')
     }
 
 
