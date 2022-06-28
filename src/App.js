@@ -9,7 +9,7 @@ import CadastroTurno from './Screens/CadastrarTurno';
 import CadastroDeTarefasDeManutencao from './Screens/CadastroDeTarefasDeManutencao';
 import CadastroEtapa from './Screens/CadastroEtapa';
 import CadastroMateriaPrima from './Screens/CadastroMateriaPrima';
-import CadastroDeOcpAdicao from './Screens/CadastroOcpWithAdicao';
+import CadastroDeOcp from './Screens/CadastroOcp';
 import CadastroOmp from './Screens/CadastroOmp';
 import CadastroParametro from './Screens/CadastroParametro';
 import CadastroProcesso from './Screens/CadastroProcesso';
@@ -126,7 +126,7 @@ class App extends React.Component {
             <Route path='/CadastroEtapa' exact={true} component={CadastroEtapa} />
             <Route path='/CadastroParametro' exact={true} component={CadastroParametro} />
             <Route path='/CadastroMateriaPrima' exact={true} component={CadastroMateriaPrima} />
-            <Route path='/CadastroOcp' exact={true} component={CadastroDeOcpAdicao } />
+            <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp } />
             <Route path='/CadastroTroca' exact={true} component={CadastroTroca} />
             <Route path='/CadastroTarefasDeManutencao' exact={true} component={CadastroDeTarefasDeManutencao} />
             <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
@@ -169,7 +169,7 @@ class App extends React.Component {
             <Route path='/Trocas' exact={true} component={Trocas} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
             <Route path='/IndicadorDeOmp' exact={true} component={IndicadorDeOmp} />
-            <Route path='/CadastroOcpAdicao' exact={true} component={CadastroDeOcpAdicao } />
+            <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp } />
             <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
             <Route path='/OrdensDeManutencao' exact={true} component={OrdensDeManutencao} />
             <Route path='/FinalizarOmp' exact={true} component={FinalizarOmp} />
