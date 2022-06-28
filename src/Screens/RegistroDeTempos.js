@@ -204,7 +204,8 @@ const RegistroDetempos = (props) => {
                         </Form.Group>
                     </Col>
                 </Row>
-                <Container style={{ padding: 30 }}>
+                </Container>
+                <div style={{padding : 12}}>
                     <h3>Registro de Tempos</h3>
 
                     <div className="table-responsive">
@@ -248,8 +249,8 @@ const RegistroDetempos = (props) => {
 
                         </Table>
                     </div>
-                </Container>
-            </Container>
+                    </div>
+                
         </>
     )
 

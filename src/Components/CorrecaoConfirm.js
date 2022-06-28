@@ -20,19 +20,6 @@ const CorrecaoConfirm = (props) => {
       });
   }
   
-  const buildAcaoDetails = (ocp) => {
-
-        
-        return(
-                  <Form.Row>
-                    <Form.Label><BsDot size={36} ></BsDot>{`${ocp.acao} prazo ${ocp.prazo}`}</Form.Label>
-                  </Form.Row>)
-           
-     
-  }
-
-
-
 
     return (
       <>
@@ -44,10 +31,10 @@ const CorrecaoConfirm = (props) => {
         </Modal.Header>
         <Modal.Body>
             
-              {props.ocp.adicoesDto.length === 0 ? buildAcaoDetails(props.ocp) : buildAdicaoDetails(props.ocp.adicoesDto)}
+              {buildAdicaoDetails(props.ocp.adicoesDto)}
          
             <Form.Row>
-                <Form.Label>Digite numero da {props.correcaoType}</Form.Label>
+                <Form.Label>Confirme o numero da OCP</Form.Label>
             </Form.Row>
             <Form.Row>
                  <Form.Control onChange={(event) => setCodigo(event.target.value)}></Form.Control>

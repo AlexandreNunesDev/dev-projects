@@ -95,7 +95,7 @@ class OrdensDeCorreção extends Component {
 
     redirectAnalise = (history, analise, ocpId) => {
         this.props.setSingleAnalise(analise)
-        history.push("/RegistroAnalise", {reanalise : true})
+        history.push("/RegistroAnalise", { reanalise: true })
     }
 
     getAproveDetails = (ocp) => {
@@ -107,14 +107,9 @@ class OrdensDeCorreção extends Component {
     }
 
 
-    correcaoConfirm = (isOcp, ocpId, isAdicao) => {
+    correcaoConfirm = (isOcp, ocpId) => {
         if (isOcp) {
-            if (isAdicao) {
-                ScqApi.AdicaoCorrigir(ocpId, [this.props.loadOcps]).then(res => responseHandler(res, this.state.toastManager, "Correcao", toastOk))
-            } else {
-                ScqApi.AcaoCorrigir(ocpId, [this.props.loadOcps]).then(res => responseHandler(res, this.state.toastManager, "Correcao", toastOk))
-
-            }
+            ScqApi.AdicaoCorrigir(ocpId, [this.props.loadOcps]).then(res => responseHandler(res, this.state.toastManager, "Correcao", toastOk))
         } else {
             this.state.toastManager.add("Codigo OCP inserido estado errado", {
                 appearance: 'error', autoDismiss: true
@@ -144,7 +139,7 @@ class OrdensDeCorreção extends Component {
     }
 
 
-    
+
 
     render() {
 
@@ -157,7 +152,7 @@ class OrdensDeCorreção extends Component {
                             <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} value={this.props.ocp.actualFilter} onChange={(event) => this.props.setActualFilter(event.target.value)}></Form.Control>
                         </Col>
                         <Col md="auto">
-                            <GenericDropDown display={ this.props.ocp.filterType|| "Tipo"} margin={10} va itens={["Processo", "Etapa", "Parametro"]} onChoose={(filterType) => this.props.setFilterType(filterType)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                            <GenericDropDown display={this.props.ocp.filterType || "Tipo"} margin={10} va itens={["Processo", "Etapa", "Parametro"]} onChoose={(filterType) => this.props.setFilterType(filterType)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
                         </Col>
                     </Row>
                 </Container>

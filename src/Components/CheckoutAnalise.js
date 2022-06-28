@@ -13,20 +13,11 @@ const CheckOutAnalise = (props) => {
   let history = useHistory();
 
 
-  const checkOpen = () => {
-    if ((props.parametro?.cantBeUsed) && (!props.analiseId)) {
-      const { toastManager } = props
-      toastManager.add("Este parametro possui correcoes pendentes", {
-        appearance: 'warning', autoDismiss: true
-      })
-    } else {
-      handleShow()
-    }
-  }
+
 
   return (
     <>
-      <Button variant="primary" hidden={props.hide || false} disabled={props.valid} style={{ margin: 5 }} onClick={() => checkOpen()}>
+      <Button variant="primary" hidden={props.hide || false} disabled={props.valid} style={{ margin: 5 }} onClick={() =>  handleShow()}>
         Salvar
       </Button>
       <Modal size={"lg"} show={props.showCheckOut || show} onHide={props.showCheckOut == ! null ? props.closeCheckOut : handleClose}>

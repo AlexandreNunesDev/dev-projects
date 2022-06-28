@@ -13,6 +13,7 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { formatIsoDate } from '../Services/stringUtils';
 import { clear, setAnaliseToSave } from '../Reducers/singleAnaliseReducer';
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -40,6 +41,7 @@ const RegistroDeAnalise = (props) => {
     const [showCheckOut, setShowCheckOut] = useState(false)
     const [calcDisabled, setCalcDisabled] = useState(true)
     const dispatch = useDispatch()
+    const history = useHistory()
     const dataFieldRef = useRef(null)
 
 
@@ -152,7 +154,7 @@ const RegistroDeAnalise = (props) => {
 
     const salvarAnalise = () => {
         const { toastManager } = props
-        ScqApi.CriarAnalise(analiseToSave, [dispatchers().loadParametros, dispatchers().loadOcps]).then(res => {
+        ScqApi.CriarAnalise(analiseToSave).then(res => {
             responseHandler(res, toastManager, "Analise", 'success')
         })
     }
@@ -161,7 +163,8 @@ const RegistroDeAnalise = (props) => {
 
     const salvarReanalise = () => {
         const { toastManager } = props
-        ScqApi.EditarAnalise(analiseToSave, [dispatchers().loadParametros, dispatchers().loadOcps]).then((res) => responseHandler(res, toastManager, "Analise", 'info'))
+        ScqApi.EditarAnalise(analiseToSave).then((res) => responseHandler(res, toastManager, "Analise", 'info'))
+        history.push("/OrdensDeCorrecao")
 
     }
 
