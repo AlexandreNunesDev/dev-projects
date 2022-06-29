@@ -30,6 +30,9 @@ const MultiRegistroAnalise = (props) => {
     const [showData, setShowData] = useState()
     const [showCheckOut, setShowCheckOut] = useState()
     const [data, setData] = useState()
+    const [nomeParametro, setNomeParametro] = useState()
+    const [etapa, setEtapa] = useState()
+    const [turno, setTurno] = useState()
     let dataFieldRef = useRef(null)
     const context = useContext(WebSocketContext)
     const reducerFunctions = dispatchers()
@@ -48,20 +51,30 @@ const MultiRegistroAnalise = (props) => {
 
     }
 
+    const filterFields = (parametros, fieldToFilter, valueToFilter) => {
+        return parametros.filter(parametro => {
+            if (String(parametro[fieldToFilter]).toLocaleLowerCase().startsWith(valueToFilter.toLocaleLowerCase())) {
+                return true
+            } else {
+                return false
+            }
+        })
+    }
+
 
     useEffect(() => {
-        let analiseFields = parametros.filter(parametro => {
-            if ((Number(parametro.processoId) === Number(analiseForm.processoId))) {
-                return true
-            }
-        }).map((parametro) => {
+        let filteredFields = filterFields(parametros, "processoId", analiseForm.processoId)
+        if (nomeParametro) filteredFields = filterFields(filteredFields, "nome", nomeParametro)
+        if (etapa) filteredFields = filterFields(filteredFields, "etapaNome", etapa)
+        if (turno) filteredFields = filterFields(filteredFields, "turno", turno)
+        let analiseFields = filteredFields.map((parametro) => {
             let analiseField = analiseForm.analiseFields.filter(analiseField => Number(analiseField.parametro.id) === Number(parametro.id))[0]
             let analiseFieldUpdate = { ...analiseField }
             analiseFieldUpdate.parametro = parametro;
             return analiseFieldUpdate
         })
         dispatcher(actions.loadFieldAnalise(analiseFields))
-    }, [parametros])
+    }, [parametros, nomeParametro, etapa,turno])
 
 
     const salvarAnalise = () => {
@@ -92,7 +105,7 @@ const MultiRegistroAnalise = (props) => {
         analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, analiseFieldCheckOut.parametro)
 
         setShowCheckOut(true)
-        let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data,ocpId: null, observacaoAnalise: '', parametro : analiseFieldCheckOut.parametro  }
+        let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data, ocpId: null, observacaoAnalise: '', parametro: analiseFieldCheckOut.parametro }
         dispatcher(setAnaliseToSave(analiseCheckout))
     }
 
@@ -118,7 +131,7 @@ const MultiRegistroAnalise = (props) => {
 
 
             <Container>
-            {analiseToSave && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={analiseToSave.resultado} parametro={analiseToSave.parametro} status={analiseToSave.status} salvarAnalise={() => salvarAnalise()} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
+                {analiseToSave && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={analiseToSave.resultado} parametro={analiseToSave.parametro} status={analiseToSave.status} salvarAnalise={() => salvarAnalise()} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
                 <Row>
                     <GenericSelect selection={analiseForm.processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
                 </Row>
@@ -126,6 +139,27 @@ const MultiRegistroAnalise = (props) => {
                     <Form.Group>
                         <Form.Control value={analista} placeholder={userName} onChange={(event) => setAnalista(event.target.value)}></Form.Control>
                     </Form.Group>
+                </Row>
+                <h3>Filtros</h3>
+                <Row>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Filtrar por nome de Etapa:</Form.Label>
+                            <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => setEtapa(event.target.value)}></Form.Control>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Filtrar por nome de parametro:</Form.Label>
+                            <Form.Control value={nomeParametro} placeholder={"filtra por nome de parametro"} onChange={(event) => setNomeParametro(event.target.value)}></Form.Control>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Filtrar por nome de Turno:</Form.Label>
+                            <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => setTurno(event.target.value)}></Form.Control>
+                        </Form.Group>
+                    </Col>
                 </Row>
                 <Row>
                     <Col style={{ marginBottom: 10 }}>
@@ -141,52 +175,52 @@ const MultiRegistroAnalise = (props) => {
                         </Form.Group>
                     </Col>
                 </Row>
-                </Container>
-                    <div style={{padding : 12}}>
-                    <h3>Registro de Analises</h3>
-                    <div className="table-responsive" >
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: "center" }}>Frequencia</th>
-                                    <th style={{ textAlign: "center" }}>Data Plenejada</th>
-                                    <th style={{ textAlign: "center" }}>Turno</th>
-                                    <th style={{ textAlign: "center" }}>Etapa</th>
-                                    <th style={{ textAlign: "center" }}>Parametro</th>
-                                    <th style={{ textAlign: "center" }}>Minimo</th>
-                                    <th style={{ textAlign: "center" }}>Maximo</th>
-                                    <th style={{ textAlign: "center" }}>Unidade</th>
-                                    <th style={{ textAlign: "center" }}>Valor</th>
-                                    <th style={{ textAlign: "center" }}>Ação</th>
-                                </tr>
-                            </thead>
+            </Container>
+            <div style={{ padding: 12 }}>
+                <h3>Registro de Analises</h3>
+                <div className="table-responsive" >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style={{ textAlign: "center" }}>Frequencia</th>
+                                <th style={{ textAlign: "center" }}>Data Plenejada</th>
+                                <th style={{ textAlign: "center" }}>Turno</th>
+                                <th style={{ textAlign: "center" }}>Etapa</th>
+                                <th style={{ textAlign: "center" }}>Parametro</th>
+                                <th style={{ textAlign: "center" }}>Minimo</th>
+                                <th style={{ textAlign: "center" }}>Maximo</th>
+                                <th style={{ textAlign: "center" }}>Unidade</th>
+                                <th style={{ textAlign: "center" }}>Valor</th>
+                                <th style={{ textAlign: "center" }}>Ação</th>
+                            </tr>
+                        </thead>
 
-                            <tbody>
-                                {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
-                                    return (
-                                        <tr hidden={!analiseField.parametro.habilitado} key={analiseField.index} >
-                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.parametro.frequencia} / ${analiseField.parametro.escalaFrequencia}`}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.parametro.dataPlanejada)}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ fontWeight: !analiseField.parametro.analiseHoje && "BOLD" , color: !analiseField.parametro.analiseHoje ? "RED" : "BLACK", textAlign: "center" }} >{!analiseField.parametro.analiseHoje ? "Atrasado" : analiseField.parametro.turno}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{analiseField.parametro.etapaNome}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.nome}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMin}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMax}</Form.Label></td>
-                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.unidade}</Form.Label></td>
-                                            <td>{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
-                                            <td className="align-middle"><Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button></td>
-                                        </tr>
-                                    )
+                        <tbody>
+                            {analiseForm.processoId && analiseForm.analiseFields.map((analiseField, index) => {
+                                return (
+                                    <tr hidden={!analiseField.parametro.habilitado} key={analiseField.index} >
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.parametro.frequencia} / ${analiseField.parametro.escalaFrequencia}`}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.parametro.dataPlanejada)}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.parametro.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{analiseField.parametro.turno}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{analiseField.parametro.etapaNome}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.nome}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMin}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMax}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.unidade}</Form.Label></td>
+                                        <td>{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
+                                        <td className="align-middle"><Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button></td>
+                                    </tr>
+                                )
 
-                                })}
-                            </tbody>
+                            })}
+                        </tbody>
 
 
-                        </table>
-                        </div>
-                    </div>
-                    
-                  
+                    </table>
+                </div>
+            </div>
+
+
         </>
     )
 

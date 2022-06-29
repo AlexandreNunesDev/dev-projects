@@ -8,11 +8,13 @@ import AdicaopH from '../Components/AdicaopH';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { loadOcps } from '../Services/storeService'
 import { WebSocketContext } from '../websocket/wsProvider';
+import AdicaoForm from '../Components/AdicaoForm';
+import { clear, updateAdicoes } from '../Reducers/adicaoReducer';
 
 
 
@@ -27,18 +29,18 @@ const CadastroDeOcpAdicao = (props) => {
     let history = useHistory();
     const [parametro, setParametro] = useState()
     const context = useContext(WebSocketContext)
-    const [materiasPrima, setMateriasPrima] = useState()
     const [mpQtds, setMpQtd] = useState([])
     const [responsavel, setResponsavel] = useState('')
     const [observacao, setObservacao] = useState('')
     const [etapa, setEtapa] = useState()
-    const [correcaoArray, setCorrecaoArray] = useState([])
-    const [adicaoMenu, setAdicaoMenu] = useState()
+    const dispatcher = useDispatch()
     const [loading] = useState(false)
     const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
     const parametros = useSelector(state => state.options.parametros)
     const etapas = useSelector(state => state.options.etapas)
     const materiasPrim = useSelector(state => state.options.materiasPrima)
+    const adicoes = useSelector(state => state.adicaoForm.adicoes)
+    const { toastManager } = props
     let unidade = ""
 
 
@@ -50,90 +52,23 @@ const CadastroDeOcpAdicao = (props) => {
         param.unidade === "pH" ? unidade = "" : unidade = param.unidade
         setEtapa(etapa)
         setParametro(param)
-        setMateriasPrima(materiasPrima)
     }, [])
 
-    useEffect(() => {
-        materiasPrima && calcularCorrecaoArray()
-    }, [materiasPrima])
-
-    useEffect(() => {
-        if (parametro) {
-            if (String(parametro.unidade) === "pH") {
-                setAdicaoMenu(<AdicaopH setMpQtd={saveMpQtd}></AdicaopH>)
-            } else {
-                setAdicaoMenu(<AdicaoComposition unidadeParametro={parametro.unidade} mps={materiasPrima} setMpQtd={saveMpQtd} correcaoArray={correcaoArray}></AdicaoComposition>)
-            }
-        }
-    }, [correcaoArray, parametro])
 
 
-    const saveMpQtd = (quantidade, mpId, unidade, index) => {
-        let tempoMpQtd = mpQtds
-        if (Number(quantidade) > 0) {
-            console.log(quantidade, mpId, unidade)
-
-            tempoMpQtd.splice(index, 1, `${mpId}:${quantidade}:${unidade}`)
-
-            setMpQtd(tempoMpQtd)
-
-        } else {
-            tempoMpQtd.splice(index, 1)
-            setMpQtd(tempoMpQtd)
-        }
-
-    }
-
-    const calcularCorrecaoArray = () => {
-        let tempCorrecaoArray = []
-        let correcaoTotal = 0
-        let nominal = (parametro.pMax + parametro.pMin) / 2
-
-        //Itero sobre todas as materias primas da Etapa do parametro que esta em analise
-        materiasPrima && materiasPrima.forEach((mp => {
-            //Se a formula do parametro contem o fator titulometrico da materia prima sera gerado analise com base no resultado da concentracao
-            if (String(parametro.formula).includes(mp.fatorTitulometrico)) {
-
-                let valorCorrecao = 0
-                if (analiseToSave.resultado < nominal) {
-                    valorCorrecao = (etapa.volume * (nominal - analiseToSave.resultado)) / 1000
-                    correcaoTotal = correcaoTotal + valorCorrecao
-                }
-                let pairCorrecaoMp = `${mp.id}:${Math.round(valorCorrecao * 100) / 100}`
-                tempCorrecaoArray = tempCorrecaoArray.concat(pairCorrecaoMp)
-                setCorrecaoArray(tempCorrecaoArray)
-            } else {
-                //Se o fator titulometri nao contem na formula do parametro então sera considerado a proporção entrar os valores de montagem
-                etapa.proportionMps.forEach((proportion) => {
-                    //Pra cada iteração cria uma par de "mpId:qtd"
-                    let pairCorreMp
-                    // reinicia a variavel valorCorrecao para sera  calculada novamente para Materia prima
-                    let valorCorrecao
-                    let pair = String(proportion).split(":")
-                    //Verifican se a materia prima é a mesma da do token de proporçao de montagem
-                    if (String(mp.id) === String(pair[0])) {
-                        //Se sim verifica se a proporcao é igual a 1.0 , o que quer dizer que so existe essa materia prima
-                        valorCorrecao = (etapa.volume * (nominal - analiseToSave.resultado)) / 1000
-                        valorCorrecao = valorCorrecao * pair[1]
-                        pairCorreMp = `${mp.id}:${Math.round(valorCorrecao)}`
-                        if (Number(valorCorrecao) > 0) {
-                            tempCorrecaoArray = tempCorrecaoArray.concat(pairCorreMp)
-                            setCorrecaoArray(tempCorrecaoArray)
-                        }
-
-                    }
-                })
-
-
-            }
-        }))
-
+    const deleteAdicao = (adicaoId) => {
+        ScqApi.deleteAdicao(adicaoId).then(res => {
+            let adicoesDtoCopy = [...adicoes]
+            dispatcher(updateAdicoes(adicoesDtoCopy.filter(addDto => Number(addDto.id) !== Number(adicaoId))))
+            toastManager.add(`Adicao ${adicaoId || ""} deletada com sucesso`, { type: "info", autoDismiss: true })
+        })
+        dispatcher(clear())
     }
 
 
 
     const saveOcp = () => {
-        let analiseCopy = {...analiseToSave}
+        let analiseCopy = { ...analiseToSave }
         if (analiseCopy.resultado < parametro?.pMin || analiseCopy.resultado > parametro?.pMax) {
             analiseCopy.status = 'fofe'
         } else if ((analiseCopy.resultado > parametro?.pMinT && analiseCopy.resultado < parametro?.pMaxT)) {
@@ -141,9 +76,10 @@ const CadastroDeOcpAdicao = (props) => {
         } else {
             analiseCopy.status = 'foft'
         }
-        const { toastManager } = props
-        const fullAnaliseForm = { ...analiseCopy, responsavel: responsavel, observacao: observacao, mpQtds: mpQtds }
-        ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm, [props.loadParametros, props.loadOcps]).then((res) => { responseHandler(res, toastManager, "OrdemDeCorrecao", 'success')
+        
+        const fullAnaliseForm = { ...analiseCopy, responsavel: responsavel, observacao: observacao, adicoes: adicoes }
+        ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm, [props.loadParametros, props.loadOcps]).then((res) => {
+            responseHandler(res, toastManager, "OrdemDeCorrecao", 'success')
         }
         );
 
@@ -187,7 +123,7 @@ const CadastroDeOcpAdicao = (props) => {
 
                                 </Form.Row>
                             }
-                            {adicaoMenu && adicaoMenu}
+                            <AdicaoForm deleteAdicao={deleteAdicao}></AdicaoForm>
 
                             <Form.Row>
                                 <Form.Group as={Col}>

@@ -64,7 +64,6 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/Home">Home</Link>
                 <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
                 <NavDropdown title="Registros" id="basic-nav-dropdown">
-                  <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
                   <Link className="nav-link" to="/RegistroAnaliseMulti">Multi Registro de Analise</Link>
                   <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
                   <Link className="nav-link" to="/RegistroDeArea">Registro de Area</Link>
@@ -114,7 +113,6 @@ const MenuBar = () => {
               <Link className="nav-link" to="/Home">Home</Link>
               <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
               <NavDropdown title="Registros" id="basic-nav-dropdown">
-                <Link className="nav-link" to="/RegistroAnalise">Registro de Analise</Link>
                 <Link className="nav-link" to="/RegistroAnaliseMulti">Multi Registro de Analise</Link>
                 <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
               </NavDropdown>

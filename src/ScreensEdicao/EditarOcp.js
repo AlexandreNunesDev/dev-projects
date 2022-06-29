@@ -14,6 +14,7 @@ import Adicao from '../models/AdicaoModels';
 import { clear, updateAdicoes } from '../Reducers/adicaoReducer';
 import { responseHandler } from '../Services/responseHandler';
 import { toastInfo, toastWarn } from '../Services/toastType';
+import { isInsideFaixa } from '../Services/analiseService';
 
 
 
@@ -75,42 +76,26 @@ const EditarOcpAdicao = (props) => {
             <Container style={{ marginTop: 20 }}>
                 <h1>{`Editar Ordem de Correcao : ${ocp.ocpToEdit.id}`}</h1>
                 <Form style={{ marginTop: 20 }}>
-
                     <Form.Row>
-                        <Col>
-                            <Form.Group>
-                                <Col>
-                                    <Form.Label style={{ fontWeight: "bold" }}>Processo: </Form.Label>
-                                </Col>
-                                <Col>
-                                    <Form.Label>{ocp.ocpToEdit.processoNome}</Form.Label>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group>
-                                <Col>
-                                    <Form.Label style={{ fontWeight: "bold" }}>Etapa: </Form.Label>
-                                </Col>
-                                <Col>
-                                    <Form.Label>{ocp.ocpToEdit.etapaNome}</Form.Label>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                        <Col>
+                        <Form.Group xs={3} as={Col}>
+                            <Form.Label>Etapa : {ocp.ocpToEdit.etapaNome}</Form.Label>
+                        </Form.Group>
+                        <Form.Group xs={3} as={Col} >
+                            <Form.Label>Parametro : {`${ocp.ocpToEdit.parametroNome}`}</Form.Label>
+                        </Form.Group>
 
-                            <Form.Group>
-                                <Col>
-                                    <Form.Label style={{ fontWeight: "bold" }}>Parametro: </Form.Label>
-                                </Col>
-                                <Col>
-                                    <Form.Label>{ocp.ocpToEdit.parametroNome}</Form.Label>
-                                </Col>
-                            </Form.Group>
-                        </Col>
+                        <Form.Group xs={2} as={Col}>
+                            <Form.Label>Faixa Mininima : {`${ocp.ocpToEdit.pMin} ${ocp.ocpToEdit.unidade}`}</Form.Label>
+                        </Form.Group>
+                        <Form.Group xs={2} as={Col} >
+                            <Form.Label>Faixa Máxima : {`${ocp.ocpToEdit.pMax} ${ocp.ocpToEdit.unidade}`}</Form.Label>
+                        </Form.Group>
+                        <Form.Group xs={2} as={Col} >
+                            <Form.Label style={{ color: !isInsideFaixa(ocp.ocpToEdit) ? 'red' : 'black' }}>Resultado: {`${ocp.ocpToEdit.resultado} ${ocp.ocpToEdit.unidade}`}</Form.Label>
+                        </Form.Group>
 
                     </Form.Row>
-                    {/* <AdicaoFreeEdit></AdicaoFreeEdit> */}
+
                     <AdicaoForm deleteAdicao={deleteAdicao}></AdicaoForm>
                     <Form.Row>
                         <Form.Group as={Col}>
@@ -128,7 +113,7 @@ const EditarOcpAdicao = (props) => {
                         <Form.Group >
                             <Button style={{ margin: 2 }} onClick={() => {
                                 props.history.push("/OrdensDeCorrecao")
-                                 dispatcher(clear())
+                                dispatcher(clear())
                             }} >
                                 Cancelar
                             </Button>

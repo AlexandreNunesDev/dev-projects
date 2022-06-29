@@ -354,6 +354,10 @@ const ScqApi = {
         return http.get("montagens/" + etapaId)
 
     },
+    LoadCorrecaoDetail: (parametroId) => {
+        return http.get("/ocp/detail/" + parametroId)
+
+    },
 
     GeatUnidades: () => {
         return http.get("unidades")
