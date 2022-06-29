@@ -38,6 +38,9 @@ export const actions = {
     loadFieldAnalise : (data) => {return{type: "LOAD_FIELDANALISE" , payload: data}},
     setAnaliseToSave : (data) => {return{type: "ANALISE_TO_SAVE" , payload: data}},
     setProcessoIdAnaliseForm : (data) => {return{type: "ANALISE_PROCESSO_ID" , payload: data}},
+    setParametroNome : (data) => {return{type: "PARAMETRO_NOME" , payload: data}},
+    setEtapaNomeForm : (data) => {return{type: "ETAPA_NOME" , payload: data}},
+    setTurnoAnaliseForm : (data) => {return{type: "TURNO" , payload: data}},
     
 
 }

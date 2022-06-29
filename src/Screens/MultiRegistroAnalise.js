@@ -30,9 +30,10 @@ const MultiRegistroAnalise = (props) => {
     const [showData, setShowData] = useState()
     const [showCheckOut, setShowCheckOut] = useState()
     const [data, setData] = useState()
-    const [nomeParametro, setNomeParametro] = useState("")
-    const [etapa, setEtapa] = useState("")
-    const [turno, setTurno] = useState("")
+    const parametroNome = useSelector(state => state.analiseReducer.parametroNome)
+    const etapa = useSelector(state => state.analiseReducer.etapa)
+    const turno = useSelector(state => state.analiseReducer.turno)
+    const processoId = useSelector(state => state.analiseReducer.processoId)
     let dataFieldRef = useRef(null)
     const context = useContext(WebSocketContext)
     const reducerFunctions = dispatchers()
@@ -41,11 +42,7 @@ const MultiRegistroAnalise = (props) => {
 
 
     const onProcessoIdChoose = (processoId) => {
-        let analiseFields = parametros.filter(parametro => {
-            if ((Number(parametro.processoId) === Number(processoId))) {
-                return true
-            }
-        }).map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
+        let analiseFields = parametros.map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
 
         dispatcher(actions.loadFieldAnalise(analiseFields))
         dispatcher(actions.setProcessoIdAnaliseForm(processoId))
@@ -64,8 +61,8 @@ const MultiRegistroAnalise = (props) => {
 
 
     useEffect(() => {
-        let filteredFields = filterFields(parametros, "processoId", analiseForm.processoId)
-        if (nomeParametro) filteredFields = filterFields(filteredFields, "nome", nomeParametro)
+        let filteredFields = filterFields(parametros, "processoId", processoId)
+        if (parametroNome) filteredFields = filterFields(filteredFields, "nome", parametroNome)
         if (etapa) filteredFields = filterFields(filteredFields, "etapaNome", etapa)
         if (turno) filteredFields = filterFields(filteredFields, "turno", turno)
         let analiseFields = filteredFields.map((parametro) => {
@@ -75,7 +72,7 @@ const MultiRegistroAnalise = (props) => {
             return analiseFieldUpdate
         })
         dispatcher(actions.loadFieldAnalise(analiseFields))
-    }, [parametros, nomeParametro, etapa,turno])
+    }, [parametros,processoId, parametroNome, etapa,turno])
 
 
     const salvarAnalise = () => {
@@ -134,11 +131,11 @@ const MultiRegistroAnalise = (props) => {
             <Container>
                 {analiseToSave && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={analiseToSave.resultado} parametro={analiseToSave.parametro} status={analiseToSave.status} salvarAnalise={() => salvarAnalise()} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
                 <Row>
-                    <GenericSelect selection={analiseForm.processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
+                    <GenericSelect selection={processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
                 </Row>
                 <Row>
                     <Form.Group>
-                        <Form.Control value={analista} placeholder={userName} onChange={(event) => setAnalista(event.target.value)}></Form.Control>
+                        <Form.Control value={analista} placeholder={userName} onChange={(event) => dispatcher(actions.loadFieldAnalise(event.target.value))}></Form.Control>
                     </Form.Group>
                 </Row>
                 <h3>Filtros</h3>
@@ -146,19 +143,19 @@ const MultiRegistroAnalise = (props) => {
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                            <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => setEtapa(event.target.value)}></Form.Control>
+                            <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(actions.setEtapaNomeForm(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de parametro:</Form.Label>
-                            <Form.Control value={nomeParametro} placeholder={"filtra por nome de parametro"} onChange={(event) => setNomeParametro(event.target.value)}></Form.Control>
+                            <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(actions.setParametroNome(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de Turno:</Form.Label>
-                            <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => setTurno(event.target.value)}></Form.Control>
+                            <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(actions.setTurnoAnaliseForm(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
                 </Row>

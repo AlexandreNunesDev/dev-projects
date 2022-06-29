@@ -4,10 +4,13 @@ import produce from "immer"
 
 
 const initialState = {
-    processoId : null,
+    processoId: null,
+    etapaNome: '',
+    turno: '',
+    parametroNome: '',
     analiseToSave: null,
     analiseFields: []
-    
+
 }
 
 const loadState = () => {
@@ -31,6 +34,15 @@ const analiseReducer = produce(
                 break
             case "ANALISE_PROCESSO_ID":
                 draft.processoId = action.payload
+                break
+            case "PARAMETRO_NOME":
+                draft.parametroNome = action.payload
+                break
+            case "ETAPA_NOME":
+                draft.etapaNome = action.payload
+                break
+            case "TURNO":
+                draft.turno = action.payload
                 break
 
         }
