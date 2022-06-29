@@ -30,9 +30,9 @@ const MultiRegistroAnalise = (props) => {
     const [showData, setShowData] = useState()
     const [showCheckOut, setShowCheckOut] = useState()
     const [data, setData] = useState()
-    const [nomeParametro, setNomeParametro] = useState()
-    const [etapa, setEtapa] = useState()
-    const [turno, setTurno] = useState()
+    const [nomeParametro, setNomeParametro] = useState("")
+    const [etapa, setEtapa] = useState("")
+    const [turno, setTurno] = useState("")
     let dataFieldRef = useRef(null)
     const context = useContext(WebSocketContext)
     const reducerFunctions = dispatchers()
@@ -46,6 +46,7 @@ const MultiRegistroAnalise = (props) => {
                 return true
             }
         }).map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
+
         dispatcher(actions.loadFieldAnalise(analiseFields))
         dispatcher(actions.setProcessoIdAnaliseForm(processoId))
 
