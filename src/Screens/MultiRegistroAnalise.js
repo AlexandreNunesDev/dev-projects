@@ -15,6 +15,7 @@ import { buildAnaliseInputMenu } from "../Services/analiseMenuBuilder"
 import { getAnaliseStatus } from "../Services/analiseMenuBuilder"
 import { useHistory } from "react-router"
 import { clear, setAnaliseToSave } from "../Reducers/singleAnaliseReducer"
+import { isMobile } from "react-device-detect"
 
 const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
 
@@ -43,36 +44,42 @@ const MultiRegistroAnalise = (props) => {
 
     const onProcessoIdChoose = (processoId) => {
         let analiseFields = parametros.map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
-
         dispatcher(actions.loadFieldAnalise(analiseFields))
-        dispatcher(actions.setProcessoIdAnaliseForm(processoId))
+        
 
     }
 
-    const filterFields = (parametros, fieldToFilter, valueToFilter) => {
-        return parametros.filter(parametro => {
-            if (String(parametro[fieldToFilter]).toLocaleLowerCase().startsWith(valueToFilter.toLocaleLowerCase())) {
-                return true
-            } else {
-                return false
-            }
-        })
+    const filterFields = (parametros, fieldToFilter, valueToFilter, isString) => {
+        if (isString) {
+            return parametros.filter(parametro => {
+                if (String(parametro[fieldToFilter]).toLocaleLowerCase().startsWith(valueToFilter.toLocaleLowerCase())) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+        } else {
+            return parametros.filter(parametro => {
+                if (parametro[fieldToFilter] == (valueToFilter.toLocaleLowerCase())) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+        }
+
+
     }
 
 
     useEffect(() => {
-        let filteredFields = filterFields(parametros, "processoId", processoId)
-        if (parametroNome) filteredFields = filterFields(filteredFields, "nome", parametroNome)
-        if (etapa) filteredFields = filterFields(filteredFields, "etapaNome", etapa)
-        if (turno) filteredFields = filterFields(filteredFields, "turno", turno)
-        let analiseFields = filteredFields.map((parametro) => {
-            let analiseField = analiseForm.analiseFields.filter(analiseField => Number(analiseField.parametro.id) === Number(parametro.id))[0]
-            let analiseFieldUpdate = { ...analiseField }
-            analiseFieldUpdate.parametro = parametro;
-            return analiseFieldUpdate
-        })
+        let filteredParametro = filterFields(parametros, "processoId", processoId)
+        if (parametroNome) filteredParametro = filterFields(filteredParametro, "nome", parametroNome, true)
+        if (etapa) filteredParametro = filterFields(filteredParametro, "etapaNome", etapa, true)
+        if (turno) filteredParametro = filterFields(filteredParametro, "turno", turno, true)
+        let analiseFields = filteredParametro.map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
         dispatcher(actions.loadFieldAnalise(analiseFields))
-    }, [parametros,processoId, parametroNome, etapa,turno])
+    }, [parametros, processoId, parametroNome, etapa, turno])
 
 
     const salvarAnalise = () => {
@@ -129,17 +136,21 @@ const MultiRegistroAnalise = (props) => {
 
 
             <Container>
+                <Container>
+                <h2>Registro de Analise</h2>
                 {analiseToSave && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={analiseToSave.resultado} parametro={analiseToSave.parametro} status={analiseToSave.status} salvarAnalise={() => salvarAnalise()} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
                 <Row>
-                    <GenericSelect selection={processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
+                    <GenericSelect selection={processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => dispatcher(actions.setProcessoIdAnaliseForm(processoId))} ></GenericSelect>
                 </Row>
                 <Row>
                     <Form.Group>
+                        <Form.Label>Nome Analista:</Form.Label>
                         <Form.Control value={analista} placeholder={userName} onChange={(event) => dispatcher(actions.loadFieldAnalise(event.target.value))}></Form.Control>
                     </Form.Group>
                 </Row>
+                </Container>
                 <h3>Filtros</h3>
-                <Row>
+                {!isMobile ? <Row>
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de Etapa:</Form.Label>
@@ -158,7 +169,34 @@ const MultiRegistroAnalise = (props) => {
                             <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(actions.setTurnoAnaliseForm(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
-                </Row>
+                </Row> :
+                    <>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Filtrar por nome de Etapa:</Form.Label>
+                                    <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(actions.setEtapaNomeForm(event.target.value))}></Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Filtrar por nome de parametro:</Form.Label>
+                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(actions.setParametroNome(event.target.value))}></Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Filtrar por nome de Turno:</Form.Label>
+                                    <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(actions.setTurnoAnaliseForm(event.target.value))}></Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </>
+                }
                 <Row>
                     <Col style={{ marginBottom: 10 }}>
                         <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => setShowData(event.target.checked)} />
@@ -174,8 +212,8 @@ const MultiRegistroAnalise = (props) => {
                     </Col>
                 </Row>
             </Container>
-            <div style={{ padding: 12 }}>
-                <h3>Registro de Analises</h3>
+            <div  style={{ padding: 12 }}>
+                <h3 style={{textAlign : "center" }} >Registro de Analises</h3>
                 <div className="table-responsive" >
                     <table>
                         <thead>

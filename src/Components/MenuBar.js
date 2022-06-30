@@ -54,8 +54,7 @@ const MenuBar = () => {
       <>
         <div className='App tc f3'>
           <Navbar bg="light" expand="lg" >
-            {/* <Navbar.Brand href="/home"  >S.C.Q</Navbar.Brand> */}
-            {<NavItem style={{ marginRight: 20 }}>{version}</NavItem>}
+            <NavItem style={{ marginRight: 20 }}>{version}</NavItem>
             <Image height={50} width={80} src={scqlogo} rounded />
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -64,7 +63,7 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/Home">Home</Link>
                 <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
                 <NavDropdown title="Registros" id="basic-nav-dropdown">
-                  <Link className="nav-link" to="/RegistroAnaliseMulti">Multi Registro de Analise</Link>
+                  <Link className="nav-link" to="/RegistroAnaliseMulti">Registro de Analise</Link>
                   <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
                   <Link className="nav-link" to="/RegistroDeArea">Registro de Area</Link>
                 </NavDropdown>
@@ -102,7 +101,7 @@ const MenuBar = () => {
       <>
 
         <Navbar bg="light" expand="lg">
-        {<NavItem style={{ marginRight: 20 }}>{version}</NavItem>}
+        <NavItem style={{ marginRight: 20 }}>{version}</NavItem>
           <Image height={50} width={80} src={scqlogo} rounded />
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -113,7 +112,7 @@ const MenuBar = () => {
               <Link className="nav-link" to="/Home">Home</Link>
               <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
               <NavDropdown title="Registros" id="basic-nav-dropdown">
-                <Link className="nav-link" to="/RegistroAnaliseMulti">Multi Registro de Analise</Link>
+                <Link className="nav-link" to="/RegistroAnaliseMulti">Registro de Analise</Link>
                 <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
               </NavDropdown>
               <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
