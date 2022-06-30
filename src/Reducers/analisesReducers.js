@@ -4,7 +4,7 @@ import produce from "immer"
 
 
 const initialState = {
-    processoId: null,
+    processoId: '',
     etapaNome: '',
     turno: '',
     parametroNome: '',

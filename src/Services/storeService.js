@@ -11,7 +11,6 @@ export const optionsLoad = async (props, forceUpdade) => {
       loadMateriasPrima(props)
       loadTrocas(props)
       loadTarefas(props)
-      loadNotifications(props)
       loadUnidades(props)
       loadTurnos(props)
       loadOrdensDeManutencao(props)

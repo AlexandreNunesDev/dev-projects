@@ -31,7 +31,15 @@ export const FormatDate = (data) => {
 export const OnlyDate = (data) => {
   const inverseDate = String(data).split("T")
   const onlyDate = inverseDate[0].split("-")
+  const time = inverseDate[1]
   return `${onlyDate[2] + "-" + onlyDate[1] + "-" + onlyDate[0]}` 
+
+}
+
+export const onlyTime = (data) => {
+  const inverseDate = String(data).split("T")
+  const time = inverseDate[1].split(".")
+  return time[0] 
 
 }
 

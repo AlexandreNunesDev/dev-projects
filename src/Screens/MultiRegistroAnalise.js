@@ -13,7 +13,7 @@ import { analiseFieldFactory } from "../models/fieldModels"
 import { clear, setAnaliseToSave } from "../Reducers/singleAnaliseReducer"
 import { buildAnaliseInputMenu, getAnaliseStatus } from "../Services/analiseMenuBuilder"
 import { responseHandler } from "../Services/responseHandler"
-import { formatIsoDate, OnlyDate } from "../Services/stringUtils"
+import { formatIsoDate, OnlyDate, onlyTime } from "../Services/stringUtils"
 import { WebSocketContext } from "../websocket/wsProvider"
 
 const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
@@ -28,13 +28,13 @@ const MultiRegistroAnalise = (props) => {
     const dispatcher = useDispatch()
     const [analista, setAnalista] = useState()
     const [showData, setShowData] = useState()
-    const [mostrarEmDia, setMostrarEmDia] = useState()
+    const [mostrarEmDia, setMostrarEmDia] = useState(true)
     const [showCheckOut, setShowCheckOut] = useState()
     const [data, setData] = useState()
     const [filteredAnaliseFields, setFiltedAnaliseFields] = useState([])
     const analiseFields = useSelector(state => state.analiseReducer.analiseFields)
     const parametroNome = useSelector(state => state.analiseReducer.parametroNome)
-    const etapa = useSelector(state => state.analiseReducer.etapa)
+    const etapa = useSelector(state => state.analiseReducer.etapaNome)
     const turno = useSelector(state => state.analiseReducer.turno)
     const processoId = useSelector(state => state.analiseReducer.processoId)
     let dataFieldRef = useRef(null)
@@ -76,16 +76,19 @@ const MultiRegistroAnalise = (props) => {
                 dispatcher(actions.loadFieldAnalise(analiFields))
                 setFiltedAnaliseFields(analiFields)
             } else {
-                let filteredParametro
-                if (processoId) filteredParametro = filterFields(parametros, "processoId", processoId)
+                let filteredParametro = parametros
+                if (processoId) filteredParametro = filterFields(filteredParametro, "processoId", processoId)
                 if (parametroNome) filteredParametro = filterFields(filteredParametro, "nome", parametroNome, true)
                 if (etapa) filteredParametro = filterFields(filteredParametro, "etapaNome", etapa, true)
                 if (turno) filteredParametro = filterFields(filteredParametro, "turno", turno, true)
                 analiFields = filteredParametro.map((parametro) => {
                     let analiseField = analiseFields.filter(analiseField => Number(analiseField.parametro.id) === Number(parametro.id))[0]
-                    let analiseFieldUpdate = { ...analiseField }
-                    analiseFieldUpdate.parametro = parametro;
-                    return analiseFieldUpdate
+                    return analiseField
+                })
+                analiFields.sort((a, b) => {
+                    let tempo1 = new Date(a.parametro.dataPlanejada).getTime()
+                    let tempo2 = new Date(b.parametro.dataPlanejada).getTime()
+                    return tempo1 - tempo2
                 })
 
                 setFiltedAnaliseFields(analiFields)
@@ -111,7 +114,7 @@ const MultiRegistroAnalise = (props) => {
 
     const onchangeAnaliseField = (analiseField) => {
         const index = filteredAnaliseFields.findIndex(fieldAnalise => Number(fieldAnalise.parametro.id) === Number(analiseField.parametro.id))
-        const stateCpy = [...filteredAnaliseFields].map(fi => ({...fi}))
+        const stateCpy = [...filteredAnaliseFields].map(fi => ({ ...fi }))
         if (index !== -1) stateCpy[index] = analiseField
         setFiltedAnaliseFields(stateCpy)
     }
@@ -228,7 +231,7 @@ const MultiRegistroAnalise = (props) => {
                         </Form.Group>
                     </Col>
                     <Col style={{ marginBottom: 10 }}>
-                        <Form.Check type="checkbox" label="Mostrar Analises em dia?" onChange={(event) => setMostrarEmDia(event.target.checked)} />
+                        <Form.Check type="checkbox" checked={mostrarEmDia} label="Mostrar Analises em dia?" onChange={(event) => setMostrarEmDia(event.target.checked)} />
                     </Col>
                 </Row>
             </Container>
@@ -254,12 +257,12 @@ const MultiRegistroAnalise = (props) => {
                         <tbody>
                             {filteredAnaliseFields.map((analiseField, index) => {
                                 return (
-                                    <tr hidden={!mostrarEmDia && analiseField.parametro.analiseHoje} key={analiseField.parametro.id} >
+                                    <tr hidden={!mostrarEmDia && analiseField.parametro.analiseHoje && analiseField.parametro.habilitado} key={analiseField.parametro.id} >
                                         <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.parametro.frequencia} / ${analiseField.parametro.escalaFrequencia}`}</Form.Label></td>
                                         <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.parametro.dataPlanejada)}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.parametro.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{analiseField.parametro.turno}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.parametro.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{`${analiseField.parametro.turno} ${onlyTime(analiseField.parametro.dataPlanejada)}`}</Form.Label></td>
                                         <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{analiseField.parametro.etapaNome}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{`${analiseField.parametro.nome} ${analiseField.parametro.id}`}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.nome}</Form.Label></td>
                                         <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMin}</Form.Label></td>
                                         <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMax}</Form.Label></td>
                                         <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.unidade}</Form.Label></td>
