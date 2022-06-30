@@ -22,7 +22,7 @@ const valueForm = (analiseField, { onValueChange, hideLabel }) => {
 }
 
 const formTitula = (analiseField, { onValueChange, hideLabel }) => {
-    return <TitulaForm value={analiseField.valor} hideLabel={hideLabel} onCalculaResultado={(valor) => analiseFieldChange(valor, analiseField, onValueChange)} formula={analiseField.parametro.formula}></TitulaForm>
+    return <TitulaForm value={ analiseField.valor} hideLabel={hideLabel} onCalculaResultado={(valor) => analiseFieldChange(valor, analiseField, onValueChange)} formula={analiseField.parametro.formula}></TitulaForm>
 }
 
 

@@ -15,7 +15,7 @@ const TitulaForm = (props) => {
             refText.current.value = props.value
             setisHidden(true)
         }
-    }, [])
+    }, [props])
 
     const calcular = () => {
         ScqApi.Calcular(props.formula, viragem).then(res => {

@@ -42,6 +42,7 @@ const rootReducer = (state, action) => {
     state.cadastroOmpReducer = undefined
     state.formsReducer = undefined
     state.adicaoForm = undefined
+    state.analiseReducer = undefined
    }
  
    return appReducer(state, action);
