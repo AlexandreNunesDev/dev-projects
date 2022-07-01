@@ -165,7 +165,7 @@ const MultiRegistroAnalise = (props) => {
                     <Row>
                         <Form.Group>
                             <Form.Label>Nome Analista:</Form.Label>
-                            <Form.Control value={analista} placeholder={userName} onChange={(event) => dispatcher(actions.loadFieldAnalise(event.target.value))}></Form.Control>
+                            <Form.Control value={analista} placeholder={userName} onChange={(event) => setAnalista(event.target.value)}></Form.Control>
                         </Form.Group>
                     </Row>
                 </Container>
