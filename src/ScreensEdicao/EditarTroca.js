@@ -57,7 +57,7 @@ const EditarTroca = (props) => {
    
 
     const salvarTroca = (troca) => {
-        ScqApi.EditarTroca(troca).then(res => responseHandler(res, toastManager,"Troca",toastInfo,context, [dispatchers().loadTrocas,dispatchers().loadOcps]))
+        ScqApi.EditarTroca(troca).then(res => responseHandler(res, toastManager,"Troca",toastInfo,context))
     }
     
 
