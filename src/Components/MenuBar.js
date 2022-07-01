@@ -19,30 +19,6 @@ const MenuBar = () => {
   const dispatch = useDispatch()
 
 
-
-
-
-  const showNotificationsReponse = (message) => {
-    const { toastManager } = this.props;
-    const status = message.split(":");
-    let appearance = status.shift();
-    let trueMessage = Array(status).pop();
-    toastManager.add(trueMessage, {
-      appearance: appearance, autoDismiss: true
-    })
-  }
-
-
-
-
-  const resolveNotificacao = (notificacao) => {
-    ScqApi.EditarNotificacao(notificacao.id).then(data => showNotificationsReponse(data))
-    const newNotificationList = notifications.filter((notification) => {
-      return notification.id !== notificacao.id
-    })
-  }
-
-
   const logUserOut = () => {
     dispatch(logOut())
     dispatch({ type: "eraseStore" })
@@ -89,7 +65,7 @@ const MenuBar = () => {
               </Nav>
 
             </Navbar.Collapse>
-
+            <NavItem style={{color : global.isConectedSocket ? 'green' : 'red', marginRight: 20 }}>{global.isConectedSocket ? "Conectado" : "Offline"}</NavItem>
             {!isMobile && <NavItem style={{ marginRight: 20 }}><BiUserCircle size={24} /> Usuario: {global.userName}</NavItem>}
           </Navbar>
 
@@ -127,7 +103,7 @@ const MenuBar = () => {
 
           </Navbar.Collapse>
 
-
+          <NavItem style={{color : global.isConectedSocket ? 'green' : 'red', marginRight: 20 }}>{global.isConectedSocket ? "Conectado" : "Offline"}</NavItem>
           {!isMobile && <NavItem style={{ marginRight: 20 }}> <BiUserCircle size={24} /> Usuario: {global.userName}</NavItem>}
 
 

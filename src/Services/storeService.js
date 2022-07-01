@@ -13,7 +13,7 @@ export const optionsLoad = async (props, forceUpdade) => {
       loadTarefas(props)
       loadUnidades(props)
       loadTurnos(props)
-      loadOrdensDeManutencao(props)
+      loadOmps(props)
     }
 
   }
@@ -31,8 +31,8 @@ export const loadTurnos = (props) => {
   props.loadTurnos()
 }
 
-export const loadOrdensDeManutencao = (props) => {
-  props.loadOrdensDeManutencao()
+export const loadOmps = (props) => {
+  props.loadOmps()
 }
 
 export const loadProcessos = (props) => {

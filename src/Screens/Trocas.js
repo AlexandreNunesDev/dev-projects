@@ -8,8 +8,7 @@ import { useToasts } from "react-toast-notifications/dist/ToastProvider";
 import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
 import { withMenuBar } from "../Hocs/withMenuBar";
-import { setProcessoTarefaRef } from "../Reducers/globalConfigReducer";
-import { setTrocasFilterType, UpdateTarefasFiltered, UpdateTrocasChoosed, UpdateTrocasFiltered } from "../Reducers/ompReducer";
+import { setBuildingOmp, setProcessoId, setTrocasFilterType, UpdateTarefasFiltered, UpdateTrocasChoosed, UpdateTrocasFiltered } from "../Reducers/ompReducer";
 
 
 const TableHead = () => {
@@ -64,18 +63,14 @@ const TableBody = props => {
                     <Form.Label style={{ color: troca.pendente ? 'red' : 'green', fontWeight: 'bolder' }} >{troca.pendente ? "Pendente" : 'Em dia'}</Form.Label>
                 </td>
                 <td className="align-middle" >
-
                     <Form.Check checked={check || false} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
                     <Form.Label>Trocar ?</Form.Label>
-
-
-
                 </td>
             </tr>
         )
     })
 
-    return trocaTd
+    return <tbody>{trocaTd}</tbody>
 
 }
 
@@ -85,10 +80,11 @@ const Trocas = () => {
 
     const [markAllHide, setMarkAllHide] = useState()
     const dispatch = useDispatch()
-    const processoIdTarefaRef = useSelector(state => state.global.processoIdTarefaRef)
-    const trocasChoosed = useSelector(state => state.cadastroOmpReducer.trocas)
-    const trocasFiltered = useSelector(state => state.cadastroOmpReducer.trocasFiltered)
-    const filterType = useSelector(state => state.cadastroOmpReducer.trocasFilterType)
+    const buildingOmp = useSelector(state => state.omp.buildingOmp)
+    const processoId = useSelector(state => state.omp.processoId)
+    const trocasChoosed = useSelector(state => state.omp.trocas)
+    const trocasFiltered = useSelector(state => state.omp.trocasFiltered)
+    const filterType = useSelector(state => state.omp.trocasFilterType)
     const processos = useSelector(state => state.options.processos)
     const trocas = useSelector(state => state.options.trocas)
     const toastManager = useToasts()
@@ -98,12 +94,11 @@ const Trocas = () => {
 
     useEffect(() => {
         const trocasFiltered = trocas.filter(troca => {
-            return Number(troca.processoId) === Number(processoIdTarefaRef)
+            return Number(troca.processoId) === Number(processoId)
         })
-        dispatch(UpdateTarefasFiltered(trocasFiltered))
-        filterByGlobalProcesso(processoIdTarefaRef)
-        
-    }, [processoIdTarefaRef,trocas])
+        dispatch(UpdateTrocasFiltered(trocasFiltered))
+
+    }, [processoId, trocas])
 
 
 
@@ -130,8 +125,9 @@ const Trocas = () => {
 
     }
 
-    const buildTrocasChoosedArray = () => {
+    const startEditing = () => {
         if (validateTrocasByProcesso(trocasChoosed)) {
+            dispatch(setBuildingOmp(true))
             history.push("/CadastroOmp")
         } else {
             toastManager.addToast("Voce não pode gerar uma OMP de diferentes processos", {
@@ -163,7 +159,7 @@ const Trocas = () => {
 
     const markAll = () => {
         dispatch(UpdateTrocasChoosed(trocasFiltered))
-    
+
     }
 
     const unmarkAll = () => {
@@ -171,7 +167,7 @@ const Trocas = () => {
     }
 
     const filterAction = (filterText) => {
-        let tofilterTrocas = processoIdTarefaRef ? filterByGlobalProcesso(processoIdTarefaRef) : trocas
+        let tofilterTrocas = processoId ? filterByGlobalProcesso(processoId) : trocas
         if (filterText !== "") {
             dispatch(UpdateTrocasFiltered(
                 tofilterTrocas.filter((troca) => {
@@ -194,10 +190,10 @@ const Trocas = () => {
                 })
             ))
 
-        
-            
+
+
         } else {
-            processoIdTarefaRef ? filterByGlobalProcesso(processoIdTarefaRef) : dispatch(UpdateTrocasFiltered(trocas))
+            processoId ? filterByGlobalProcesso(processoId) : dispatch(UpdateTrocasFiltered(trocas))
 
         }
 
@@ -206,7 +202,6 @@ const Trocas = () => {
 
     const filterByGlobalProcesso = (processoId) => {
         let filteredTrocas = trocas.filter(troca => Number(troca.processoId) === Number(processoId))
-        dispatch(setProcessoTarefaRef(processoId))
         dispatch(UpdateTrocasFiltered(filteredTrocas))
 
         return filteredTrocas
@@ -219,18 +214,18 @@ const Trocas = () => {
             <Row className="align-items-center">
 
                 <Col md="auto">
-                    <Button disabled={trocasChoosed.length !== 0 ? false : true} style={{ margin: 10 }} onClick={() => {
-                        buildTrocasChoosedArray()
-                    }}>Gerar OMP</Button>
+                    <Button disabled={trocasChoosed.length !== 0 ? false : true} style={{ margin: 10 , backgroundColor : buildingOmp && "ORANGE" , borderColor :  buildingOmp && "ORANGE" }} onClick={() => {
+                        startEditing()
+                    }}>{buildingOmp ? "Editar OMP" : "Gerar OMP"}</Button>
                 </Col>
 
-                <Col style={{ paddingTop: 20 }} md="auto">
-                    <GenericSelect noLabel={true} default={"--Selecione um Processo--"} selection={processoIdTarefaRef} onChange={(processoId) => filterByGlobalProcesso(processoId)} ops={processos} displayType={"nome"} returnType={"id"}></GenericSelect>
+                <Col hidden={buildingOmp} style={{ paddingTop: 20 }} md="auto">
+                    <GenericSelect noLabel={true} default={"--Selecione um Processo--"} selection={processoId} onChange={(processoId) => dispatch(setProcessoId(processoId))} ops={processos} displayType={"nome"} returnType={"id"}></GenericSelect>
                 </Col>
 
                 <Col md="auto">
-                    <Button  style={{ margin: 10 }} onClick={() => { markAll(); setMarkAllHide(true) }}>Selecionar Todos</Button>
-                    <Button style={{marginLeft : 12 }} onClick={() => { unmarkAll(); setMarkAllHide(false) }}>Desmarcar Todos</Button>
+                    <Button style={{ margin: 10 }} onClick={() => { markAll(); setMarkAllHide(true) }}>Selecionar Todos</Button>
+                    <Button style={{ marginLeft: 12 }} onClick={() => { unmarkAll(); setMarkAllHide(false) }}>Desmarcar Todos</Button>
                 </Col>
 
                 <Col>
@@ -244,15 +239,9 @@ const Trocas = () => {
                 </Col>
             </Row>
             <div className="table-responsive">
-
-
                 <Table className="table table-hover" >
                     <TableHead></TableHead>
-                    <tbody>
-                     {TableBody({setTrocaToList: addTrocaIdToChoosedIdList,trocas,trocasChoosed,trocasFiltered})}
-                    </tbody>
-
-
+                    <TableBody setTrocaToList={addTrocaIdToChoosedIdList} trocas={trocas} trocasChoosed={trocasChoosed} trocasFiltered={trocasFiltered}></TableBody>
                 </Table>
             </div>
 

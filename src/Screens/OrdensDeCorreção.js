@@ -1,21 +1,19 @@
-import React, { Component } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button, Row, Col, Form, Container } from "react-bootstrap";
-import ScqApi from "../Http/ScqApi";
-import CredentialConfirm from '../Components/CredentialConfirm'
-import CorrecaoConfirm from "../Components/CorrecaoConfirm";
-import { withToastManager } from "react-toast-notifications";
-import { withMenuBar } from "../Hocs/withMenuBar";
-import GenericDropDown from "../Components/GenericDropDown";
+import { Component } from "react";
+import { Col, Container, Form, Row, Table } from "react-bootstrap";
 import { isMobile } from 'react-device-detect';
-import mapStateToProps from "../mapStateProps/mapStateToProps"
 import { connect } from "react-redux";
-import dispatchers from "../mapDispatch/mapDispathToProps";
-import { WebSocketContext } from "../websocket/wsProvider";
+import { withToastManager } from "react-toast-notifications";
+import CredentialConfirm from '../Components/CredentialConfirm';
+import GenericDropDown from "../Components/GenericDropDown";
 import OcpsTableBody from "../Components/OcpsTableBody";
+import { withMenuBar } from "../Hocs/withMenuBar";
+import ScqApi from "../Http/ScqApi";
+import dispatchers from "../mapDispatch/mapDispathToProps";
+import mapStateToProps from "../mapStateProps/mapStateToProps";
 import { responseHandler } from "../Services/responseHandler";
 import { toastOk } from "../Services/toastType";
-import { store } from "../store";
+import { WebSocketContext } from "../websocket/wsProvider";
 
 
 
@@ -25,8 +23,7 @@ const TableHead = (props) => {
         <thead >
             <tr>
                 <th style={{ textAlign: "center" }}>Id</th>
-                {!isMobile && <th colSpan={2} style={{ textAlign: "center" }}>Açoes</th>}
-
+                {!isMobile && <th style={{ textAlign: "center" }}>Acao</th>}
                 <th style={{ textAlign: "center" }}>Processo</th>
                 {!isMobile ?
                     <>
@@ -138,6 +135,12 @@ class OrdensDeCorreção extends Component {
         return mostHeight;
     }
 
+    openCorrecaoDialog = (ocpToConfirm) => {
+        this.props.ocpToEdit(ocpToConfirm)
+
+        this.props.history.push("/CorrecaoConfirm")
+    }
+
 
 
 
@@ -158,16 +161,15 @@ class OrdensDeCorreção extends Component {
                 </Container>
 
                 <div className="table-responsive">
+                <h3 style={{ textAlign: "center" }} >Ordens de Correções</h3>
                     <Table id={"ocpTable"}>
                         <TableHead ></TableHead>
                         <tbody>
-                            <OcpsTableBody editarOcp={this.editOcp} openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.setState({ ocpToConfirm: ocpToConfirm, showCorrecaoConfirm: true })} reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></OcpsTableBody>
+                            <OcpsTableBody  openCredentialsConfirm={(ocpToAprove) => this.setState({ ocpToAprove: ocpToAprove, details: this.getAproveDetails(ocpToAprove) }, () => this.setState({ show: true }))} openCorrecaoConfirm={(ocpToConfirm) => this.openCorrecaoDialog(ocpToConfirm) } reanalisar={this.goToReanalise} aprovarOcp={this.aprovarOcp} history={this.props.history}></OcpsTableBody>
                         </tbody>
 
                     </Table>
                 </div>
-
-                {this.state.ocpToConfirm && <CorrecaoConfirm closeCorrecaoConfim={(value) => this.setState({ showCorrecaoConfirm: value })} show={this.state.showCorrecaoConfirm} statusCorrecao={this.state.ocpToConfirm.statusCorrecao} ocp={this.state.ocpToConfirm} correcaoConfirm={(isOcp, ocpId) => this.correcaoConfirm(isOcp, ocpId, this.state.ocpToConfirm.isAdicao)} correcaoType={this.state.ocpToConfirm.isAdicao ? "adicao" : "acao"}></CorrecaoConfirm>}
                 <CredentialConfirm details={this.state.details} aproveOcp={() => this.aprovarOcp()} show={this.state.show} closeCredentialConfirm={(value) => this.setState({ show: value })}  ></CredentialConfirm>
             </>
 

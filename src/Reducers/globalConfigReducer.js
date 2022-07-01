@@ -4,7 +4,6 @@ import { createSlice } from '@reduxjs/toolkit'
   const initialState = {
     loadedOptions : [],
     loading : false,
-    processoIdTarefaRef : '',
     firstReload : true,
     isAuth : false,
     tokenInfo : '',
@@ -14,7 +13,8 @@ import { createSlice } from '@reduxjs/toolkit'
     userEnable : '',
     googlKey : 'AIzaSyAwUkhGE3_YB8cT4706OKT-xi3RpvnL014',
     portalSheetApi : 'https://sheets.googleapis.com/v4/spreadsheets/1_RVYwW2QaWfaq3Ib-SOs6jo9qbGEbqh01rHRBrS2ewY/values',
-    headers : []
+    headers : [],
+    isConectedSocket : null
 }
 
 const globalConfig = createSlice({
@@ -39,11 +39,12 @@ const globalConfig = createSlice({
         state.userName = ''
         state.userEnable = ''
     },
-    setProcessoTarefaRef(state,action) {
-        state.processoIdTarefaRef = action.payload
+    setIsConnectedSocket(state,action) {
+      state.isConectedSocket = action.payload
     }
+
   },
 })
 
-export const { loadPositions,logIn,logOut, setProcessoTarefaRef } = globalConfig.actions
+export const { loadPositions,logIn,logOut, setIsConnectedSocket } = globalConfig.actions
 export default globalConfig.reducer

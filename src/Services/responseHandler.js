@@ -1,7 +1,7 @@
 
 import { capitalize } from '../Services/stringUtils'
 
-export const responseHandler = (response, toastManager, type, toastType,dimissCallBack) => {
+export const responseHandler = (response, toastManager, type, toastType, dimissCallBack) => {
 
     const toastCall = 'add' in toastManager ? toastManager.add : toastManager.addToast
 
@@ -15,7 +15,7 @@ export const responseHandler = (response, toastManager, type, toastType,dimissCa
         return false;
     } else {
         toastManager && toastCall(buildMsg(type, response, toastType), {
-            appearance: toastType || 'success', autoDismiss: true , onDismiss : dimissCallBack
+            appearance: toastType || 'success', autoDismiss: true, onDismiss: dimissCallBack
         })
         return true
     }
@@ -72,6 +72,8 @@ const buildMsg = (type, response, msgType) => {
         case "OrdemDeCorrecao":
             return `${type} ${textByMsgType} com sucesso`
         case "OrdemDeManutencao":
+            return `${type} ${textByMsgType} com sucesso`
+        case "Adicao":
             return `${type} ${textByMsgType} com sucesso`
         case "Analise":
             return `${type} ${response.id} ${textByMsgType} com sucesso`

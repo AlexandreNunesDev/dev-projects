@@ -59,7 +59,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId }) => {
 
     return (
         <>
-           {/*  <h4>Informacões para adicao</h4>
+            {/*  <h4>Informacões para adicao</h4>
             <Row>
                 <Col><Form.Label>Volume Etapa considerado: 1500Lts</Form.Label></Col>
             </Row>
@@ -84,7 +84,10 @@ const AdicaoForm = ({ deleteAdicao, parametroId }) => {
                 </Col>
             </Row> */}
 
-
+            <h4>Informacões para adicao</h4>
+            <Row>
+                <Col><Form.Label><strong>Volume Etapa considerado:</strong> {ocpToEdit.volumeEtapa} Lts</Form.Label></Col>
+            </Row>
 
             <Row >
                 <Col>
@@ -149,6 +152,9 @@ const AdicaoForm = ({ deleteAdicao, parametroId }) => {
                                 <Form.Label style={{ fontWeight: 'bold' }}>Quantidade</Form.Label>
                             </th>
                             <th md={'auto'}>
+                                <Form.Label style={{ fontWeight: 'bold' }}>Quntidade Adicionada</Form.Label>
+                            </th>
+                            <th md={'auto'}>
                                 <Form.Label>Acao</Form.Label>
                             </th>
 
@@ -170,13 +176,16 @@ const AdicaoForm = ({ deleteAdicao, parametroId }) => {
                                         <Form.Label style={{ fontWeight: 'bold' }}>{`${adicao.quantidade} ${adicao.unidade} `}</Form.Label>
                                     </td>
                                     <td md={'auto'}>
-                                        <Button style={{ backgroundColor: "RED", borderColor: "RED" }} onClick={() => {
-                                            if (!adicao.status) {
-                                                deleteAdicao(adicao.id)
-                                            } else {
-                                                toast.addToast("Voce nao pode excluir uma adicao ja realizada", { appearance: "warning", autoDismiss: true })
-                                            }
+                                        <Form.Label style={{ fontWeight: 'bold' }}>{`${adicao.quantidadeRealizada || 0} ${adicao.unidade} `}</Form.Label>
+                                    </td>
+                                    <td md={'auto'}>
+                                        {!adicao.status ? <Button style={{ backgroundColor: "RED", borderColor: "RED" }} onClick={() => {
+                                            deleteAdicao(adicao.id)
+
                                         }} >Del</Button>
+                                            :
+                                            <Button disabled style={{ backgroundColor: "GREEN", borderColor: "GREEN" }}>Concluido</Button>
+                                        }
                                     </td>
 
                                 </tr>)

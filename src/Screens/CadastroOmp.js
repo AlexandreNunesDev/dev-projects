@@ -11,7 +11,7 @@ import { WebSocketContext } from '../websocket/wsProvider'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import mapToStateProps from '../mapStateProps/mapStateToProps'
 import dispatchers from '../mapDispatch/mapDispathToProps'
-import { UpdateTarefasChoosed } from '../Reducers/ompReducer'
+import { UpdateTarefasChoosed,setBuildingOmp, clear } from '../Reducers/ompReducer'
 
 
 
@@ -43,7 +43,7 @@ const FormatDate = (data) => {
 const TableBodyTarefas = props => {
 
     const dispatch = useDispatch()
-    const tarefasChoosed = useSelector(state => state.cadastroOmpReducer.tarefas)
+    const tarefasChoosed = useSelector(state => state.omp.tarefas)
 
     const choosedTarefaClick = (tarefa) => {
         const tarefasUpdadated = tarefasChoosed.filter(terefaChoosed => {
@@ -77,7 +77,7 @@ const TableBodyTarefas = props => {
 
     })
 
-    return tarefaTd
+    return <tbody>{tarefaTd}</tbody> 
 
 }
 
@@ -118,7 +118,7 @@ const TableBody = props => {
         )
     })
 
-    return trocaTd
+    return <tbody>{trocaTd}</tbody>
 
 }
 
@@ -129,41 +129,18 @@ const CadastroOmp = (props) => {
     const [dataPlanejada, setDataPlanejada] = useState(new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0])
     const location = useLocation()
     const [emitidoPor, setEmitidoPor] = useState()
-    const tarefasChoosed = useSelector(state => state.cadastroOmpReducer.tarefas)
-    const trocasChoosed = useSelector(state => state.cadastroOmpReducer.trocas)
-    const tarefas = useSelector(state => state.options.trocas)
+    const tarefasChoosed = useSelector(state => state.omp.tarefas)
+    const trocasChoosed = useSelector(state => state.omp.trocas)
+    const tarefas = useSelector(state => state.options.tarefas)
     const trocas = useSelector(state => state.options.trocas)
     const [tarefasChoosedId, setTarefasChoosedId] = useState([])
     const history = useHistory()
     const context = useContext(WebSocketContext)
     const toastManager = useToasts()
+    const dispatch = useDispatch()
 
 
 
-    useEffect(() => generateTarefasChoosedIdarray(), [])
-
-    const generateTarefasChoosedIdarray = () => {
-        let markedTarefas = tarefas.map((value) => {
-            return value.id
-        })
-        setTarefasChoosedId(markedTarefas)
-    }
-
-    const setTarefaToList = (checked, id) => {
-
-        if (checked) {
-
-            setTarefasChoosedId(tarefasChoosedId.concat(id))
-
-        } else {
-
-            const removedArray = tarefasChoosedId.filter((value) => {
-                return Number(value) !== Number(id)
-            })
-            setTarefasChoosedId(removedArray)
-        }
-
-    }
 
 
 
@@ -172,7 +149,7 @@ const CadastroOmp = (props) => {
             <Container style={{ marginTop: 20 }}>
 
                 <Row>
-                    {trocas.length !== 0 ? <h2>{`Ordem de Manutençao de Processo - ${trocas[0]?.processoNome}`}</h2> :
+                    {trocas.length !== 0 ? <h2>{`Ordem de Manutençao de Processo - ${trocasChoosed[0]?.processoNome}`}</h2> :
                         <h2>Ordem de Manutençao de Processo</h2>}
 
                 </Row>
@@ -199,53 +176,57 @@ const CadastroOmp = (props) => {
                         <h4>Trocas Selecionadas</h4>
                         <Table className="table table-hover">
                             <TableHead></TableHead>
-                            <tbody>
-                                <TableBody trocas={trocasChoosed} ></TableBody>
-                            </tbody>
-                        </Table> </>}
+                            <TableBody trocas={trocasChoosed} ></TableBody>
+                    </Table> </>}
 
-                {tarefas &&
-                    <Fragment>
-                        <Row className="d-flex align-items-center">
+            {tarefasChoosed &&
+                <Fragment>
+                    <Row className="d-flex align-items-center">
                         <h4>Tarefas de Manutencao</h4>
-                        <Button style={{margin : 12}} onClick={(event) => history.push("/TarefasDeManutencao")} type="checkbox" >
+                        <Button style={{ margin: 12 }} onClick={(event) => history.push("/TarefasDeManutencao")} type="checkbox" >
                             Adicionar Tarefas
                         </Button>
-                        </Row>
-                       
-                        <Table>
-                            <TableHeadTarefas tarefasChecked={tarefasChoosed} ></TableHeadTarefas>
-                            <tbody>
-                                <TableBodyTarefas tarefasChecked={tarefasChoosed} tarefas={tarefas}></TableBodyTarefas>
-                            </tbody>
+                    </Row>
 
-                        </Table>
-                    </Fragment>
-                }
+                    <Table>
+                        <TableHeadTarefas tarefasChecked={tarefasChoosed} ></TableHeadTarefas>
+                        <TableBodyTarefas tarefasChecked={tarefasChoosed} tarefas={tarefas}></TableBodyTarefas>
 
-                <Button style={{ marginLeft: 20 }} onClick={
-                    () => {
-                        const trocasId = trocasChoosed.map((troca, index) => {
-                            return troca.id
-                        })
+                    </Table>
+                </Fragment>
+            }
+            <Form.Group>
 
-                        const tarefasId = tarefasChoosed.map((tarefa, index) => {
-                            return tarefa.id
-                        })
-
-                        if (trocasChoosed.length === 0) {
-                            const omp = { processoId: tarefasChoosed[0].processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
-                            ScqApi.GerarOmp(omp,[props.loadOrdensDeManutencao]).then(res => responseHandler(res, toastManager, "OrdemDeManutencao", toastOk))
-                        } else {
-                            const omp = { processoId: trocasChoosed[0]?.processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
-                            ScqApi.GerarOmp(omp,[props.loadOrdensDeManutencao]).then(res => responseHandler(res, toastManager, "OrdemDeManutencao", toastOk))
-                        }
-
-                        history.push("OrdensDeManutencao")
+            <Button onClick={
+                () => {
+                    const trocasId = trocasChoosed.map((troca, index) => {
+                        return troca.id
+                    })
+                    
+                    const tarefasId = tarefasChoosed.map((tarefa, index) => {
+                        return tarefa.id
+                    })
+                    
+                    if (trocasChoosed.length === 0) {
+                        const omp = { processoId: tarefasChoosed[0].processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
+                        ScqApi.GerarOmp(omp, [props.loadOrdensDeManutencao]).then(res => responseHandler(res, toastManager, "OrdemDeManutencao", toastOk))
+                    } else {
+                        const omp = { processoId: trocasChoosed[0]?.processoId, programadoPara: dataPlanejada, emitidoPor: emitidoPor, trocasId, tarefasId: tarefasId }
+                        ScqApi.GerarOmp(omp, [props.loadOrdensDeManutencao]).then(res => responseHandler(res, toastManager, "OrdemDeManutencao", toastOk))
                     }
-                }>Gerar Documento</Button>
+                    
+                    dispatch(clear())
+                    history.push("OrdensDeManutencao")
+                }
+            }>Gerar Documento</Button>
+            <Button style={{ margin: 2, backgroundColor: 'RED', borderColor: 'RED' }} onClick={() => {
+                dispatch(clear())
+                history.push("/Trocas")
+            } }>Descartar</Button>
+            </Form.Group>
 
-            </Container>
+
+        </Container>
 
 
 

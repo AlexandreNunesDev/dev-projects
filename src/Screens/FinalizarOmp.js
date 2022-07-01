@@ -6,7 +6,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { responseHandler } from '../Services/responseHandler'
 import mapToStateProps from '../mapStateProps/mapStateToProps'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import dispatchers from '../mapDispatch/mapDispathToProps'
 import { WebSocketContext } from '../websocket/wsProvider'
 import { toastOk } from '../Services/toastType'
@@ -106,12 +106,12 @@ const TableBodyTrocas = props => {
 
 const FinalizarOmp = (props) => {
 
-    const [omp] = useState(props.location.state)
+    const ompId = useSelector(state => state.omp.ompToView)
     const [trocas, setTrocas] = useState([])
     const [tarefas, setTarefas] = useState([])
     const [tarefasIdChecked, setTarefasChecked] = useState([])
     const [trocasIdChecked, setTrocasIdChecked] = useState([])
-    const histoy = useHistory()
+    const history = useHistory()
     const toastManager = useToasts()
     const dispatch = useDispatch()
     const context = useContext(WebSocketContext)
@@ -120,11 +120,11 @@ const FinalizarOmp = (props) => {
     const [dataRealizada, setDataRealizada] = useState(new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0])
 
     useEffect(() => {
-        ScqApi.LoadFullOmpDetails(omp).then(res => {
+        ScqApi.LoadFullOmpDetails(ompId).then(res => {
             setTrocas(res.trocas)
             setTarefas(res.tarefas)
         })
-    }, [omp])
+    }, [ompId])
 
     useEffect(() => {
         console.log(tarefasIdChecked)
@@ -191,7 +191,7 @@ const FinalizarOmp = (props) => {
     const finalizar = (OmpFinalizarForm) => {
         dispatch(UpdateTrocasChoosed([]))
         dispatch(UpdateTarefasChoosed([]))
-        ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, toastManager, "OrdemDeManutencao", toastOk);  }).then(() => histoy.push(paths.trocas))
+        ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, toastManager, "OrdemDeManutencao", toastOk);  }).then(() => history.push(paths.ordensDeManutencao))
     }
 
     return (
@@ -201,7 +201,7 @@ const FinalizarOmp = (props) => {
 
             <Container style={{ marginTop: 20 }}>
                 <Row>
-                    <h2>{`Finalizar Omp ${omp.id}`}</h2>
+                    <h2>{`Finalizar Omp ${ompId}`}</h2>
 
                 </Row>
                 <Form.Row style={{ marginTop: 10 }}>
@@ -249,7 +249,7 @@ const FinalizarOmp = (props) => {
 
 
                 <Button onClick={() => {
-                    const OmpFinalizarForm = { id: omp.id, tarefasId: tarefasIdChecked, trocasId: trocasIdChecked, data: dataRealizada }
+                    const OmpFinalizarForm = { id: ompId, tarefasId: tarefasIdChecked, trocasId: trocasIdChecked, data: dataRealizada }
                     finalizar(OmpFinalizarForm)
                 }}>Confirmar</Button>
 

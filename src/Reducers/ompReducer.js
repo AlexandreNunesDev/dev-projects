@@ -5,13 +5,17 @@ const initialState = {
   tarefas: [],
   tarefasFiltered: [],
   trocasFiltered: [],
-  trocasFilterType : '',
-  tarefasFilterType : ''
+  trocasFilterType: '',
+  tarefasFilterType: '',
+  processoId: '',
+  buildingOmp : false,
+  ompsFiltered : [],
+  ompToView : null
 
 }
 
 const cadastroOmp = createSlice({
-  name: 'cadastroOmp',
+  name: 'omp',
   initialState,
   reducers: {
     UpdateTarefasChoosed(state, action) {
@@ -26,21 +30,37 @@ const cadastroOmp = createSlice({
     UpdateTrocasFiltered(state, action) {
       state.trocasFiltered = action.payload
     },
-    setTrocasFilterType(state,action) {
+    UpdateFilteredOmps(state, action) {
+      state.ompsFiltered = action.payload
+    },
+    setTrocasFilterType(state, action) {
       state.trocasFilterType = action.payload
     },
-    setTarefasFilterType(state,action) {
-      state.tarefasFilterType = action.payload
+    setProcessoId(state, action) {
+      state.processoId = action.payload
+    },
+    setToEditOrdem(state, action) {
+      state.toEditDeleteOrdem = action.payload
+    },
+    setOmpToView(state, action) {
+      state.ompToView = action.payload
+    },
+    setBuildingOmp(state,action)  {
+      state.buildingOmp = action.payload
     },
     clear(state) {
       state.tarefas = []
       state.trocas = []
       state.tarefasFiltered = []
       state.trocasFiltered = []
+      state.ompsFiltered = []
+      state.processoId = ''
+      state.ompToView = null
+      state.buildingOmp = false
     },
 
   },
 })
 
-export const { UpdateTarefasChoosed,setTrocasFilterType,setTarefasFilterType,UpdateTarefasFiltered,UpdateTrocasFiltered, UpdateTrocasChoosed, clear } = cadastroOmp.actions
+export const {UpdateFilteredOmps,setBuildingOmp,setOmpToView, setToEditOrdem,updateOrdens,UpdateTarefasChoosed, setTrocasFilterType, setTarefasFilterType, UpdateTarefasFiltered, UpdateTrocasFiltered, UpdateTrocasChoosed, setProcessoId, clear } = cadastroOmp.actions
 export default cadastroOmp.reducer

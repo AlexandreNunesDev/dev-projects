@@ -155,7 +155,7 @@ const RegistroDetempos = (props) => {
 
     const gerarOcpReanalise = (history) => {
         const analise = { id: null, analista: analista, resultado: resultado, status: status, parametroId: parametro.id, ocpId: null }
-        history.push('/CadastroOcp' + parametro.menuType, analise)
+        history.push('/CadastroOcp', analise)
 
     }
 
@@ -169,7 +169,7 @@ const RegistroDetempos = (props) => {
             nomeAnalista = userName
         }
         const analise = { id: null, parametroId: parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: data }
-        history.push('/CadastroOcp' + parametro.menuType, analise)
+        history.push('/CadastroOcp', analise)
     }
 
 

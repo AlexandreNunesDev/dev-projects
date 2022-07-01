@@ -1,9 +1,10 @@
 import React, { createContext } from 'react'
 import { Client } from '@stomp/stompjs';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import { isTokenExpired } from '../Services/auth';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { logOut, setIsConnectedSocket } from '../Reducers/globalConfigReducer';
 
 
 
@@ -19,7 +20,7 @@ export default ({ children }) => {
     let ws;
   
     const dispatch =  useDispatch()
-    const store = useStore()
+    const global = useSelector(state => state.global)
     const history = useHistory()
 
 
@@ -41,13 +42,14 @@ export default ({ children }) => {
 
 
     const onConnect = () => {
-        console.log("Socket conectado")
+        console.log("Sincronizado com servidor")
+        dispatch(setIsConnectedSocket(true))
         
    
        
         socket.subscribe("/reducer/return", (message) => {
             
-            if((store.getState().global.isAuth) &&  (isTokenExpired(store.getState().global.tokenExpiration))){
+            if((global.isAuth) &&  (isTokenExpired(global.tokenExpiration))){
                 history.push("/VoceFoiDesconectado")
             } else {
                 
@@ -78,7 +80,9 @@ export default ({ children }) => {
     const onDisconnect = () => {
         console.log("socket desconectado")
         socket.deactivate()
-        dispatchers(dispatch).setLogOut()
+        dispatch(logOut())
+        dispatch(setIsConnectedSocket(false))
+        history.push("/VoceFoiDesconectado")
     }
 
 
@@ -91,11 +95,11 @@ export default ({ children }) => {
             heartbeatOutgoing: 4000,
             onConnect: onConnect,
             onDisconnect: onDisconnect,
-            onWebSocketError : () =>  dispatchers(dispatch).setLogOut()
+            onWebSocketError : onDisconnect
          
             
           });
-          if(store.getState().global.isAuth) {
+          if(global.isAuth) {
             socket.activate()  
           }
          

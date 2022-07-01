@@ -13,10 +13,10 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import mapStateToProps from "../mapStateProps/mapStateToProps"
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import { useHistory } from "react-router";
-import { updateOrdem } from "../Reducers/ordensDeManutencaoReducer";
 import { responseHandler } from "../Services/responseHandler";
 import { toastWarn } from "../Services/toastType";
 import { WebSocketContext } from "../websocket/wsProvider";
+import { setOmpToView, setProcessoId, UpdateFilteredOmps } from "../Reducers/ompReducer";
 
 
 const TableHead = () => {
@@ -27,8 +27,8 @@ const TableHead = () => {
                 <th>Id</th>
                 <th>Download</th>
                 <th>Processo</th>
-                <th>Data Planejada</th>
                 <th>Data Realizada</th>
+                <th>Data Planejada</th>
                 <th>Emitido por</th>
                 <th>Status</th>
                 <th>Encerrar</th>
@@ -102,9 +102,9 @@ const TableBody = props => {
                 <td className="align-middle"><Button size={20} onClick={() => downloadOmp(omp)}>Download</Button></td>
                 <td className="align-middle" >{omp.nomeProcesso}</td>
 
-                <td className="align-middle">{`${FormatDate(dataPlanejada)}`}</td>
                 <td className="align-middle">{`${FormatDate(dataRealizada)}`}</td>
-             
+                <td className="align-middle">{`${FormatDate(dataPlanejada)}`}</td>
+
                 <td className="align-middle">{omp.emitidoPor}</td>
                 <td className="align-middle">
                     <Form.Label style={{ color: statusToken[1], fontWeight: 'bolder' }} >{statusToken[0]}</Form.Label>
@@ -116,44 +116,53 @@ const TableBody = props => {
         )
     })
 
-    return ompTd
+    return <tbody>{ompTd}</tbody>
 
 }
 
 
 
-const OrdensDeManutencao = (props)  =>  {
+const OrdensDeManutencao = (props) => {
 
-    const {ordens,toEditDeleteOrdem,toViewOrdem} = useSelector(state => state.ordensDeManutencao)
-    const [filteredOmps,setFiltered] = useState([])
-    const [ompToDelete,setOmpToDelete] = useState([])
+    const ordens = useSelector(state => state.options.omps)
+    const processoId = useSelector(state => state.omp.processoId)
+    const ompsFiltered = useSelector(state => state.omp.ompsFiltered)
+    const [ompToDelete, setOmpToDelete] = useState([])
     const [showDeleteConfirm, setSowDeleteConfirm] = useState(false)
-    const [selection,setSelection] = useState('')
+    const [selection, setSelection] = useState('')
     const [filterType, setFilterType] = useState('')
     const context = useContext(WebSocketContext)
     const dispatch = useDispatch()
     const history = useHistory()
 
 
+    useEffect(() => {
+        if(processoId) {
+            dispatch(UpdateFilteredOmps(ordens.filter(omp => Number(omp.processoId === Number(processoId)))))
+        } else {
+            dispatch(UpdateFilteredOmps(ordens))
+        }
+
+
+    },[processoId,ordens])
+
 
     const encerrarOmp = (ompId) => {
         const omp = ordens.filter(ordem => {
             return ordem.id === ompId
-        })
-        history.push("/FinalizarOmp", omp[0])
+        })[0]
+        dispatch(setOmpToView(omp.id))
+        history.push("/FinalizarOmp")
 
     }
 
     const verOmp = (ompId) => {
         const omp = ordens.filter(ordem => {
             return ordem.id === ompId
-        })
-        history.push("/VerOmp", omp[0])
+        })[0]
+        dispatch(setOmpToView(omp.id))
+        history.push("/VerOmp")
     }
-
-    useEffect(() => {
-        setFiltered(ordens.filter(omp => Number(omp.processoId) === Number(props.global.processoIdTarefaRef)))
-    },ordens)
 
 
     const confirmDeleteDiolog = (ompId) => {
@@ -165,13 +174,13 @@ const OrdensDeManutencao = (props)  =>  {
     }
 
     const deletarOmp = () => {
-        ScqApi.DeleteOmp(ompToDelete.id).then(res => responseHandler(res, props,"OrdemDeManutencao",toastWarn,context,[props.loadOrdensDeManutencao]))
+        ScqApi.DeleteOmp(ompToDelete.id).then(res => responseHandler(res, props, "OrdemDeManutencao", toastWarn, context, [props.loadOrdensDeManutencao]))
     }
 
 
     const filterAction = (filterText) => {
         if (filterText !== "") {
-            setFiltered(ordens.filter((omp) => {
+            dispatch(UpdateFilteredOmps(ordens.filter((omp) => {
                 if (filterType === "Data") {
                     let data = FormatDate(String(omp.dataPlanejada).substr(0, 10))
                     return data.startsWith(filterText)
@@ -180,55 +189,46 @@ const OrdensDeManutencao = (props)  =>  {
                     return String(omp.status).toLowerCase().includes(filterText.toLowerCase())
                 }
                 return ""
-            }).filter(omp => Number(omp.processoId === Number(props.global.processoIdTarefaRef))))
+            }).filter(omp => Number(omp.processoId === Number(processoId)))))
             setSelection(filterText)
         } else {
-            setFiltered(ordens.filter(omp => Number(omp.processoId === Number(props.global.processoIdTarefaRef))))
+            dispatch(UpdateFilteredOmps(ordens.filter(omp => Number(omp.processoId === Number(processoId)))))
         }
 
     }
 
-    const filterByGlobalProcesso = (processoId) => {
-        props.setProcessoIdTarefaRef(processoId)
-        let newFilteredOmps = ordens.filter(omp => Number(omp.processoId === Number(processoId)))
-        setFiltered(newFilteredOmps)
-
-    }
 
 
-        return (
-            <>
 
-                <Container >
-                    <DeleteOmpConfirm show={showDeleteConfirm} deletarOmp={deletarOmp} omp={ompToDelete} handleClose={() => setSowDeleteConfirm(false)}></DeleteOmpConfirm>
-                    <Row className="justify-content-md-center">
-                        <Col style={{paddingTop : 10}} >
-                            <GenericSelect selection={props.global.processoIdTarefaRef} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => filterByGlobalProcesso(processoId) } ops={props.processos}  ></GenericSelect>
-                        </Col>
-                        <Col>
-                            <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => filterAction(event.target.value)}></Form.Control>
-                        </Col>
-                        <Col md="auto">
-                            <GenericDropDown display={"Tipo"} margin={10} itens={["Data", "Status"]} onChoose={(item) => setFilterType(item)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
-                        </Col>
+    return (
+        <>
 
-                    </Row>
-                </Container>
-                <div className="table-responsive">
-                    <Table >
-                        <TableHead></TableHead>
-                        <tbody>
-                            <TableBody filterType={filterType} selection={selection} omps={filteredOmps} encerrarOmp={encerrarOmp} verOmp={verOmp} confirmDeleteDiolog={confirmDeleteDiolog}  ></TableBody>
-                        </tbody>
+            <Container >
+                <DeleteOmpConfirm show={showDeleteConfirm} deletarOmp={deletarOmp} omp={ompToDelete} handleClose={() => setSowDeleteConfirm(false)}></DeleteOmpConfirm>
+                <Row className="justify-content-md-center">
+                    <Col style={{ paddingTop: 10 }} >
+                        <GenericSelect selection={processoId} noLabel={true} title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(processoId) => dispatch(setProcessoId(processoId))} ops={props.processos}  ></GenericSelect>
+                    </Col>
+                    <Col>
+                        <Form.Control placeholder="filtrar por..." style={{ margin: 10 }} onChange={(event) => filterAction(event.target.value)}></Form.Control>
+                    </Col>
+                    <Col md="auto">
+                        <GenericDropDown display={"Tipo"} margin={10} itens={["Data", "Status"]} onChoose={(item) => setFilterType(item)} style={{ margin: 10 }}>Filtrar </GenericDropDown>
+                    </Col>
 
-
-                    </Table>
-                </div>
+                </Row>
+            </Container>
+            <div className="table-responsive">
+                <Table >
+                    <TableHead></TableHead>
+                    <TableBody filterType={filterType} selection={selection} omps={ompsFiltered} encerrarOmp={encerrarOmp} verOmp={verOmp} confirmDeleteDiolog={confirmDeleteDiolog}  ></TableBody>
+                </Table>
+            </div>
 
 
-            </>
+        </>
 
-        )
+    )
 
 }
 

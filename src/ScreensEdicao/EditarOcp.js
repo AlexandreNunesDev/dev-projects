@@ -35,7 +35,7 @@ const EditarOcpAdicao = (props) => {
 
     useEffect(() => {
         if (adicoes.length === 0) {
-            let adicoesDtoToAdicoes = ocp.ocpToEdit.adicoesDto.map(adicaoDto => new Adicao(adicaoDto.id, adicaoDto.quantidade, adicaoDto.ocpId, adicaoDto.idMp, adicaoDto.unidade, adicaoDto.nomeMp))
+            let adicoesDtoToAdicoes = ocp.ocpToEdit.adicoesDto.map(adicaoDto => new Adicao(adicaoDto.id, adicaoDto.quantidade, adicaoDto.ocpId, adicaoDto.idMp, adicaoDto.unidade, adicaoDto.nomeMp ,adicaoDto.quantidadeRealizada,adicaoDto.status))
             dispatcher(updateAdicoes([...adicoesDtoToAdicoes, ...adicoes]))
         }
 

@@ -5,8 +5,6 @@ import { connect, useSelector } from "react-redux";
 import { useHistory } from 'react-router';
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import mapToStateProps from "../mapStateProps/mapStateToProps";
-import { downloadOcp } from "../Services/documentsDownload";
-import { OnlyDate } from '../Services/stringUtils';
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -27,34 +25,32 @@ const buildAdicaoDetails = (ocp) => {
 
 
         return (
-            <li key={index} className="text-nowrap">{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</li>
+            <li >
+                <div style={{ borderColor: 'black', borderWidth: 2, borderStyle: 'double', margin : 4 }}>
+                    <label style={{color: adicao.status? "green" : "orange"}}>{adicao.status? "concluido" : "pendente"}</label>
+                    <div key={index} className="text-nowrap"><strong>Qtd. Planejada: </strong>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</div>
+                    <div key={index} className="text-nowrap"><strong>Qtd. Realizado: </strong>{`${adicao.quantidadeRealizada} ${adicao.unidade} ${adicao.nomeMp}`}</div>
+                    <div><strong>Responsavel: </strong> {adicao.realizadoPor}</div>
+                    <div><strong>Realizado em: </strong> {adicao.realizadoEm}</div>
+                    <div key={index} className="text-nowrap"><strong>Observacao: </strong> {adicao.observacao ? adicao.observacao : "" }</div>
+                </div>
+            </li>
+
         )
 
     });
     return (
         <div >
-            <ul>
-                <li><span style={{ fontWeight: 'bold' }}>Observação Ocp: </span>{`${ocp.observacao}`}</li>
+            <div><label><strong>Aberto por: </strong>{`${ocp.responsavel}`}</label></div>
+            <div><label><strong >Observação Ocp: </strong>{`${ocp.observacao}`}</label></div>
+            <h6 style={{ textAlign: "center" }}><strong>Adicoes</strong></h6>
+            <ol>
                 {lis}
-            </ul>
+            </ol>
         </div>
     )
 }
 
-const buildAcaoDetails = (ocp) => {
-    let showAcao = ocp.acao === null ? true : false
-
-    return (
-        <div>
-            <ul>
-                <li hidden={showAcao} >{`${ocp.acao}`}</li>
-                <li className="text-nowrap"><span style={{ fontWeight: 'bold' }}>Prazo: </span>{`${OnlyDate(ocp.prazo)}`}</li>
-            </ul>
-
-        </div>)
-
-
-}
 
 
 const OcpsTableBody = (props) => {
@@ -66,7 +62,6 @@ const OcpsTableBody = (props) => {
 
     const editOcp = (ocp) => {
         props.ocpToEdit(ocp)
-
         history.push("/EditarOcp")
 
 
@@ -194,7 +189,6 @@ const OcpsTableBody = (props) => {
 
                 <tr key={ocp.id}>
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                    {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></th>}
                     {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></th>}
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                     {
@@ -223,7 +217,6 @@ const OcpsTableBody = (props) => {
                     </tr>
                     <tr>
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => downloadOcp(ocp.id)}>Download</Button></td>}
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                         {!isMobile ? <><td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>

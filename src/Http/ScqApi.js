@@ -335,16 +335,16 @@ const ScqApi = {
         return http.get(encodedUrl)
 
     },
-    AdicaoCorrigir: (ocpId) => {
-        return http.put("adicao/corrigir/" + ocpId, null)
+    AdicaoCorrigir: (adicoes) => {
+        return http.put("adicao/corrigir/", adicoes)
 
     },
     AcaoCorrigir: (ocpId) => {
         return http.put("acao/corrigir/" + ocpId,null)
 
     },
-    LoadFullOmpDetails: (omp) => {
-        return http.get("omps/" + omp.id)
+    LoadFullOmpDetails: (id) => {
+        return http.get("omps/" + id)
 
     },
     LoadOmpHistorico: (omp) => {

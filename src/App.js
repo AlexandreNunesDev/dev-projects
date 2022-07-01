@@ -45,6 +45,7 @@ import { WebSocketContext } from './websocket/wsProvider';
 import { reloadState } from './store';
 import IndicadorDeGastos from './Screens/IndicadorDeGastos';
 import RegistroDeArea from './Screens/RegistroDeArea';
+import CorrecaoConfirm from './Screens/CorrecaoConfirm';
 
 
 
@@ -147,6 +148,7 @@ class App extends React.Component {
             <Route path='/ServidorError' exact={true} component={ServidorError} />
             <Route path='/CadastroTurno' exact={true} component={CadastroTurno} />
             <Route path='/RegistroDeArea' exact={true} component={RegistroDeArea} />
+            <Route path='/CorrecaoConfirm' exact={true} component={CorrecaoConfirm} />
           </Switch>
         </>
 
@@ -181,6 +183,7 @@ class App extends React.Component {
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
             <Route path='/RegistroDeArea' exact={true} component={RegistroDeArea} />
+            <Route path='/CorrecaoConfirm' exact={true} component={CorrecaoConfirm} />
             
           </Switch>
         </>
