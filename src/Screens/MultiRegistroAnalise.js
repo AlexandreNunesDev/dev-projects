@@ -82,7 +82,8 @@ const MultiRegistroAnalise = (props) => {
                 if (etapa) filteredParametro = filterFields(filteredParametro, "etapaNome", etapa, true)
                 if (turno) filteredParametro = filterFields(filteredParametro, "turno", turno, true)
                 analiFields = filteredParametro.map((parametro) => {
-                    let analiseField = analiseFields.filter(analiseField => Number(analiseField.parametro.id) === Number(parametro.id))[0]
+                    let analiseField = {...analiseFields.filter(analiseField => Number(analiseField.parametro.id) === Number(parametro.id))[0]}
+                    analiseField.parametro = parametro
                     return analiseField
                 })
                 analiFields.sort((a, b) => {
@@ -91,11 +92,10 @@ const MultiRegistroAnalise = (props) => {
                     return tempo1 - tempo2
                 })
 
-                setFiltedAnaliseFields(analiFields)
+               
             }
-
+            setFiltedAnaliseFields(analiFields)
         }
-
     }, [parametros, processoId, parametroNome, etapa, turno])
 
 
