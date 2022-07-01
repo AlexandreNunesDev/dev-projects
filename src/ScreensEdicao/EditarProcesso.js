@@ -27,7 +27,7 @@ const EditarProcesso = (props) => {
 
     const submitForm = (event) => {
         const replaceProcesso = { id: id, nome: nome }
-        ScqApi.EditarProcesso(replaceProcesso).then(res =>  responseHandler(res, props,"Processo",toastInfo, context, [dispatchers().loadProcessos,dispatchers().loadOcps]))       
+        ScqApi.EditarProcesso(replaceProcesso).then(res =>  responseHandler(res, toastManager,"Processo",toastInfo, context, [dispatchers().loadProcessos,dispatchers().loadOcps]))       
     }
 
 

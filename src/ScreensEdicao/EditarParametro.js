@@ -90,7 +90,7 @@ const EditarParametro = (props) => {
 
         const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart,isHabilitado : habilitado}
 
-        ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res, props,"Parametro",toastInfo,context, [dispatchers().loadParametros,dispatchers().loadOcps],))
+        ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res,toastManager ,"Parametro",toastInfo,context))
         
     }
 
@@ -192,7 +192,6 @@ const EditarParametro = (props) => {
                     </Form.Row>
 
                     <Form.Group style={{ marginTop: 20 }}>
-                        
                         <Button style={{ margin: 5 }} variant="primary" type="reset" onClick={() => onSaveClick()}>Salvar</Button>
                     </Form.Group>
                 </Form>

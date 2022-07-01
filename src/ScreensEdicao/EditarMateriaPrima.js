@@ -20,6 +20,7 @@ const EditarMateriaPrima = (props) => {
     const [fatorTitulometrico, setFatorTitulometrico] = useState()
     const [preco, setPreco] = useState()
     const [unidade, setUnidade] = useState()
+    const {toastManager} = props
 
 
  
@@ -41,7 +42,7 @@ const EditarMateriaPrima = (props) => {
         }
 
         const newMateriaPrima = { id: materiaPrima.id, nome: nome, fornecedor: fornecedor, fatorTitulometrico: fatorTitulometrico, preco: preco, unidade: unidade }
-        ScqApi.EditarMateriaPrima(newMateriaPrima).then(res => responseHandler(res, props,"Materia Prima",toastInfo,context, [dispatchers().loadMateriasPrima,dispatchers().loadEtapas,dispatchers().loadTrocas,dispatchers().loadOcps]))
+        ScqApi.EditarMateriaPrima(newMateriaPrima).then(res => responseHandler(res, toastManager,"Materia Prima",toastInfo,context, [dispatchers().loadMateriasPrima,dispatchers().loadEtapas,dispatchers().loadTrocas,dispatchers().loadOcps]))
     }
 
     return (

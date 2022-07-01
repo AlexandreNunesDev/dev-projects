@@ -27,6 +27,7 @@ const EditarTroca = (props) => {
     const [processoId, setProcessoId] = useState()
     const [escalaFrequencia, setEscalaFrequencia] = useState()
     const [troca, setTroca] = useState()
+    const {toastManager} = props
     
    
 
@@ -55,8 +56,8 @@ const EditarTroca = (props) => {
 
    
 
-    const salvarTroca = (troca,toastManager) => {
-        ScqApi.EditarTroca(troca).then(res => responseHandler(res, props,"Troca",toastInfo,context, [dispatchers().loadTrocas,dispatchers().loadOcps]))
+    const salvarTroca = (troca) => {
+        ScqApi.EditarTroca(troca).then(res => responseHandler(res, toastManager,"Troca",toastInfo,context, [dispatchers().loadTrocas,dispatchers().loadOcps]))
     }
     
 
