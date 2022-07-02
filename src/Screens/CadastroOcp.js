@@ -15,6 +15,7 @@ import { loadOcps } from '../Services/storeService'
 import { WebSocketContext } from '../websocket/wsProvider';
 import AdicaoForm from '../Components/AdicaoForm';
 import { clear, updateAdicoes } from '../Reducers/adicaoReducer';
+import { toastOk } from '../Services/toastType';
 
 
 
@@ -79,7 +80,7 @@ const CadastroDeOcpAdicao = (props) => {
         
         const fullAnaliseForm = { ...analiseCopy, responsavel: responsavel, observacao: observacao, adicoes: adicoes }
         ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm).then((res) => {
-            responseHandler(res, toastManager, "OrdemDeCorrecao", 'success')
+            responseHandler(res, toastManager, "OrdemDeCorrecao", toastOk)
         }
         );
 

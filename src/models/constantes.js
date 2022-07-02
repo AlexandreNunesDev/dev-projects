@@ -3,4 +3,4 @@ export const paths = {
     ordensDeManutencao : "/OrdensDeManutencao"
 }
 
-export const version = "1.0.13"
+export const version = "1.0.14"
