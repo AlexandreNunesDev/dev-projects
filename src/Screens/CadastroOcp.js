@@ -48,10 +48,10 @@ const CadastroDeOcpAdicao = (props) => {
     useEffect(() => {
         const param = parametros.filter(param => String(param.id) === String(analiseToSave.parametroId))[0]
         const etapa = etapas.filter(etap => etap.parametrosId.includes(param.id))[0]
-        const materiasPrima = etapa.mpIds.map(mpId => materiasPrim.find(mp => String(mp.id) === String(mpId)))
         param.unidade === "pH" ? unidade = "" : unidade = param.unidade
         setEtapa(etapa)
         setParametro(param)
+        dispatcher(updateAdicoes([]))
     }, [])
 
 
@@ -78,11 +78,12 @@ const CadastroDeOcpAdicao = (props) => {
         }
         
         const fullAnaliseForm = { ...analiseCopy, responsavel: responsavel, observacao: observacao, adicoes: adicoes }
-        ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm, [props.loadParametros, props.loadOcps]).then((res) => {
+        ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm).then((res) => {
             responseHandler(res, toastManager, "OrdemDeCorrecao", 'success')
         }
         );
 
+        dispatcher(updateAdicoes([]))
         history.push("/OrdensDeCorrecao")
 
     }
