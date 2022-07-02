@@ -89,7 +89,7 @@ const EditarParametro = (props) => {
     const onSaveClick = () => {
 
         const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart,isHabilitado : habilitado}
-        ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res,toastManager ,"Parametro",toastInfo,context))
+        ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res,toastManager ,"Parametro",toastInfo))
         
     }
 
