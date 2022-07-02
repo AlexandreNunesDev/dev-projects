@@ -14,9 +14,16 @@ export const responseHandler = (response, toastManager, type, toastType, dimissC
         });
         return false;
     } else {
-        toastManager && toastCall(buildMsg(type, response, toastType), {
-            appearance: toastType || 'success', autoDismiss: true, onDismiss: dimissCallBack && dimissCallBack
-        })
+        if(dimissCallBack) {
+            toastManager && toastCall(buildMsg(type, response, toastType), {
+                appearance: toastType || 'success', autoDismiss: true, onDismiss: dimissCallBack
+            })
+        } else {
+            toastManager && toastCall(buildMsg(type, response, toastType), {
+                appearance: toastType || 'success', autoDismiss: true
+            })
+        }
+       
         return true
     }
 }
