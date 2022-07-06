@@ -46,6 +46,7 @@ import { reloadState } from './store';
 import IndicadorDeGastos from './Screens/IndicadorDeGastos';
 import RegistroDeArea from './Screens/RegistroDeArea';
 import CorrecaoConfirm from './Screens/CorrecaoConfirm';
+import CadastroParametroNovo from './Screens/CadastroParametroNovo';
 
 
 
@@ -125,7 +126,7 @@ class App extends React.Component {
             <Route path='/IndicadorDeGastos' exact={true} component={IndicadorDeGastos} />
             <Route path='/CadastroProcesso' exact={true} component={CadastroProcesso} />
             <Route path='/CadastroEtapa' exact={true} component={CadastroEtapa} />
-            <Route path='/CadastroParametro' exact={true} component={CadastroParametro} />
+            <Route path='/CadastroParametro' exact={true} component={CadastroParametroNovo} />
             <Route path='/CadastroMateriaPrima' exact={true} component={CadastroMateriaPrima} />
             <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp } />
             <Route path='/CadastroTroca' exact={true} component={CadastroTroca} />

@@ -25,14 +25,14 @@ const buildAdicaoDetails = (ocp) => {
 
 
         return (
-            <li >
+            <li key={adicao.id} >
                 <div style={{ borderColor: 'black', borderWidth: 2, borderStyle: 'double', margin : 4 }}>
                     <label style={{color: adicao.status? "green" : "orange"}}>{adicao.status? "concluido" : "pendente"}</label>
-                    <div key={index} className="text-nowrap"><strong>Qtd. Planejada: </strong>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</div>
-                    <div key={index} className="text-nowrap"><strong>Qtd. Realizado: </strong>{`${adicao.quantidadeRealizada} ${adicao.unidade} ${adicao.nomeMp}`}</div>
+                    <div className="text-nowrap"><strong>Qtd. Planejada: </strong>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</div>
+                    <div className="text-nowrap"><strong>Qtd. Realizado: </strong>{`${adicao.quantidadeRealizada} ${adicao.unidade} ${adicao.nomeMp}`}</div>
                     <div><strong>Responsavel: </strong> {adicao.realizadoPor}</div>
                     <div><strong>Realizado em: </strong> {adicao.realizadoEm}</div>
-                    <div key={index} className="text-nowrap"><strong>Observacao: </strong> {adicao.observacao ? adicao.observacao : "" }</div>
+                    <div  className="text-nowrap"><strong>Observacao: </strong> {adicao.observacao ? adicao.observacao : "" }</div>
                 </div>
             </li>
 

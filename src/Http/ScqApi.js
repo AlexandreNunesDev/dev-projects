@@ -347,8 +347,8 @@ const ScqApi = {
         return http.get("omps/" + id)
 
     },
-    LoadOmpHistorico: (omp) => {
-        return http.get("omps/historico/" + omp.id)
+    LoadOmpHistorico: (id) => {
+        return http.get("omps/historico/" + id)
     },
     FindMontagemByEtapaId: (etapaId) => {
         return http.get("montagens/" + etapaId)

@@ -21,8 +21,6 @@ const TableHeadTarefas = () => {
             <tr style={{ textAlign: "center" }}>
                 <th>Id</th>
                 <th>Nome</th>
-                <th>Código Instrução</th>
-                <th>Status</th>
                 <th>Confirmar</th>
             </tr>
         </thead>
@@ -37,9 +35,6 @@ const TableBodyTarefas = props => {
             <tr style={{ textAlign: "center" }} key={tarefa.id}>
                 <td className="align-middle">{tarefa.id}</td>
                 <td className="align-middle">{tarefa.nome}</td>
-                <td className="align-middle">{tarefa.codigo}</td>
-                <td className="align-middle"><Form.Label style={{ color: tarefa.pendente ? 'red' : 'green', fontWeight: 'bolder' }} >
-                    {tarefa.pendente ? "Pendente" : 'Em dia'}</Form.Label></td>
                 <td className="align-middle" >
                     <div className="form-check">
                         <input type="checkbox" checked={props.checkedTarefas.includes(tarefa.id)} onChange={(event) => props.checkedElement(event.target.checked, tarefa.id, "tarefa")} className="form-check-input" />
@@ -61,6 +56,7 @@ const TableHeadTrocas = () => {
 
         <thead >
             <tr style={{ textAlign: "center" }}>
+                <th>Id</th>
                 <th>Etapa</th>
                 <th>Tanque</th>
                 <th>Produto</th>
@@ -77,20 +73,21 @@ const TableBodyTrocas = props => {
         return (
 
             <tr style={{ textAlign: "center" }} key={troca.id}>
+                <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.etapaNome}</td>
                 <td className="align-middle">{troca.posicao}</td>
-                <td>
-                    {troca.listaMontagens.map((pair, indexy) => {
-                        return <div key={indexy}>{`${pair[0]}`} </div>
+                <td key={troca.id}  >
+                    {troca.listaMontagens.map((mc, index) => {
+                        return <div key={index}>{mc.mpNome}</div>
                     })}
                 </td>
-                <td>
-                    {troca.listaMontagens.map((pair, indexz) => {
-                        return <div key={indexz}>{`${pair[1]} ${pair[2]}`} </div>
+                <td key={index} >
+                    {troca.listaMontagens.map((mc, index) => {
+                        return <div key={index}>{mc.quantidade} {mc.unidade}</div>
                     })}
                 </td>
                 <td className="align-middle" >
-                <div className="form-check">
+                    <div className="form-check">
                         <input type="checkbox" checked={props.checkedTrocas.includes(troca.id)} onChange={(event) => props.checkedElement(event.target.checked, troca.id, "troca")} className="form-check-input" />
                         <label className="form-check-label" >Executado</label>
                     </div>
@@ -191,7 +188,7 @@ const FinalizarOmp = (props) => {
     const finalizar = (OmpFinalizarForm) => {
         dispatch(UpdateTrocasChoosed([]))
         dispatch(UpdateTarefasChoosed([]))
-        ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, toastManager, "OrdemDeManutencao", toastOk);  }).then(() => history.push(paths.ordensDeManutencao))
+        ScqApi.FinalizarOmp(OmpFinalizarForm).then((response) => { responseHandler(response, toastManager, "OrdemDeManutencao", toastOk); }).then(() => history.push(paths.ordensDeManutencao))
     }
 
     return (
