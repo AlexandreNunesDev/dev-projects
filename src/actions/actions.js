@@ -36,11 +36,12 @@ export const actions = {
     loadTurnos : (data) => {return{type: "LOAD_TURNOS" , payload: data}},
     updadteAnaliseField : (data) => {return{type: "UPDADTE_FIELDANALISE" , payload: data}},
     loadFieldAnalise : (data) => {return{type: "LOAD_FIELDANALISE" , payload: data}},
-    setAnaliseToSave : (data) => {return{type: "ANALISE_TO_SAVE" , payload: data}},
+    setAnaliseToSave : (data) => {return{type: "analise/updateAnaliseToSave" , payload: data}},
     setProcessoIdAnaliseForm : (data) => {return{type: "ANALISE_PROCESSO_ID" , payload: data}},
     setParametroNome : (data) => {return{type: "PARAMETRO_NOME" , payload: data}},
     setEtapaNomeForm : (data) => {return{type: "ETAPA_NOME" , payload: data}},
     setTurnoAnaliseForm : (data) => {return{type: "TURNO" , payload: data}},
+
     
 
 }

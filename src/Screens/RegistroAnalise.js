@@ -12,8 +12,8 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { formatIsoDate } from '../Services/stringUtils';
-import { clear, setAnaliseToSave } from '../Reducers/singleAnaliseReducer';
 import { useHistory } from 'react-router-dom';
+import { updateAnaliseToSave } from '../Reducers/analiseReducer';
 
 
 
@@ -54,9 +54,9 @@ const RegistroDeAnalise = (props) => {
             onLinhaSelect(analiseToSave.processoId)
             onEtapaSelect(analiseToSave.etapaId)
             onParametroSelect(analiseToSave.parametroId)
-            dispatch(setAnaliseToSave(analise))
+            dispatch(updateAnaliseToSave(analise))
         } else {
-            dispatch(setAnaliseToSave({ id: '', analista: analise.analista, resultado: '', status: '', parametroId: '', ocpId: '', observacaoAnalise: '' }))
+            dispatch(updateAnaliseToSave({ id: '', analista: analise.analista, resultado: '', status: '', parametroId: '', ocpId: '', observacaoAnalise: '' }))
         }
 
     }, [])
@@ -109,7 +109,7 @@ const RegistroDeAnalise = (props) => {
         let analise = { ...analiseToSave }
         analise.parametroId = parametroId
         setparametro(parametroRef)
-        dispatch(setAnaliseToSave(analise))
+        dispatch(updateAnaliseToSave(analise))
 
     }
 
@@ -134,7 +134,7 @@ const RegistroDeAnalise = (props) => {
             }
         }
 
-        dispatch(setAnaliseToSave(analise))
+        dispatch(updateAnaliseToSave(analise))
     }
 
 
@@ -171,14 +171,14 @@ const RegistroDeAnalise = (props) => {
     const setObservacao = (observacao) => {
         let analise = { ...analiseToSave }
         analise.observacao = observacao
-        dispatch(setAnaliseToSave(analise))
+        dispatch(updateAnaliseToSave(analise))
 
     }
 
     const setanalista = (analista) => {
         let analise = { ...analiseToSave }
         analise.analista = analista
-        dispatch(setAnaliseToSave(analise))
+        dispatch(updateAnaliseToSave(analise))
 
     }
 
@@ -209,7 +209,7 @@ const RegistroDeAnalise = (props) => {
     const setDataDaAnalise = (data) => {
         let analise = { ...analiseToSave }
         analise.data = data
-        dispatch(setAnaliseToSave(analise))
+        dispatch(updateAnaliseToSave(analise))
     }
 
     return (
