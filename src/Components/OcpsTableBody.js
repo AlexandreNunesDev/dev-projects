@@ -5,6 +5,7 @@ import { connect, useSelector } from "react-redux";
 import { useHistory } from 'react-router';
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import mapToStateProps from "../mapStateProps/mapStateToProps";
+import { buildMotivo } from '../Services/ocpService';
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -26,13 +27,13 @@ const buildAdicaoDetails = (ocp) => {
 
         return (
             <li key={adicao.id} >
-                <div style={{ borderColor: 'black', borderWidth: 2, borderStyle: 'double', margin : 4 }}>
-                    <label style={{color: adicao.status? "green" : "orange"}}>{adicao.status? "concluido" : "pendente"}</label>
+                <div style={{ borderColor: 'black', borderWidth: 2, borderStyle: 'double', margin: 4 }}>
+                    <label style={{ color: adicao.status ? "green" : "orange" }}>{adicao.status ? "concluido" : "pendente"}</label>
                     <div className="text-nowrap"><strong>Qtd. Planejada: </strong>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</div>
                     <div className="text-nowrap"><strong>Qtd. Realizado: </strong>{`${adicao.quantidadeRealizada} ${adicao.unidade} ${adicao.nomeMp}`}</div>
                     <div><strong>Responsavel: </strong> {adicao.realizadoPor}</div>
                     <div><strong>Realizado em: </strong> {adicao.realizadoEm}</div>
-                    <div  className="text-nowrap"><strong>Observacao: </strong> {adicao.observacao ? adicao.observacao : "" }</div>
+                    <div className="text-nowrap"><strong>Observacao: </strong> {adicao.observacao ? adicao.observacao : ""}</div>
                 </div>
             </li>
 
@@ -189,21 +190,10 @@ const OcpsTableBody = (props) => {
 
                 <tr key={ocp.id}>
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                    {!isMobile && <th className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></th>}
+                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
-                    {
-                        !isMobile
-                            ?
-                            <>
-                                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
-                                <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td>
-                            </>
-                            :
-                            <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>
-                    }
-                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
-                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}  ${ocp.unidade}`}</td>}
-                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}  ${ocp.unidade}`}</td>}
+                    <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome}`}</td>
+                    <td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>
                     <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
                     <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                 </tr>
@@ -219,13 +209,8 @@ const OcpsTableBody = (props) => {
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
                         {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
-                        {!isMobile ? <><td className="align-middle" style={{ textAlign: "center" }}>{ocp.etapaNome}</td>
-                            <td className="align-middle" style={{ textAlign: "center" }}>{ocp.parametroNome}</td></>
-                            : <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome} ${ocp.parametroNome}`}</td>}
-
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin} ${ocp.unidade}`}</td>}
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax} ${ocp.unidade}`}</td>}
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado} ${ocp.unidade}`}</td>}
+                        <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome}`}</td>
+                        <td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>
                         <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
                         <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                     </tr>

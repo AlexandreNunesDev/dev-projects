@@ -65,9 +65,6 @@ export const loadOcps = (props) => {
   props.loadOcps()
 }
 
-export const loadNotifications = (props) => {
-  props.loadNotifications()
-}
 
 
 

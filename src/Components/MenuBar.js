@@ -15,7 +15,6 @@ const MenuBar = () => {
   const [user, setUser] = useState()
   const [show, setShow] = useState()
   const global = useSelector(state => state.global)
-  const notifications = useSelector(state => state.notification.notifications)
   const dispatch = useDispatch()
 
 
@@ -48,6 +47,10 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
 
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
+                  <Link className="nav-link" to="/Analises">Analises</Link>
+                </NavDropdown>
+
+                <NavDropdown title="Indicadores" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                   <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
                   <Link className="nav-link" to="/IndicadorDeGastos">Indicador de Gastos</Link>
@@ -95,6 +98,9 @@ const MenuBar = () => {
               <Link className="nav-link" to='/Trocas' >Trocas</Link>
               <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
               <NavDropdown title="Consultas" id="basic-nav-dropdown">
+                  <Link className="nav-link" to="/Analises">Analises</Link>
+                </NavDropdown>
+              <NavDropdown title="Indicadores" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                 <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
               </NavDropdown>

@@ -29,7 +29,6 @@ const dispatchers = (dispatch) => {
         removeOcp : (data) => dispatch({type: 'REMOVE_OCP' , payload : data}),
         ocpToEdit : (data) => dispatch({type: 'OCP_TO_EDIT' , payload : data}),
         updadteOcpQuantidadeAdicao : (data) => dispatch({type: 'OCP_QTD_ADICAO' , payload : data}),
-        loadNotifications : () => ScqApi.ListaNotificacoes().then(data => dispatch(actions.loadNotifications(data))),
         setProcessoIdTarefaRef : (data) => dispatch(actions.setProcessoIdTarefaRef(data)),
         setLogIn : (data) => dispatch(actions.logIn(data)),
         setLogOut : (data) => dispatch(actions.logOut(data)),

@@ -54,7 +54,6 @@ export default ({ children }) => {
             } else {
                 
                 const bodyMsg = JSON.parse(message.body)
-                console.log(bodyMsg)
                 if(bodyMsg.type === 'action'){
                     const actionObj = bodyMsg.action
                     dispatch(actionObj)
@@ -62,11 +61,6 @@ export default ({ children }) => {
                 } else {
                     const functionsName =  bodyMsg.functions
                     functionsName.forEach(functionName => dispatchers(dispatch)[functionName]() )
-                    
-
-
-                    
-                   
                 }
             }
            
@@ -82,7 +76,6 @@ export default ({ children }) => {
         socket.deactivate()
         dispatch(logOut())
         dispatch(setIsConnectedSocket(false))
-        history.push("/VoceFoiDesconectado")
     }
 
 

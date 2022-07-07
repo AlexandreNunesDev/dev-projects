@@ -9,7 +9,7 @@ const initialState = {
     turno: '',
     parametroNome: '',
     analiseToSave: null,
-    analiseFields: []
+    analiseFields: [],
 
 }
 

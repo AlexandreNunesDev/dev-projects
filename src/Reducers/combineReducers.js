@@ -5,11 +5,11 @@ import ocpsReducer from './ocpsReducers'
 import globalConfig from './globalConfigReducer'
 import notificationsReducer from './notificationsReducer'
 import timeReducer from './timeReducers'
-import analiseReducer from './analisesReducers'
 import dynamicFormsReducer from './dyanamicForms'
 import ompReducer from './ompReducer'
 import singleAnaliseReducer from './singleAnaliseReducer'
 import adicaoReducer from './adicaoReducer'
+import analiseReducer from './analiseReducer'
 
 
 
@@ -19,13 +19,12 @@ const appReducer = combineReducers({
    options :  optionsReducer,
    ocp : ocpsReducer,
    global : globalConfig,
-   notification :notificationsReducer,
    timeReducer : timeReducer,
-   analiseReducer : analiseReducer,
    omp : ompReducer,
    formsReducer : dynamicFormsReducer,
    singleAnalise : singleAnaliseReducer,
-   adicaoForm : adicaoReducer
+   adicaoForm : adicaoReducer,
+   analise : analiseReducer
 
 })
 
@@ -36,11 +35,10 @@ const rootReducer = (state, action) => {
     state.options = undefined
     state.ocp = undefined
     state.global = undefined
-    state.notification = undefined
     state.omp = undefined
     state.formsReducer = undefined
     state.adicaoForm = undefined
-    state.analiseReducer = undefined
+    state.analise = undefined
    }
  
    return appReducer(state, action);
