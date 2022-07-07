@@ -10,7 +10,7 @@ import { withMenuBar } from "../Hocs/withMenuBar"
 import ScqApi from "../Http/ScqApi"
 import dispatchers from "../mapDispatch/mapDispathToProps"
 import { analiseFieldFactory } from "../models/fieldModels"
-import { clear, setAnaliseToSave } from "../Reducers/singleAnaliseReducer"
+import { clear, updadteEtapaNome, updateAnaliseFields, updateAnaliseToSave, updateFiltroEtapa, updateFiltroParametro, updateParametroNome, updateProcessoId, updateTurno } from "../Reducers/analiseReducer"
 import { buildAnaliseInputMenu, getAnaliseStatus } from "../Services/analiseMenuBuilder"
 import { responseHandler } from "../Services/responseHandler"
 import { formatIsoDate, OnlyDate, onlyTime } from "../Services/stringUtils"
@@ -24,7 +24,7 @@ const MultiRegistroAnalise = (props) => {
     const processos = useSelector(state => state.options.processos)
     const parametros = useSelector(state => state.options.parametros)
     const userName = useSelector(state => state.global.userName)
-    const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
+    const analiseToSave = useSelector(state => state.analise.analiseToSave)
     const dispatcher = useDispatch()
     const [analista, setAnalista] = useState()
     const [showData, setShowData] = useState()
@@ -32,16 +32,16 @@ const MultiRegistroAnalise = (props) => {
     const [showCheckOut, setShowCheckOut] = useState()
     const [data, setData] = useState()
     const [filteredAnaliseFields, setFiltedAnaliseFields] = useState([])
-    const analiseFields = useSelector(state => state.analiseReducer.analiseFields)
-    const parametroNome = useSelector(state => state.analiseReducer.parametroNome)
-    const etapa = useSelector(state => state.analiseReducer.etapaNome)
-    const turno = useSelector(state => state.analiseReducer.turno)
-    const processoId = useSelector(state => state.analiseReducer.processoId)
+    const analiseFields = useSelector(state => state.analise.analiseFields)
+    const parametroNome = useSelector(state => state.analise.filtroParametro)
+    const etapa = useSelector(state => state.analise.filtroEtapa)
+    const turno = useSelector(state => state.analise.turno)
+    const processoId = useSelector(state => state.analise.processoId)
     let dataFieldRef = useRef(null)
     const context = useContext(WebSocketContext)
     const reducerFunctions = dispatchers()
     const history = useHistory()
-
+   
 
 
 
@@ -73,7 +73,7 @@ const MultiRegistroAnalise = (props) => {
         if (parametros) {
             if (analiseFields.length == 0) {
                 analiFields = parametros.map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
-                dispatcher(actions.loadFieldAnalise(analiFields))
+                dispatcher(updateAnaliseFields(analiFields))
                 setFiltedAnaliseFields(analiFields)
             } else {
                 let filteredParametro = parametros
@@ -101,7 +101,7 @@ const MultiRegistroAnalise = (props) => {
 
     const salvarAnalise = () => {
         const { toastManager } = props
-        ScqApi.CriarAnalise(analiseToSave, [dispatchers().loadParametros, dispatchers().loadOcps]).then(res => {
+        ScqApi.CriarAnalise(analiseToSave).then(res => {
             responseHandler(res, toastManager, "Analise", 'success')
         })
         setShowCheckOut(false)
@@ -131,19 +131,18 @@ const MultiRegistroAnalise = (props) => {
 
         setShowCheckOut(true)
         let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data, ocpId: null, observacaoAnalise: '', parametro: analiseFieldCheckOut.parametro }
-        dispatcher(setAnaliseToSave(analiseCheckout))
+        dispatcher(updateAnaliseToSave(analiseCheckout))
     }
 
     const closeCheckOut = () => {
         setShowCheckOut(false)
-        dispatcher(clear())
     }
 
 
     const observacaoUpdate = (valor) => {
         let analiseCheckOutWithObservacao = { ...analiseToSave }
         analiseCheckOutWithObservacao.observacaoAnalise = valor
-        dispatcher(setAnaliseToSave(analiseCheckOutWithObservacao))
+        dispatcher(updateAnaliseToSave(analiseCheckOutWithObservacao))
     }
 
 
@@ -160,7 +159,7 @@ const MultiRegistroAnalise = (props) => {
                     <h2>Registro de Analise</h2>
                     {analiseToSave && <CheckoutAnalise onValueChange={(valor) => observacaoUpdate(valor)} hide={true} showCheckOut={showCheckOut} valid={true} resultado={analiseToSave.resultado} parametro={analiseToSave.parametro} status={analiseToSave.status} salvarAnalise={() => salvarAnalise()} gerarOcp={gerarOcp} closeCheckOut={() => closeCheckOut()}></CheckoutAnalise>}
                     <Row>
-                        <GenericSelect selection={processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => dispatcher(actions.setProcessoIdAnaliseForm(processoId))} ></GenericSelect>
+                        <GenericSelect selection={processoId} title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => dispatcher(updateProcessoId(processoId))} ></GenericSelect>
                     </Row>
                     <Row>
                         <Form.Group>
@@ -174,19 +173,19 @@ const MultiRegistroAnalise = (props) => {
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                            <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(actions.setEtapaNomeForm(event.target.value))}></Form.Control>
+                            <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de parametro:</Form.Label>
-                            <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(actions.setParametroNome(event.target.value))}></Form.Control>
+                            <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de Turno:</Form.Label>
-                            <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(actions.setTurnoAnaliseForm(event.target.value))}></Form.Control>
+                            <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(updateTurno(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
                 </Row> :
@@ -195,7 +194,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                                    <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(actions.setEtapaNomeForm(event.target.value))}></Form.Control>
+                                    <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updadteEtapaNome(event.target.value))}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -203,7 +202,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de parametro:</Form.Label>
-                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(actions.setParametroNome(event.target.value))}></Form.Control>
+                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateParametroNome(event.target.value))}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -211,7 +210,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Turno:</Form.Label>
-                                    <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(actions.setTurnoAnaliseForm(event.target.value))}></Form.Control>
+                                    <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(updateTurno(event.target.value))}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
