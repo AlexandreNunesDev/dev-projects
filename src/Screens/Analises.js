@@ -1,9 +1,10 @@
 import ScqApi from '../Http/ScqApi'
 import { Button, Col, Container, Form } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import { updateAnalises, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateFiltroProcesso, updateHistoricoDataFinal, updateHistoricoDataInicial } from '../Reducers/analiseReducer'
+import { updateAnalises, updateAnaliseToGenerateOcp, updateAnaliseToSave, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateFiltroProcesso, updateHistoricoDataFinal, updateHistoricoDataInicial } from '../Reducers/analiseReducer'
 import { useEffect, useState } from 'react'
 import { withMenuBar } from '../Hocs/withMenuBar'
+import { useHistory } from 'react-router-dom'
 
 const Analises = () => {
 
@@ -16,6 +17,8 @@ const Analises = () => {
     const filtroProcesso = useSelector(state => state.analise.filtroProcesso)
     const filtroEtapa = useSelector(state => state.analise.filtroEtapa)
     const filtroParametro = useSelector(state => state.analise.filtroParametro)
+    const history = useHistory()
+
 
 
     useEffect(() => {
@@ -46,6 +49,11 @@ const Analises = () => {
     useEffect(() => {
         dispatchers(updateFilteredAnalises(filtra(analisesHistorico)))
     }, [filtroProcesso, filtroEtapa, filtroParametro])
+
+    const gerarOcp = (analise) => {
+        dispatchers(updateAnaliseToSave(analise))
+        history.push("/CadastroOcp")
+    }
 
     return (
         <Container>
@@ -120,7 +128,7 @@ const Analises = () => {
                             <td>{analise.pMin}</td>
                             <td>{analise.pMax}</td>
                             <td>{analise.valor} {analise.unidade}</td>
-                            <td><Button>GERAR OCP</Button></td>
+                            <td><Button onClick={() => gerarOcp(analise)}>GERAR OCP</Button></td>
                         </tr>)
                     })}
                 </tbody>

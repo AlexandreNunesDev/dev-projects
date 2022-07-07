@@ -23,10 +23,13 @@ const TableHead = (props) => {
         <thead >
             <tr>
                 <th style={{ textAlign: "center" }}>Id</th>
-                {!isMobile && <th style={{ textAlign: "center" }}>Acao</th>}
+                <th style={{ textAlign: "center" }}>Acao</th>
                 <th style={{ textAlign: "center" }}>Processo</th>
                 <th style={{ textAlign: "center" }}>Etapa</th>
-                <th style={{ textAlign: "center" }}>Motivo</th>
+                <th style={{ textAlign: "center" }}>Max</th>
+                <th style={{ textAlign: "center" }}>Min</th>
+                <th style={{ textAlign: "center" }}>Resultado</th>
+                {/* <th style={{ textAlign: "center" }}>Motivo</th> */}
                 <th style={{ textAlign: "center" }}>Correção</th>
                 <th style={{ textAlign: "center" }}>Status</th>
             </tr>

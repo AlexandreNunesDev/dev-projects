@@ -68,18 +68,9 @@ const CadastroDeOcpAdicao = (props) => {
 
 
 
-    const saveOcp = () => {
-        let analiseCopy = { ...analiseToSave }
-        if (analiseCopy.resultado < parametro?.pMin || analiseCopy.resultado > parametro?.pMax) {
-            analiseCopy.status = 'fofe'
-        } else if ((analiseCopy.resultado > parametro?.pMinT && analiseCopy.resultado < parametro?.pMaxT)) {
-            analiseCopy.status = 'deft'
-        } else {
-            analiseCopy.status = 'foft'
-        }
-        
-        const fullAnaliseForm = { ...analiseCopy, responsavel: responsavel, observacao: observacao, adicoes: adicoes }
-        ScqApi.CriarAnaliseComOcpAdicao(fullAnaliseForm).then((res) => {
+    const saveOcp = () => {        
+        let ocp = {parametroId : analiseToSave.parametroId, responsavel : responsavel, observacao : observacao, analiseId : analiseToSave.id, etapaId : analiseToSave.etapaId, adicoes  : adicoes}
+        ScqApi.CriarOcp(ocp).then((res) => {
             responseHandler(res, toastManager, "OrdemDeCorrecao", toastOk)
         }
         );

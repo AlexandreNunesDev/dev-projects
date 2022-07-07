@@ -29,7 +29,7 @@ const RegistroDeAnalise = (props) => {
     const etapas = useSelector(state => state.options.etapas)
     const parametros = useSelector(state => state.options.parametros)
     const userName = useSelector(state => state.global.userName)
-    const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
+    const analiseToSave = useSelector(state => state.analise.analiseToSave)
     const [processo, setprocesso] = useState('')
     const [etapa, setetapa] = useState('')
     const [parametro, setparametro] = useState('')

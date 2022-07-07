@@ -190,10 +190,13 @@ const OcpsTableBody = (props) => {
 
                 <tr key={ocp.id}>
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                    {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
+                    <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                     <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome}`}</td>
-                    <td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>
+                    <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}`}</td>
+                    <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin}`}</td>
+                    <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}`}</td>
+                    {/*<td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>*/}
                     <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
                     <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                 </tr>
@@ -207,10 +210,13 @@ const OcpsTableBody = (props) => {
                     </tr>
                     <tr>
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                        {!isMobile && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
+                        <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                         <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome}`}</td>
-                        <td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>
+                        <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMax}`}</td>
+                        <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.pMin}`}</td>
+                        <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.resultado}`}</td>
+                        {/*<td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>*/}
                         <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
                         <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
                     </tr>

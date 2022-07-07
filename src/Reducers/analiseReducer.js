@@ -6,11 +6,13 @@ const initialState = {
     dataInicioHistorico: '',
     dataFimHistorico: '',
     historicoPage: 1,
+    totalPages : 0,
     processoId: '',
     etapaNome: '',
     turno: '',
     parametroNome: '',
     analiseToSave: null,
+    analiseToGenerateOcp : null,
     analiseFields: [],
     filtroProcesso: '',
     filtroEtapa: '',
@@ -46,6 +48,9 @@ const analiseReducer = createSlice({
         updateAnaliseFields(state, action) {
             state.analiseFields = action.payload
         },
+        updateAnaliseToGenerateOcp(state, action) {
+            state.analiseToGenerateOcp = action.payload
+        },
         updateHistoricoDataInicial(state, action) {
             state.dataInicioHistorico = action.payload
         },
@@ -59,6 +64,12 @@ const analiseReducer = createSlice({
             state.filtroEtapa = action.payload
         },
         updateFiltroParametro(state, action) {
+            state.filtroParametro = action.payload
+        },
+        updatePage(state, action) {
+            state.filtroParametro = action.payload
+        },
+        updateTotalPages(state, action) {
             state.filtroParametro = action.payload
         },
         clear(state) {
@@ -75,10 +86,12 @@ const analiseReducer = createSlice({
             state.filtroProcesso = ''
             state.filtroEtapa = ''
             state.filtroParametro = ''
+            state.totalPages = 0
+            state.historicoPage = 0
         },
 
     },
 })
 
-export const {updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields, clear } = analiseReducer.actions
+export const {updateAnaliseToGenerateOcp,updateTotalPages,updatePage,updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields, clear } = analiseReducer.actions
 export default analiseReducer.reducer
