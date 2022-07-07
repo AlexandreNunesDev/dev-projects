@@ -36,7 +36,7 @@ const CadastroDeOcpAdicao = (props) => {
     const [etapa, setEtapa] = useState()
     const dispatcher = useDispatch()
     const [loading] = useState(false)
-    const analiseToSave = useSelector(state => state.singleAnalise.analiseToSave)
+    const analiseToSave = useSelector(state => state.analise.analiseToSave)
     const parametros = useSelector(state => state.options.parametros)
     const etapas = useSelector(state => state.options.etapas)
     const materiasPrim = useSelector(state => state.options.materiasPrima)
