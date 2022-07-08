@@ -1,7 +1,7 @@
 import ScqApi from '../Http/ScqApi'
 import { Button, Col, Container, Form } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import { updateAnalises, updateAnaliseToGenerateOcp, updateAnaliseToSave, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateFiltroProcesso, updateHistoricoDataFinal, updateHistoricoDataInicial } from '../Reducers/analiseReducer'
+import { updateAnalises, updateAnaliseToGenerateOcp, updateAnaliseToSave, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateFiltroProcesso, updateHistoricoDataFinal, updateHistoricoDataInicial, updateOrdensToView } from '../Reducers/analiseReducer'
 import { useEffect, useState } from 'react'
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { useHistory } from 'react-router-dom'
@@ -38,10 +38,10 @@ const Analises = () => {
         if (filtroProcesso) {
             initialAnlises = initialAnlises.filter(analise => analise.nomeProcesso.toLowerCase().startsWith(filtroProcesso.toLowerCase()))
         }
-        if(filtroEtapa) {
+        if (filtroEtapa) {
             initialAnlises = initialAnlises.filter(analise => analise.nomeEtapa.toLowerCase().startsWith(filtroEtapa.toLowerCase()))
         }
-        if(filtroParametro) {
+        if (filtroParametro) {
             initialAnlises = initialAnlises.filter(analise => analise.nomeParametro.toLowerCase().startsWith(filtroParametro.toLowerCase()))
         }
         return initialAnlises
@@ -51,8 +51,12 @@ const Analises = () => {
     }, [filtroProcesso, filtroEtapa, filtroParametro])
 
     const gerarOcp = (analise) => {
-        dispatchers(updateAnaliseToSave(analise))
         history.push("/CadastroOcp")
+    }
+
+    const verOdens = (analise) => {
+        dispatchers(updateOrdensToView(analise.ocps))
+        history.push("/HistoricoCorrecao")
     }
 
     return (
@@ -131,8 +135,19 @@ const Analises = () => {
                             <td>{analise.pMinT}</td>
                             <td>{analise.pMaxT}</td>
                             <td>{analise.pMax}</td>
-                            <td style={{backgroundColor : backGroundByAnaliseStatus(analise.statusAnalise)}} >{analise.resultado} {analise.unidade}</td>
-                            <td><Button onClick={() => gerarOcp(analise)}>GERAR OCP</Button></td>
+                            <td style={{ backgroundColor: backGroundByAnaliseStatus(analise.statusAnalise) }} >{analise.resultado} {analise.unidade}</td>
+                            {
+                                analise.ocps.length > 0 ? 
+                                <td>
+                                    <Button style={{margin : 2}} onClick={() => gerarOcp(analise)}>GERAR OCP</Button>
+                                    <Button  variant="link" style={{margin : 2}} onClick={() => verOdens(analise)}>VER OCPs</Button>
+                                </td> :
+                                <td>
+                                    <Button style={{margin : 2}} onClick={() => gerarOcp(analise)}>GERAR OCP</Button>
+                                </td>
+
+                            }
+
                         </tr>)
                     })}
                 </tbody>

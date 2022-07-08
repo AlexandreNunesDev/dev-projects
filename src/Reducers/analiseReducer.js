@@ -17,6 +17,7 @@ const initialState = {
     filtroProcesso: '',
     filtroEtapa: '',
     filtroParametro: '',
+    ordensToView : [],
 
 }
 
@@ -26,6 +27,9 @@ const analiseReducer = createSlice({
     reducers: {
         updateAnalises(state, action) {
             state.analises = action.payload
+        },
+        updateOrdensToView(state, action) {
+            state.ordensToView = action.payload
         },
         updateFilteredAnalises(state, action) {
             state.filteredAnalises = action.payload
@@ -93,5 +97,5 @@ const analiseReducer = createSlice({
     },
 })
 
-export const {updateAnaliseToGenerateOcp,updateTotalPages,updatePage,updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields, clear } = analiseReducer.actions
+export const {updateOrdensToView,updateAnaliseToGenerateOcp,updateTotalPages,updatePage,updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields, clear } = analiseReducer.actions
 export default analiseReducer.reducer

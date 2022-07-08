@@ -48,6 +48,7 @@ import RegistroDeArea from './Screens/RegistroDeArea';
 import CorrecaoConfirm from './Screens/CorrecaoConfirm';
 import CadastroParametroNovo from './Screens/CadastroParametroNovo';
 import Analises from './Screens/Analises';
+import HistoricoCorrecoes from './Screens/HistoricoCorrecoes';
 
 
 
@@ -152,6 +153,7 @@ class App extends React.Component {
             <Route path='/RegistroDeArea' exact={true} component={RegistroDeArea} />
             <Route path='/CorrecaoConfirm' exact={true} component={CorrecaoConfirm} />
             <Route path='/Analises' exact={true} component={Analises} />
+            <Route path='/HistoricoCorrecao' exact={true} component={HistoricoCorrecoes} />
           </Switch>
         </>
 
@@ -188,6 +190,7 @@ class App extends React.Component {
             <Route path='/RegistroDeArea' exact={true} component={RegistroDeArea} />
             <Route path='/CorrecaoConfirm' exact={true} component={CorrecaoConfirm} />
             <Route path='/Analises' exact={true} component={Analises} />
+            <Route path='/HistoricoCorrecao' exact={true} component={HistoricoCorrecoes} />
             
           </Switch>
         </>
