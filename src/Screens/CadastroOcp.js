@@ -16,6 +16,7 @@ import { WebSocketContext } from '../websocket/wsProvider';
 import AdicaoForm from '../Components/AdicaoForm';
 import { clear, updateAdicoes } from '../Reducers/adicaoReducer';
 import { toastOk } from '../Services/toastType';
+import { isInsideFaixa } from '../Services/analiseService';
 
 
 
@@ -97,21 +98,21 @@ const CadastroDeOcpAdicao = (props) => {
                                 <Form.Row>
                                     {etapa &&
                                         <Form.Group xs={3} as={Col}>
-                                            <Form.Label>Etapa : {etapa.nome}</Form.Label>
+                                            <Form.Label><strong>Etapa :</strong> {etapa.nome}</Form.Label>
                                         </Form.Group>
                                     }
                                     <Form.Group xs={3} as={Col} >
-                                        <Form.Label>Parametro : {`${parametro.nome}`}</Form.Label>
+                                        <Form.Label><strong>Parametro :</strong> {`${parametro.nome}`}</Form.Label>
                                     </Form.Group>
 
                                     <Form.Group xs={2} as={Col}>
-                                        <Form.Label>Faixa Mininima : {`${parametro.pMin} ${unidade}`}</Form.Label>
+                                        <Form.Label><strong>Faixa Mininima :</strong> {`${parametro.pMin} ${parametro.unidade}`}</Form.Label>
                                     </Form.Group>
                                     <Form.Group xs={2} as={Col} >
-                                        <Form.Label>Faixa Máxima : {`${parametro.pMax} ${unidade}`}</Form.Label>
+                                        <Form.Label><strong>Faixa Máxima :</strong> {`${parametro.pMax} ${parametro.unidade}`}</Form.Label>
                                     </Form.Group>
                                     <Form.Group xs={2} as={Col} >
-                                        <Form.Label style={{ color: analiseToSave.status === "fofe" ? 'red' : 'black' }}>Resultado: {`${analiseToSave.resultado} ${unidade}`}</Form.Label>
+                                        <Form.Label style={{ color: isInsideFaixa(analiseToSave) == true  ? 'red' : 'black' }}><stroong style={{color : 'black', fontWeight : 'bold'}}>Resultado:</stroong> {`${analiseToSave.resultado} ${parametro.unidade}`}</Form.Label>
                                     </Form.Group>
 
                                 </Form.Row>

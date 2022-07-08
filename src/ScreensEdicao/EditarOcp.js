@@ -15,6 +15,7 @@ import { clear, updateAdicoes } from '../Reducers/adicaoReducer';
 import { responseHandler } from '../Services/responseHandler';
 import { toastInfo, toastWarn } from '../Services/toastType';
 import { isInsideFaixa } from '../Services/analiseService';
+import { buildMotivo } from '../Services/ocpService';
 
 
 
@@ -35,7 +36,7 @@ const EditarOcpAdicao = (props) => {
 
     useEffect(() => {
         if (adicoes.length === 0) {
-            let adicoesDtoToAdicoes = ocp.ocpToEdit.adicoesDto.map(adicaoDto => new Adicao(adicaoDto.id, adicaoDto.quantidade, adicaoDto.ocpId, adicaoDto.idMp, adicaoDto.unidade, adicaoDto.nomeMp ,adicaoDto.quantidadeRealizada,adicaoDto.status))
+            let adicoesDtoToAdicoes = ocp.ocpToEdit.adicoesDto.map(adicaoDto => new Adicao(adicaoDto.id, adicaoDto.quantidade, adicaoDto.ocpId, adicaoDto.idMp, adicaoDto.unidade, adicaoDto.nomeMp, adicaoDto.quantidadeRealizada, adicaoDto.status))
             dispatcher(updateAdicoes([...adicoesDtoToAdicoes, ...adicoes]))
         }
 
@@ -77,23 +78,19 @@ const EditarOcpAdicao = (props) => {
                 <h1>{`Editar Ordem de Correcao : ${ocp.ocpToEdit.id}`}</h1>
                 <Form style={{ marginTop: 20 }}>
                     <Form.Row>
-                        <Form.Group xs={3} as={Col}>
-                            <Form.Label>Etapa : {ocp.ocpToEdit.etapaNome}</Form.Label>
-                        </Form.Group>
                         <Form.Group xs={3} as={Col} >
-                            <Form.Label>Parametro : {`${ocp.ocpToEdit.parametroNome}`}</Form.Label>
+                            <Form.Label><strong>Processo :</strong> {`${ocp.ocpToEdit.processoNome}`}</Form.Label>
+                        </Form.Group>
+                        <Form.Group xs={3} as={Col}>
+                            <Form.Label><strong>Etapa :</strong> {ocp.ocpToEdit.etapaNome}</Form.Label>
                         </Form.Group>
 
-                        <Form.Group xs={2} as={Col}>
-                            <Form.Label>Faixa Mininima : {`${ocp.ocpToEdit.pMin} ${ocp.ocpToEdit.unidade}`}</Form.Label>
-                        </Form.Group>
-                        <Form.Group xs={2} as={Col} >
-                            <Form.Label>Faixa Máxima : {`${ocp.ocpToEdit.pMax} ${ocp.ocpToEdit.unidade}`}</Form.Label>
-                        </Form.Group>
-                        <Form.Group xs={2} as={Col} >
-                            <Form.Label style={{ color: !isInsideFaixa(ocp.ocpToEdit) ? 'red' : 'black' }}>Resultado: {`${ocp.ocpToEdit.resultado} ${ocp.ocpToEdit.unidade}`}</Form.Label>
-                        </Form.Group>
+                    </Form.Row>
 
+                    <Form.Row>
+                        <Form.Group xs={9} as={Col}>
+                            <Form.Label><strong>Detalhes:</strong> {ocp.ocpToEdit.motivo}</Form.Label>
+                        </Form.Group>
                     </Form.Row>
 
                     <AdicaoForm deleteAdicao={deleteAdicao}></AdicaoForm>
