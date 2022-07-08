@@ -51,6 +51,7 @@ const Analises = () => {
     }, [filtroProcesso, filtroEtapa, filtroParametro])
 
     const gerarOcp = (analise) => {
+        dispatchers(updateAnaliseToSave(analise))
         history.push("/CadastroOcp")
     }
 

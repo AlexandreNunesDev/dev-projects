@@ -14,6 +14,8 @@ import { responseHandler } from '../Services/responseHandler';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { toastInfo} from '../Services/toastType';
 import dispatchers from '../mapDispatch/mapDispathToProps';
+import { useSelector } from 'react-redux';
+import { getValorSugestao } from '../Services/ocpService';
 
 
 const EditarParametro = (props) => {
@@ -26,6 +28,7 @@ const EditarParametro = (props) => {
     const [processoId, setProcessoId] = useState()
     const [etapas, setEtapas] = useState()
     const [etapaId, setEtapaId] = useState()
+    const [etapa, setEtapa] = useState()
     const [nome, setNome] = useState()
     const [pMax, setPmax] = useState()
     const [pMin, setPmin] = useState()
@@ -39,22 +42,16 @@ const EditarParametro = (props) => {
     const [frequenciaAnalise, setFrequenciaAnalise] = useState()
     const [edited, setEdited] = useState(false)
     const [habilitado ,  setHabilitado] = useState()
-
+    const [regras, setRegras] = useState()
+    const etapasOps = useSelector(state => state.options.etapas)
+    const processosOps = useSelector(state => state.options.processos)
+    const materiasPrimaOps = useSelector(state => state.options.materiasPrima)
 
 
 
 
     useEffect(() => {
-        ScqApi.ListaProcessos().then(res => {
-            setProcessos(res)
-        })
-    },[])
-
-
-    useEffect(() => {
-        processoId && ScqApi.ListaEtapasByProcesso(processoId).then(res => {
-            setEtapas(res)
-        })
+        processoId &&  setEtapas(etapasOps.filter(etap => etap.processoId == processoId))
     }, [processoId])
 
  
@@ -79,16 +76,36 @@ const EditarParametro = (props) => {
         setProcessoId(parametro.processoId)
         setEtapaId(parametro.etapaId)
         setUnidade(parametro.unidade)
+        setEtapa(etapasOps.filter(etap => etap.id == parametro.etapaId)[0])
     }
     },[parametro])
 
+    useEffect(() => {
+        if (etapaId) {
+            let etapa = etapasOps.filter(etapa => etapa.id == etapaId)[0]
+            setEtapa(etapa)
+            let materiasPrima = etapa.proportionMps.map(propMp => {
+                let idMp = propMp.split(':')[0]
+                let materiaPrima = materiasPrimaOps.filter(mp => mp.id == idMp)
+                return materiaPrima[0]
+            })
+            let regrasToBeCreated = materiasPrima.map(mp => ({ mpId: mp.id, mpNome: mp.nome, parametroId: null, valorUnidade: getValorSugestao(etapa.volume, unidade, etapa.proportionMps, mp.id) }))
+            setRegras(regrasToBeCreated)
+        }
+
+    }, [etapaId, unidade])
+
     
-    useEffect(() => console.log(habilitado),[habilitado])
+    const updateRegrasField = (valor, regraField, index) => {
+        const regrasCopy = [...regras].map(r => ({ ...r }))
+        regraField.valorUnidade = valor
+        regrasCopy[index] = regraField
+        setRegras(regrasCopy)
+    }
 
     
     const onSaveClick = () => {
-
-        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart,isHabilitado : habilitado}
+        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart,isHabilitado : habilitado , regrasCorrecao : regras}
         ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res,toastManager ,"Parametro",toastInfo))
         
     }
@@ -109,7 +126,7 @@ const EditarParametro = (props) => {
                          </Form.Group> }
                     <Form.Row>
                     <Col>
-                            <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={processos} onChange={id => setProcessoId(id)} selection={processos && processoId}></GenericSelect>
+                            <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={processosOps} onChange={id => setProcessoId(id)} selection={processos && processoId}></GenericSelect>
                         </Col> 
                       <Col>
                             <GenericSelect title={"Etapa"} returnType={"id"} default={"Escolha uma Etapa"} ops={etapas} onChange={id => setEtapaId(id)} selection={etapas && etapaId}></GenericSelect>
@@ -189,6 +206,28 @@ const EditarParametro = (props) => {
                             {etapaId && <FormulaBuilder etapaId={etapaId} onClose={formula => setFormula(formula)} processos={processos} etapas={etapas}></FormulaBuilder>}
                         </Form.Group>
                     </Form.Row>
+                    {regras &&
+                        <>
+                            <h3>Regras de Correcao para tanque de {etapa.volume}</h3>
+                            <div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Materia Prima</th>
+                                            <th>Quantidade / unidade:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {regras.map((regra, index) => {
+                                            return (<tr key={regra.mpId}>
+                                                <td>{regra.mpNome}</td>
+                                                <td><Form.Control type="number" pattern="0.00" placeholder="quantidade dosada para cada 1 unidade" value={regra.valorUnidade} onChange={event => updateRegrasField(event.target.value, regra, index)} /></td>
+                                            </tr>)
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>}
 
                     <Form.Group style={{ marginTop: 20 }}>
                         <Button style={{ margin: 5 }} variant="primary" type="reset" onClick={() => onSaveClick()}>Salvar</Button>
