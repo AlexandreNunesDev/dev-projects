@@ -5,6 +5,7 @@ import { updateAnalises, updateAnaliseToGenerateOcp, updateAnaliseToSave, update
 import { useEffect, useState } from 'react'
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { useHistory } from 'react-router-dom'
+import { backGroundByAnaliseStatus } from '../Services/analiseService'
 
 const Analises = () => {
 
@@ -25,9 +26,8 @@ const Analises = () => {
         if (historicoDataInicial && historicoDataFinal) {
             ScqApi.LoadHistoricoAnaliseWithPage(historicoDataInicial, historicoDataFinal, historicoPage, 50)
                 .then(res => {
-                    let dados = res
-                    dispatchers(updateAnalises(dados.content))
-                    dispatchers(updateFilteredAnalises(filtra(dados.content)))
+                    dispatchers(updateAnalises(res))
+                    dispatchers(updateFilteredAnalises(filtra(res)))
                 })
 
         }
@@ -112,6 +112,8 @@ const Analises = () => {
                         <th>Etapa</th>
                         <th>Parametro</th>
                         <th>Min</th>
+                        <th>Min Trab.</th>
+                        <th>Max Trab.</th>
                         <th>Max</th>
                         <th>Resultado</th>
                         <th>Ação</th>
@@ -126,8 +128,10 @@ const Analises = () => {
                             <td>{analise.nomeEtapa}</td>
                             <td>{analise.nomeParametro}</td>
                             <td>{analise.pMin}</td>
+                            <td>{analise.pMinT}</td>
+                            <td>{analise.pMaxT}</td>
                             <td>{analise.pMax}</td>
-                            <td>{analise.valor} {analise.unidade}</td>
+                            <td style={{backgroundColor : backGroundByAnaliseStatus(analise.statusAnalise)}} >{analise.resultado} {analise.unidade}</td>
                             <td><Button onClick={() => gerarOcp(analise)}>GERAR OCP</Button></td>
                         </tr>)
                     })}

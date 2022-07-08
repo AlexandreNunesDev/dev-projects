@@ -77,17 +77,7 @@ const CheckOutAnalise = (props) => {
           <Button style={{ margin: 2 }} variant="secondary" onClick={props.showCheckOut == ! null ? props.closeCheckOut : handleClose}>
             Cancelar
           </Button>
-          <Button onClick={() => {
-            if (props.analiseId) {
-              props.gerarOcpReanalise(history)
-            } else {
-              props.gerarOcp(history)
-            }
-
-          }}>
-            Gerar Ocp
-          </Button>
-          {props.status !== "fofe" ? <Button style={{ margin: 2 }} variant="primary" onClick={() => {
+          <Button style={{ margin: 2 }} variant="primary" onClick={() => {
             if (props.analiseId) {
               handleClose()
               props.salvarReanalise()
@@ -97,9 +87,7 @@ const CheckOutAnalise = (props) => {
             }
           }}>
             Salvar
-          </Button> : <Button disabled>
-            Salvar
-          </Button>}
+          </Button>
         </Modal.Footer>
 
       </Modal>

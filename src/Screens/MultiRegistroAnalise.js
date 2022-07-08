@@ -64,9 +64,9 @@ const MultiRegistroAnalise = (props) => {
                 }
             })
         }
-
-
     }
+
+
 
     useEffect(() => {
         let analiFields
