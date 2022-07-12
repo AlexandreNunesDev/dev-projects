@@ -256,6 +256,7 @@ const MultiRegistroAnalise = (props) => {
                                     <th style={{ textAlign: "center" }}>Frequencia</th>
                                     <th style={{ textAlign: "center" }}>Data Plenejada</th>
                                     <th style={{ textAlign: "center" }}>Turno</th>
+                                    <th style={{ textAlign: "center" }}>Processo</th>
                                     <th style={{ textAlign: "center" }}>Etapa</th>
                                     <th style={{ textAlign: "center" }}>Parametro</th>
                                     <th style={{ textAlign: "center" }}>Minimo</th>
@@ -273,6 +274,7 @@ const MultiRegistroAnalise = (props) => {
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.frequencia}`}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.dataPlanejada)}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{`${analiseField.turno} ${onlyTime(analiseField.dataPlanejada)}`}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center", maxWidth: 120 }} >{analiseField.processoNome}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center", maxWidth: 120 }} >{analiseField.etapaNome}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center", maxWidth: 120 }}>{analiseField.parametroNome}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.pMin}</Form.Label></td>
