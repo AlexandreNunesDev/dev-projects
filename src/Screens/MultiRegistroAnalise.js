@@ -109,10 +109,11 @@ const MultiRegistroAnalise = (props) => {
         const index = filteredAnalises.findIndex(fieldAnalise => Number(fieldAnalise.parametroId) === Number(analiseField.parametroId))
         const stateCpy = [...filteredAnalises].map(fi => ({ ...fi }))
         let analiseFieldCopy = { ...analiseField }
-        analiseFieldCopy.isLate = !stateCpy[index].isLate
+        analiseFieldCopy.isLate = false
         if (index !== -1) stateCpy[index] = analiseFieldCopy
         dispatcher(updateFilteredAnalises(stateCpy))
     }
+
 
     const checkoutAnalise = (analiseField) => {
         let nomeAnalista
