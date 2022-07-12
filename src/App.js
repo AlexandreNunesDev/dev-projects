@@ -48,6 +48,7 @@ import CorrecaoConfirm from './Screens/CorrecaoConfirm';
 import CadastroParametroNovo from './Screens/CadastroParametroNovo';
 import Analises from './Screens/Analises';
 import HistoricoCorrecoes from './Screens/HistoricoCorrecoes';
+import CadastroOcpLivre from './Screens/CadastroOcpLivre';
 
 
 
@@ -130,6 +131,7 @@ class App extends React.Component {
             <Route path='/CadastroParametro' exact={true} component={CadastroParametroNovo} />
             <Route path='/CadastroMateriaPrima' exact={true} component={CadastroMateriaPrima} />
             <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp } />
+            <Route path='/CadastroOcpLivre' exact={true} component={CadastroOcpLivre} />
             <Route path='/CadastroTroca' exact={true} component={CadastroTroca} />
             <Route path='/CadastroTarefasDeManutencao' exact={true} component={CadastroDeTarefasDeManutencao} />
             <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
@@ -176,6 +178,7 @@ class App extends React.Component {
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
             <Route path='/IndicadorDeOmp' exact={true} component={IndicadorDeOmp} />
             <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp } />
+            <Route path='/CadastroOcpLivre' exact={true} component={CadastroOcpLivre} />
             <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
             <Route path='/OrdensDeManutencao' exact={true} component={OrdensDeManutencao} />
             <Route path='/FinalizarOmp' exact={true} component={FinalizarOmp} />

@@ -12,7 +12,7 @@ import { updateAdicoes } from '../Reducers/adicaoReducer'
 
 
 
-const AdicaoForm = ({ deleteAdicao, parametroId }) => {
+const AdicaoForm = ({ deleteAdicao, parametroId , etapa }) => {
 
     const materiasPrima = useSelector(state => state.options.materiasPrima)
     const ocpToEdit = useSelector(state => state.ocp.ocpToEdit)
@@ -86,7 +86,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId }) => {
 
             <h4>Informacões para adicao</h4>
             <Row>
-                <Col><Form.Label><strong>Volume Etapa considerado:</strong> {ocpToEdit.volumeEtapa} Lts</Form.Label></Col>
+                <Col><Form.Label><strong>Volume Etapa considerado:</strong> {etapa.volume || ocpToEdit.volumeEtapa } Lts</Form.Label></Col>
             </Row>
 
             <Row >

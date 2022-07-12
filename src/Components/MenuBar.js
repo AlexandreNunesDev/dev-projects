@@ -42,7 +42,10 @@ const MenuBar = () => {
                   <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
                   <Link className="nav-link" to="/RegistroDeArea">Registro de Area</Link>
                 </NavDropdown>
-                <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
+                <NavDropdown title="OCP" id="basic-nav-dropdown">
+                  <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
+                  <Link className="nav-link" to="/CadastroOcpLivre">Cadastrar Ordem de Correcao</Link>
+                </NavDropdown>
                 <Link className="nav-link" to='/Trocas' >Trocas</Link>
                 <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
 
@@ -68,7 +71,7 @@ const MenuBar = () => {
               </Nav>
 
             </Navbar.Collapse>
-            <NavItem style={{color : global.isConectedSocket ? 'green' : 'red', marginRight: 20 }}>{global.isConectedSocket ? "Conectado" : "Offline"}</NavItem>
+            <NavItem style={{ color: global.isConectedSocket ? 'green' : 'red', marginRight: 20 }}>{global.isConectedSocket ? "Conectado" : "Offline"}</NavItem>
             {!isMobile && <NavItem style={{ marginRight: 20 }}><BiUserCircle size={24} /> Usuario: {global.userName}</NavItem>}
           </Navbar>
 
@@ -80,7 +83,7 @@ const MenuBar = () => {
       <>
 
         <Navbar bg="light" expand="lg">
-        <NavItem style={{ marginRight: 20 }}>{version}</NavItem>
+          <NavItem style={{ marginRight: 20 }}>{version}</NavItem>
           <Image height={50} width={80} src={scqlogo} rounded />
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -94,12 +97,16 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/RegistroAnaliseMulti">Registro de Analise</Link>
                 <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
               </NavDropdown>
-              <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
+              <NavDropdown title="OCP" id="basic-nav-dropdown">
+                <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
+                <Link className="nav-link" to="/CadastroOcpLivre">Cadastrar Ordem de Correcao</Link>
+              </NavDropdown>
+
               <Link className="nav-link" to='/Trocas' >Trocas</Link>
               <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
               <NavDropdown title="Consultas" id="basic-nav-dropdown">
-                  <Link className="nav-link" to="/Analises">Analises</Link>
-                </NavDropdown>
+                <Link className="nav-link" to="/Analises">Analises</Link>
+              </NavDropdown>
               <NavDropdown title="Indicadores" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                 <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
@@ -109,7 +116,7 @@ const MenuBar = () => {
 
           </Navbar.Collapse>
 
-          <NavItem style={{color : global.isConectedSocket ? 'green' : 'red', marginRight: 20 }}>{global.isConectedSocket ? "Conectado" : "Offline"}</NavItem>
+          <NavItem style={{ color: global.isConectedSocket ? 'green' : 'red', marginRight: 20 }}>{global.isConectedSocket ? "Conectado" : "Offline"}</NavItem>
           {!isMobile && <NavItem style={{ marginRight: 20 }}> <BiUserCircle size={24} /> Usuario: {global.userName}</NavItem>}
 
 
