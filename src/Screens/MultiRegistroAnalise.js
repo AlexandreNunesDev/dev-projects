@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router"
@@ -64,6 +64,8 @@ const MultiRegistroAnalise = (props) => {
             })
         }
     }
+
+    useEffect(() => filter(),[])
 
 
 
