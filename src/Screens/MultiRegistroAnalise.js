@@ -8,7 +8,7 @@ import GenericSelect from "../Components/GenericSelect"
 import { withMenuBar } from "../Hocs/withMenuBar"
 import ScqApi from "../Http/ScqApi"
 import dispatchers from "../mapDispatch/mapDispathToProps"
-import { updadteEtapaNome, updateAnaliseToSave, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateParametroNome, updateProcessoId, updateTurno } from "../Reducers/analiseReducer"
+import { updadteEtapaNome, updateAnaliseToSave, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateFrequencia, updateParametroNome, updateProcessoId, updateTurno } from "../Reducers/analiseReducer"
 import { buildAnaliseInputMenu, getAnaliseStatus, loadButtons } from "../Services/analiseMenuBuilder"
 import { responseHandler } from "../Services/responseHandler"
 import { formatIsoDate, OnlyDate, onlyTime } from "../Services/stringUtils"
@@ -21,6 +21,7 @@ const MultiRegistroAnalise = (props) => {
     const processos = useSelector(state => state.options.processos)
     const parametros = useSelector(state => state.options.parametros)
     const userName = useSelector(state => state.global.userName)
+    const frequencia = useSelector(state => state.analise.frequencia)
     const analiseToSave = useSelector(state => state.analise.analiseToSave)
     const filteredAnalises = useSelector(state => state.analise.filteredAnalises)
     const dispatcher = useDispatch()
@@ -36,7 +37,8 @@ const MultiRegistroAnalise = (props) => {
     const processoId = useSelector(state => state.analise.processoId)
     let dataFieldRef = useRef(null)
     const history = useHistory()
-    
+
+
 
 
 
@@ -65,21 +67,22 @@ const MultiRegistroAnalise = (props) => {
 
 
     useEffect(() => {
-            let analiseFieldsCopy = [...analiseFields].map(afi => ({...afi}))
-            if (processoId) analiseFieldsCopy = filterFields(analiseFieldsCopy, "processoId", processoId)
-            if (parametroNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "parametroNome", parametroNome, true)
-            if (etapaNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "etapaNome", etapaNome, true)
-            if (turno) analiseFieldsCopy = filterFields(analiseFieldsCopy, "turno", turno, true)
-            let toBuildFields = analiseFieldsCopy.map(fiCopy => {
-                let filteredCopy = filteredAnalises.find(fiField => fiField.parametroId == fiCopy.parametroId)
-                let orignalCopy = {...fiCopy}
-                orignalCopy.valor = filteredCopy && filteredCopy.valor
-                return orignalCopy
-            })
+        let analiseFieldsCopy = [...analiseFields].map(afi => ({ ...afi }))
+        if (processoId) analiseFieldsCopy = filterFields(analiseFieldsCopy, "processoId", processoId)
+        if (parametroNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "parametroNome", parametroNome, true)
+        if (etapaNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "etapaNome", etapaNome, true)
+        if (turno) analiseFieldsCopy = filterFields(analiseFieldsCopy, "turno", turno, true)
+        if (frequencia) analiseFieldsCopy = filterFields(analiseFieldsCopy, "frequencia", frequencia, true)
+        let toBuildFields = analiseFieldsCopy.map(fiCopy => {
+            let filteredCopy = filteredAnalises.find(fiField => fiField.parametroId == fiCopy.parametroId)
+            let orignalCopy = { ...fiCopy }
+            orignalCopy.valor = filteredCopy && filteredCopy.valor
+            return orignalCopy
+        })
 
-            dispatcher(updateFilteredAnalises(toBuildFields))
+        dispatcher(updateFilteredAnalises(toBuildFields))
 
-    }, [analiseFields, processoId,parametroNome, etapaNome, turno])
+    }, [analiseFields, processoId, parametroNome, etapaNome, turno, frequencia])
 
 
     const salvarAnalise = () => {
@@ -102,6 +105,15 @@ const MultiRegistroAnalise = (props) => {
         dispatcher(updateFilteredAnalises(stateCpy))
     }
 
+    const onTdClick = (analiseField) => {
+        const index = filteredAnalises.findIndex(fieldAnalise => Number(fieldAnalise.parametroId) === Number(analiseField.parametroId))
+        const stateCpy = [...filteredAnalises].map(fi => ({ ...fi }))
+        let analiseFieldCopy = { ...analiseField }
+        analiseFieldCopy.isLate = !stateCpy[index].isLate
+        if (index !== -1) stateCpy[index] = analiseFieldCopy
+        dispatcher(updateFilteredAnalises(stateCpy))
+    }
+
     const checkoutAnalise = (analiseField) => {
         let nomeAnalista
         if (analista) {
@@ -114,7 +126,7 @@ const MultiRegistroAnalise = (props) => {
         analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, parametroToRef)
 
         setShowCheckOut(true)
-        let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametroId, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data, ocpId: null, observacaoAnalise: '', parametro: parametroToRef}
+        let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametroId, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data, ocpId: null, observacaoAnalise: '', parametro: parametroToRef }
         dispatcher(updateAnaliseToSave(analiseCheckout))
     }
 
@@ -172,6 +184,12 @@ const MultiRegistroAnalise = (props) => {
                             <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(updateTurno(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Filtrar por frequencia:</Form.Label>
+                            <Form.Control value={frequencia} placeholder={"filtra por frequencia"} onChange={(event) => dispatcher(updateFrequencia(event.target.value))}></Form.Control>
+                        </Form.Group>
+                    </Col>
                 </Row> :
                     <>
                         <Row>
@@ -198,9 +216,18 @@ const MultiRegistroAnalise = (props) => {
                                 </Form.Group>
                             </Col>
                         </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Filtrar por frequencia:</Form.Label>
+                                    <Form.Control value={frequencia} placeholder={"filtra por frequencia"} onChange={(event) => dispatcher(updateFrequencia(event.target.value))}></Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Row>
                     </>
                 }
                 <Row>
+                    <Col><Button onClick={() => dispatchers(dispatcher).loadAnaliseFields()}>Recarregar Pagina</Button></Col>
                     <Col style={{ marginBottom: 10 }}>
                         <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => setShowData(event.target.checked)} />
                         <Form.Group hidden={!showData}>
@@ -220,45 +247,48 @@ const MultiRegistroAnalise = (props) => {
             </Container>
             <div style={{ padding: 12 }}>
                 <h3 style={{ textAlign: "center" }} >Registro de Analises</h3>
+
                 <div className="table-responsive" >
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style={{ textAlign: "center" }}>Frequencia</th>
-                                <th style={{ textAlign: "center" }}>Data Plenejada</th>
-                                <th style={{ textAlign: "center" }}>Turno</th>
-                                <th style={{ textAlign: "center" }}>Etapa</th>
-                                <th style={{ textAlign: "center" }}>Parametro</th>
-                                <th style={{ textAlign: "center" }}>Minimo</th>
-                                <th style={{ textAlign: "center" }}>Maximo</th>
-                                <th style={{ textAlign: "center" }}>Unidade</th>
-                                <th style={{ textAlign: "center" }}>Valor</th>
-                                <th style={{ textAlign: "center" }}>Ação</th>
-                            </tr>
-                        </thead>
+                    <div className="tableFixHead" >
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style={{ textAlign: "center" }}>Frequencia</th>
+                                    <th style={{ textAlign: "center" }}>Data Plenejada</th>
+                                    <th style={{ textAlign: "center" }}>Turno</th>
+                                    <th style={{ textAlign: "center" }}>Etapa</th>
+                                    <th style={{ textAlign: "center" }}>Parametro</th>
+                                    <th style={{ textAlign: "center" }}>Minimo</th>
+                                    <th style={{ textAlign: "center" }}>Maximo</th>
+                                    <th style={{ textAlign: "center" }}>Unidade</th>
+                                    <th style={{ textAlign: "center" }}>Valor</th>
+                                    <th style={{ textAlign: "center" }}>Ação</th>
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                            {filteredAnalises.map((analiseField, index) => {
-                                return (
-                                    <tr hidden={!mostrarEmDia && analiseField.parametro.analiseHoje && analiseField.isHabilitado} key={analiseField.parametroId} >
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.frequencia} / ${analiseField.escalaFreq}`}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.dataPlanejada)}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{`${analiseField.turno} ${onlyTime(analiseField.dataPlanejada)}`}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center", maxWidth : 120 }} >{analiseField.etapaNome}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" , maxWidth : 120 }}>{analiseField.parametroNome}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.pMin}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.pMax}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center"}}>{analiseField.unidade}</Form.Label></td>
-                                        {buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}
-                                        <td className="align-middle">{loadButtons(analiseField,checkoutAnalise)}</td>
-                                    </tr>
-                                )
+                            <tbody>
+                                {filteredAnalises.map((analiseField, index) => {
+                                    return (
+                                        <tr hidden={!mostrarEmDia && analiseField.parametro.analiseHoje && analiseField.isHabilitado} key={analiseField.parametroId} >
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.frequencia}`}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.dataPlanejada)}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{`${analiseField.turno} ${onlyTime(analiseField.dataPlanejada)}`}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center", maxWidth: 120 }} >{analiseField.etapaNome}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center", maxWidth: 120 }}>{analiseField.parametroNome}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.pMin}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.pMax}</Form.Label></td>
+                                            <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.unidade}</Form.Label></td>
+                                            {buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true, onTdClick: onTdClick })}
+                                            <td className="align-middle">{loadButtons(analiseField, checkoutAnalise)}</td>
+                                        </tr>
+                                    )
 
-                            })}
-                        </tbody>
+                                })}
+                            </tbody>
 
 
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
 

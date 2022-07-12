@@ -59,18 +59,18 @@ export const loadButtons = (analiseField, checkoutAnalise) => {
     }
 }
 
-const valueForm = (analiseField, { onValueChange, hideLabel }) => {
+const valueForm = (analiseField, { onValueChange, hideLabel, onTdClick }) => {
     return (
-        <td style={{ minWidth : 180}}><Form.Control value={analiseField.valor} type="number" placeholder="0.0"  onChange={(event) => analiseFieldChange(event.target.value, analiseField, onValueChange)} /></td>
+        <td onClick={() => onTdClick(analiseField)} style={{ minWidth : 180}}><Form.Control value={analiseField.valor} type="number" placeholder="0.0"  onChange={(event) => analiseFieldChange(event.target.value, analiseField, onValueChange)} /></td>
     )
 }
 
-const formTitula = (analiseField, { onValueChange, hideLabel }) => {
-    return <td style={{ minWidth : 180}} ><TitulaForm value={analiseField.valor} hideLabel={hideLabel} onCalculaResultado={(valor) => analiseFieldChange(valor, analiseField, onValueChange)} formula={analiseField.formula}></TitulaForm></td>
+const formTitula = (analiseField, { onValueChange, hideLabel ,onTdClick}) => {
+    return <td onClick={() => onTdClick(analiseField)} style={{ minWidth : 180}} ><TitulaForm value={analiseField.valor} hideLabel={hideLabel} onCalculaResultado={(valor) => analiseFieldChange(valor, analiseField, onValueChange)} formula={analiseField.formula}></TitulaForm></td>
 }
 
-const formLastValueDisplay = (analiseField) => {
-    return <td style={{ backgroundColor: backGroundByAnaliseStatus(analiseField.analiseStatus) }}>{analiseField.lastValue} {analiseField.unidade}</td >
+const formLastValueDisplay = (analiseField, { onValueChange, hideLabel ,onTdClick}) => {
+    return <td onClick={() => onTdClick(analiseField)} style={{ backgroundColor: backGroundByAnaliseStatus(analiseField.analiseStatus) }}>{analiseField.lastValue} {analiseField.unidade}</td >
 }
 
 
@@ -82,7 +82,7 @@ export const buildAnaliseInputMenu = (analiseField, payload) => {
             return valueForm(analiseField, payload)
         }
     } else {
-        return formLastValueDisplay(analiseField)
+        return formLastValueDisplay(analiseField,payload)
     }
 
 
