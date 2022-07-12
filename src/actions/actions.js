@@ -41,6 +41,7 @@ export const actions = {
     setParametroNome : (data) => {return{type: "PARAMETRO_NOME" , payload: data}},
     setEtapaNomeForm : (data) => {return{type: "ETAPA_NOME" , payload: data}},
     setTurnoAnaliseForm : (data) => {return{type: "TURNO" , payload: data}},
+    loadAnaliseFields : (data) => {return  {type : "analise/updateAnaliseFields" , payload : data} }
 
     
 

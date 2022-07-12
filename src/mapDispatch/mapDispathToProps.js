@@ -15,6 +15,7 @@ const dispatchers = (dispatch) => {
         loadOcps: () => ScqApi.ListaOcps().then(data => dispatch(actions.loadOcps(data))) ,
         loadTurnos: () => ScqApi.ListTurnos().then(data => dispatch(actions.loadTurnos(data))) ,
         loadOmps: () => ScqApi.LoadOmps().then(data => dispatch(actions.loadOmps(data))) ,
+        loadAnaliseFields: () => ScqApi.LoadAnaliseFields().then(data => dispatch(actions.loadAnaliseFields(data))) ,
         loadOcpView: data => dispatch(actions.loadOcpsView(data)) ,
         showOcpView: data => dispatch(actions.setOcpView(data)) ,
         loadPosition : (data) => dispatch({type: 'LOAD_POSITIONS' , payload : data}),

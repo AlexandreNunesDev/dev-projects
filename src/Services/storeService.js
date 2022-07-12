@@ -14,6 +14,7 @@ export const optionsLoad = async (props, forceUpdade) => {
       loadUnidades(props)
       loadTurnos(props)
       loadOmps(props)
+      loadAnaliseFields(props)
     }
 
   }
@@ -23,6 +24,9 @@ export const optionsLoad = async (props, forceUpdade) => {
 }
 
 
+export const loadAnaliseFields = (props) => {
+  props.loadAnaliseFields()
+}
 export const loadUnidades = (props) => {
   props.loadUnidades()
 }

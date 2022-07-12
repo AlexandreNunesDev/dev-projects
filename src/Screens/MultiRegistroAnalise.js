@@ -1,20 +1,17 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router"
 import { withToastManager } from "react-toast-notifications/dist/ToastProvider"
-import { actions } from "../actions/actions"
 import CheckoutAnalise from "../Components/CheckoutAnalise"
 import GenericSelect from "../Components/GenericSelect"
 import { withMenuBar } from "../Hocs/withMenuBar"
 import ScqApi from "../Http/ScqApi"
 import dispatchers from "../mapDispatch/mapDispathToProps"
-import { analiseFieldFactory } from "../models/fieldModels"
-import { clear, updadteEtapaNome, updateAnaliseFields, updateAnaliseToSave, updateFiltroEtapa, updateFiltroParametro, updateParametroNome, updateProcessoId, updateTurno } from "../Reducers/analiseReducer"
-import { buildAnaliseInputMenu, getAnaliseStatus } from "../Services/analiseMenuBuilder"
+import { updadteEtapaNome, updateAnaliseToSave, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateParametroNome, updateProcessoId, updateTurno } from "../Reducers/analiseReducer"
+import { buildAnaliseInputMenu, getAnaliseStatus, loadButtons } from "../Services/analiseMenuBuilder"
 import { responseHandler } from "../Services/responseHandler"
 import { formatIsoDate, OnlyDate, onlyTime } from "../Services/stringUtils"
-import { WebSocketContext } from "../websocket/wsProvider"
 
 const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
 
@@ -25,23 +22,22 @@ const MultiRegistroAnalise = (props) => {
     const parametros = useSelector(state => state.options.parametros)
     const userName = useSelector(state => state.global.userName)
     const analiseToSave = useSelector(state => state.analise.analiseToSave)
+    const filteredAnalises = useSelector(state => state.analise.filteredAnalises)
     const dispatcher = useDispatch()
     const [analista, setAnalista] = useState()
     const [showData, setShowData] = useState()
     const [mostrarEmDia, setMostrarEmDia] = useState(true)
     const [showCheckOut, setShowCheckOut] = useState()
     const [data, setData] = useState()
-    const [filteredAnaliseFields, setFiltedAnaliseFields] = useState([])
     const analiseFields = useSelector(state => state.analise.analiseFields)
     const parametroNome = useSelector(state => state.analise.filtroParametro)
-    const etapa = useSelector(state => state.analise.filtroEtapa)
+    const etapaNome = useSelector(state => state.analise.filtroEtapa)
     const turno = useSelector(state => state.analise.turno)
     const processoId = useSelector(state => state.analise.processoId)
     let dataFieldRef = useRef(null)
-    const context = useContext(WebSocketContext)
-    const reducerFunctions = dispatchers()
     const history = useHistory()
-   
+    
+
 
 
 
@@ -69,34 +65,21 @@ const MultiRegistroAnalise = (props) => {
 
 
     useEffect(() => {
-        let analiFields
-        if (parametros) {
-            if (analiseFields.length == 0) {
-                analiFields = parametros.map((parametro, index) => analiseFieldFactory(index, parametro, '', null, false))
-                dispatcher(updateAnaliseFields(analiFields))
-                setFiltedAnaliseFields(analiFields)
-            } else {
-                let filteredParametro = parametros
-                if (processoId) filteredParametro = filterFields(filteredParametro, "processoId", processoId)
-                if (parametroNome) filteredParametro = filterFields(filteredParametro, "nome", parametroNome, true)
-                if (etapa) filteredParametro = filterFields(filteredParametro, "etapaNome", etapa, true)
-                if (turno) filteredParametro = filterFields(filteredParametro, "turno", turno, true)
-                analiFields = filteredParametro.map((parametro) => {
-                    let analiseField = {...analiseFields.filter(analiseField => Number(analiseField.parametro.id) === Number(parametro.id))[0]}
-                    analiseField.parametro = parametro
-                    return analiseField
-                })
-                analiFields.sort((a, b) => {
-                    let tempo1 = new Date(a.parametro.dataPlanejada).getTime()
-                    let tempo2 = new Date(b.parametro.dataPlanejada).getTime()
-                    return tempo1 - tempo2
-                })
+            let analiseFieldsCopy = [...analiseFields].map(afi => ({...afi}))
+            if (processoId) analiseFieldsCopy = filterFields(analiseFieldsCopy, "processoId", processoId)
+            if (parametroNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "parametroNome", parametroNome, true)
+            if (etapaNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "etapaNome", etapaNome, true)
+            if (turno) analiseFieldsCopy = filterFields(analiseFieldsCopy, "turno", turno, true)
+            let toBuildFields = analiseFieldsCopy.map(fiCopy => {
+                let filteredCopy = filteredAnalises.find(fiField => fiField.parametroId == fiCopy.parametroId)
+                let orignalCopy = {...fiCopy}
+                orignalCopy.valor = filteredCopy && filteredCopy.valor
+                return orignalCopy
+            })
 
-               
-            }
-            setFiltedAnaliseFields(analiFields)
-        }
-    }, [parametros, processoId, parametroNome, etapa, turno])
+            dispatcher(updateFilteredAnalises(toBuildFields))
+
+    }, [analiseFields, processoId,parametroNome, etapaNome, turno])
 
 
     const salvarAnalise = () => {
@@ -113,10 +96,10 @@ const MultiRegistroAnalise = (props) => {
     }
 
     const onchangeAnaliseField = (analiseField) => {
-        const index = filteredAnaliseFields.findIndex(fieldAnalise => Number(fieldAnalise.parametro.id) === Number(analiseField.parametro.id))
-        const stateCpy = [...filteredAnaliseFields].map(fi => ({ ...fi }))
+        const index = filteredAnalises.findIndex(fieldAnalise => Number(fieldAnalise.parametroId) === Number(analiseField.parametroId))
+        const stateCpy = [...filteredAnalises].map(fi => ({ ...fi }))
         if (index !== -1) stateCpy[index] = analiseField
-        setFiltedAnaliseFields(stateCpy)
+        dispatcher(updateFilteredAnalises(stateCpy))
     }
 
     const checkoutAnalise = (analiseField) => {
@@ -127,10 +110,11 @@ const MultiRegistroAnalise = (props) => {
             nomeAnalista = userName
         }
         let analiseFieldCheckOut = { ...analiseField }
-        analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, analiseFieldCheckOut.parametro)
+        let parametroToRef = parametros.find(param => param.id == analiseField.parametroId)
+        analiseFieldCheckOut.analiseStatus = getAnaliseStatus(analiseFieldCheckOut.valor, parametroToRef)
 
         setShowCheckOut(true)
-        let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametro.id, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data, ocpId: null, observacaoAnalise: '', parametro: analiseFieldCheckOut.parametro }
+        let analiseCheckout = { id: null, parametroId: analiseFieldCheckOut.parametroId, analista: nomeAnalista, resultado: analiseFieldCheckOut.valor, status: analiseFieldCheckOut.analiseStatus, data: data, ocpId: null, observacaoAnalise: '', parametro: parametroToRef}
         dispatcher(updateAnaliseToSave(analiseCheckout))
     }
 
@@ -173,7 +157,7 @@ const MultiRegistroAnalise = (props) => {
                     <Col>
                         <Form.Group>
                             <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                            <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))}></Form.Control>
+                            <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))}></Form.Control>
                         </Form.Group>
                     </Col>
                     <Col>
@@ -194,7 +178,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                                    <Form.Control value={etapa} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updadteEtapaNome(event.target.value))}></Form.Control>
+                                    <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updadteEtapaNome(event.target.value))}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -254,19 +238,19 @@ const MultiRegistroAnalise = (props) => {
                         </thead>
 
                         <tbody>
-                            {filteredAnaliseFields.map((analiseField, index) => {
+                            {filteredAnalises.map((analiseField, index) => {
                                 return (
-                                    <tr hidden={!mostrarEmDia && analiseField.parametro.analiseHoje && analiseField.parametro.habilitado} key={analiseField.parametro.id} >
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.parametro.frequencia} / ${analiseField.parametro.escalaFrequencia}`}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.parametro.dataPlanejada)}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.parametro.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{`${analiseField.parametro.turno} ${onlyTime(analiseField.parametro.dataPlanejada)}`}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{analiseField.parametro.etapaNome}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.nome}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMin}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.pMax}</Form.Label></td>
-                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.parametro.unidade}</Form.Label></td>
-                                        <td>{buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}</td>
-                                        <td className="align-middle"><Button disabled={analiseField.valor ? false : true} style={{ backgroundColor: "BLUE", borderColor: "BLUE", alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button></td>
+                                    <tr hidden={!mostrarEmDia && analiseField.parametro.analiseHoje && analiseField.isHabilitado} key={analiseField.parametroId} >
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.frequencia} / ${analiseField.escalaFreq}`}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.dataPlanejada)}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{`${analiseField.turno} ${onlyTime(analiseField.dataPlanejada)}`}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center", maxWidth : 120 }} >{analiseField.etapaNome}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" , maxWidth : 120 }}>{analiseField.parametroNome}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.pMin}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center" }}>{analiseField.pMax}</Form.Label></td>
+                                        <td className="align-middle"><Form.Label style={{ textAlign: "center"}}>{analiseField.unidade}</Form.Label></td>
+                                        {buildAnaliseInputMenu(analiseField, { onValueChange: onchangeAnaliseField, hideLabel: true })}
+                                        <td className="align-middle">{loadButtons(analiseField,checkoutAnalise)}</td>
                                     </tr>
                                 )
 

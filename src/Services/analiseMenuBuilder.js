@@ -1,6 +1,10 @@
 import React from "react"
-import { Col, Container, Form } from "react-bootstrap"
+import { Button, Form } from "react-bootstrap"
+import { useDispatch } from "react-redux"
+import { useHistory } from "react-router-dom"
+import { updateAnaliseToSave, updateOrdensToView } from "../Reducers/analiseReducer"
 import TitulaForm from "../Screens/TitulaForm"
+import { backGroundByAnaliseStatus } from "./analiseService"
 
 const analiseFieldChange = (value, analiseField, onChange) => {
     let aField = { ...analiseField }
@@ -14,24 +18,75 @@ const analiseFieldChange = (value, analiseField, onChange) => {
 
 }
 
-const valueForm = (analiseField, { onValueChange, hideLabel }) => {
+const HistoricoMenu = (analiseField) => {
+
+    const dispatchers = useDispatch()
+    const history = useHistory()
+
+    const gerarOcp = (analiseField) => {
+        let analiseCopy = {...analiseField}
+        analiseCopy.resultado = analiseCopy.lastValue
+        dispatchers(updateAnaliseToSave(analiseCopy))
+        history.push("/CadastroOcp")
+    }
+
+    const verOdens = (analiseField) => {
+        dispatchers(updateOrdensToView(analiseField.ocps))
+        history.push("/HistoricoCorrecao")
+    }
 
     return (
-            <Form.Control value={analiseField.valor} type="number" placeholder={"0.00"} onChange={(event) => analiseFieldChange(event.target.value, analiseField, onValueChange)} />
+        analiseField.ocps.length > 0 ?
+            <div>
+                <Button onClick={() => gerarOcp(analiseField)}>GERAR OCP</Button>
+                <Button variant="link" onClick={() => verOdens(analiseField)}>VER OCPs</Button>
+
+            </div> :
+            <div>
+                <Button onClick={() => gerarOcp(analiseField)}>GERAR OCP</Button>
+            </div>
+
+
+
+    )
+}
+
+export const loadButtons = (analiseField, checkoutAnalise) => {
+    if (!analiseField.isLate) {
+        return <div><Button style={{ alignmentBaseline: "center" }} onClick={() => checkoutAnalise(analiseField)}>Salvar</Button></div>
+    } else {
+        return HistoricoMenu(analiseField)
+    }
+}
+
+const valueForm = (analiseField, { onValueChange, hideLabel }) => {
+    return (
+        <td style={{ minWidth : 180}}><Form.Control value={analiseField.valor} type="number" placeholder="0.0"  onChange={(event) => analiseFieldChange(event.target.value, analiseField, onValueChange)} /></td>
     )
 }
 
 const formTitula = (analiseField, { onValueChange, hideLabel }) => {
-    return <TitulaForm value={ analiseField.valor} hideLabel={hideLabel} onCalculaResultado={(valor) => analiseFieldChange(valor, analiseField, onValueChange)} formula={analiseField.parametro.formula}></TitulaForm>
+    return <td style={{ minWidth : 180}} ><TitulaForm value={analiseField.valor} hideLabel={hideLabel} onCalculaResultado={(valor) => analiseFieldChange(valor, analiseField, onValueChange)} formula={analiseField.formula}></TitulaForm></td>
+}
+
+const formLastValueDisplay = (analiseField) => {
+    return <td style={{ backgroundColor: backGroundByAnaliseStatus(analiseField.analiseStatus) }}>{analiseField.lastValue} {analiseField.unidade}</td >
 }
 
 
 export const buildAnaliseInputMenu = (analiseField, payload) => {
-    if (analiseField.parametro.needCalculo) {
-        return formTitula(analiseField, payload)
+    if (!analiseField.isLate) {
+        if (analiseField.needCalculo) {
+            return formTitula(analiseField, payload)
+        } else {
+            return valueForm(analiseField, payload)
+        }
     } else {
-        return valueForm(analiseField, payload)
+        return formLastValueDisplay(analiseField)
     }
+
+
+
 
 }
 

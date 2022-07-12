@@ -48,6 +48,10 @@ const ScqApi = {
         return http.get("trocas")
 
     },
+    LoadAnaliseFields: () => {
+        return http.get("/analiseFields")
+
+    },
     LoadAnaliseChart: (dataInicial, dataFinal, parametroId) => {
         return http.get("analise/" + dataInicial + "/" + dataFinal + "/" + parametroId)
 
