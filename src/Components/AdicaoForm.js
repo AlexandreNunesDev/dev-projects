@@ -86,7 +86,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId , etapa }) => {
 
             <h4>Informacões para adicao</h4>
             <Row>
-                <Col><Form.Label><strong>Volume Etapa considerado:</strong> {etapa.volume || ocpToEdit.volumeEtapa } Lts</Form.Label></Col>
+                <Col><Form.Label><strong>Volume Etapa considerado:</strong> {etapa?.volume || ocpToEdit.volumeEtapa } Lts</Form.Label></Col>
             </Row>
 
             <Row >
