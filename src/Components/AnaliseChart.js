@@ -16,7 +16,7 @@ import OcpView from './OcpView';
 const AnaliseChart = (props) => {
 
   const [entries, setEntries] = useState()
-  const selectedAnalise = useSelector(state => state.singleAnalise.analiseToSave)
+  const selectedAnalise = useSelector(state => state.analise.analiseToSave)
   const [ocps, setOcps] = useState()
   const [show, setShow] = useState(false)
   const dispatcher = useDispatch()
@@ -122,7 +122,7 @@ const AnaliseChart = (props) => {
     <Fragment  key={props.chave}>
       <h4 style={{ alignContent: "center" }}>{`Grafico de Analise  ${props.data.nomeParam} ${props.data.nomeEtapa} ${props.data.nomeProcesso} `}</h4>
 
-      <OcpView></OcpView>
+      {/* <OcpView></OcpView> */}
       <AnaliseEdit  show={show} handleClose={handleClose} showOcps={() => props.showOcpView(true)} ocps={ocps} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
       <div style={{ display: "flex-auto" }}>
         <LineChart width={props.containerRef.current.offsetWidth} height={250}

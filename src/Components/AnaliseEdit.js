@@ -79,18 +79,6 @@ const AnaliseEdit = (props) => {
           {props.ocps && <Button onClick={() => { props.showOcps(true) }}>
             {props.ocps.length > 1 ? `Ver ${props.ocps.length} ocps` : `Ver ${props.ocps.length == 0 ? "" : props.ocps.length} ocp`}
           </Button>}
-
-          <Button onClick={() => {
-            if(analise.type == "Adicao") {
-              props.history.push("/CadastroOcpAdicao")
-            } else {
-              props.history.push("/CadastroOcpAcao")
-            }
-           
-           
-          }}>
-            Gerar Ocp
-          </Button>
           <Button onClick={() => { ScqApi.UpdataAnaliseData(analise.id, dataPlanejada); props.handleClose(false); props.reloadChart() }}>
             Salvar
           </Button>
