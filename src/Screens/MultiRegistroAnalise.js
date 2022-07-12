@@ -197,7 +197,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                                    <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updadteEtapaNome(event.target.value))}></Form.Control>
+                                    <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -205,7 +205,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de parametro:</Form.Label>
-                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateParametroNome(event.target.value))}></Form.Control>
+                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateFiltroParametro(event.target.value))}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
