@@ -66,7 +66,7 @@ const CadastroParametro = (props) => {
 
 
     const salvarParametro = () => {
-        const { toastManager } = this.props;
+        const { toastManager } = props;
         const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise, showChart: showChart, isHabilitado: controlado,regrasCorrecao : regras }
         ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, toastManager, "Parametro", toastOk) })
     }

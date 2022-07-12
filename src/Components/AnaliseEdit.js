@@ -9,7 +9,6 @@ import mapToStateProps from '../mapStateProps/mapStateToProps';
 import { formatIsoDate } from '../Services/stringUtils';
 import { toastWarn } from '../Services/toastType';
 import CredentialConfirm from './CredentialConfirm';
-import { clear, setAnaliseToSave } from '../Reducers/singleAnaliseReducer';
 
 
 const AnaliseEdit = (props) => {
@@ -18,9 +17,8 @@ const AnaliseEdit = (props) => {
 
   const [dataPlanejada, setDataPlanejada] = useState()
   const [showDelete, setShowDelete] = useState(false)
-  const dispatcher = useDispatch()
   const toastManager = useToasts()
-  const analise = useSelector(state => state.singleAnalise.analiseToSave)
+  const analise = useSelector(state => state.analise.analiseToSave)
 
 
   const closeCredentialConfirm = () => {

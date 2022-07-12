@@ -11,7 +11,6 @@ import CadastroEtapa from './Screens/CadastroEtapa';
 import CadastroMateriaPrima from './Screens/CadastroMateriaPrima';
 import CadastroDeOcp from './Screens/CadastroOcp';
 import CadastroOmp from './Screens/CadastroOmp';
-import CadastroParametro from './Screens/CadastroParametro';
 import CadastroProcesso from './Screens/CadastroProcesso';
 import CadastroTroca from './Screens/CadastroTroca';
 import ConfirmMailPage from './Screens/ConfirmYourMail';

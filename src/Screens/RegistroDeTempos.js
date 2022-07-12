@@ -12,7 +12,7 @@ import { WebSocketContext } from "../websocket/wsProvider"
 import dispatchers from "../mapDispatch/mapDispathToProps"
 import { withToastManager } from "react-toast-notifications/dist/ToastProvider"
 import { toastOk } from "../Services/toastType"
-import { setAnaliseToSave } from "../Reducers/singleAnaliseReducer"
+import { updateAnaliseToSave } from "../Reducers/analiseReducer"
 
 const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
 
@@ -156,7 +156,7 @@ const RegistroDetempos = (props) => {
 
     const gerarOcpReanalise = (history) => {
         const analise = { id: null, analista: analista, resultado: resultado, status: status, parametroId: parametro.id, ocpId: null }
-        dispatch(setAnaliseToSave(analise))
+        dispatch(updateAnaliseToSave(analise))
         history.push('/CadastroOcp')
 
     }
@@ -171,7 +171,7 @@ const RegistroDetempos = (props) => {
             nomeAnalista = userName
         }
         const analise = { id: null, parametroId: parametro.id, analista: nomeAnalista, resultado: resultado, status: status, data: data }
-        dispatch(setAnaliseToSave(analise))
+        dispatch(updateAnaliseToSave(analise))
         history.push('/CadastroOcp')
     }
 

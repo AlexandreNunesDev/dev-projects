@@ -6,7 +6,7 @@ import { LineChart, XAxis, CartesianGrid, Line, YAxis, ReferenceLine, Tooltip } 
 import ScqApi from '../Http/ScqApi';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import mapToStateProps from '../mapStateProps/mapStateToProps';
-import { setAnaliseToSave } from '../Reducers/singleAnaliseReducer';
+import { updateAnaliseToSave } from '../Reducers/analiseReducer';
 import AnaliseEdit from './AnaliseEdit';
 import { CustomDot } from './CustomLineDot';
 import OcpView from './OcpView';
@@ -76,7 +76,7 @@ const AnaliseChart = (props) => {
     let ocpsFromAnalise  = props.data.ocps[payload.payload.id]
     setOcps(ocpsFromAnalise)
     props.loadOcpView(ocpsFromAnalise) 
-    ScqApi.FindAnalise(payload.payload.id).then(res => {dispatcher(setAnaliseToSave(res));setShow(true); }  )
+    ScqApi.FindAnalise(payload.payload.id).then(res => {dispatcher(updateAnaliseToSave(res));setShow(true); }  )
     
 
     
