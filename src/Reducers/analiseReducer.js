@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     analises: [],
+    filteredAnaliseHistorico : [],
     filteredAnalises : [],
     dataInicioHistorico: '',
     dataFimHistorico: '',
@@ -80,9 +81,13 @@ const analiseReducer = createSlice({
         updateFrequencia(state,action) {
             state.frequencia = action.payload
         },
+        updateFilterdAnaliseHistorico(state,action) {
+            state.filteredAnaliseHistorico = action.payload
+        },
         clear(state) {
             state.analises = []
             state.filteredAnalises = []
+            state.filteredAnaliseHistorico = []
             state.dataInicioHistorico =  ''
             state.dataFimHistorico =  ''
             state.processoId = ''
@@ -102,5 +107,5 @@ const analiseReducer = createSlice({
     },
 })
 
-export const {updateFrequencia,updateOrdensToView,updateAnaliseToGenerateOcp,updateTotalPages,updatePage,updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields, clear } = analiseReducer.actions
+export const {updateFilterdAnaliseHistorico,updateFrequencia,updateOrdensToView,updateAnaliseToGenerateOcp,updateTotalPages,updatePage,updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields, clear } = analiseReducer.actions
 export default analiseReducer.reducer

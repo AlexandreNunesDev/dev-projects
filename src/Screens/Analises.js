@@ -1,7 +1,7 @@
 import ScqApi from '../Http/ScqApi'
 import { Button, Col, Container, Form } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import { updateAnalises, updateAnaliseToGenerateOcp, updateAnaliseToSave, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateFiltroProcesso, updateHistoricoDataFinal, updateHistoricoDataInicial, updateOrdensToView } from '../Reducers/analiseReducer'
+import { updateAnalises, updateAnaliseToGenerateOcp, updateAnaliseToSave, updateFilterdAnaliseHistorico, updateFilteredAnalises, updateFiltroEtapa, updateFiltroParametro, updateFiltroProcesso, updateHistoricoDataFinal, updateHistoricoDataInicial, updateOrdensToView } from '../Reducers/analiseReducer'
 import { useEffect, useState } from 'react'
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { useHistory } from 'react-router-dom'
@@ -11,7 +11,7 @@ const Analises = () => {
 
     const dispatchers = useDispatch()
     const analisesHistorico = useSelector(state => state.analise.analises)
-    const filteredAnalises = useSelector(state => state.analise.filteredAnalises)
+    const filteredAnalises = useSelector(state => state.analise.filteredAnaliseHistorico)
     const historicoDataInicial = useSelector(state => state.analise.dataInicioHistorico)
     const historicoDataFinal = useSelector(state => state.analise.dataFimHistorico)
     const historicoPage = useSelector(state => state.analise.historicoPage)
@@ -27,7 +27,7 @@ const Analises = () => {
             ScqApi.LoadHistoricoAnaliseWithPage(historicoDataInicial, historicoDataFinal, historicoPage, 50)
                 .then(res => {
                     dispatchers(updateAnalises(res))
-                    dispatchers(updateFilteredAnalises(filtra(res)))
+                    dispatchers(updateFilterdAnaliseHistorico(filtra(res)))
                 })
 
         }
@@ -47,7 +47,7 @@ const Analises = () => {
         return initialAnlises
     }
     useEffect(() => {
-        dispatchers(updateFilteredAnalises(filtra(analisesHistorico)))
+        dispatchers(updateFilterdAnaliseHistorico(filtra(analisesHistorico)))
     }, [filtroProcesso, filtroEtapa, filtroParametro])
 
     const gerarOcp = (analise) => {
