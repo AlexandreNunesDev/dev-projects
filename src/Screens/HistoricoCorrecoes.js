@@ -12,7 +12,7 @@ const HistoricoCorrecao = () => {
     return (
         <div style={{margin : 12}}>
             <h3>Historico de ocps</h3>
-            <Button onClick={() =>history.push("/Analises") }>Voltar</Button>
+            <Button onClick={() =>history.goBack() }>Voltar</Button>
             <div  className="table-responsive">
 
 

@@ -65,7 +65,7 @@ const MultiRegistroAnalise = (props) => {
         }
     }
 
-    useEffect(() => filter(),[])
+    useEffect(() => filter(),[analiseFields])
 
 
 
@@ -248,7 +248,7 @@ const MultiRegistroAnalise = (props) => {
                     </>
                 }
                 <Row>
-                    <Col><Button onClick={() => dispatchers(dispatcher).loadAnaliseFields()}>Recarregar Pagina</Button></Col>
+                    <Col><Button style={{backgroundColor : "black" , color: "white", fontWeight : "bold", borderColor : "black"}} onClick={() => dispatchers(dispatcher).loadAnaliseFields()}>Recarregar Dados</Button></Col>
                     <Col style={{ marginBottom: 10 }}>
                         <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => setShowData(event.target.checked)} />
                         <Form.Group hidden={!showData}>
