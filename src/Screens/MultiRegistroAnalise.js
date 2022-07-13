@@ -36,6 +36,7 @@ const MultiRegistroAnalise = (props) => {
     const etapaNome = useSelector(state => state.analise.filtroEtapa)
     const turno = useSelector(state => state.analise.turno)
     const processoId = useSelector(state => state.analise.processoId)
+    const [checkFilter, setCheckFilter] = useState([])
     let dataFieldRef = useRef(null)
     const history = useHistory()
 
@@ -45,44 +46,33 @@ const MultiRegistroAnalise = (props) => {
 
 
 
-    const filterFields = (parametros, fieldToFilter, valueToFilter, isString) => {
-        if (isString) {
-            return parametros.filter(parametro => {
-                if (String(parametro[fieldToFilter]).toLocaleLowerCase().startsWith(valueToFilter.toLocaleLowerCase())) {
-                    return true
-                } else {
-                    return false
-                }
-            })
-        } else {
-            return parametros.filter(parametro => {
-                if (parametro[fieldToFilter] == (valueToFilter.toLocaleLowerCase())) {
-                    return true
-                } else {
-                    return false
-                }
-            })
-        }
+    const filterFields = (toFielterFields, fieldToFilter, valueToFilter) => {
+        return toFielterFields.filter(filterFi => {
+            let search = String(filterFi[fieldToFilter]).toLowerCase()
+            if (search.includes(valueToFilter.toLowerCase())) {
+                return true
+            } else {
+                return false
+            }
+        })
     }
 
-    useEffect(() => filter(),[analiseFields])
+    useEffect(() => filter(), [analiseFields])
 
 
 
-    const filter = () => {
-        let analiseFieldsCopy = [...analiseFields].map(afi => ({ ...afi }))
-        if (processoNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "processoNome", processoNome,true)
-        if (parametroNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "parametroNome", parametroNome, true)
-        if (etapaNome) analiseFieldsCopy = filterFields(analiseFieldsCopy, "etapaNome", etapaNome, true)
-        if (turno) analiseFieldsCopy = filterFields(analiseFieldsCopy, "turno", turno, true)
-        if (frequencia) analiseFieldsCopy = filterFields(analiseFieldsCopy, "frequencia", frequencia, true)
-        let toBuildFields = analiseFieldsCopy.map(fiCopy => {
+    const filter = (externAnaliseFieldsRef) => {
+        let toBuildFields = externAnaliseFieldsRef || [...analiseFields].map(afi => ({ ...afi }))
+        if (processoNome) toBuildFields = filterFields(toBuildFields, "processoNome", processoNome)
+        if (parametroNome) toBuildFields = filterFields(toBuildFields, "parametroNome", parametroNome)
+        if (etapaNome) toBuildFields = filterFields(toBuildFields, "etapaNome", etapaNome)
+        if (filteredAnalises.length > 0) toBuildFields = toBuildFields.map(fiCopy => {
             let filteredCopy = filteredAnalises.find(fiField => fiField.parametroId == fiCopy.parametroId)
             let orignalCopy = { ...fiCopy }
             orignalCopy.valor = filteredCopy && filteredCopy.valor
             return orignalCopy
         })
-
+        toBuildFields.sort((fa, fb) => new Date(fa.dataPlanejada).getTime() - new Date(fb.dataPlanejada).getTime())
         dispatcher(updateFilteredAnalises(toBuildFields))
 
     }
@@ -146,6 +136,28 @@ const MultiRegistroAnalise = (props) => {
     }
 
 
+    const applyCheckFilter = (checkField, checkValue) => {
+        let checkFiltersCopy = [...checkFilter]
+        let toCheckFilter = `${checkField}:${checkValue}`
+        let filteredCheckFilter = checkFiltersCopy.find(cfc => cfc == toCheckFilter)
+        if (!filteredCheckFilter) {
+            checkFiltersCopy.push(toCheckFilter)
+        } else {
+            checkFiltersCopy = checkFiltersCopy.filter(cfc => cfc != toCheckFilter)
+        }
+
+
+        let mixedFilters = []
+        checkFiltersCopy.forEach(cf => {
+            let splited = cf.split(":")
+            mixedFilters.push(...filterFields(analiseFields, splited[0], splited[1]))
+        })
+
+        setCheckFilter(checkFiltersCopy)
+        filter(mixedFilters.length == 0 ? analiseFields : mixedFilters)
+
+    }
+
 
 
 
@@ -172,36 +184,57 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Processo:</Form.Label>
-                                    <Form.Control value={processoNome} placeholder={"filtra por nome do processo"} onChange={(event) => dispatcher(updateFiltroProcesso(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={processoNome} placeholder={"filtra por nome do processo"} onChange={(event) => dispatcher(updateFiltroProcesso(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                                    <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de parametro:</Form.Label>
-                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateFiltroParametro(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateFiltroParametro(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
                                 <Form.Group>
-                                    <Form.Label>Filtrar por nome de Turno:</Form.Label>
-                                    <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(updateTurno(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Check label={"Turno A"} placeholder={"filtra por nome de turno"} onChange={(event) => applyCheckFilter("turno", "Turno A")}></Form.Check>
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group>
-                                    <Form.Label>Filtrar por frequencia:</Form.Label>
-                                    <Form.Control value={frequencia} placeholder={"filtra por frequencia"} onChange={(event) => dispatcher(updateFrequencia(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Check label={"Turno B"} placeholder={"filtra por nome de turno"} onChange={(event) => applyCheckFilter("turno", "Turno B")}></Form.Check>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Check label={"Turno C"} placeholder={"filtra por nome de turno"} onChange={(event) => applyCheckFilter("turno", "Turno C")}></Form.Check>
                                 </Form.Group>
                             </Col>
                         </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Check label={"Diario"} onChange={(event) => applyCheckFilter("frequencia", "Dia")}></Form.Check>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Check label={"Semanal"} onChange={(event) => applyCheckFilter("frequencia", "Semanal")}></Form.Check>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Check label={"Mensal"} onChange={(event) => applyCheckFilter("frequencia", "Mensal")}></Form.Check>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
                     </>
                     :
                     <>
@@ -209,7 +242,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Processo:</Form.Label>
-                                    <Form.Control value={processoNome} placeholder={"filtra por nome do processo"} onChange={(event) => dispatcher(updateFiltroProcesso(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={processoNome} placeholder={"filtra por nome do processo"} onChange={(event) => dispatcher(updateFiltroProcesso(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -217,7 +250,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Etapa:</Form.Label>
-                                    <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={etapaNome} placeholder={"filtra por nome de etapa"} onChange={(event) => dispatcher(updateFiltroEtapa(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -225,7 +258,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de parametro:</Form.Label>
-                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateFiltroParametro(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateFiltroParametro(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -233,7 +266,7 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por nome de Turno:</Form.Label>
-                                    <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(updateTurno(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={turno} placeholder={"filtra por nome de turno"} onChange={(event) => dispatcher(updateTurno(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -241,14 +274,14 @@ const MultiRegistroAnalise = (props) => {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Filtrar por frequencia:</Form.Label>
-                                    <Form.Control value={frequencia} placeholder={"filtra por frequencia"} onChange={(event) => dispatcher(updateFrequencia(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter() } onBlur={() => filter() }></Form.Control>
+                                    <Form.Control value={frequencia} placeholder={"filtra por frequencia"} onChange={(event) => dispatcher(updateFrequencia(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
                         </Row>
                     </>
                 }
                 <Row>
-                    <Col><Button style={{backgroundColor : "black" , color: "white", fontWeight : "bold", borderColor : "black"}} onClick={() => dispatchers(dispatcher).loadAnaliseFields()}>Recarregar Dados</Button></Col>
+                    <Col><Button style={{ backgroundColor: "black", color: "white", fontWeight: "bold", borderColor: "black" }} onClick={() => dispatchers(dispatcher).loadAnaliseFields()}>Recarregar Dados</Button></Col>
                     <Col style={{ marginBottom: 10 }}>
                         <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => setShowData(event.target.checked)} />
                         <Form.Group hidden={!showData}>
@@ -262,7 +295,7 @@ const MultiRegistroAnalise = (props) => {
                         </Form.Group>
                     </Col>
                     <Col style={{ marginBottom: 10 }}>
-                        <Form.Check type="checkbox" checked={mostrarEmDia} label="Mostrar Analises em dia?" onChange={(event) => setMostrarEmDia(event.target.checked)} />
+                        <Form.Check style={{fontWeight : "bold" , fontSize : 18}} type="checkbox" checked={mostrarEmDia} label="Mostrar Analises em dia?" onChange={(event) => setMostrarEmDia(event.target.checked)} />
                     </Col>
                 </Row>
             </Container>
@@ -291,7 +324,7 @@ const MultiRegistroAnalise = (props) => {
                             <tbody>
                                 {filteredAnalises.map((analiseField, index) => {
                                     return (
-                                        <tr hidden={!mostrarEmDia && analiseField.parametro.analiseHoje && analiseField.isHabilitado} key={analiseField.parametroId} >
+                                        <tr hidden={!mostrarEmDia && analiseField.isLate && analiseField.isHabilitado} key={analiseField.parametroId} >
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{`${analiseField.frequencia}`}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ textAlign: "center" }} >{OnlyDate(analiseField.dataPlanejada)}</Form.Label></td>
                                             <td className="align-middle"><Form.Label style={{ fontWeight: "BOLD", color: !analiseField.analiseHoje ? "RED" : "GREEN", textAlign: "center" }} >{`${analiseField.turno} ${onlyTime(analiseField.dataPlanejada)}`}</Form.Label></td>

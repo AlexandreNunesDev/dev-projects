@@ -127,7 +127,7 @@ const CadastroParametro = (props) => {
                         <Form.Group as={Col} controlId="nomeParametroForm">
                             <Form.Label>Nome do Parametro: </Form.Label>
 
-                            <SelectEditable getValue={(nome) => nome && setNome(nome)} default={"selecione um nome"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão",]}></SelectEditable>
+                            <SelectEditable getValue={(nome) => nome && setNome(nome)} default={"selecione um nome"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão","Tempo"]}></SelectEditable>
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
@@ -151,7 +151,7 @@ const CadastroParametro = (props) => {
                         </Form.Row>
                         <Form.Row>
                             <Col >
-                                <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} selection={escalaTempo} default={"Escolha a escala"} onChange={(event) => setEscalaTempo(event.target.value)} />
+                                <UnidadeSelect type="frequenciaAnalise" title={"Unidade: "} selection={escalaTempo} default={"Escolha a escala"} onChange={(valor) => setEscalaTempo(valor)} />
                             </Col>
                         </Form.Row> </>}
 
