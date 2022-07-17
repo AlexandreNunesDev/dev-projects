@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom"
 import ScqApi from "../Http/ScqApi"
 import { withToastManager } from "react-toast-notifications"
 import validator from 'validator';
+import { withMenuBar } from "../Hocs/withMenuBar"
 
 
 const Registrar = (props) => {
@@ -100,4 +101,4 @@ const Registrar = (props) => {
     )
 }
 
-export default withToastManager(Registrar)
+export default withMenuBar(withToastManager(Registrar))

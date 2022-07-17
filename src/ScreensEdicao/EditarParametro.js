@@ -16,6 +16,7 @@ import { toastInfo} from '../Services/toastType';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { useSelector } from 'react-redux';
 import { getValorSugestao } from '../Services/ocpService';
+import RegraCorrecoes from '../Reducers/regraCorrecoes';
 
 
 const EditarParametro = (props) => {
@@ -126,10 +127,10 @@ const EditarParametro = (props) => {
                          </Form.Group> }
                     <Form.Row>
                     <Col>
-                            <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={processosOps} onChange={id => setProcessoId(id)} selection={processos && processoId}></GenericSelect>
+                            <GenericSelect title={"Processo"} displayType={"nome"} returnType={"id"} default={"Escolha um Processo"} ops={processosOps} onChange={id => setProcessoId(id)} selection={processos && processoId}></GenericSelect>
                         </Col> 
                       <Col>
-                            <GenericSelect title={"Etapa"} returnType={"id"} default={"Escolha uma Etapa"} ops={etapas} onChange={id => setEtapaId(id)} selection={etapas && etapaId}></GenericSelect>
+                            <GenericSelect title={"Etapa"} displayType={"nome"} returnType={"id"} default={"Escolha uma Etapa"} ops={etapas} onChange={id => setEtapaId(id)} selection={etapas && etapaId}></GenericSelect>
                         </Col>
                     </Form.Row>
 
@@ -148,7 +149,7 @@ const EditarParametro = (props) => {
 
                         <Col sm={2} >
                             <Form.Label>Analise a cada : </Form.Label>
-                            <Form.Control type="number" value={frequenciaAnalise} onChange={event => setFrequenciaAnalise(event.target.value)} />
+                            <Form.Control type="number" value={frequenciaAnalise || ''} onChange={event => setFrequenciaAnalise(event.target.value)} />
                         </Col>
                         <Col sm={2}>
                             <UnidadeSelect selection={escalaTempo} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={value => setEscalaTempo(value)} />
@@ -159,19 +160,19 @@ const EditarParametro = (props) => {
                     <Form.Row>
                         <Form.Group sm as={Col} controlId="pMinParametroForm">
                             <Form.Label>Mínimo Especificado</Form.Label>
-                            <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={pMin} onChange={event => setPmin(event.target.value)} />
+                            <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={pMin || ''} onChange={event => setPmin(event.target.value)} />
                         </Form.Group>
                         <Form.Group sm as={Col} controlId="pMinParametroForm">
                             <Form.Label>Mínimo Trabalho</Form.Label>
-                            <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={pMinT} onChange={event => setPminT(event.target.value)} />
+                            <Form.Control type="number" pattern="0.00" placeholder="Parametro Minimo" value={pMinT || ''} onChange={event => setPminT(event.target.value)} />
                         </Form.Group>
                         <Form.Group sm as={Col} controlId="pMaxParametroForm">
                             <Form.Label>Máximo Trabalho</Form.Label>
-                            <Form.Control type="number" placeholder="Parametro Máximo" value={pMaxT} onChange={event => setPmaxT(event.target.value)} />
+                            <Form.Control type="number" placeholder="Parametro Máximo" value={pMaxT || ''}  onChange={event => setPmaxT(event.target.value)} />
                         </Form.Group>
                         <Form.Group sm as={Col} controlId="pMaxParametroForm">
                             <Form.Label>Máximo Especificado</Form.Label>
-                            <Form.Control type="number" placeholder="Parametro Máximo" value={pMax} onChange={event => setPmax(event.target.value)} />
+                            <Form.Control type="number" placeholder="Parametro Máximo" value={pMax || ''} onChange={event => setPmax(event.target.value)} />
                         </Form.Group>
 
 
@@ -180,17 +181,17 @@ const EditarParametro = (props) => {
 
                     <Form.Row>
                     <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkTitula">
-                        <Form.Check.Input  type="checkbox" checked={showChart} onChange={(event) =>  setShowChart(!showChart)} />
+                        <Form.Check.Input  type="checkbox" checked={showChart || false} onChange={(event) =>  setShowChart(!showChart)} />
                         <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
                     </Form.Check>
                     <Form.Check style={{marginRight : 15}} type="checkbox" id="checkTitula">
-                        <Form.Check.Input type="checkbox" checked={titula} onChange={(event) => setTitula(!titula)} />
+                        <Form.Check.Input type="checkbox" checked={titula || false} onChange={(event) => setTitula(!titula)} />
                         <Form.Check.Label>Formulas ?</Form.Check.Label>
                     </Form.Check>
 
                     
                     <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkHabilitado">
-                            <Form.Check.Input type="checkbox" checked={habilitado} onChange={(event) => setHabilitado(event.target.checked)} />
+                            <Form.Check.Input type="checkbox" checked={habilitado || false} onChange={(event) => setHabilitado(event.target.checked)} />
                             <Form.Check.Label>Habilitado</Form.Check.Label>
                         </Form.Check>
 
@@ -200,35 +201,12 @@ const EditarParametro = (props) => {
 
                     <Form.Row hidden={!titula}>
                         <Form.Group as={Col} controlId="formulaParametroForm">
-                            <Form.Control readOnly={true} value={formula} type="text" placeholder="Formula" />
+                            <Form.Control readOnly={true} value={formula || ''} type="text" placeholder="Formula" />
                         </Form.Group>
                         <Form.Group as={Col} controlId="btnFormulaBuilderParametroForm">
                             {etapaId && <FormulaBuilder etapaId={etapaId} onClose={formula => setFormula(formula)} processos={processos} etapas={etapas}></FormulaBuilder>}
                         </Form.Group>
                     </Form.Row>
-                    {regras &&
-                        <>
-                            <h3>Regras de Correcao para tanque de {etapa.volume}</h3>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Materia Prima</th>
-                                            <th>Quantidade / unidade:</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {regras.map((regra, index) => {
-                                            return (<tr key={regra.mpId}>
-                                                <td>{regra.mpNome}</td>
-                                                <td><Form.Control type="number" pattern="0.00" placeholder="quantidade dosada para cada 1 unidade" value={regra.valorUnidade} onChange={event => updateRegrasField(event.target.value, regra, index)} /></td>
-                                            </tr>)
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </>}
-
                     <Form.Group style={{ marginTop: 20 }}>
                         <Button style={{ margin: 5 }} variant="primary" type="reset" onClick={() => onSaveClick()}>Salvar</Button>
                     </Form.Group>

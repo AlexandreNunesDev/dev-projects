@@ -81,7 +81,10 @@ class OrdensDeCorreção extends Component {
     }
 
     redirectAnalise = (history, analise, ocpId) => {
-        this.props.setSingleAnalise(analise)
+        
+        let analiseCopy = {...analise}
+        analiseCopy.ordemId = ocpId
+        this.props.setSingleAnalise(analiseCopy)
         history.push("/RegistroAnalise", { reanalise: true })
     }
 

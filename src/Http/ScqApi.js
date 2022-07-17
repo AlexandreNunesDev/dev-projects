@@ -98,6 +98,30 @@ const ScqApi = {
         return http.post("processo", processo)
 
     },
+    CriarRegrasCorrecao: (regras) => {
+        return http.post("regraCorrecao",regras)
+
+    },
+    AtualizaRegrasCorrecao: (regras) => {
+        return http.put("regraCorrecao",regras)
+
+    },
+    ListarRegrasCorrecao: () => {
+        return http.get("regraCorrecao")
+
+    },
+    EncontrarUmaRegraCorrecao: (id) => {
+        return http.get(`regraCorrecao/${id}`)
+
+    },
+    EncontrarUmaRegraCorrecaoPorParametro: (parametroId) => {
+        return http.get(`/regraCorrecao/parametro/${parametroId}`)
+
+    },
+    DeletarCorrecao: (id) => {
+        return http.delete(`regraCorrecao/${id}`)
+
+    },
     CriarFrequenciaAnalise: (frequencia) => {
         return http.post("frequencia", frequencia)
     },

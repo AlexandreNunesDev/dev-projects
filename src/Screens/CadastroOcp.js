@@ -3,8 +3,6 @@ import { Form, Container, Col, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, withRouter } from 'react-router-dom';
 import ScqApi from '../Http/ScqApi';
-import AdicaoComposition from '../Components/AdicaoComposition';
-import AdicaopH from '../Components/AdicaopH';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { withToastManager } from 'react-toast-notifications';
@@ -15,8 +13,10 @@ import { loadOcps } from '../Services/storeService'
 import { WebSocketContext } from '../websocket/wsProvider';
 import AdicaoForm from '../Components/AdicaoForm';
 import { clear, updateAdicoes } from '../Reducers/adicaoReducer';
+import { clearCorrecao}  from '../Reducers/regraCorrecoes';
 import { toastOk } from '../Services/toastType';
 import { isInsideFaixa } from '../Services/analiseService';
+import CalculadoraDeCorrecao from '../Components/CalculadoraDeCorrecao';
 
 
 
@@ -117,6 +117,7 @@ const CadastroDeOcpAdicao = (props) => {
 
                                 </Form.Row>
                             }
+                            <CalculadoraDeCorrecao></CalculadoraDeCorrecao>
                             <AdicaoForm deleteAdicao={deleteAdicao}></AdicaoForm>
 
                             <Form.Row>
@@ -136,6 +137,7 @@ const CadastroDeOcpAdicao = (props) => {
                                     <Button style={{ margin: 2 }} onClick={() => {
                                         redirectAnalise(history, analiseToSave)
                                         redirectAnalise(history)
+                                        dispatcher(clearCorrecao())
                                     }}>
                                         Cancelar
                                     </Button>

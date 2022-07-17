@@ -8,6 +8,7 @@ import dynamicFormsReducer from './dyanamicForms'
 import ompReducer from './ompReducer'
 import adicaoReducer from './adicaoReducer'
 import analiseReducer from './analiseReducer'
+import regrasCorrecao from './regraCorrecoes'
 
 
 
@@ -21,7 +22,8 @@ const appReducer = combineReducers({
    omp : ompReducer,
    formsReducer : dynamicFormsReducer,
    adicaoForm : adicaoReducer,
-   analise : analiseReducer
+   analise : analiseReducer,
+   regraCorrecao : regrasCorrecao
 
 })
 
@@ -37,6 +39,7 @@ const rootReducer = (state, action) => {
     state.adicaoForm = undefined
     state.analise = undefined
     state.timeReducer = undefined
+    state.regraCorrecao = undefined
    }
  
    return appReducer(state, action);

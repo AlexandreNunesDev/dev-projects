@@ -168,44 +168,44 @@ const ModoEdicao = (props) => {
         
             <Row>
                 <Col xl={{ order: colSequence[0]}} >
-               {props.type !== "materiaPrima" && <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={props.processos} onChange={(processoId) => {
-                    setProcesso(processoId)
+               {props.type !== "materiaPrima" && <GenericSelect returnType={"id"} displayType={"nome"} title={"Processo"} default={"Escolha um Processo"} ops={props.processos} onChange={(processoId) => {
+                    setProcesso(processoId.id)
                     if(props.type=== "processo") {
-                    props.getSelectedProcesso( loadEditableProcesso(processoId))
+                    props.getSelectedProcesso( loadEditableProcesso(processoId.id))
                     }else{
-                    loadEditableProcesso(processoId)
+                    loadEditableProcesso(processoId.id)
                     }}}>
                 </GenericSelect> }
                 </Col>
                 <Col xl={{ order: colSequence[1]}} >
-                { etapas!=null && <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={async (idEtapa) => {
-                    setEtapa(idEtapa)
+                { etapas!=null && <GenericSelect returnType={"id"} displayType={"nome"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={async (idEtapa) => {
+                    setEtapa(idEtapa.id)
                     if(props.type === "etapa") {
-                        props.getSelectedEtapa(loadEditableEtapa(idEtapa))
+                        props.getSelectedEtapa(loadEditableEtapa(idEtapa.id))
                     }else if(props.type === "troca") {
-                        props.getSelectedTroca( await loadEditableTroca(idEtapa))
+                        props.getSelectedTroca( await loadEditableTroca(idEtapa.id))
                     } else {
-                        loadEditableEtapa(idEtapa)
+                        loadEditableEtapa(idEtapa.id)
                     }
                     }}></GenericSelect> }
                 </Col>
                 <Col xl={{ order: colSequence[2]}} >
-                { parametros!=null && <GenericSelect returnType={"id"} title={"Parametro"} default={"Escolha um Parametro"}  ops={parametros} onChange={(idParametro) => {
+                { parametros!=null && <GenericSelect returnType={"id"} displayType={"nome"} title={"Parametro"} default={"Escolha um Parametro"}  ops={parametros} onChange={(idParametro) => {
                     if(props.type === "parametro") {
-                    props.getSelectedParametro(loadEditableParametro(idParametro))
+                    props.getSelectedParametro(loadEditableParametro(idParametro.id))
         
                     } else {
-                    loadEditableParametro(idParametro)
+                    loadEditableParametro(idParametro.id)
                     }
                     }}></GenericSelect> }
                 </Col>
                 <Col xl={{ order: colSequence[3]}}  >
-               {materiasPrima!=null && props.type ==="materiaPrima" && <GenericSelect returnType={"id"} title={"Materia Prima"} default={"Escolha uma Materia Prima"} ops={materiasPrima} onChange={(materiaPrimaId) => {
-                    setProcesso(materiaPrimaId)
+               {materiasPrima!=null && props.type ==="materiaPrima" && <GenericSelect returnType={"id"} displayType={"nome"} title={"Materia Prima"} default={"Escolha uma Materia Prima"} ops={materiasPrima} onChange={(materiaPrimaId) => {
+                    setProcesso(materiaPrimaId.id)
                     if(props.type=== "materiaPrima") {
-                    loadEditableMateriaPrima(materiaPrimaId).then( res => props.getSelectedMateriaPrima(res))}
+                    loadEditableMateriaPrima(materiaPrimaId.id).then( res => props.getSelectedMateriaPrima(res))}
                     else {
-                    loadEditableMateriaPrima(materiaPrimaId)
+                    loadEditableMateriaPrima(materiaPrimaId.id)
                     }}}>
                 </GenericSelect> }
                 
@@ -214,7 +214,7 @@ const ModoEdicao = (props) => {
                {tarefas!=null && props.type ==="tarefa" && <GenericSelect returnType={"id"} title={"Tarefa de Manutenção"} default={"Escolha uma Tarefa"} ops={tarefas} onChange={(id) => {
              
                     if(props.type=== "tarefa") {
-                    loadEditableTarefa(id).then( res => props.getSelectedTarefa(res))}
+                    loadEditableTarefa(id).then( res => props.getSelectedTarefa(res.id))}
                     else {
                     loadEditableTarefa()
                     }}}>

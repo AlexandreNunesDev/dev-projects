@@ -220,7 +220,7 @@ const Trocas = () => {
                 </Col>
 
                 <Col hidden={buildingOmp} style={{ paddingTop: 20 }} md="auto">
-                    <GenericSelect noLabel={true} default={"--Selecione um Processo--"} selection={processoId} onChange={(processoId) => dispatch(setProcessoId(processoId))} ops={processos} displayType={"nome"} returnType={"id"}></GenericSelect>
+                    <GenericSelect noLabel={true} default={"--Selecione um Processo--"}  selection={processoId} onChange={(processoId) => dispatch(setProcessoId(processoId))} title={"Processo"} displayType={"nome"} ></GenericSelect>
                 </Col>
 
                 <Col md="auto">

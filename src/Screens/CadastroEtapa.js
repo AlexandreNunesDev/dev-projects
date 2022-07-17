@@ -34,8 +34,8 @@ class CadastroEtapa extends React.Component {
 
 
 
-    selectedLinhaListner = (processoId) => {
-        this.setState({ processoId: processoId })
+    selectedLinhaListner = (processo) => {
+        this.setState({ processoId: processo.id })
     }
 
     handleChangeEtapaNome = (event) => {
@@ -47,9 +47,6 @@ class CadastroEtapa extends React.Component {
     }
 
     submitForm = () => {
-
-
-
         const { processoId, nome, posicao } = this.state
         const etapa = { processoId: processoId, nome, posicao, volume: this.state.volume }
         const { toastManager } = this.props;
@@ -57,12 +54,7 @@ class CadastroEtapa extends React.Component {
             responseHandler(res,toastManager ,"Etapa",toastOk)
             const composes = this.state.montagemComposes.map((montagemCompose) => { return { quantidade: montagemCompose.quantidade, mpId: montagemCompose.mp.id, etapaId: res.id } })
             ScqApi.CriarMontagem(composes)
-          
         })
-
-      
-
-
     }
 
 
@@ -115,7 +107,7 @@ class CadastroEtapa extends React.Component {
 
                         <Form.Row>
                             <Col>
-                                <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={this.selectedLinhaListner} ops={this.props.processos} isNotEditable={this.state.isNotEditable} selection={this.state.etapa.processoId}></GenericSelect>
+                                <GenericSelect title={"Processo"} displayType={"nome"} returnType={"id"} default={"Escolha um Processo"} onChange={this.selectedLinhaListner}  isNotEditable={this.state.isNotEditable} selection={this.state.etapa.processoId}></GenericSelect>
                             </Col>
                         </Form.Row>
                         <Form.Row>
@@ -146,10 +138,10 @@ class CadastroEtapa extends React.Component {
                         <Form.Row>
          
                       
-                            <Button style={{ margin: 2 }} variant="primary" onClick={this.enterEditMode}>Editar</Button>
+                            <Button style={{ margin: 12 ,marginLeft : 0}} variant="primary" onClick={this.enterEditMode}>Editar</Button>
               
           
-                            <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={this.submitForm}>Salvar</Button>
+                            <Button style={{ margin: 12, marginLeft : 0 }} variant="primary" type="reset" onClick={this.submitForm}>Salvar</Button>
                  
            
                         </Form.Row>

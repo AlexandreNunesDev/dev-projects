@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Form, Button, Col, Row, Table } from 'react-bootstrap'
-import GenericSelect from '../Components/GenericSelect';
+import { Typeahead } from 'react-bootstrap-typeahead';
 
 
 
@@ -23,12 +23,11 @@ const EditarMontagemComposition = (props) => {
               
                 
                 <Col>
-                    <GenericSelect returnType={"id"} noLabel={true} default={"Selecione uma Matéria Prima"} ops={props.ops} onChange={(mpId) => {
-                        const materiaPrimaChoosen = props.ops.filter(materiaPrima => {
-                            return Number(materiaPrima.id) === Number(mpId)
-                        })
-                        setMp(materiaPrimaChoosen[0])
-                    }}></GenericSelect>
+                <Typeahead id={"searchMp"}
+                        clearButton
+                        labelKey={"nome"}
+                        onChange={(mp) => setMp(mp[0])}
+                        options={props.ops || []} />
                 </Col>
 
                 <Col>
@@ -43,7 +42,7 @@ const EditarMontagemComposition = (props) => {
                     }}>Adicionar</Button>
                 </Col>
             </Row>
-            <Table hidden={props.montagemComposes.length === 0 ? true : false}>
+            <Table style={{marginTop : 12}} hidden={props.montagemComposes.length === 0 ? true : false}>
                 <thead>
                     <tr>
                         <th md={'auto'}>

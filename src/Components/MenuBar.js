@@ -63,6 +63,7 @@ const MenuBar = () => {
                   <Link className="dropdown-item" to="/CadastroEtapa">Etapa</Link>
                   <Link className="dropdown-item" to="/CadastroParametro">Parametro</Link>
                   <Link className="dropdown-item" to="/CadastroMateriaPrima">Matéria Prima</Link>
+                  <Link className="dropdown-item" to="/CadastroDeRegrasDeCorrecao">Regras de Correcao</Link>
                   <Link className="dropdown-item" to="/CadastroTroca">Troca</Link>
                   <Link className="dropdown-item" to="/CadastroTarefasDeManutencao">Tarefa de Manutenção</Link>
                   <Link className="dropdown-item" to="/CadastroTurno">Turno</Link>

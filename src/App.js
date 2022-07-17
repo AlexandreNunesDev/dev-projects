@@ -34,6 +34,7 @@ import VoceFoiDesconectado from './Screens/VoceFoiDesconectado';
 import EditarEtapa from './ScreensEdicao/EditarEtapa';
 import EditarMateriaPrima from './ScreensEdicao/EditarMateriaPrima';
 import EditarOcpAdicao from './ScreensEdicao/EditarOcp';
+import CadastroDeRegraDeCorrecao from './Screens/CadastroRegraDeCorrecao';
 import EditarParametro from './ScreensEdicao/EditarParametro';
 import EditarProcesso from './ScreensEdicao/EditarProcesso';
 import EditarTroca from './ScreensEdicao/EditarTroca';
@@ -155,6 +156,7 @@ class App extends React.Component {
             <Route path='/CorrecaoConfirm' exact={true} component={CorrecaoConfirm} />
             <Route path='/Analises' exact={true} component={Analises} />
             <Route path='/HistoricoCorrecao' exact={true} component={HistoricoCorrecoes} />
+            <Route path='/CadastroDeRegrasDeCorrecao' exact={true} component={CadastroDeRegraDeCorrecao} />
           </Switch>
         </>
 
@@ -193,7 +195,7 @@ class App extends React.Component {
             <Route path='/CorrecaoConfirm' exact={true} component={CorrecaoConfirm} />
             <Route path='/Analises' exact={true} component={Analises} />
             <Route path='/HistoricoCorrecao' exact={true} component={HistoricoCorrecoes} />
-            
+            <Route path='/CadastroDeRegrasDeCorrecao' exact={true} component={HistoricoCorrecoes} />
           </Switch>
         </>
 

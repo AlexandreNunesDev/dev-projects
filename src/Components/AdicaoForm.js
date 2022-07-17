@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
@@ -12,7 +12,7 @@ import { updateAdicoes } from '../Reducers/adicaoReducer'
 
 
 
-const AdicaoForm = ({ deleteAdicao, parametroId , etapa }) => {
+const AdicaoForm = ({ deleteAdicao, parametroId , etapa,isCorrecaoLivre }) => {
 
     const materiasPrima = useSelector(state => state.options.materiasPrima)
     const ocpToEdit = useSelector(state => state.ocp.ocpToEdit)
@@ -25,6 +25,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId , etapa }) => {
     const [quantidade, setQuantidade] = useState('')
     const [correcaoDetails, setCorrecaoDetails] = useState()
     const toast = useToasts()
+    const regras = useSelector(state => state.regraCorrecao.regras)
 
 
 
@@ -58,37 +59,8 @@ const AdicaoForm = ({ deleteAdicao, parametroId , etapa }) => {
 
 
     return (
-        <>
-            {/*  <h4>Informacões para adicao</h4>
-            <Row>
-                <Col><Form.Label>Volume Etapa considerado: 1500Lts</Form.Label></Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Form.Group>
-                        <Form.Label>Produto</Form.Label>
-                        <Form.Control disabled value={"Endox 280"} ></Form.Control>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group>
-                        <Form.Label>Corrigir para:</Form.Label>
-                        <Form.Control></Form.Control>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group>
-                        <Form.Label>Quantidade produto sugerida:</Form.Label>
-                        <Form.Control></Form.Control>
-                    </Form.Group>
-                </Col>
-            </Row> */}
-
-            <h4>Informacões para adicao</h4>
-            <Row>
-                <Col><Form.Label><strong>Volume Etapa considerado:</strong> {etapa?.volume || ocpToEdit.volumeEtapa } Lts</Form.Label></Col>
-            </Row>
-
+        <div hidden={regras.length == 0}>
+           
             <Row >
                 <Col>
                     <h4>Inserir adicoes</h4>
@@ -96,7 +68,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId , etapa }) => {
 
             </Row>
 
-            <Row >
+            <Row hidden={!isCorrecaoLivre} >
                 <Col>
 
                     <Form.Group>
@@ -198,7 +170,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId , etapa }) => {
 
                 </Table>}
 
-        </>
+        </div>
     )
 
 

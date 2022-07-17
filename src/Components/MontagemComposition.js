@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Form, Button, Col, Row, Table } from 'react-bootstrap'
+import { Typeahead } from 'react-bootstrap-typeahead';
 import GenericSelect from '../Components/GenericSelect';
 
 
@@ -21,18 +22,17 @@ const MontagemComposition = (props) => {
             <h4>Composicao de Montagem</h4>
             <Row>
                 <Col>
-                    <GenericSelect returnType={"id"} noLabel={true} default={"Selecione uma Matéria Prima"} ops={props.ops} onChange={(mpId) => {
-                        const materiaPrimaChoosen = props.ops.filter(materiaPrima => {
-                            return Number(materiaPrima.id) === Number(mpId)
-                        })
-                        setMp(materiaPrimaChoosen[0])
-                    }}></GenericSelect>
+                    <Typeahead id={"searchMp"}
+                        clearButton
+                        labelKey={"nome"}
+                        onChange={(mp) => setMp(mp[0])}
+                        options={props.ops || []} />
                 </Col>
                 <Col>
                     <Form.Control ref={quantidadeRef} type={'number'} placeholder={"Quantidade"} onChange={event => setQuantidade(event.target.value)} ></Form.Control>
                 </Col>
 
-               
+
 
                 <Col>
                     <Button onClick={() => {
@@ -41,7 +41,7 @@ const MontagemComposition = (props) => {
                     }}>Adicionar</Button>
                 </Col>
             </Row>
-            <Table hidden={props.montagemComposes.length === 0 ? true : false}>
+            <Table style={{marginTop : 12}} hidden={props.montagemComposes.length === 0 ? true : false}>
                 <thead>
                     <tr>
                         <th md={'auto'}>
@@ -76,13 +76,13 @@ const MontagemComposition = (props) => {
                                 <td md={'auto'}>
                                     <Form.Label>{mc.mp.unidade}</Form.Label>
                                 </td>
-                                <td>                                
+                                <td>
                                     <Form.Label>{mc.mp.nome}</Form.Label>
                                 </td>
-                                <td>                                
+                                <td>
                                     <Button onClick={() => props.removeMontagemCompose(index)}>remover</Button>
                                 </td>
-                                
+
                             </tr>
                         </tbody>
 

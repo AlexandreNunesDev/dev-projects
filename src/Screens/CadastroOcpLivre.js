@@ -94,13 +94,11 @@ const CadastroOcpLivre = (props) => {
                             </Form.Row>
                             <Form.Row>
                                 <Form.Group as={Col}>
-                                    <GenericSelect title={"Etapa"} returnType={"id"} default={"Escolha uma Etapa"} ops={etapasOpts} onChange={(value) => {
-                                            setEtapa(etapas.find(etap => etap.id == value))
-                                    }} selection={etapa?.id}></GenericSelect>
+                                    <GenericSelect title={"Etapa"}  filter={processoId} filterField={"processoId"} default={"Escolha uma Etapa"} ops={etapasOpts} onChange={(value) => setEtapa(value)} selection={etapa?.id}></GenericSelect>
                                 </Form.Group>
                             </Form.Row>
 
-                            <AdicaoForm deleteAdicao={deleteAdicao} etapa={etapa}></AdicaoForm>
+                            <AdicaoForm deleteAdicao={deleteAdicao} etapa={etapa} isCorrecaoLivre={true}></AdicaoForm>
 
                             <Form.Row>
                                 <Form.Group as={Col}>

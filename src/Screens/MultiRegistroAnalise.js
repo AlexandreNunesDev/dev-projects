@@ -36,7 +36,8 @@ const MultiRegistroAnalise = (props) => {
     const etapaNome = useSelector(state => state.analise.filtroEtapa)
     const turno = useSelector(state => state.analise.turno)
     const processoId = useSelector(state => state.analise.processoId)
-    const [checkFilter, setCheckFilter] = useState([])
+    const [turnoCheckFilter, setTurnoCheckFilter] = useState([])
+    const [frequenciaCheckFilter, setFrequenciaCheckFilter] = useState([])
     let dataFieldRef = useRef(null)
     const history = useHistory()
 
@@ -66,6 +67,7 @@ const MultiRegistroAnalise = (props) => {
         if (processoNome) toBuildFields = filterFields(toBuildFields, "processoNome", processoNome)
         if (parametroNome) toBuildFields = filterFields(toBuildFields, "parametroNome", parametroNome)
         if (etapaNome) toBuildFields = filterFields(toBuildFields, "etapaNome", etapaNome)
+        if (frequencia) toBuildFields = filterFields(toBuildFields, "frequencia", frequencia)
         if (filteredAnalises.length > 0) toBuildFields = toBuildFields.map(fiCopy => {
             let filteredCopy = filteredAnalises.find(fiField => fiField.parametroId == fiCopy.parametroId)
             let orignalCopy = { ...fiCopy }
@@ -136,27 +138,9 @@ const MultiRegistroAnalise = (props) => {
     }
 
 
-    const applyCheckFilter = (checkField, checkValue) => {
-        let checkFiltersCopy = [...checkFilter]
-        let toCheckFilter = `${checkField}:${checkValue}`
-        let filteredCheckFilter = checkFiltersCopy.find(cfc => cfc == toCheckFilter)
-        if (!filteredCheckFilter) {
-            checkFiltersCopy.push(toCheckFilter)
-        } else {
-            checkFiltersCopy = checkFiltersCopy.filter(cfc => cfc != toCheckFilter)
-        }
 
 
-        let mixedFilters = []
-        checkFiltersCopy.forEach(cf => {
-            let splited = cf.split(":")
-            mixedFilters.push(...filterFields(analiseFields, splited[0], splited[1]))
-        })
 
-        setCheckFilter(checkFiltersCopy)
-        filter(mixedFilters.length == 0 ? analiseFields : mixedFilters)
-
-    }
 
 
 
@@ -199,42 +183,13 @@ const MultiRegistroAnalise = (props) => {
                                     <Form.Control value={parametroNome} placeholder={"filtra por nome de parametro"} onChange={(event) => dispatcher(updateFiltroParametro(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
                                 </Form.Group>
                             </Col>
+                        <Col>
+                            <Form.Group>
+                                <Form.Label>Filtrar por frequencia:</Form.Label>
+                                <Form.Control value={frequencia} placeholder={"filtra por frequencia"} onChange={(event) => dispatcher(updateFrequencia(event.target.value))} onKeyDown={(event) => event.key == "Enter" && filter()} onBlur={() => filter()}></Form.Control>
+                            </Form.Group>
+                        </Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Check label={"Turno A"} placeholder={"filtra por nome de turno"} onChange={(event) => applyCheckFilter("turno", "Turno A")}></Form.Check>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Check label={"Turno B"} placeholder={"filtra por nome de turno"} onChange={(event) => applyCheckFilter("turno", "Turno B")}></Form.Check>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Check label={"Turno C"} placeholder={"filtra por nome de turno"} onChange={(event) => applyCheckFilter("turno", "Turno C")}></Form.Check>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Check label={"Diario"} onChange={(event) => applyCheckFilter("frequencia", "Dia")}></Form.Check>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Check label={"Semanal"} onChange={(event) => applyCheckFilter("frequencia", "Semanal")}></Form.Check>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Check label={"Mensal"} onChange={(event) => applyCheckFilter("frequencia", "Mensal")}></Form.Check>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
                     </>
                     :
                     <>
@@ -295,7 +250,7 @@ const MultiRegistroAnalise = (props) => {
                         </Form.Group>
                     </Col>
                     <Col style={{ marginBottom: 10 }}>
-                        <Form.Check style={{fontWeight : "bold" , fontSize : 18}} type="checkbox" checked={mostrarEmDia} label="Mostrar Analises em dia?" onChange={(event) => setMostrarEmDia(event.target.checked)} />
+                        <Form.Check style={{ fontWeight: "bold", fontSize: 18 }} type="checkbox" checked={mostrarEmDia} label="Mostrar Analises em dia?" onChange={(event) => setMostrarEmDia(event.target.checked)} />
                     </Col>
                 </Row>
             </Container>

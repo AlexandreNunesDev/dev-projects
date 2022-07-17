@@ -12,6 +12,7 @@ import { responseHandler } from '../Services/responseHandler';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { toastInfo } from '../Services/toastType';
+import { useSelector } from 'react-redux';
 
 
 const EditarEtapa = (props) => {
@@ -24,10 +25,10 @@ const EditarEtapa = (props) => {
     const [montagemComposes, setMontagemComposes] = useState()
     const [removedCompose, setRemovedCompose] = useState()
     const [isEditableSelected, setIsEditableSelected] = useState(false)
-    const [processos, setProcessos] = useState()
     const [edited, setEdited] = useState(false)
     const [etapa, setEtapa] = useState()
-    const [mps, setMps] = useState()
+    const processos= useSelector(state => state.options.processos)
+    const mps= useSelector(state => state.options.materiasPrima)
     const { toastManager } = props
     const history = useHistory()
 
@@ -61,18 +62,6 @@ const EditarEtapa = (props) => {
 
     }
 
-
-    useEffect(() => {
-        ScqApi.ListaProcessos().then(res => setProcessos(res))
-        ScqApi.ListaMateriaPrimas().then(res => setMps(res))
-
-    }, [])
-
-    useEffect(() => {
-        console.log(montagemComposes)
-        console.log(removedCompose)
-
-    }, [montagemComposes, removedCompose])
 
 
     const removerMontagemCompose = (indexToRemove) => {
@@ -117,7 +106,7 @@ const EditarEtapa = (props) => {
                     </Form.Group>}
                     <Form.Row>
                         <Col>
-                            <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} onChange={(id) => setProcessoId(id)} ops={processos} isNotEditable={!isEditableSelected} selection={Number(processoId)}></GenericSelect>
+                            <GenericSelect title={"Processo"}  returnType={"id"} default={"Escolha um Processo"} onChange={(id) => setProcessoId(id)} ops={processos} isNotEditable={!isEditableSelected} selection={Number(processoId) || ''}></GenericSelect>
                         </Col>
                         <Col>
                             <Form.Group >

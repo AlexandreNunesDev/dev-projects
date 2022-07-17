@@ -25,12 +25,17 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
     const dispatch = useDispatch()
     const toatManager = useToasts()
     const [headers, setHeaders] = useState([])
+    const [optionsHeaders, setOptionsHeaders] = useState()
+    const [spreadSheetMetaData, setSpreadSheetMetadata] = useState()
+    const [showChartBuilder,setShowChartBuilder] = useState(false)
     const [carimbos, setCarimbos] = useState()
     const [body, setBody] = useState([])
     const [dataInicial, setDataInicial] = useState()
     const [dataFinal, setDataFinal] = useState()
     const [maxCol, setMaxCol] = useState()
     const [maxRow, setMaxRow] = useState()
+    const [eixoX, setEixoX] = useState()
+    const [eixoY, setEixoY] = useState()
     const formNameChoosed = useSelector(state => state.formsReducer.formNameChoosed)
 
 
@@ -38,6 +43,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
         if (selectedSpreadSheetUri) {
             httpClient.get("?").then(res => {
                 let metaData = res.data.sheets[0]
+                setSpreadSheetMetadata(metaData)
                 let maxColums = getMaxColumns(metaData)
                 let maxRows = getMaxRows(metaData)
                 setMaxCol(maxColums)
@@ -66,9 +72,9 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
 
                 let carimbosIndexados = []
                 carimbos.filter((carimbo, index) => {
-
+                    
                     if ((carimbo.getTime() > dataInicial.getTime()) && (carimbo.getTime() < dataFinal.getTime())) {
-
+                        
                         carimbosIndexados.push(new Cell(1, index + 2, carimbo))
                         return true
                     } else {
@@ -79,12 +85,12 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                 setCarimbos(carimbosIndexados)
             })
         } else {
-            toatManager.addToast("Necessario selecionar range de datas", { appearance: "warning", autoDismiss: true })
+            toatManager.addToast("Necessario selecionar range de datas", { appearance: "warning", autoDismiss :true })
         }
 
     }
 
-
+   
 
     function loadHeaders() {
         httpClient.get(`/values/:batchGet?ranges=R1C1:R1C${maxCol}&`).then(res => {
@@ -113,16 +119,10 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
     }
 
     /** @param {Array<Row>} rows */
-    function buildTable(rows, filtersIndex, filtersValues) {
-
+    function buildTable(rows) {
         let dataIni
         let dataFini
-        let rowsToBuild = []
-
-        filtersIndex.forEach(fIndex => {
-            rowsToBuild.push(rows.filter(row => row.cells[fIndex] == filtersValues[fIndex]))
-        })
-
+        let rowsToBuild
         if (dataFinal && dataInicial) {
             dataIni = dataInicial.getTime()
             dataFini = dataFinal.getTime()
@@ -155,10 +155,6 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
             </>)
     }
 
-    const setFilters = (value,index) => {
-        
-    }
-
 
 
 
@@ -166,9 +162,10 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
 
     return (
         <>
+            <ChartBuilder setShow={setShowChartBuilder} show={showChartBuilder} headers={headers} rows={body} setEixoX={(xData) => setEixoX(xData)} setEixoY={(yData) => setEixoY(yData)}></ChartBuilder>
             {
                 maxCol && maxRow && <>
-                    <h3>{`Dados - ${formNameChoosed} - carregado`}</h3>
+                <h3>{`Dados - ${formNameChoosed} - carregado`}</h3>
                     <Form.Row style={{ marginTop: 10 }}>
                         <Form.Group as={Col}>
                             <Form.Label>Data Inicial</Form.Label>
@@ -187,29 +184,16 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                                 onChange={event => setDataFinal(new Date(event.target.value))}>
                             </Form.Control>
                         </Form.Group>
-
-
                         <Form.Group as={Col} >
-                            <Button style={{ position: "absolute", bottom: 0 }} onClick={() => loadCarimbos()}>Carregar dados</Button>
+                            <Button style={{position:"absolute", bottom:0}}  onClick={() => loadCarimbos()}>Carregar dados</Button>
                         </Form.Group>
-                        {/*  <Form.Group as={Col} >
+                       {/*  <Form.Group as={Col} >
                             <Button style={{position:"absolute", bottom:0}}  onClick={() => setShowChartBuilder(true)}>Abrir construtor de graficos</Button>
                         </Form.Group> */}
                     </Form.Row>
-                    <Form.Row>
-                        <div style={{ display: "block" }}>
-                            {headers && headers.map((head, index) => <div>
-                                <Form.Row>
-                                    <Form.Label>{head}</Form.Label>
-                                    <Form.Control onChange={(event) =>  setFilters(event.target.value,index) }></Form.Control>
-                                </Form.Row>
-
-                            </div>)}
-                        </div>
-                    </Form.Row>
                 </>
             }
-
+            
             <div className="tableFixHead" >
                 <table>
                     <thead>{headers && buildHeaders(headers)}</thead>

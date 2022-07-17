@@ -11,6 +11,7 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { responseHandler } from '../Services/responseHandler';
 import { toastOk } from '../Services/toastType';
+import { setProcessoId } from '../Reducers/ompReducer';
 
 
 
@@ -23,6 +24,8 @@ const CadastroTroca = (props) => {
     const context = useContext(WebSocketContext)
     const [frequencia, setFrequencia] = useState()
     const [etapaId, setEtapaId] = useState()
+    const [processoId, setProcessoId] = useState()
+
     const [etapas, setEtapas] = useState()
     const [unidade, setUnidade] = useState()
     const [areaPlanejada, setAreaPlanejada] = useState('')
@@ -53,12 +56,12 @@ const CadastroTroca = (props) => {
                 <Form>
                     <Form.Row>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={props.processos} onChange={(processoId) =>setEtapas(props.etapas.filter(etapa => etapa.processoId === Number(processoId))) } ></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Processo"}  default={"Escolha um Processo"}  onChange={(processo) =>setProcessoId(processo.id) } ></GenericSelect>
                         </Col>
                     </Form.Row>
                     <Form.Row>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={(etapaId) => { setEtapaId(etapaId) }}></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Etapa"} filter={processoId} filterField={"processoId"} default={"Escolha uma Etapa"}  onChange={(etapa) => { setEtapaId(etapa.id) }}></GenericSelect>
                         </Col>
                     </Form.Row>
 

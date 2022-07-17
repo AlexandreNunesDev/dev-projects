@@ -1,13 +1,12 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { buildFormModel } from '../models/portalFormsModel';
-import { clear, setFormNameChoosed, setFullFormTarget, setSpreadSheetId } from '../Reducers/dyanamicForms';
-import { getToken } from '../Services/auth';
+import { clear, setFormNameChoosed, setFullFormTarget } from '../Reducers/dyanamicForms';
 import { getOauthToken } from '../Services/googleTokenService';
 import DynamicVizualization from './dynamicVisualizer';
 

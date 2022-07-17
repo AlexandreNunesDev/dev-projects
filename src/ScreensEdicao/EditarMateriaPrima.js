@@ -60,22 +60,22 @@ const EditarMateriaPrima = (props) => {
                     <Form.Row>
                         <Form.Group as={Col} controlId="nomeMateriaPrimaForm">
                             <Form.Label>Nome Matéria Prima: </Form.Label>
-                            <Form.Control type="text" placeholder="Nome da Matéria Prima" value={nome} onChange={(event) => setNome(event.target.value)} />
+                            <Form.Control type="text" placeholder="Nome da Matéria Prima" value={nome || ''} onChange={(event) => setNome(event.target.value)} />
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="fornecedorMateriaPrimaForm">
                             <Form.Label>Fornecedor: </Form.Label>
-                            <Form.Control type="text" placeholder="Nome do Fornecedor" value={fornecedor} onChange={(event) => setFornecedor(event.target.value)} />
+                            <Form.Control type="text" placeholder="Nome do Fornecedor" value={fornecedor || ''} onChange={(event) => setFornecedor(event.target.value)} />
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                             <Form.Label>Preco: </Form.Label>
-                            <Form.Control type="text" placeholder={"R$ 0,00"} value={preco} onChange={(event) => setPreco(event.target.value)} />
+                            <Form.Control type="text" placeholder={"R$ 0,00"} value={preco || ''} onChange={(event) => setPreco(event.target.value)} />
                         </Form.Group>
                         <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                             <Form.Label>Fator Titulométrico: </Form.Label>
-                            <Form.Control type="text" placeholder="Fator Titulometrico" value={fatorTitulometrico} onChange={(event) => setFatorTitulometrico(event.target.value)} />
+                            <Form.Control type="text" placeholder="Fator Titulometrico" value={fatorTitulometrico || ''} onChange={(event) => setFatorTitulometrico(event.target.value)} />
                         </Form.Group>
                         <Form.Group as={Col} controlId="fatorMateriaPrimaForm">
                             <UnidadeSelect selection={unidade} default={"Escolha uma Unidade"} type={"adicao"} title={"Unidade Mp"} onChange={(unidade) => setUnidade(unidade)}></UnidadeSelect>
