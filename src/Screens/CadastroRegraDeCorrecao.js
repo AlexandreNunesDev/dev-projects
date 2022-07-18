@@ -20,7 +20,6 @@ const CadastroDeRegraDeCorrecao = () => {
     const toast = useToasts()
 
 
-
     useEffect(() => {
         if (etapa) {
             let materiasPrima = etapa.proportionMps.map(propMp => {
@@ -31,6 +30,10 @@ const CadastroDeRegraDeCorrecao = () => {
             let regrasToBeCreated = materiasPrima.map(mp => ({ mpId: mp.id, mpNome: mp.nome, parametroId: parametro.id, valorUnidade: getValorSugestao(etapa.volume, parametro.unidade, etapa.proportionMps, mp.id), variacaoMaxima: 0 }))
             dispatch(updadteRegras(regrasToBeCreated))
         }
+
+        return () => dispatch(updadteRegras([]))
+
+
 
     }, [parametro])
 
@@ -77,9 +80,9 @@ const CadastroDeRegraDeCorrecao = () => {
 
                
                 <div>
-                    <GenericSelect title={"Processo"} displayType={"nome"} returnType={"id"} selection={processo.id} onChange={(value) => dispatch(updadteProcessoRegras(value))}></GenericSelect>
-                    <GenericSelect title={"Etapa"} displayType={"nome"} returnType={"id"} filter={processo.id} filterField={"processoId"} selection={etapa.id} onChange={(value) => dispatch(updadteEtapaRegras(value))}></GenericSelect>
-                    <GenericSelect title={"Parametro"} displayType={"nome"} returnType={"id"} filter={etapa.id} filterField={"etapaId"} selection={parametro.id} onChange={(value) => dispatch(updadteParametroRegras(value))}></GenericSelect>
+                    <GenericSelect title={"Processo"} displayType={"nome"} selection={processo.id} onChange={(value) => dispatch(updadteProcessoRegras(value))}></GenericSelect>
+                    <GenericSelect title={"Etapa"} displayType={"nome"} filter={processo.id} filterField={"processoId"} selection={etapa.id} onChange={(value) => dispatch(updadteEtapaRegras(value))}></GenericSelect>
+                    <GenericSelect title={"Parametro"} displayType={"nome"} filter={etapa.id} filterField={"etapaId"} selection={parametro.id} onChange={(value) => dispatch(updadteParametroRegras(value))}></GenericSelect>
                 </div>
                 <div>
                     <Row>

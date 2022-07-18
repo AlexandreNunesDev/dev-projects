@@ -59,7 +59,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId , etapa,isCorrecaoLivre }) => {
 
 
     return (
-        <div hidden={regras.length == 0}>
+        <div hidden={!isCorrecaoLivre}>
            
             <Row >
                 <Col>
@@ -68,7 +68,7 @@ const AdicaoForm = ({ deleteAdicao, parametroId , etapa,isCorrecaoLivre }) => {
 
             </Row>
 
-            <Row hidden={!isCorrecaoLivre} >
+            <Row >
                 <Col>
 
                     <Form.Group>

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 /* */
 
 
-const GenericSelect = ({ noLabel, title, onChange, ops, selection, returnType, displayType, filter, filterField }, props) => {
+const GenericSelect = ({ noLabel, title, onChange, ops, selection, returnType, displayType, filter, filterField, valueType }, props) => {
 
     const processos = useSelector(state => state.options.processos)
     const etapas = useSelector(state => state.options.etapas)
@@ -37,7 +37,7 @@ const GenericSelect = ({ noLabel, title, onChange, ops, selection, returnType, d
             <Form.Control as="select" value={selection} onChange={(event) => getTrueValue(event.target.selectedIndex)}>
                 <option unselectable="on" value={null} key={0}>-- {props.default ? props.default : "Seleciona uma Opção"} --</option>
                 {ops && ops.map((op, index) => {
-                    return <option value={op[returnType] || op.id || op} key={op.id || index}>{op[displayType || "nome"] || op} </option>
+                    return <option value={op[valueType] || op.id || op} key={op.id || index}>{op[displayType || "nome"] || op} </option>
                 })
                 }
             </Form.Control>
