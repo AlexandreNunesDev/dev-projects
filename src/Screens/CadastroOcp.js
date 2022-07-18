@@ -118,7 +118,7 @@ const CadastroDeOcpAdicao = (props) => {
                                 </Form.Row>
                             }
                             <CalculadoraDeCorrecao></CalculadoraDeCorrecao>
-                            <AdicaoForm deleteAdicao={deleteAdicao}></AdicaoForm>
+                            <AdicaoForm isCorrecaoLivre={true} deleteAdicao={deleteAdicao}></AdicaoForm>
 
                             <Form.Row>
                                 <Form.Group as={Col}>
