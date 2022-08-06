@@ -25,7 +25,6 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
     const dispatch = useDispatch()
     const toatManager = useToasts()
     const [headers, setHeaders] = useState([])
-    const [optionsHeaders, setOptionsHeaders] = useState()
     const [spreadSheetMetaData, setSpreadSheetMetadata] = useState()
     const [showChartBuilder,setShowChartBuilder] = useState(false)
     const [carimbos, setCarimbos] = useState()

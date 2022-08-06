@@ -1,29 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Button, Form, Container, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import GenericSelect from '../Components/GenericSelect';
-import SelectEditable from '../Components/SelectEditable'
-import ScqApi from '../Http/ScqApi';
-import FormulaBuilder from '../Components/FormulaBuilder';
-import ModoEdicao from '../Components/ModoEdicao'
-import { withToastManager } from 'react-toast-notifications';
-import UnidadeSelect from '../Components/UnidadeSelect';
-import { useHistory } from 'react-router-dom';
-import {withMenuBar} from '../Hocs/withMenuBar';
-import { responseHandler } from '../Services/responseHandler';
-import { WebSocketContext } from '../websocket/wsProvider';
-import { toastInfo} from '../Services/toastType';
-import dispatchers from '../mapDispatch/mapDispathToProps';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Col, Container, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { withToastManager } from 'react-toast-notifications';
+import FormulaBuilder from '../Components/FormulaBuilder';
+import GenericSelect from '../Components/GenericSelect';
+import SelectEditable from '../Components/SelectEditable';
+import UnidadeSelect from '../Components/UnidadeSelect';
+import { withMenuBar } from '../Hocs/withMenuBar';
+import ScqApi from '../Http/ScqApi';
 import { getValorSugestao } from '../Services/ocpService';
-import RegraCorrecoes from '../Reducers/regraCorrecoes';
+import { responseHandler } from '../Services/responseHandler';
+import { toastInfo } from '../Services/toastType';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 
 const EditarParametro = (props) => {
 
-    const {toastManager} = props;
+
+    const location = useLocation()
+    const { toastManager } = props;
     const history = useHistory()
-    const [parametro, setParametro] = useState()
+    const [parametro, setParametro] = useState(location.state)
     const context = useContext(WebSocketContext)
     const [processos, setProcessos] = useState([])
     const [processoId, setProcessoId] = useState()
@@ -38,11 +37,11 @@ const EditarParametro = (props) => {
     const [formula, setFormula] = useState()
     const [titula, setTitula] = useState(false)
     const [unidade, setUnidade] = useState()
-    const [showChart , setShowChart] = useState()
+    const [showChart, setShowChart] = useState()
     const [escalaTempo, setEscalaTempo] = useState()
     const [frequenciaAnalise, setFrequenciaAnalise] = useState()
     const [edited, setEdited] = useState(false)
-    const [habilitado ,  setHabilitado] = useState()
+    const [habilitado, setHabilitado] = useState()
     const [regras, setRegras] = useState()
     const etapasOps = useSelector(state => state.options.etapas)
     const processosOps = useSelector(state => state.options.processos)
@@ -52,34 +51,34 @@ const EditarParametro = (props) => {
 
 
     useEffect(() => {
-        processoId &&  setEtapas(etapasOps.filter(etap => etap.processoId == processoId))
+        processoId && setEtapas(etapasOps.filter(etap => etap.processoId == processoId))
     }, [processoId])
 
- 
+
 
     useEffect(() => {
-        if(parametro) {
+        if (parametro) {
 
-        setNome(parametro.nome)
-        setPmax(parametro.pMax)
-        setPmin(parametro.pMin)
-        setPmaxT(parametro.pMaxT)
-        setPminT(parametro.pMinT)
-        setFormula(parametro.formula)
-        setHabilitado(parametro.habilitado)
-        if(parametro.formula.length>0){
-            setTitula(true)
+            setNome(parametro.nome)
+            setPmax(parametro.pMax)
+            setPmin(parametro.pMin)
+            setPmaxT(parametro.pMaxT)
+            setPminT(parametro.pMinT)
+            setFormula(parametro.formula)
+            setHabilitado(parametro.habilitado)
+            if (parametro.formula.length > 0) {
+                setTitula(true)
+            }
+            setShowChart(parametro.showChart)
+
+            setFrequenciaAnalise(parametro.frequencia)
+            setEscalaTempo(parametro.escalaFrequencia)
+            setProcessoId(parametro.processoId)
+            setEtapaId(parametro.etapaId)
+            setUnidade(parametro.unidade)
+            setEtapa(etapasOps.filter(etap => etap.id == parametro.etapaId)[0])
         }
-        setShowChart(parametro.showChart)
-     
-        setFrequenciaAnalise(parametro.frequencia)
-        setEscalaTempo(parametro.escalaFrequencia)
-        setProcessoId(parametro.processoId)
-        setEtapaId(parametro.etapaId)
-        setUnidade(parametro.unidade)
-        setEtapa(etapasOps.filter(etap => etap.id == parametro.etapaId)[0])
-    }
-    },[parametro])
+    }, [parametro])
 
     useEffect(() => {
         if (etapaId) {
@@ -96,7 +95,7 @@ const EditarParametro = (props) => {
 
     }, [etapaId, unidade])
 
-    
+
     const updateRegrasField = (valor, regraField, index) => {
         const regrasCopy = [...regras].map(r => ({ ...r }))
         regraField.valorUnidade = valor
@@ -104,32 +103,38 @@ const EditarParametro = (props) => {
         setRegras(regrasCopy)
     }
 
-    
+
     const onSaveClick = () => {
-        const editedParametro = { id : parametro.id, etapaId: etapaId, nome : nome, pMax : pMax, pMin : pMin, formula: formula || "[V]", unidade : unidade, pMaxT : pMaxT, pMinT : pMinT ,escala : escalaTempo , frequencia : frequenciaAnalise,showChart,isHabilitado : habilitado , regrasCorrecao : regras}
-        ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res,toastManager ,"Parametro",toastInfo))
-        
+        const editedParametro = { id: parametro.id, etapaId: etapaId, nome: nome, pMax: pMax, pMin: pMin, formula: formula || "[V]", unidade: unidade, pMaxT: pMaxT, pMinT: pMinT, escala: escalaTempo, frequencia: frequenciaAnalise, showChart, isHabilitado: habilitado, regrasCorrecao: regras }
+        ScqApi.EditarParametro(editedParametro).then(res => responseHandler(res, toastManager, "Parametro", toastInfo))
+
+    }
+
+    const onDelete = () => {
+        ScqApi.DeleteEtapa(etapa.id).then(msg => {
+            toastManager.add(`${msg}`, { appearance: 'success', autoDismiss: true, autoDismissTimeout: 3000, onDismiss: () => { history.push("/CadastroParametro") } })
+        })
+
     }
 
 
     return (
         <>
-     
+
 
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar de Parametro</h1>
 
                 <Form>
                     <h4>Escolha o Parametro para editar</h4>
-                    <ModoEdicao edited={edited} onDelete={(deleteMessage) => {toastManager.add(`${deleteMessage}`, {appearance: 'success', autoDismiss: true ,autoDismissTimeout: 3000,onDismiss: () => { history.push("/CadastroParametro")}}); setEdited(!edited)}} type={"parametro"} getSelectedParametro={(parametro) => setParametro(parametro)}></ModoEdicao>
                     {parametro && <Form.Group style={{ marginTop: 20 }} >
-                             <Form.Label style={{color : "RED" ,fontWeight : "bold"}} >Parametro Id: {parametro.id}</Form.Label>
-                         </Form.Group> }
+                        <Form.Label style={{ color: "RED", fontWeight: "bold" }} >Parametro Id: {parametro.id}</Form.Label>
+                    </Form.Group>}
                     <Form.Row>
-                    <Col>
+                        <Col>
                             <GenericSelect title={"Processo"} displayType={"nome"} returnType={"id"} default={"Escolha um Processo"} ops={processosOps} onChange={id => setProcessoId(id)} selection={processos && processoId}></GenericSelect>
-                        </Col> 
-                      <Col>
+                        </Col>
+                        <Col>
                             <GenericSelect title={"Etapa"} displayType={"nome"} returnType={"id"} default={"Escolha uma Etapa"} ops={etapas} onChange={id => setEtapaId(id)} selection={etapas && etapaId}></GenericSelect>
                         </Col>
                     </Form.Row>
@@ -144,7 +149,7 @@ const EditarParametro = (props) => {
                             <SelectEditable value={nome} getValue={(nome) => nome && setNome(nome)} default={"Clique 2x para digitar"} ops={["Concentracao", "pH", "Temperatura", "Condutividade", "Corrente", "Tensão"]}></SelectEditable>
                         </Form.Group>
                         <Col sm={3} >
-                            <UnidadeSelect selection={unidade}  title={"Escolha um unidade"} type={"parametros"} default={"Escolha um unidade"} onChange={unidade => setUnidade(unidade)}></UnidadeSelect>
+                            <UnidadeSelect selection={unidade} title={"Escolha um unidade"} type={"parametros"} default={"Escolha um unidade"} onChange={unidade => setUnidade(unidade)}></UnidadeSelect>
                         </Col>
 
                         <Col sm={2} >
@@ -168,7 +173,7 @@ const EditarParametro = (props) => {
                         </Form.Group>
                         <Form.Group sm as={Col} controlId="pMaxParametroForm">
                             <Form.Label>Máximo Trabalho</Form.Label>
-                            <Form.Control type="number" placeholder="Parametro Máximo" value={pMaxT || ''}  onChange={event => setPmaxT(event.target.value)} />
+                            <Form.Control type="number" placeholder="Parametro Máximo" value={pMaxT || ''} onChange={event => setPmaxT(event.target.value)} />
                         </Form.Group>
                         <Form.Group sm as={Col} controlId="pMaxParametroForm">
                             <Form.Label>Máximo Especificado</Form.Label>
@@ -180,23 +185,23 @@ const EditarParametro = (props) => {
 
 
                     <Form.Row>
-                    <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkTitula">
-                        <Form.Check.Input  type="checkbox" checked={showChart || false} onChange={(event) =>  setShowChart(!showChart)} />
-                        <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
-                    </Form.Check>
-                    <Form.Check style={{marginRight : 15}} type="checkbox" id="checkTitula">
-                        <Form.Check.Input type="checkbox" checked={titula || false} onChange={(event) => setTitula(!titula)} />
-                        <Form.Check.Label>Formulas ?</Form.Check.Label>
-                    </Form.Check>
+                        <Form.Check style={{ marginRight: 15 }} type="checkbox" id="checkTitula">
+                            <Form.Check.Input type="checkbox" checked={showChart || false} onChange={(event) => setShowChart(!showChart)} />
+                            <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
+                        </Form.Check>
+                        <Form.Check style={{ marginRight: 15 }} type="checkbox" id="checkTitula">
+                            <Form.Check.Input type="checkbox" checked={titula || false} onChange={(event) => setTitula(!titula)} />
+                            <Form.Check.Label>Formulas ?</Form.Check.Label>
+                        </Form.Check>
 
-                    
-                    <Form.Check style={{marginRight : 15}}   type="checkbox" id="checkHabilitado">
+
+                        <Form.Check style={{ marginRight: 15 }} type="checkbox" id="checkHabilitado">
                             <Form.Check.Input type="checkbox" checked={habilitado || false} onChange={(event) => setHabilitado(event.target.checked)} />
                             <Form.Check.Label>Habilitado</Form.Check.Label>
                         </Form.Check>
 
                     </Form.Row>
-                   
+
 
 
                     <Form.Row hidden={!titula}>
@@ -208,6 +213,7 @@ const EditarParametro = (props) => {
                         </Form.Group>
                     </Form.Row>
                     <Form.Group style={{ marginTop: 20 }}>
+                        <Button style={{ margin: 5, borderColor: "RED", backgroundColor: "RED" }} variant="primary" type="reset" onClick={() => onDelete()}>Deletar</Button>
                         <Button style={{ margin: 5 }} variant="primary" type="reset" onClick={() => onSaveClick()}>Salvar</Button>
                     </Form.Group>
                 </Form>

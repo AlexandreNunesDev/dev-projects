@@ -169,7 +169,7 @@ const ModoEdicao = (props) => {
             <Row>
                 <Col xl={{ order: colSequence[0]}} >
                {props.type !== "materiaPrima" && <GenericSelect returnType={"id"} displayType={"nome"} title={"Processo"} default={"Escolha um Processo"} ops={props.processos} onChange={(processoId) => {
-                    setProcesso(processoId.id)
+                    setProcesso(processoId)
                     if(props.type=== "processo") {
                     props.getSelectedProcesso( loadEditableProcesso(processoId.id))
                     }else{

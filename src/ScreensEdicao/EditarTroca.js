@@ -10,6 +10,7 @@ import { toastInfo } from '../Services/toastType';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { responseHandler } from '../Services/responseHandler';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -17,30 +18,22 @@ import { responseHandler } from '../Services/responseHandler';
 
 const EditarTroca = (props) => {
 
+    const location = useLocation()
+    const [troca, setTroca] = useState(location.state)
     const context = useContext(WebSocketContext)
-    const [frequencia, setFrequencia] = useState()
-    const [etapaId, setEtapaId] = useState()
-    const [etapas, setEtapas] = useState()
-    const [processos, setProcessos] = useState()
+    const [frequencia, setFrequencia] = useState(troca.frequencia)
+    const [etapaId, setEtapaId] = useState(troca.etapaId)
+    const [dataPlanejada, setdataPlanejada] = useState(troca.dataPlanejada)
+    const [dataRealizada, setdataRealizada] = useState(troca.ultimaTroca)
     const [numeroGrupoArea, setNumeroGrupoArea] = useState('')
-    const [areaPlanejada, setAreaPlanejada] = useState('')
-    const [processoId, setProcessoId] = useState()
-    const [escalaFrequencia, setEscalaFrequencia] = useState()
-    const [troca, setTroca] = useState()
+    const [contadorPlanejado, setContadorPlanejado] = useState(troca.areaPlanejada)
+    const [contadorRealizado, setContadorRealizado] = useState(troca.areaRealizada)
+    const [processoId, setProcessoId] = useState(troca.processoId)
+    const [escalaFrequencia, setEscalaFrequencia] = useState(troca.escalaFrequencia)
+
     const {toastManager} = props
     
    
-
-
-    useEffect(() => {
-        ScqApi.ListaProcessos().then(res => setProcessos(res))
-        
-    }, [])
-
-    useEffect(() => {
-       processoId && ScqApi.ListaEtapasByProcesso(processoId).then(res => setEtapas(res))
-        
-    }, [processoId])
 
 
     const loadTroca = (troca) => {
@@ -49,15 +42,17 @@ const EditarTroca = (props) => {
         setEtapaId(troca.etapaId)
         setProcessoId(troca.processoId)
         setEscalaFrequencia(troca.escalaFrequencia)
-        setNumeroGrupoArea(troca.numeroGrupoArea)
         let area = +troca.areaPlanejada
-        setAreaPlanejada(area)
+        setContadorPlanejado(area)
     }
+
+
 
    
 
-    const salvarTroca = (troca) => {
-        ScqApi.EditarTroca(troca).then(res => responseHandler(res, toastManager,"Troca",toastInfo,context))
+    const salvarTroca = () => {
+        let trocaToUpdadte = {id:troca.id,etapaId,escala : escalaFrequencia,frequencia,dataPlanejada,dataRealizada,contadorPlanejado,contadorRealizado}
+        ScqApi.EditarTroca(trocaToUpdadte).then(res => responseHandler(res, toastManager,"Troca",toastInfo))
     }
     
 
@@ -77,10 +72,10 @@ const EditarTroca = (props) => {
                         </Form.Group>}
                     <Form.Row>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(processoId) => { ScqApi.ListaEtapasByProcesso(processoId).then(res => setEtapas(res)) }} selection={processoId}></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Processo"}  default={"Escolha um Processo"} onChange={(processoId) =>  setProcessoId(processoId)} selection={processoId}></GenericSelect>
                         </Col>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} ops={etapas} onChange={(etapaId) => { setEtapaId(etapaId) }} selection={etapaId}></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Etapa"} default={"Escolha uma Etapa"} filterField={"processoId"} filter={processoId} onChange={(etapaId) => { setEtapaId(etapaId) }} selection={etapaId}></GenericSelect>
                         </Col>
                     </Form.Row>
 
@@ -95,23 +90,43 @@ const EditarTroca = (props) => {
                             <UnidadeSelect selection={escalaFrequencia} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => setEscalaFrequencia(escala)} />
                         </Col>
                     </Form.Row>
-                    <Form.Row style={{ marginBottom: 16 }}>
+                    <Form.Row>
                         <Col>
-                            <Form.Label>Trocar a cada (metros quadrados) : </Form.Label>
-                            <Form.Control type="text" value={areaPlanejada} onChange={event => setAreaPlanejada(event.target.value)} />
+                            <Form.Label>Data Planejada : </Form.Label>
+                            <Form.Control
+                                type="date"
+                                defaultValue={dataPlanejada}
+                                onChange={event => { setdataPlanejada(event.target.value); console.log(dataPlanejada) }}>
+
+                            </Form.Control>
+                        </Col>
+                    </Form.Row>
+                    <Form.Row>
+                        <Col>
+                            <Form.Label>Data Realizada : </Form.Label>
+                            <Form.Control
+                                type="date"
+                                defaultValue={dataRealizada}
+                                onChange={event => { setdataRealizada(event.target.value); console.log(dataPlanejada) }}>
+
+                            </Form.Control>
                         </Col>
                     </Form.Row>
                     <Form.Row style={{ marginBottom: 16 }}>
                         <Col>
-                            <Form.Label>Numero grupo area : </Form.Label>
-                            <Form.Control type="number" value={numeroGrupoArea} onChange={event => setNumeroGrupoArea(event.target.value)} />
+                            <Form.Label>Contador Planejado : </Form.Label>
+                            <Form.Control type="text" value={contadorPlanejado} onChange={event => setContadorPlanejado(event.target.value)} />
+                        </Col>
+                        <Col>
+                            <Form.Label>Atual Quantiade Contador : </Form.Label>
+                            <Form.Control type="text" value={contadorRealizado} onChange={event => setContadorRealizado(event.target.value)} />
                         </Col>
                     </Form.Row>
 
                     <Form.Group >
 
                         
-                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca({id : troca.id, frequencia : frequencia, escala : escalaFrequencia, etapaId: troca.etapaId, dataPlanejada : troca.dataPlanejada, areaPlanejada : areaPlanejada, numeroGrupoArea : numeroGrupoArea}, props.toastManager)} >Salvar</Button>
+                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca({id : troca.id, frequencia : frequencia, escala : escalaFrequencia, etapaId: troca.etapaId, dataPlanejada : troca.dataPlanejada, areaPlanejada : contadorPlanejado, numeroGrupoArea : numeroGrupoArea}, props.toastManager)} >Salvar</Button>
                     </Form.Group>
 
                 </Form>

@@ -40,7 +40,7 @@ const MenuBar = () => {
                 <NavDropdown title="Registros" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/RegistroAnaliseMulti">Registro de Analise</Link>
                   <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
-                  <Link className="nav-link" to="/RegistroDeArea">Registro de Area</Link>
+                  <Link className="nav-link" to="/RegistroDeContador">Registro de contador</Link>
                 </NavDropdown>
                 <NavDropdown title="OCP" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
@@ -51,6 +51,11 @@ const MenuBar = () => {
 
                 <NavDropdown title="Consultas" id="basic-nav-dropdown">
                   <Link className="nav-link" to="/Analises">Analises</Link>
+                  <Link className="nav-link" to="/Consultas/processo">Processos</Link>
+                  <Link className="nav-link" to="/Consultas/etapa">Etapas</Link>
+                  <Link className="nav-link" to="/Consultas/parametro">Parametros</Link>
+                  <Link className="nav-link" to="/Consultas/troca">Trocas</Link>
+                  <Link className="nav-link" to="/Consultas/tarefa">Tarefas</Link>
                 </NavDropdown>
 
                 <NavDropdown title="Indicadores" id="basic-nav-dropdown">
@@ -97,6 +102,7 @@ const MenuBar = () => {
               <NavDropdown title="Registros" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/RegistroAnaliseMulti">Registro de Analise</Link>
                 <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
+                <Link className="nav-link" to="/RegistroDeContador">Registro de contador</Link>
               </NavDropdown>
               <NavDropdown title="OCP" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/OrdensDeCorrecao">Ordens de Correção</Link>
@@ -107,6 +113,11 @@ const MenuBar = () => {
               <Link className="nav-link" to="/TarefasDeManutencao" >Tarefas de Manutenção</Link>
               <NavDropdown title="Consultas" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/Analises">Analises</Link>
+                <Link className="nav-link" to="/Consultas/processo">Processos</Link>
+                <Link className="nav-link" to="/Consultas/etapa">Etapas</Link>
+                <Link className="nav-link" to="/Consultas/parametro">Parametros</Link>
+                <Link className="nav-link" to="/Consultas/troca">Trocas</Link>
+                <Link className="nav-link" to="/Consultas/tarefa">Tarefas</Link>
               </NavDropdown>
               <NavDropdown title="Indicadores" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>

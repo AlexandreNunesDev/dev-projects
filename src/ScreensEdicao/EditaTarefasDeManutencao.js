@@ -34,7 +34,6 @@ const EditarTarefaDeManutencao = (props) => {
 
     useEffect(() => {
         ScqApi.ListaProcessos().then(res => setProcessos(res))
-
     }, [])
 
     useEffect(() => {
@@ -46,7 +45,6 @@ const EditarTarefaDeManutencao = (props) => {
             setFrequencia(tarefa.frequencia)
             setDataPlanejada(tarefa.dataPlanejada)
             setEscala(tarefa.escalaFrequencia)
-
         }
     }, [tarefa])
 

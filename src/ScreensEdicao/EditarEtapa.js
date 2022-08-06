@@ -6,7 +6,7 @@ import ScqApi from '../Http/ScqApi';
 import { withToastManager } from 'react-toast-notifications';
 import GenericSelect from '../Components/GenericSelect';
 import EditarMontagemComposition from './EditarMontagemComposition';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import dispatchers from '../mapDispatch/mapDispathToProps';
@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 
 const EditarEtapa = (props) => {
 
+    const location = useLocation()
     const [nome, setNome] = useState('')
     const context = useContext(WebSocketContext)
     const [posicao, setPosicao] = useState('')
@@ -26,7 +27,7 @@ const EditarEtapa = (props) => {
     const [removedCompose, setRemovedCompose] = useState()
     const [isEditableSelected, setIsEditableSelected] = useState(false)
     const [edited, setEdited] = useState(false)
-    const [etapa, setEtapa] = useState()
+    const [etapa, setEtapa] = useState(location.state)
     const processos= useSelector(state => state.options.processos)
     const mps= useSelector(state => state.options.materiasPrima)
     const { toastManager } = props
@@ -100,7 +101,6 @@ const EditarEtapa = (props) => {
                 <h1>Editar Etapa</h1>
                 <Form>
                     <h4>Escolha a Etapa para editar</h4>
-                    <ModoEdicao edited={edited} onDelete={(deleteMessage) => { toastManager.add(`${deleteMessage}`, { appearance: 'success', autoDismiss: true, autoDismissTimeout: 3000, onDismiss: () => { history.push("/CadastroEtapa") } }); setEdited(!edited) }} type={"etapa"} getSelectedEtapa={(etapa) => setEtapa(etapa)}></ModoEdicao>
                     {etapa && <Form.Group style={{ marginTop: 20 }} >
                         <Form.Label style={{ color: "RED", fontWeight: "bold" }} >Etapa Id: {etapa.id}</Form.Label>
                     </Form.Group>}

@@ -420,6 +420,18 @@ const ScqApi = {
         return http.get("materiaPrima/search/" + searchString)
 
     },
+    listAllContadores: (processoId) => {
+        return http.get(`/listContadores/${processoId}`)
+
+    },
+    updateContador: (id,contador) => {
+        return http.put(`/uploadArea/${id}`,contador)
+
+    },
+    deleteContador: (id) => {
+        return http.delete(`/deleteContador/${id}`)
+
+    },
     Auth: (loginForm) => {   
         return http.post("auth",loginForm)
     },
@@ -429,8 +441,11 @@ const ScqApi = {
 
     },
 
-    UpLoadAreaWithExcel : (dInicial,dFinal,form) => {
+    UploadQuantidadeProducaoWithFile : (dInicial,dFinal,form) => {
         return http.post(`uploadArea/${dInicial}/${dFinal}`, form, { headers: {"Content-Type": "multipart/form-data" } }).then((response) => { return response});
+    },
+    UploadQuantidadeProducaoWithForm : (dInicial,dFinal,form) => {
+        return http.post(`uploadArea/${dInicial}/${dFinal}`, form).then((response) => { return response});
     },
     
 
