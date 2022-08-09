@@ -13,6 +13,7 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { toastInfo } from '../Services/toastType';
 import { useSelector } from 'react-redux';
+import SaveDeleteButtons from '../Components/SaveDeleteButtons';
 
 
 const EditarEtapa = (props) => {
@@ -43,7 +44,6 @@ const EditarEtapa = (props) => {
     const submitForm = () => {
         const {toastManager} = props
         const replacedEtapa = { id: etapa.id, processoId: processoId, nome: nome, posicao: posicao, volume: volume }
-
         ScqApi.EditarEtapa(replacedEtapa).then(res => {
             responseHandler(res, toastManager, "Etapa", toastInfo)
             const composes = montagemComposes.map((montagemCompose) => { return { id: montagemCompose.id, quantidade: montagemCompose.quantidade, mpId: montagemCompose.mpId, etapaId: etapa.id } })
@@ -51,15 +51,10 @@ const EditarEtapa = (props) => {
                 ScqApi.CriarMontagem(composes)
             }
         })
-
         if (removedCompose) {
             let idsMcs = removedCompose.map(mc => { return mc.id })
             ScqApi.DeleteMontagemCompose(idsMcs)
         }
-
-
-
-
 
     }
 
@@ -90,6 +85,10 @@ const EditarEtapa = (props) => {
     }, [etapa])
 
 
+
+    const onDelete = () => {
+        ScqApi.DeleteEtapa(etapa.id).then(res => responseHandler(res,toastManager,"Etapa", toastInfo))
+    }
 
 
 
@@ -130,11 +129,7 @@ const EditarEtapa = (props) => {
                         </Form.Row>
                     </Form.Group>
                     {montagemComposes && <EditarMontagemComposition montagemComposes={montagemComposes} removerMontagemCompose={(indexToRemove) => removerMontagemCompose(indexToRemove)} setMontagemComposes={(montagemCompose) => addEditedMontagemComposes(montagemCompose)} ops={mps}></EditarMontagemComposition>}
-
-                    <Form.Group>
-
-                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={submitForm}>Salvar</Button>
-                    </Form.Group>
+                    <SaveDeleteButtons deleteClick={onDelete} saveClick={submitForm} ></SaveDeleteButtons>
                 </Form>
             </Container>
 

@@ -83,8 +83,6 @@ class CadastroProcesso extends Component {
                             <Form.Control value={this.state.nome} type="text" placeholder="Entre o nome do Processo" onChange={this.handleChange} />
                         </Form.Group>
                         <Form.Group>
-
-                            <Button style={{ margin: 2 }} variant="primary" onClick={this.enterEditMode}>Editar</Button>
                             <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={this.submitForm}>Salvar</Button>
                         </Form.Group>
                     </Form>

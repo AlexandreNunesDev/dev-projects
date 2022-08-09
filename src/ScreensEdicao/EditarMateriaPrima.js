@@ -10,10 +10,14 @@ import { responseHandler } from '../Services/responseHandler';
 import { toastInfo } from '../Services/toastType';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
+import SaveDeleteButtons from '../Components/SaveDeleteButtons';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const EditarMateriaPrima = (props) => {
 
-    const [materiaPrima, setMateriaPrima] = useState()
+
+    const location = useLocation()
+    const [materiaPrima, setMateriaPrima] = useState(location.state)
     const context = useContext(WebSocketContext)
     const [nome, setNome] = useState()
     const [fornecedor, setFornecedor] = useState()
@@ -21,6 +25,7 @@ const EditarMateriaPrima = (props) => {
     const [preco, setPreco] = useState()
     const [unidade, setUnidade] = useState()
     const {toastManager} = props
+    const history = useHistory()
 
 
  
@@ -36,15 +41,19 @@ const EditarMateriaPrima = (props) => {
 
 
     const salvarMateriaPrima = () => {
-
         if (fatorTitulometrico === '' || fatorTitulometrico === null) {
             setFatorTitulometrico(1)
         }
-
         const newMateriaPrima = { id: materiaPrima.id, nome: nome, fornecedor: fornecedor, fatorTitulometrico: fatorTitulometrico, preco: preco, unidade: unidade }
-        ScqApi.EditarMateriaPrima(newMateriaPrima).then(res => responseHandler(res, toastManager,"Materia Prima",toastInfo,context, [dispatchers().loadMateriasPrima,dispatchers().loadEtapas,dispatchers().loadTrocas,dispatchers().loadOcps]))
+        ScqApi.EditarMateriaPrima(newMateriaPrima).then(res => responseHandler(res, toastManager,"Materia Prima",toastInfo))
+        history.goBack()
     }
 
+    const onDelete = () => {
+        ScqApi.DeleteMateriaPrima(materiaPrima.id).then(res => responseHandler(res,toastManager,"MateriaPrima", toastInfo))
+        history.goBack()
+    }
+ 
     return (
         <>
     
@@ -53,7 +62,6 @@ const EditarMateriaPrima = (props) => {
                 <h1>Cadastro de Matéria Prima</h1>
                 <Form>
                     <h4>Escolha a Materia Prima para editar</h4>
-                    <ModoEdicao type={"materiaPrima"} getSelectedMateriaPrima={(materiaPrima) => setMateriaPrima(materiaPrima)}></ModoEdicao>
                     {materiaPrima && <Form.Group style={{ marginTop: 20 }} >
                         <Form.Label style={{ color: "RED", fontWeight: "bold" }} >Materia Prima Id: {materiaPrima.id}</Form.Label>
                     </Form.Group>}
@@ -81,12 +89,7 @@ const EditarMateriaPrima = (props) => {
                             <UnidadeSelect selection={unidade} default={"Escolha uma Unidade"} type={"adicao"} title={"Unidade Mp"} onChange={(unidade) => setUnidade(unidade)}></UnidadeSelect>
                         </Form.Group>
                     </Form.Row>
-
-
-                    <Form.Group>
-
-                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarMateriaPrima()}>Salvar</Button>
-                    </Form.Group>
+                    <SaveDeleteButtons deleteClick={onDelete} saveClick={salvarMateriaPrima} ></SaveDeleteButtons>
                 </Form>
             </Container>
 

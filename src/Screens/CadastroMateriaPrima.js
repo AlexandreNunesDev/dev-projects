@@ -176,7 +176,6 @@ render() {
 
             <Form.Group>
             <Form.Group>
-                <Button style = {{margin:2}} variant="primary" type="reset" onClick={this.enterEditMode} >Editar</Button>
                 <Button style = {{margin:2}} variant="primary" type="reset" onClick={this.salvarMateriaPrima}>Salvar</Button>
             </Form.Group>   
             </Form.Group>

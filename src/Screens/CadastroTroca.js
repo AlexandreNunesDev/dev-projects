@@ -104,9 +104,6 @@ const CadastroTroca = (props) => {
                     <Form.Row>
                     <Form.Group >
 
-                        <Button style={{ margin: 2 }} variant="primary" onClick={() => {
-                            props.history.push("/EditarTroca")
-                        }}>Editar</Button>
 
                         <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca()} >Salvar</Button>
                     </Form.Group>

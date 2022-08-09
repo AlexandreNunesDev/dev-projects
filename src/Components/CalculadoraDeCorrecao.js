@@ -27,12 +27,11 @@ const CalculadoraDeCorrecao = () => {
 
 
     const multiplyAllUnitFactors = (valor, isFromQuantidadeField) => {
-        if (!(+valor < +analiseToSave.resultado) && !(+valor > +analiseToSave.pMax)) {
-            let multiplicarPor = valor - analiseToSave.resultado
+        if (!(+valor > +analiseToSave.pMax)) {
             let regrasToUpdate = [...regras].map(r => {
-                let regrasCopy = { ...r }
-                regrasCopy.quantidade = +(regrasCopy.valorUnidade * multiplicarPor).toFixed(2)
-                return regrasCopy
+                let regraCopy = { ...r }
+                regraCopy.quantidade = checkIfNeedQuantidadeFromRule(analiseToSave.resultado,valor, regraCopy.valorUnidade)
+                return regraCopy
             })
 
             dispatch(updadtecorrigirPara(valor))
@@ -44,12 +43,28 @@ const CalculadoraDeCorrecao = () => {
                 dispatch(updadtecorrigirPara(valor))
             }
 
-
-
-
             isFromQuantidadeField && toast.addToast(`O valor nao pode ser maior que ${analiseToSave.pMax} ${analiseToSave.unidade}`, { appearance: toastWarn, autoDismiss: true })
 
         }
+
+    }
+
+    const checkIfNeedQuantidadeFromRule = (resultado, valor, valorUnidade) => {
+        let multiplicarPor = valor - resultado
+        multiplicarPor = multiplicarPor < 0 ? multiplicarPor * -1 : multiplicarPor
+        if ((valorUnidade < 0) && (valor < resultado)) {
+            return +(-valorUnidade * multiplicarPor).toFixed(2)
+        }
+         if ((valorUnidade < 0) && (valor > resultado)){
+            return 0
+        }
+        if ((valorUnidade > 0) && (valor < resultado)){
+            return 0
+        }
+        if ((valorUnidade > 0) && (valor > resultado)){
+            return +(valorUnidade * multiplicarPor).toFixed(2)
+        }
+
 
     }
 
@@ -67,7 +82,7 @@ const CalculadoraDeCorrecao = () => {
     }
 
     const applyCorrecoes = () => {
-        dispatch(updateAdicoes(regras.map(regra => new Adicao(null, regra.quantidade || 0, null, regra.materiaPrima.id, regra.materiaPrima.unidade, regra.materiaPrima.nome))))
+        dispatch(updateAdicoes(regras.map(regra => new Adicao(null, regra.quantidade || 0, null, regra.materiaPrima.id, regra.materiaPrima.unidade, regra.materiaPrima.nome)).filter(r => r.quantidade > 0)))
     }
 
 
@@ -78,7 +93,7 @@ const CalculadoraDeCorrecao = () => {
     return (
         <>
             {regras.length > 0 ?
-                <Form>
+                <div>
                     <Form.Group>
                         <Form.Label style={{ fontWeight: 'bold' }}>Corrigir para:</Form.Label>
                         <Form.Control type={"number"} min={analiseToSave.resultado} value={corrigirPara} onChange={(event) => multiplyAllUnitFactors(event.target.value,)} />
@@ -93,16 +108,16 @@ const CalculadoraDeCorrecao = () => {
                             </thead>
                             <tbody>
                                 {regras && regras.map((regra, index) => {
-                                    return (<tr key={regra.mpId}>
+                                    return (<tr key={index}>
                                         <td>{regra.materiaPrima.nome}</td>
-                                        <td><Form.Control type="number" pattern="0.00" value={regra.quantidade || 0} onChange={(event) => adjustCorrecao(event.target.value, index)} onKeyDown={event => event.key == "Enter" && adjustCorrecaoTarget(event.target.value, index)} /></td>
+                                        <td><Form.Control type="number" pattern="0.00" value={regra.quantidade} onChange={(event) => adjustCorrecao(event.target.value, index)} onKeyDown={event => event.key == "Enter" && adjustCorrecaoTarget(event.target.value, index)} /></td>
                                     </tr>)
                                 })}
                             </tbody>
                         </table>
                     </div>
-                    <Button style={{ margin : 8 , marginLeft : 0}} disabled={regras.length == 0} onClick={() => applyCorrecoes()} >Aplicar correcoes</Button>
-                </Form>
+                    <Button style={{ margin: 8, marginLeft: 0 }} disabled={regras.length == 0} onClick={() => applyCorrecoes()} >Aplicar correcoes</Button>
+                </div>
                 : <h3>Este parametro nao possui regras para correcoes</h3>}
         </>
     )

@@ -167,7 +167,6 @@ const CadastroParametro = (props) => {
                     </Form.Row>
 
                     <Form.Group style={{ marginTop: 20 }}>
-                        <Button style={{ margin: 5 }} variant="primary" type="reset" onClick={enterEditMode}>Editar</Button>
                         <Button style={{ margin: 5 }} variant="primary" type="reset" onClick={salvarParametro}>Salvar</Button>
                     </Form.Group>
                 </Form>

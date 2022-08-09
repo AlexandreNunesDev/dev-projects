@@ -112,7 +112,7 @@ const CadastroDeOcpAdicao = (props) => {
                                         <Form.Label><strong>Faixa Máxima :</strong> {`${parametro.pMax} ${parametro.unidade}`}</Form.Label>
                                     </Form.Group>
                                     <Form.Group xs={2} as={Col} >
-                                        <Form.Label style={{ color: isInsideFaixa(analiseToSave) == true  ? 'red' : 'black' }}><stroong style={{color : 'black', fontWeight : 'bold'}}>Resultado:</stroong> {`${analiseToSave.resultado} ${parametro.unidade}`}</Form.Label>
+                                        <Form.Label style={{ color: isInsideFaixa(analiseToSave) == true  ? 'red' : 'black' }}><strong style={{color : 'black', fontWeight : 'bold'}}>Resultado:</strong> {`${analiseToSave.resultado} ${parametro.unidade}`}</Form.Label>
                                     </Form.Group>
 
                                 </Form.Row>

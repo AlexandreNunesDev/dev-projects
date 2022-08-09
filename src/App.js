@@ -52,6 +52,7 @@ import HistoricoCorrecoes from './Screens/HistoricoCorrecoes';
 import CadastroOcpLivre from './Screens/CadastroOcpLivre';
 import ConsultaDinamica from './ScreensEdicao/ConsultaDinamica';
 import EditarContador from './ScreensEdicao/EditarContador';
+import EditarRegraDeCorrecao from './ScreensEdicao/EditarRegraDeCorrecao';
 
 
 
@@ -150,6 +151,7 @@ class App extends React.Component {
             <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
             <Route path='/EditarOcp' exact={true} component={EditarOcpAdicao} />
             <Route path='/EditarContador' exact={true} component={EditarContador} />
+            <Route path='/EditarregrasDeCorrecao' exact={true} component={EditarRegraDeCorrecao} />
             <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />

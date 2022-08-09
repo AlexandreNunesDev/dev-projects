@@ -80,18 +80,18 @@ const CadastroDeRegraDeCorrecao = () => {
 
                
                 <div>
-                    <GenericSelect title={"Processo"} displayType={"nome"} selection={processo.id} onChange={(value) => dispatch(updadteProcessoRegras(value))}></GenericSelect>
-                    <GenericSelect title={"Etapa"} displayType={"nome"} filter={processo.id} filterField={"processoId"} selection={etapa.id} onChange={(value) => dispatch(updadteEtapaRegras(value))}></GenericSelect>
-                    <GenericSelect title={"Parametro"} displayType={"nome"} filter={etapa.id} filterField={"etapaId"} selection={parametro.id} onChange={(value) => dispatch(updadteParametroRegras(value))}></GenericSelect>
+                    <GenericSelect title={"Processo"} displayType={"nome"} selection={processo?.id} onChange={(value) => dispatch(updadteProcessoRegras(value))}></GenericSelect>
+                    <GenericSelect title={"Etapa"} displayType={"nome"} filter={processo?.id} filterField={"processoId"} selection={etapa?.id} onChange={(value) => dispatch(updadteEtapaRegras(value))}></GenericSelect>
+                    <GenericSelect title={"Parametro"} displayType={"nome"} filter={etapa?.id} filterField={"etapaId"} selection={parametro?.id} onChange={(value) => dispatch(updadteParametroRegras(value))}></GenericSelect>
                 </div>
                 <div>
                     <Row>
-                        <Col><Form.Label><strong>Unidade:</strong>{parametro.unidade}</Form.Label></Col>
-                        <Col><Form.Label><strong>Faixa Mínima:</strong>{parametro.pMin}</Form.Label></Col>
-                        <Col><Form.Label><strong>Faixa Máxima:</strong>{parametro.pMax}</Form.Label></Col>
+                        <Col><Form.Label><strong>Unidade:</strong>{parametro?.unidade}</Form.Label></Col>
+                        <Col><Form.Label><strong>Faixa Mínima:</strong>{parametro?.pMin}</Form.Label></Col>
+                        <Col><Form.Label><strong>Faixa Máxima:</strong>{parametro?.pMax}</Form.Label></Col>
                     </Row>
                 </div>
-                <label style={{fontSize : 32}}><strong>Regras de Correcao para tanque de:</strong> {etapa.volume} <strong>Lts</strong></label>
+                <label style={{fontSize : 32}}><strong>Regras de Correcao para tanque de:</strong> {etapa?.volume} <strong>Lts</strong></label>
                 <div>
                     <table>
                         <thead>
@@ -113,7 +113,6 @@ const CadastroDeRegraDeCorrecao = () => {
                     </table>
                 </div>
                 <div>
-                    <Button style={{margin : 4 , marginLeft : 0}}>Editar</Button>
                     <Button style={{margin : 4,marginLeft : 0}} onClick={salvarCorrecoes} >Salvar</Button>
                 </div>
 

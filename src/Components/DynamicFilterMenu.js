@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react"
 import { Button, Container, Form } from "react-bootstrap"
+import { useSelector } from "react-redux"
 import { getFormatedField } from "../Services/consultaFields"
 
 
-const DynamicFilterMenu = ({ ops, onActionClick, fieldsToInclude }) => {
+const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude }) => {
 
 
+    const global = useSelector(state => state.global)
+    const isAdmin = global.userRole == "ADMIN_ROLE" ? true : false
     const [innerOps, setInternalOps] = useState(ops)
     const [filteredOps, setFilteredOps] = useState(ops)
     const [filterRules, setFilterRules] = useState({})
@@ -29,12 +32,15 @@ const DynamicFilterMenu = ({ ops, onActionClick, fieldsToInclude }) => {
         })
         setInternalOps(ops)
         setHeaders(headerss)
+
+
+
     }, [ops])
 
     useEffect(() => {
         let inneropscopy = [...innerOps]
         Object.keys(filterRules).forEach(key => {
-            inneropscopy = inneropscopy.filter(op => String(op[key]).startsWith(String(filterRules[key])))
+            inneropscopy = inneropscopy.filter(op => String(op[key]).toLowerCase().startsWith(String(filterRules[key]).toLowerCase()))
         })
         setFilteredOps(inneropscopy)
     }, [filterRules, innerOps])
@@ -76,11 +82,11 @@ const DynamicFilterMenu = ({ ops, onActionClick, fieldsToInclude }) => {
                         {filteredOps.map((gerenicObj, index) => {
                             return (<tr key={index}>
                                 {headers.map((objKey, ind) => {
-                                    let formatedField = getFormatedField(gerenicObj,objKey)
-                                     return <td style={{whiteSpace: "nowrap"}} key={ind} >{formatedField}</td> 
+                                    let formatedField = getFormatedField(gerenicObj, objKey)
+                                    return <td style={{ whiteSpace: "nowrap" }} key={ind} >{formatedField}</td>
                                 })}
                                 <td key={filteredOps.length + 1}>
-                                    <Button style={{ margin: 2 }} onClick={() => {
+                                    <Button disabled={!isAdmin} style={{ margin: 2 }} onClick={() => {
                                         let trueObj = innerOps.find(inOp => inOp.id == gerenicObj.id)
                                         onActionClick(trueObj)
                                     }}>EDITAR</Button>

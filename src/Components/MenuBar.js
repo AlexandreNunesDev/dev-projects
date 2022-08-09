@@ -56,6 +56,8 @@ const MenuBar = () => {
                   <Link className="nav-link" to="/Consultas/parametro">Parametros</Link>
                   <Link className="nav-link" to="/Consultas/troca">Trocas</Link>
                   <Link className="nav-link" to="/Consultas/tarefa">Tarefas</Link>
+                  <Link className="nav-link" to="/Consultas/materiaPrima">Materia Prima</Link>
+                  <Link className="nav-link" to="/Consultas/regrasDeCorrecao">Regras de Correcao</Link>
                 </NavDropdown>
 
                 <NavDropdown title="Indicadores" id="basic-nav-dropdown">
@@ -118,6 +120,8 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/Consultas/parametro">Parametros</Link>
                 <Link className="nav-link" to="/Consultas/troca">Trocas</Link>
                 <Link className="nav-link" to="/Consultas/tarefa">Tarefas</Link>
+                <Link className="nav-link" to="/Consultas/materiaPrima">Materia Prima</Link>
+                <Link className="nav-link" to="/Consultas/regrasDeCorrecao">Regras de Correcao</Link>
               </NavDropdown>
               <NavDropdown title="Indicadores" id="basic-nav-dropdown">
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>

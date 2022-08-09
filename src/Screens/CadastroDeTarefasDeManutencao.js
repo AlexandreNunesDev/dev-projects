@@ -76,9 +76,6 @@ const CadastroDeTarefasDeManutencao = (props) => {
                     </Form.Row>                   
                   
                     <Form.Group >
-                        <Button style={{ marginTop: 10 ,marginRight : 5}} variant="primary" onClick={() => { 
-                            props.history.push("/EditarTarefa")
-                        }} >Editar</Button>
                         <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
                             const {toastManager} = props
                             const tarefaManutencao = {nome,processoId,codigoDoDocumento,dataExecutada: dataExecutada,escala: escala ,frequencia : repetirAcada}

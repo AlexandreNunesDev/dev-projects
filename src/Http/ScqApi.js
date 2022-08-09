@@ -102,6 +102,11 @@ const ScqApi = {
         return http.post("regraCorrecao",regras)
 
     },
+
+    deleteRegraDeCorrecao: (id) => {
+        return http.delete(`regraCorrecao/${id}`)
+
+    },
     AtualizaRegrasCorrecao: (regras) => {
         return http.put("regraCorrecao",regras)
 

@@ -138,7 +138,6 @@ class CadastroEtapa extends React.Component {
                         <Form.Row>
          
                       
-                            <Button style={{ margin: 12 ,marginLeft : 0}} variant="primary" onClick={this.enterEditMode}>Editar</Button>
               
           
                             <Button style={{ margin: 12, marginLeft : 0 }} variant="primary" type="reset" onClick={this.submitForm}>Salvar</Button>
