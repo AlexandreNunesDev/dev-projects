@@ -9,7 +9,6 @@ import TitulaForm from './TitulaForm';
 import { withMenuBar } from '../Hocs/withMenuBar';
 import { responseHandler } from '../Services/responseHandler';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { formatIsoDate } from '../Services/stringUtils';
 import { useHistory } from 'react-router-dom';

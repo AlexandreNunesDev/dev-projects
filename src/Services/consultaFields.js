@@ -1,4 +1,5 @@
 import ScqApi from "../Http/ScqApi"
+import { backGroundByAnaliseStatus } from "./analiseService"
 import { OnlyDate } from "./stringUtils"
 
 
@@ -19,15 +20,42 @@ export function getFieldsFromRoute(routeName) {
         case "materiaPrima":
             return ["id", "nome", "fornecedor", "preco", "unidade", "fatorTitulometrico"]
         case "regrasDeCorrecao":
-            return ["id", "material", "parametro", "valor","etapa" , "processo", "volume"]
-
+            return ["id", "material", "parametro", "valor", "etapa", "processo", "volume"]
+        case "analise":
+            return ["id", "max", "min", "etapa", "parametro", "processo", "valor"]
+        case "correcao":
+            return ["id", "etapa", "parametro", "processo", "motivo"]
+        case "adicao":
+            return ["id","material","etapa","planejado","data","realizadoEm","realizadoPor","adicionado","observacao"]
         default:
             return ["volume"]
     }
 }
 
-export function getOpsFromRoute(routeName, options) {
-    return optionsGenerator[routeName](options)
+
+const farolAnalise = (analise) => {
+    return backGroundByAnaliseStatus(analise.statusAnalise)
+}
+
+
+export function formatationRules(routeName) {
+    switch (routeName) {
+        case "analise":
+            return [null, null, null, null, null, null, farolAnalise]
+        default:
+            return [null, null, null, null, null, null, null]
+    }
+}
+
+
+export function hasDateFilter(routeName) {
+    if (routeName == "analise") return true
+    if (routeName == "adicao") return true
+    return false
+}
+
+export function getOpsFromRoute(routeName, options, dataInicial, dataFinal, page, updateTotalPages) {
+    return optionsGenerator[routeName](options, dataInicial, dataFinal, page, updateTotalPages)
 }
 
 
@@ -83,6 +111,57 @@ let optionsGenerator = {
             return copy
         })
         return opsCopy
+    },
+    analise: async function (options, dataInicial, dataFinal, page, updateTotalPages) {
+        if (dataInicial && dataFinal) {
+            let response = await ScqApi.LoadHistoricoAnaliseWithPage(dataInicial, dataFinal, page, 15)
+            updateTotalPages(response.totalPages)
+            let opsCopy = response.content.map(cp => {
+                let copy = { ...cp }
+                copy.max = cp.pMax
+                copy.min = cp.pMin
+                copy.parametro = cp.nomeParametro
+                copy.etapa = cp.nomeEtapa
+                copy.processo = cp.nomeProcesso
+                copy.valor = `${cp.resultado} ${cp.unidade}`
+                return copy
+            })
+            return opsCopy
+        }
+        return []
+
+    },
+    correcao: async function (options, dataInicial, dataFinal, page, updateTotalPages) {
+        if (dataInicial && dataFinal) {
+            let response = await ScqApi.LoadOcpHistorico(dataInicial, dataFinal, page, 15)
+            updateTotalPages(response.totalPages)
+            let opsCopy = response.content.map(cp => {
+                let copy = { ...cp }
+                copy.max = cp.pMax
+                copy.min = cp.pMin
+                copy.parametro = cp.processoNome
+                copy.etapa = cp.etapaNome
+                copy.valor = `${cp.resultado} ${cp.unidade}`
+                return copy
+            })
+            return opsCopy
+        }
+        return []
+    },
+    adicao: async function (options, dataInicial, dataFinal, page, updateTotalPages) {
+        if (dataInicial && dataFinal) {
+            let response = await ScqApi.LoadAdicaoHistorico(dataInicial, dataFinal, page, 15)
+            updateTotalPages(response.totalPages)
+            let opsCopy = response.content.map(cp => {
+                let copy = { ...cp }
+                copy.material = copy.nomeMp
+                copy.adicionado = `${copy.quantidadeRealizada} ${copy.unidade}`
+                copy.planejado = `${copy.quantidade} ${copy.unidade}`
+                return copy
+            })
+            return opsCopy
+        }
+        return []
     },
     regrasDeCorrecao: async function (options) {
         let opsCopy = await ScqApi.ListarRegrasCorrecao()

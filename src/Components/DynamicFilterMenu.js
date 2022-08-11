@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { getFormatedField } from "../Services/consultaFields"
 
 
-const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude }) => {
+const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatationRules }) => {
 
 
     const global = useSelector(state => state.global)
@@ -74,7 +74,7 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude }) => {
                 {headers && <table >
                     <thead  >
                         <tr >
-                            {headers.map((objKey, index) => <th style={{ borderWidth: 0 }} key={index}>{formatedObjKey(objKey)}</th>)}
+                            {headers.map((objKey, index) => <th style={{ borderWidth: 0}} key={index}>{formatedObjKey(objKey)}</th>)}
                             <th style={{ borderWidth: 0 }} >Ação</th>
                         </tr>
                     </thead>
@@ -83,7 +83,7 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude }) => {
                             return (<tr key={index}>
                                 {headers.map((objKey, ind) => {
                                     let formatedField = getFormatedField(gerenicObj, objKey)
-                                    return <td style={{ whiteSpace: "nowrap" }} key={ind} >{formatedField}</td>
+                                    return <td style={{ whiteSpace: "nowrap", backgroundColor : formatationRules[ind] && formatationRules[ind](gerenicObj) }} key={ind} >{formatedField}</td>
                                 })}
                                 <td key={filteredOps.length + 1}>
                                     <Button disabled={!isAdmin} style={{ margin: 2 }} onClick={() => {

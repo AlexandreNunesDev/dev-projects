@@ -1,35 +1,35 @@
-import axios from "axios"
+import axios from "axios";
 
 
 import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
-const URL_TEST =  "http://localhost:8080/"// https://scqapi.com/
+const URL_TEST = "http://localhost:8080/"// https://scqapi.com/
 const URL = "https://scqapi.com/"
 const http = axios.create({
-     baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
-     
+    baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
+
 })
 
 const respInter = http.interceptors.response.use(function (response) {
-    
+
     return response.data;
-  }, function (error) {
-   
-    if(error.response){
-       statusResponseHandler(error.response.status, error.response.data)
-        const errorObj = {error : true, data : error.response.data}
+}, function (error) {
+
+    if (error.response) {
+        statusResponseHandler(error.response.status, error.response.data)
+        const errorObj = { error: true, data: error.response.data }
         return errorObj
     }
-   
-  });
+
+});
 
 http.interceptors.request.use(async config => {
     const token = store.getState().global.tokenInfo;
- 
-    if (token!=null) {
+
+    if (token != null) {
         config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
 });
 
@@ -37,7 +37,7 @@ http.interceptors.request.use(async config => {
 
 const ScqApi = {
 
-    
+
     ListaProcessos: () => {
         return http.get("processos")
     },
@@ -65,10 +65,16 @@ const ScqApi = {
 
     },
 
-    LoadHistoricoAnaliseWithPage: (dataInicial, dataFinal,page,size) => {
-        
-        return http.get(`historicoAnalise?page=${page}&size=${size}`,{ params: { dataInicial,dataFinal }} ,
-          )
+    LoadHistoricoAnaliseWithPage: (dataInicial, dataFinal, page, size) => {
+        return http.get(`historicoAnalise?page=${page}&size=${size}`, { params: { dataInicial, dataFinal } })
+
+    },
+    LoadOcpHistorico: (dataInicial, dataFinal, page, size) => {
+        return http.get(`ocpsHistorico?page=${page}&size=${size}`, { params: { dataInicial, dataFinal } })
+
+    },
+    LoadAdicaoHistorico: (dataInicial, dataFinal, page, size) => {
+        return http.get(`adicoesHistorico?page=${page}&size=${size}`, { params: { dataInicial, dataFinal } })
 
     },
 
@@ -80,11 +86,11 @@ const ScqApi = {
         return http.get("fullEtapaAnalises/" + dataInicial + "/" + dataFinal + "/" + parametroId)
 
     },
-    LoadOmpChart : (fromDate,toDate) => {
+    LoadOmpChart: (fromDate, toDate) => {
         return http.get(`ompChart/${fromDate}/${toDate}`)
     },
 
-   
+
     ListaParametros: () => {
         return http.get("parametros")
     },
@@ -99,7 +105,7 @@ const ScqApi = {
 
     },
     CriarRegrasCorrecao: (regras) => {
-        return http.post("regraCorrecao",regras)
+        return http.post("regraCorrecao", regras)
 
     },
 
@@ -108,7 +114,7 @@ const ScqApi = {
 
     },
     AtualizaRegrasCorrecao: (regras) => {
-        return http.put("regraCorrecao",regras)
+        return http.put("regraCorrecao", regras)
 
     },
     ListarRegrasCorrecao: () => {
@@ -193,8 +199,8 @@ const ScqApi = {
         return http.delete(`/adicao/${id}`)
 
     },
-    UpdataAnaliseData: (analiseId,data) => {
-        return http.put("analise/"+data+"/"+ analiseId)
+    UpdataAnaliseData: (analiseId, data) => {
+        return http.put("analise/" + data + "/" + analiseId)
 
     },
     CriarEtapa: (etapa) => {
@@ -209,7 +215,7 @@ const ScqApi = {
         return http.post("materiaPrima", materiaPrima)
 
     },
-    
+
     CriarAnalise: (analise) => {
         return http.post("analise", analise)
 
@@ -274,8 +280,8 @@ const ScqApi = {
         return http.get("ocpsList")
 
     },
-    FindOneOcp : (id) => {
-        return http.get('fullOcp/'+id)
+    FindOneOcp: (id) => {
+        return http.get('fullOcp/' + id)
     },
     FindParametro: (parametroId) => {
         return http.get("parametro/" + parametroId)
@@ -290,17 +296,17 @@ const ScqApi = {
 
     },
     EditarTroca: (troca) => {
-        return http.put("troca/edit/" + troca.id,troca)
+        return http.put("troca/edit/" + troca.id, troca)
 
     },
 
     EditarOcpAdicao: (ocp) => {
-        return http.put("/ocp/editarAdicao/" + ocp.id,ocp)
+        return http.put("/ocp/editarAdicao/" + ocp.id, ocp)
 
     },
 
     EditarOcpAcao: (ocp) => {
-        return http.put("/ocp/editarAcao/" + ocp.id,ocp)
+        return http.put("/ocp/editarAcao/" + ocp.id, ocp)
 
     },
     FindaTarefasByProcesso: (processoId) => {
@@ -373,7 +379,7 @@ const ScqApi = {
 
     },
     AcaoCorrigir: (ocpId) => {
-        return http.put("acao/corrigir/" + ocpId,null)
+        return http.put("acao/corrigir/" + ocpId, null)
 
     },
     LoadFullOmpDetails: (id) => {
@@ -413,7 +419,7 @@ const ScqApi = {
 
     },
 
-    FinalizarOmp: (omp ) => {
+    FinalizarOmp: (omp) => {
         return http.post("omp/finalizar", omp)
 
     },
@@ -429,16 +435,16 @@ const ScqApi = {
         return http.get(`/listContadores/${processoId}`)
 
     },
-    updateContador: (id,contador) => {
-        return http.put(`/uploadArea/${id}`,contador)
+    updateContador: (id, contador) => {
+        return http.put(`/uploadArea/${id}`, contador)
 
     },
     deleteContador: (id) => {
         return http.delete(`/deleteContador/${id}`)
 
     },
-    Auth: (loginForm) => {   
-        return http.post("auth",loginForm)
+    Auth: (loginForm) => {
+        return http.post("auth", loginForm)
     },
 
     Register: (loginForm) => {
@@ -446,23 +452,23 @@ const ScqApi = {
 
     },
 
-    UploadQuantidadeProducaoWithFile : (dInicial,dFinal,form) => {
-        return http.post(`uploadArea/${dInicial}/${dFinal}`, form, { headers: {"Content-Type": "multipart/form-data" } }).then((response) => { return response});
+    UploadQuantidadeProducaoWithFile: (dInicial, dFinal, form) => {
+        return http.post(`uploadArea/${dInicial}/${dFinal}`, form, { headers: { "Content-Type": "multipart/form-data" } }).then((response) => { return response });
     },
-    UploadQuantidadeProducaoWithForm : (dInicial,dFinal,form) => {
-        return http.post(`uploadArea/${dInicial}/${dFinal}`, form).then((response) => { return response});
+    UploadQuantidadeProducaoWithForm: (dInicial, dFinal, form) => {
+        return http.post(`uploadArea/${dInicial}/${dFinal}`, form).then((response) => { return response });
     },
-    
 
-    DownloadOcp : (ocpId) => {
+
+    DownloadOcp: (ocpId) => {
         http.interceptors.response.eject(respInter);
-        return http.get("downloadOcp/" + ocpId, { responseType: 'arraybuffer' }).then((response) => { return response});
+        return http.get("downloadOcp/" + ocpId, { responseType: 'arraybuffer' }).then((response) => { return response });
     },
-    DownloadOmp : (omp) => {
+    DownloadOmp: (omp) => {
         http.interceptors.response.eject(respInter);
-        return http.get("downloadOmp/"+omp.type+"/"+omp.id, { responseType: 'arraybuffer' }).then((response) => { return response})
+        return http.get("downloadOmp/" + omp.type + "/" + omp.id, { responseType: 'arraybuffer' }).then((response) => { return response })
     },
-    
+
 
 
 }
