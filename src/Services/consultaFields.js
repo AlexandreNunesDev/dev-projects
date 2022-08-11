@@ -22,7 +22,7 @@ export function getFieldsFromRoute(routeName) {
         case "regrasDeCorrecao":
             return ["id", "material", "parametro", "valor", "etapa", "processo", "volume"]
         case "analise":
-            return ["id", "max", "min", "etapa", "parametro", "processo", "valor"]
+            return ["id", "max", "min", "etapa", "parametro", "processo", "valor","analista","observacaoAnalise"]
         case "correcao":
             return ["id", "etapa", "parametro", "processo", "motivo"]
         case "adicao":
@@ -41,7 +41,7 @@ const farolAnalise = (analise) => {
 export function formatationRules(routeName) {
     switch (routeName) {
         case "analise":
-            return [null, null, null, null, null, null, farolAnalise]
+            return [null, null, null, null, null, null,null,null, farolAnalise]
         default:
             return [null, null, null, null, null, null, null]
     }

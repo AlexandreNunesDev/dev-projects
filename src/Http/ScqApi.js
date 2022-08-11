@@ -378,6 +378,10 @@ const ScqApi = {
         return http.put("adicao/corrigir/", adicoes)
 
     },
+    EditarAdicao: (id,adicao) => {
+        return http.put(`adicao/${id}`, adicao)
+
+    },
     AcaoCorrigir: (ocpId) => {
         return http.put("acao/corrigir/" + ocpId, null)
 

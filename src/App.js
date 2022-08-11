@@ -53,6 +53,8 @@ import CadastroOcpLivre from './Screens/CadastroOcpLivre';
 import ConsultaDinamica from './ScreensEdicao/ConsultaDinamica';
 import EditarContador from './ScreensEdicao/EditarContador';
 import EditarRegraDeCorrecao from './ScreensEdicao/EditarRegraDeCorrecao';
+import EditarAdicao from './ScreensEdicao/EditarAdicao';
+import EditarAnalise from './ScreensEdicao/EditarAnalise';
 
 
 
@@ -152,6 +154,8 @@ class App extends React.Component {
             <Route path='/EditarOcp' exact={true} component={EditarOcpAdicao} />
             <Route path='/EditarContador' exact={true} component={EditarContador} />
             <Route path='/EditarregrasDeCorrecao' exact={true} component={EditarRegraDeCorrecao} />
+            <Route path='/Editaradicao' exact={true} component={EditarAdicao} />
+            <Route path='/Editaranalise' exact={true} component={EditarAnalise} />
             <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
@@ -193,7 +197,6 @@ class App extends React.Component {
             <Route path='/VerOmp' exact={true} component={VerOmp} />
             <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
             <Route path='/EditarOcp' exact={true} component={EditarOcpAdicao} />
-            <Route path='/EditarContador' exact={true} component={EditarContador} />
             <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
