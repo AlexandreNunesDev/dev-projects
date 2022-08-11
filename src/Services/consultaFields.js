@@ -61,10 +61,12 @@ export function getOpsFromRoute(routeName, options, dataInicial, dataFinal, page
 
 let optionsGenerator = {
     processo: async function (options) {
-        return options.processos.map(op => ({ ...op }))
+        let processos  =  await ScqApi.ListaProcessos()
+        return processos.map(op => ({ ...op }))
     },
     etapa: async function (options) {
-        let etapasCopy = options.etapas.map(etapaCopy => {
+        let etapas = await ScqApi.ListaEtapas()
+        let etapasCopy = etapas.map(etapaCopy => {
             let copy = { ...etapaCopy }
             copy.processo = options.processos.filter(processo => processo.id == copy.processoId)[0].nome
             return copy
@@ -72,7 +74,8 @@ let optionsGenerator = {
         return etapasCopy
     },
     parametro: async function (options) {
-        let parametrosCopy = options.parametros.map(parametroCopy => {
+        let parametros = await ScqApi.ListaParametros()
+        let parametrosCopy = parametros.map(parametroCopy => {
             let copy = { ...parametroCopy }
             copy.processo = options.processos.filter(processo => processo.id == copy.processoId)[0].nome
             copy.etapa = options.etapas.filter(etapa => etapa.id == copy.etapaId)[0].nome
@@ -81,7 +84,8 @@ let optionsGenerator = {
         return parametrosCopy
     },
     troca: async function (options) {
-        let parametrosCopy = options.trocas.map(trocaCopy => {
+        let trocas = await ScqApi.ListaTrocas()
+        let parametrosCopy = trocas.map(trocaCopy => {
             let copy = { ...trocaCopy }
             copy.etapa = copy.etapaNome
             copy.processo = options.processos.filter(processo => processo.id == copy.processoId)[0].nome
@@ -90,7 +94,8 @@ let optionsGenerator = {
         return parametrosCopy
     },
     tarefa: async function (options) {
-        let opsCopy = options.tarefasDeManutencao.map(tarefaCopy => {
+        let tarefasDeManutencao = await ScqApi.ListaTarefasDeManutencao()
+        let opsCopy = tarefasDeManutencao.map(tarefaCopy => {
             let copy = { ...tarefaCopy }
             copy.processo = copy.processoNome
             return copy
@@ -106,7 +111,8 @@ let optionsGenerator = {
         return parametrosCopy
     },
     materiaPrima: async function (options) {
-        let opsCopy = options.materiasPrima.map(materiaCopy => {
+        let materiasPrima = await ScqApi.ListaMateriaPrimas()
+        let opsCopy = materiasPrima.map(materiaCopy => {
             let copy = { ...materiaCopy }
             return copy
         })

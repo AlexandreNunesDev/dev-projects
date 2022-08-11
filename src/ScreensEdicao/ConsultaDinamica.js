@@ -3,6 +3,7 @@ import { Button, Col, Container, Form } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation, useParams } from "react-router-dom"
 import DynamicFilterMenu from '../Components/DynamicFilterMenu'
+import LoadingProgress from "../Components/LoadProgress"
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { clear, updadteFieldsValues, updateActualConsultaPage, updateDataFinal, updateDataInicial, updateFields, updateFilteredOps, updateOps, updatePage, updateTotalPages } from "../Reducers/consultaDinamicaReducer"
 import { formatationRules, getFieldsFromRoute, getOpsFromRoute, hasDateFilter } from "../Services/consultaFields"
@@ -105,7 +106,7 @@ const Consultas = () => {
 
     return (
 
-        <Container>
+        <Container style={{position : "relative"}}>
             <h3>Consulta de {consultaPage}</h3>
             {hasdata && <div> <Form.Row style={{ marginTop: 10 }}>
                 <Form.Group as={Col}>
@@ -130,7 +131,12 @@ const Consultas = () => {
                 <Button onClick={() => loadOps()}>Carregar Dados</Button>
                 {totalPages > 0 && paginationButtons()}
             </Form.Row>}
-            {shouldRenderDynamicMenu() && <DynamicFilterMenu formatationRules={formatationRules(consultaPage)} ops={ops || []} onActionClick={(obj) => onEditClick(obj)} fieldValues={fieldValues} fieldsToInclude={fields} ></DynamicFilterMenu>}
+            {shouldRenderDynamicMenu() ? <DynamicFilterMenu formatationRules={formatationRules(consultaPage)} ops={ops || []} onActionClick={(obj) => onEditClick(obj)} fieldValues={fieldValues} fieldsToInclude={fields} ></DynamicFilterMenu> :
+               <div style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}> <LoadingProgress></LoadingProgress></div>
+            }
             {totalPages > 0 && paginationButtons()}
 
 
