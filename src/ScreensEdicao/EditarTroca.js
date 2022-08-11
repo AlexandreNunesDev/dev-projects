@@ -11,6 +11,7 @@ import dispatchers from '../mapDispatch/mapDispathToProps';
 import { WebSocketContext } from '../websocket/wsProvider';
 import { responseHandler } from '../Services/responseHandler';
 import { useLocation } from 'react-router-dom';
+import SaveDeleteButtons from '../Components/SaveDeleteButtons';
 
 
 
@@ -56,6 +57,10 @@ const EditarTroca = (props) => {
     }
     
 
+    const deletarTroca = () => {
+        ScqApi.DeleteTroca(troca.id).then(res => responseHandler(res, toastManager,"Troca",toastInfo))
+    }
+
 
 
 
@@ -66,7 +71,6 @@ const EditarTroca = (props) => {
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar Troca</h1>
                 <Form>
-                     <ModoEdicao  type={"troca"} getSelectedTroca={(troca) => loadTroca(troca)}></ModoEdicao>
                      {troca && <Form.Group style={{ marginTop: 20 }} >
                             <Form.Label style={{ color: "RED", fontWeight: "bold" }} >Troca Id: {troca.id} || Data Planejada : {troca?.dataPlanejada }</Form.Label>
                         </Form.Group>}
@@ -122,12 +126,7 @@ const EditarTroca = (props) => {
                             <Form.Control type="text" value={contadorRealizado} onChange={event => setContadorRealizado(event.target.value)} />
                         </Col>
                     </Form.Row>
-
-                    <Form.Group >
-
-                        
-                        <Button style={{ margin: 2 }} variant="primary" type="reset" onClick={() => salvarTroca({id : troca.id, frequencia : frequencia, escala : escalaFrequencia, etapaId: troca.etapaId, dataPlanejada : troca.dataPlanejada, areaPlanejada : contadorPlanejado, numeroGrupoArea : numeroGrupoArea}, props.toastManager)} >Salvar</Button>
-                    </Form.Group>
+                    <SaveDeleteButtons saveClick={salvarTroca} deleteClick={deletarTroca}></SaveDeleteButtons>
 
                 </Form>
             </Container>

@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { withToastManager } from 'react-toast-notifications';
 import FormulaBuilder from '../Components/FormulaBuilder';
 import GenericSelect from '../Components/GenericSelect';
+import SaveDeleteButtons from '../Components/SaveDeleteButtons';
 import SelectEditable from '../Components/SelectEditable';
 import UnidadeSelect from '../Components/UnidadeSelect';
 import { withMenuBar } from '../Hocs/withMenuBar';
@@ -212,10 +213,7 @@ const EditarParametro = (props) => {
                             {etapaId && <FormulaBuilder etapaId={etapaId} onClose={formula => setFormula(formula)} processos={processos} etapas={etapas}></FormulaBuilder>}
                         </Form.Group>
                     </Form.Row>
-                    <Form.Group style={{ marginTop: 20 }}>
-                        <Button style={{ margin: 5, borderColor: "RED", backgroundColor: "RED" }} variant="primary" type="reset" onClick={() => onDelete()}>Deletar</Button>
-                        <Button style={{ margin: 5 }} variant="primary" type="reset" onClick={() => onSaveClick()}>Salvar</Button>
-                    </Form.Group>
+                    <SaveDeleteButtons saveClick={onSaveClick} deleteClick={onDelete}></SaveDeleteButtons>
                 </Form>
             </Container>
         </>

@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import dispatchers from '../mapDispatch/mapDispathToProps';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications/dist/ToastProvider';
+import SaveDeleteButtons from '../Components/SaveDeleteButtons';
 
 const EditarTarefaDeManutencao = (props) => {
 
@@ -48,13 +49,25 @@ const EditarTarefaDeManutencao = (props) => {
         }
     }, [tarefa])
 
+
+    const deletarTarefa = () => {
+        ScqApi.DeleteTarefa(tarefa.id)
+    }
+
+
+    const salvarTarefa = () => {
+        const tarefaManutencao = {id:tarefa.id ,nome: nome, processoId: processoId, dataPlanejada : dataPlenejada, codigoDoDocumento: codigoDoDocumento, escala: escala, frequencia: frequencia }
+        ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,toastManager,"Tarefa",toastInfo,context,[dispatchers().loadTarefasDeManutencao]))
+    
+
+    }
+
     return (
         <>
     
             <Container style={{ marginTop: 20 }}>
                 <h1>Editar Tarefa de Manutencao</h1>
                 <Form>
-                    <ModoEdicao type={"tarefa"} getSelectedTarefa={(tarefa) => setTarefa(tarefa)}  onDelete={(deleteMessage) => {toastManager.addToast(`${deleteMessage}`, {appearance: 'success', autoDismiss: true,onDismiss: () => { history.push("/CadastroTarefasDeManutencao")}})}}></ModoEdicao>
                     {tarefa && <Form.Group style={{ marginTop: 20 }} >
                         <Form.Label style={{ color: "RED", fontWeight: "bold" }} >Tarefa Id: {tarefa.id} || Data Planejada : {tarefa?.dataPlanejada}</Form.Label>
                     </Form.Group>}
@@ -90,16 +103,7 @@ const EditarTarefaDeManutencao = (props) => {
                             <Form.Control type="text" value={codigoDoDocumento} onChange={event => { setCodigo(event.target.value) }} />
                         </Col>
                     </Form.Row>
-
-                    <Form.Group >
-                        <Button style={{ marginTop: 10, marginRight: 5 }} variant="primary" >Editar</Button>
-                        <Button style={{ marginTop: 10 }} variant="primary" type="reset" onClick={() => {
-                            const tarefaManutencao = {id:tarefa.id ,nome: nome, processoId: processoId, dataPlanejada : dataPlenejada, codigoDoDocumento: codigoDoDocumento, escala: escala, frequencia: frequencia }
-                            ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,toastManager,"Tarefa",toastInfo,context,[dispatchers().loadTarefasDeManutencao]))
-                        
-
-                        }} >Salvar</Button>
-                    </Form.Group>
+                    <SaveDeleteButtons saveClick={salvarTarefa} deleteClick={deletarTarefa}></SaveDeleteButtons>
                 </Form>
             </Container>
 
