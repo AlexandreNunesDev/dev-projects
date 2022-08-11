@@ -36,6 +36,15 @@ export const OnlyDate = (data) => {
 
 }
 
+
+
+export const DateAndTime = (data) => {
+  const inverseDate = String(data).split("T")
+  const onlyDate = inverseDate[0].split("-")
+  const time = inverseDate[1]
+  return `${onlyDate[2] + "-" + onlyDate[1] + "-" + onlyDate[0]} ${time}` 
+
+}
 export const onlyTime = (data) => {
   const inverseDate = String(data).split("T")
   const time = inverseDate[1].split(".")

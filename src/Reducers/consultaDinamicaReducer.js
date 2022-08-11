@@ -9,7 +9,8 @@ const initialState = {
     totalPages : 0,
     fields: [],
     fieldValues: [],
-    numeroDeDados : 15
+    numeroDeDados : 15,
+    actualConsultaPage : ""
    
 
 }
@@ -45,6 +46,9 @@ const consultaDinamica = createSlice({
         updateNumeroDeDados(state,action) {
             state.numeroDeDados = action.payload
         },
+        updateActualConsultaPage(state,action) {
+            state.actualConsultaPage = action.payload
+        },
         clear(state) {
             state.fields = []
             state.filteredOps = []
@@ -57,5 +61,5 @@ const consultaDinamica = createSlice({
     },
 })
 
-export const {updadteFieldsValues,updateNumeroDeDados,updateFields,updateDataFinal,updateDataInicial,updateOps,updatePage,updateTotalPages,updateFilteredOps, clear } = consultaDinamica.actions
+export const {updateActualConsultaPage,updadteFieldsValues,updateNumeroDeDados,updateFields,updateDataFinal,updateDataInicial,updateOps,updatePage,updateTotalPages,updateFilteredOps, clear } = consultaDinamica.actions
 export default consultaDinamica.reducer

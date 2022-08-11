@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation, useParams } from "react-router-dom"
 import DynamicFilterMenu from '../Components/DynamicFilterMenu'
 import { withMenuBar } from '../Hocs/withMenuBar'
-import { clear, updateDataFinal, updateDataInicial, updateFields, updateFilteredOps, updateOps, updatePage, updateTotalPages } from "../Reducers/consultaDinamicaReducer"
+import { clear, updadteFieldsValues, updateActualConsultaPage, updateDataFinal, updateDataInicial, updateFields, updateFilteredOps, updateOps, updatePage, updateTotalPages } from "../Reducers/consultaDinamicaReducer"
 import { formatationRules, getFieldsFromRoute, getOpsFromRoute, hasDateFilter } from "../Services/consultaFields"
 
 const Consultas = () => {
@@ -22,14 +22,24 @@ const Consultas = () => {
     const totalPages = consulta.totalPages
     const dataInicial = consulta.dataInicial
     const dataFinal = consulta.dataFinal
+    const pagina = consulta.actualConsultaPage
     const hasdata = hasDateFilter(consultaPage)
 
     const onEditClick = (obj) => {
         history.push(`/Editar${consultaPage}`, obj)
     }
+    useEffect(() => {
+        dispatcher(updateActualConsultaPage(consultaPage))
+    },[])
 
     useEffect(() => {
-        dispatcher(clear())
+        if(consultaPage != pagina) {
+            dispatcher(updadteFieldsValues([]))
+            dispatcher(clear())
+        } else {
+            dispatcher(clear())
+        }
+        
 
     }, [consultaPage])
 

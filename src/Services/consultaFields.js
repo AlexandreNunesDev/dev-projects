@@ -1,6 +1,6 @@
 import ScqApi from "../Http/ScqApi"
 import { backGroundByAnaliseStatus } from "./analiseService"
-import { OnlyDate } from "./stringUtils"
+import { DateAndTime, OnlyDate } from "./stringUtils"
 
 
 export function getFieldsFromRoute(routeName) {
@@ -22,7 +22,7 @@ export function getFieldsFromRoute(routeName) {
         case "regrasDeCorrecao":
             return ["id", "material", "parametro", "valor", "etapa", "processo", "volume"]
         case "analise":
-            return ["id", "max", "min", "etapa", "parametro", "processo", "valor","analista","observacaoAnalise"]
+            return ["id", "max", "min", "etapa", "data","parametro", "processo", "valor","analista","observacaoAnalise"]
         case "correcao":
             return ["id", "etapa", "parametro", "processo", "motivo"]
         case "adicao":
@@ -181,7 +181,13 @@ let optionsGenerator = {
 
 export function getFormatedField(genericObject, objectKey) {
     const regexExpDate = /\d\d\d\d\-\d\d\-\d\d/gi;
+    const regExDateAndTime = /\d\d\d\d\-\d\d\-\d\d\T\d\d:\d\d:\d\d/gi 
     let field = genericObject[objectKey]
+    
+   
+    if (regExDateAndTime.test(field)) {
+        return DateAndTime(field)
+    }
     if (regexExpDate.test(field)) {
         return OnlyDate(field)
     }
