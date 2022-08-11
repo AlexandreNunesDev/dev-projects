@@ -17,6 +17,7 @@ const Consultas = () => {
     const consulta = useSelector(state => state.consulta)
     const ops = consulta.ops
     const fields = consulta.fields
+    const fieldValues = consulta.fieldValues
     const historicoPage = consulta.historicoPage
     const totalPages = consulta.totalPages
     const dataInicial = consulta.dataInicial
@@ -119,7 +120,7 @@ const Consultas = () => {
                 <Button onClick={() => loadOps()}>Carregar Dados</Button>
                 {totalPages > 0 && paginationButtons()}
             </Form.Row>}
-            {shouldRenderDynamicMenu() && <DynamicFilterMenu formatationRules={formatationRules(consultaPage)} ops={ops || []} onActionClick={(obj) => onEditClick(obj)} fieldsToInclude={fields} ></DynamicFilterMenu>}
+            {shouldRenderDynamicMenu() && <DynamicFilterMenu formatationRules={formatationRules(consultaPage)} ops={ops || []} onActionClick={(obj) => onEditClick(obj)} fieldValues={fieldValues} fieldsToInclude={fields} ></DynamicFilterMenu>}
             {totalPages > 0 && paginationButtons()}
 
 

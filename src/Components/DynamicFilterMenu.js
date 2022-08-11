@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
 import { Button, Container, Form } from "react-bootstrap"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { updadteFieldsValues } from "../Reducers/consultaDinamicaReducer"
 import { getFormatedField } from "../Services/consultaFields"
 
 
-const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatationRules }) => {
+const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatationRules,fieldValues }) => {
 
 
     const global = useSelector(state => state.global)
     const isAdmin = global.userRole == "ADMIN_ROLE" ? true : false
     const [innerOps, setInternalOps] = useState(ops)
     const [filteredOps, setFilteredOps] = useState(ops)
-    const [filterRules, setFilterRules] = useState({})
     const [headers, setHeaders] = useState()
+    const dispatcher =  useDispatch()
 
     /** @param {String} objKey */
     const formatedObjKey = (objKey) => {
@@ -39,16 +40,16 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatat
 
     useEffect(() => {
         let inneropscopy = [...innerOps]
-        Object.keys(filterRules).forEach(key => {
-            inneropscopy = inneropscopy.filter(op => String(op[key]).toLowerCase().startsWith(String(filterRules[key]).toLowerCase()))
+        Object.keys(fieldValues).forEach(key => {
+            inneropscopy = inneropscopy.filter(op => String(op[key]).toLowerCase().startsWith(String(fieldValues[key]).toLowerCase()))
         })
         setFilteredOps(inneropscopy)
-    }, [filterRules, innerOps])
+    }, [fieldValues, innerOps])
 
     const updateFilterRules = (value, header) => {
-        let filterRulesCopy = { ...filterRules }
+        let filterRulesCopy = { ...fieldValues }
         filterRulesCopy[header] = value
-        setFilterRules(filterRulesCopy)
+        dispatcher(updadteFieldsValues(filterRulesCopy))
     }
 
 
@@ -62,7 +63,7 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatat
                     return <div key={hd} style={{ padding: 4 }} >
                         <Form.Group>
                             <Form.Label>{hd}</Form.Label>
-                            <Form.Control onChange={(event) => updateFilterRules(event.target.value, hd)} ></Form.Control>
+                            <Form.Control value={fieldValues[hd]} onChange={(event) => updateFilterRules(event.target.value, hd)} ></Form.Control>
                         </Form.Group>
                     </div>
                 })}

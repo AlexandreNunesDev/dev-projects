@@ -46,7 +46,6 @@ const consultaDinamica = createSlice({
             state.numeroDeDados = action.payload
         },
         clear(state) {
-            state.fieldValues = []
             state.fields = []
             state.filteredOps = []
             state.historicoPage = 0
