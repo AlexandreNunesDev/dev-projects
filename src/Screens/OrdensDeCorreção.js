@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Component } from "react";
 import { Col, Container, Form, Row, Table } from "react-bootstrap";
-import { isMobile } from 'react-device-detect';
 import { connect } from "react-redux";
 import { withToastManager } from "react-toast-notifications";
 import CredentialConfirm from '../Components/CredentialConfirm';
@@ -130,7 +129,6 @@ class OrdensDeCorreção extends Component {
 
     openCorrecaoDialog = (ocpToConfirm) => {
         this.props.ocpToEdit(ocpToConfirm)
-
         this.props.history.push("/CorrecaoConfirm")
     }
 

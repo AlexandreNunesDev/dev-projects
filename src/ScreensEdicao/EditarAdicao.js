@@ -66,7 +66,7 @@ const EditarAdicao = () => {
                 <Form.Group >
                     <Form.Label>Realizado em:</Form.Label>
                     <Form.Control
-                        type="date"
+                        type="datetime-local"
                         defaultValue={realizadoEm}
                         onChange={event => setRealizadoEm(event.target.value)}>
                     </Form.Control>

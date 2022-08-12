@@ -66,7 +66,7 @@ const MenuBar = () => {
                   <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
                   <Link className="nav-link" to="/IndicadorDeGastos">Indicador de Gastos</Link>
                 </NavDropdown>
-                <NavDropdown title="Cadastros" id="basic-nav-dropdown">
+                {/* <NavDropdown title="Cadastros" id="basic-nav-dropdown">
                   <Link className="dropdown-item" to="/CadastroProcesso">Processo</Link>
                   <Link className="dropdown-item" to="/CadastroEtapa">Etapa</Link>
                   <Link className="dropdown-item" to="/CadastroParametro">Parametro</Link>
@@ -76,7 +76,7 @@ const MenuBar = () => {
                   <Link className="dropdown-item" to="/CadastroTarefasDeManutencao">Tarefa de Manutenção</Link>
                   <Link className="dropdown-item" to="/CadastroTurno">Turno</Link>
                   <Link className="dropdown-item" to="/Registrar">Novo usuario</Link>
-                </NavDropdown>
+                </NavDropdown> */}
               </Nav>
 
             </Navbar.Collapse>

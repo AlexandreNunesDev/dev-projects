@@ -135,7 +135,7 @@ const Consultas = () => {
                <div style={{
                 alignItems: 'center',
                 justifyContent: 'center',
-            }}> <LoadingProgress></LoadingProgress></div>
+            }}> {hasdata ? <div></div> : <LoadingProgress></LoadingProgress>}</div>
             }
             {totalPages > 0 && paginationButtons()}
 

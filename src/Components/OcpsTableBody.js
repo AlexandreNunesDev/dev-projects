@@ -6,6 +6,7 @@ import { useHistory } from 'react-router';
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import mapToStateProps from "../mapStateProps/mapStateToProps";
 import { buildMotivo } from '../Services/ocpService';
+import { DateAndTime } from '../Services/stringUtils';
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -32,7 +33,7 @@ const buildAdicaoDetails = (ocp) => {
                     <div className="text-nowrap"><strong>Qtd. Planejada: </strong>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</div>
                     <div className="text-nowrap"><strong>Qtd. Realizado: </strong>{`${adicao.quantidadeRealizada} ${adicao.unidade} ${adicao.nomeMp}`}</div>
                     <div><strong>Responsavel: </strong> {adicao.realizadoPor}</div>
-                    <div><strong>Realizado em: </strong> {adicao.realizadoEm}</div>
+                    <div><strong>Realizado em: </strong> {adicao.realizadoEm == " " ? adicao.realizadoEm  : DateAndTime(adicao.realizadoEm)}</div>
                     <div className="text-nowrap"><strong>Observacao: </strong> {adicao.observacao ? adicao.observacao : ""}</div>
                 </div>
             </li>

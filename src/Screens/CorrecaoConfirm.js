@@ -16,8 +16,6 @@ const CorrecaoConfirm = (props) => {
 
   const dispatch = useDispatch()
   const ocp = useSelector(state => state.ocp.ocpToEdit)
-  const [responsavel, setResponsavel] = useState()
-  const [realizado, setRealizado] = useState()
   const toast = useToasts()
   const history = useHistory()
 
@@ -41,95 +39,128 @@ const CorrecaoConfirm = (props) => {
     dispatch(actions.ocpToEdit(ocpCopy))
   }
 
+  const updateRealizadoEm = (adicaoDto, realizado) => {
+    let ocpCopy = { ...ocp }
+    let adicoesCopy = [...ocpCopy.adicoesDto].map(adTo => ({ ...adTo }))
+    let indexToUpdate = adicoesCopy.findIndex(addCopy => addCopy.id == adicaoDto.id)
+    adicoesCopy[indexToUpdate].realizada = realizado
+    ocpCopy.adicoesDto = adicoesCopy
+    dispatch(actions.ocpToEdit(ocpCopy))
+  }
 
 
-
-  const confirmar = () => {
-    if ((responsavel) && (realizado)) {
-    let adicoes = ocp.adicoesDto.map(addDto => ({ id: addDto.id, quantidade: addDto.quantidade, ordemId: ocp.id, materiaPrimaId: addDto.idMp, unidade: addDto.unidade, realizada: realizado, responsavel: responsavel, observacao: addDto.observacao }))
-      ScqApi.AdicaoCorrigir(adicoes, ocp.id).then(res => {
-        responseHandler(res, toast, "OrdemDeCorrecao", toastInfo)
-        history.push("/OrdensDeCorrecao")
-      })
-    } else {
-      toast.addToast("Responsavel e realizada nao podem ser nulos", {appearance : 'success'})
-    }
-
+  const updateResponsavel = (adicaoDto, responsavel) => {
+    let ocpCopy = { ...ocp }
+    let adicoesCopy = [...ocpCopy.adicoesDto].map(adTo => ({ ...adTo }))
+    let indexToUpdate = adicoesCopy.findIndex(addCopy => addCopy.id == adicaoDto.id)
+    adicoesCopy[indexToUpdate].responsavel = responsavel
+    ocpCopy.adicoesDto = adicoesCopy
+    dispatch(actions.ocpToEdit(ocpCopy))
   }
 
 
 
-return (
-  <>
-    <Container>
-      <h3>Confirme as Quantidades</h3>
 
-      <Form.Group as={Row}>
-        <Form.Label>Realizado em: </Form.Label>
-        <Form.Control
-          type="datetime-local"
-          onChange={event => setRealizado(event.target.value)}>
+  const confirmar = () => {
+    let adicoes = ocp.adicoesDto.filter(add => {
+      if ((!add.realizada) || (!add.responsavel)) {
+        return false
+      }
+      if ((add.quantidade == 0) && (!add.observacao)) {
+        return false
+      }
+      return true
 
-        </Form.Control>
-      </Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label>Realizado por: </Form.Label>
-        <Form.Control onChange={(event) => setResponsavel(event.target.value)}>
+    }
 
-        </Form.Control>
-      </Form.Group>
+    ).map(addDto => ({ id: addDto.id, quantidade: addDto.quantidade, ordemId: ocp.id, materiaPrimaId: addDto.idMp, unidade: addDto.unidade, realizada: addDto.realizada, responsavel: addDto.responsavel, observacao: addDto.observacao }))
+    ScqApi.AdicaoCorrigir(adicoes, ocp.id).then(res => {
+      responseHandler(res, toast, "OrdemDeCorrecao", toastInfo)
+      history.push("/OrdensDeCorrecao")
+    })
+  }
+
+  const voltar = () => {
+    history.goBack()
+  }
 
 
-      <h3 style={{ textAlign: "center", paddingBottom: 12 }}>Confirme as quantidades das Adições</h3>
-      <div className="table-responsive">
-        <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Materia Prima</th>
-              <th>Quantidade</th>
-              <th>Unidade</th>
-              <th>Justificativa</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ocp.adicoesDto.map(adicao => {
-              return (
-                <tr key={adicao.id}>
-                  <td>{adicao.id}</td>
-                  <td>{adicao.nomeMp}</td>
-                  <td >
-                    <Form.Control disabled={adicao.status} value={adicao.quantidade} placeholder={`Solicitado ${adicao.quantidade}`} onChange={(event) => updateOcpDtos(adicao, event.target.value)}></Form.Control>
-                  </td>
-                  <td>
-                    {adicao.unidade}
-                  </td>
-                  <td >
-                    <Form.Control disabled={adicao.status} value={adicao.observacao} placeholder={`Observacao`} onChange={(event) => updateOcpDtosObservacao(adicao, event.target.value)}></Form.Control>
-                  </td>
-                </tr>
-              )
 
-            })}
-          </tbody>
-        </table>
+
+
+  return (
+    <>
+      <div style={{ padding: 12 }}>
+        <h3>Confirme as Quantidades</h3>
+        <h3 style={{ textAlign: "center", paddingBottom: 12 }}>Confirme as quantidades das Adições</h3>
+        <div className="table-responsive">
+          <table >
+            <thead>
+              <tr>
+                <th style={{ textAlign: "center" }}>Id</th>
+                <th style={{ textAlign: "center" }}>Materia Prima</th>
+                <th style={{ textAlign: "center" }}>Quantidade</th>
+                <th style={{ textAlign: "center" }}>Uni.</th>
+                <th style={{ textAlign: "center" }}>Data</th>
+                <th style={{ textAlign: "center" }}>Responsavel</th>
+                <th style={{ textAlign: "center" }}>Justificativa</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ocp.adicoesDto.map(adicao => {
+                return (
+                  <tr key={adicao.id}>
+                    <td >{adicao.id}</td>
+                    <td className="text-nowrap" >{adicao.nomeMp}</td>
+                    <td  >
+                      <Form.Control  disabled={adicao.status} value={adicao.quantidade} type={"number"} onChange={(event) => updateOcpDtos(adicao, event.target.value)}></Form.Control>
+                    </td>
+                    <td >
+                      {adicao.unidade}
+                    </td>
+                    <td  >
+                      <Form.Control
+                        disabled={adicao.status}
+                        style={{ borderColor: adicao.status || adicao.realizada ? null : "RED" }}
+                        type="datetime-local"
+                        defaultValue={adicao.realizada || adicao.realizadoEm}
+                        onChange={event => updateRealizadoEm(adicao, event.target.value)}>
+                      </Form.Control>
+                    </td>
+                    <td  >
+                      <Form.Control disabled={adicao.status} value={adicao.responsavel} style={{ borderColor: adicao.status || adicao.responsavel ? null : "RED" }} onChange={(event) => updateResponsavel(adicao, event.target.value)}></Form.Control>
+                    </td>
+                    <td  >
+                      <Form.Control disabled={adicao.status} value={adicao.observacao}  placeholder={`Observacao`} onChange={(event) => updateOcpDtosObservacao(adicao, event.target.value)}></Form.Control>
+                    </td>
+                  </tr>
+                )
+
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
+      <div>
+        <Button style={{ margin: 12, backgroundColor: "gray", borderColor: "gray" }} onClick={() => {
+          voltar()
+        }}>
+          Voltar
+        </Button>
+
+        <Button style={{ margin: 12 }} onClick={() => {
+          confirmar()
+        }}>
+          Confirmar
+        </Button>
+      </div>
+    </>
 
 
 
-      <Button style={{ margin: 12 }} onClick={() => {
-        confirmar()
-      }}>
-        Confirmar
-      </Button>
-    </Container>
-  </>
 
-
-
-
-)
+  )
 }
 
 export default withMenuBar(CorrecaoConfirm)
