@@ -1,17 +1,16 @@
-import React, { useContext, useState} from 'react'
-import ScqApi from '../Http/ScqApi';
-import { Button, Form, Container, Col } from 'react-bootstrap'
-import { withToastManager } from 'react-toast-notifications'
-import UnidadeSelect from '../Components/UnidadeSelect'
-import GenericSelect from '../Components/GenericSelect';
-import { withMenuBar } from '../Hocs/withMenuBar';
+import React, { useContext, useState } from 'react';
+import { Button, Col, Container, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import mapToStateProps from '../mapStateProps/mapStateToProps';
+import { withToastManager } from 'react-toast-notifications';
+import GenericSelect from '../Components/GenericSelect';
+import UnidadeSelect from '../Components/UnidadeSelect';
+import { withMenuBar } from '../Hocs/withMenuBar';
+import ScqApi from '../Http/ScqApi';
 import dispatchers from '../mapDispatch/mapDispathToProps';
-import { WebSocketContext } from '../websocket/wsProvider';
+import mapToStateProps from '../mapStateProps/mapStateToProps';
 import { responseHandler } from '../Services/responseHandler';
 import { toastOk } from '../Services/toastType';
-import { setProcessoId } from '../Reducers/ompReducer';
+import { WebSocketContext } from '../websocket/wsProvider';
 
 
 
@@ -29,13 +28,13 @@ const CadastroTroca = (props) => {
     const [etapas, setEtapas] = useState()
     const [unidade, setUnidade] = useState()
     const [areaPlanejada, setAreaPlanejada] = useState('')
-    const [numeroGrupoArea, setNumeroGrupoArea] = useState('')
+
 
    
 
 
     const salvarTroca = () => {
-        const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade, areaPlanejada : areaPlanejada, numeroGrupoArea : numeroGrupoArea }
+        const troca = { id: null, dataPlanejada, frequencia, etapaId, escala: unidade, areaPlanejada : areaPlanejada }
         const {toastManager} = props
         ScqApi.CriarTroca(troca,[props.loadTrocas]).then(res => responseHandler(res,toastManager,'Troca',toastOk))
     
@@ -56,12 +55,12 @@ const CadastroTroca = (props) => {
                 <Form>
                     <Form.Row>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Processo"}  default={"Escolha um Processo"}  onChange={(processo) =>setProcessoId(processo.id) } ></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Processo"}  default={"Escolha um Processo"}  onChange={(id) =>setProcessoId(id) } ></GenericSelect>
                         </Col>
                     </Form.Row>
                     <Form.Row>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Etapa"} filter={processoId} filterField={"processoId"} default={"Escolha uma Etapa"}  onChange={(etapa) => { setEtapaId(etapa.id) }}></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Etapa"} filter={processoId} filterField={"processoId"} default={"Escolha uma Etapa"}  onChange={(id) => { setEtapaId(id) }}></GenericSelect>
                         </Col>
                     </Form.Row>
 
@@ -93,12 +92,6 @@ const CadastroTroca = (props) => {
                         <Col>
                             <Form.Label>Trocar a cada (metros quadrados) : </Form.Label>
                             <Form.Control type="number" value={areaPlanejada} onChange={event => setAreaPlanejada(event.target.value)} />
-                        </Col>
-                    </Form.Row>
-                    <Form.Row style={{ marginBottom: 16 }}>
-                        <Col>
-                            <Form.Label>Numero grupo area : </Form.Label>
-                            <Form.Control type="number" value={numeroGrupoArea} onChange={event => setNumeroGrupoArea(event.target.value)} />
                         </Col>
                     </Form.Row>
                     <Form.Row>

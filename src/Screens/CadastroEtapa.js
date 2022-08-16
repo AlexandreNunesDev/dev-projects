@@ -34,8 +34,8 @@ class CadastroEtapa extends React.Component {
 
 
 
-    selectedLinhaListner = (processo) => {
-        this.setState({ processoId: processo.id })
+    selectedLinhaListner = (id) => {
+        this.setState({ processoId: id })
     }
 
     handleChangeEtapaNome = (event) => {

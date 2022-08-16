@@ -18,10 +18,10 @@ import { WebSocketContext } from '../websocket/wsProvider';
 const CadastroParametro = (props) => {
     const context = useContext(WebSocketContext)
     const history = useHistory()
-    const [etapas, setEtapas] = useState()
+
     const [processoId, setProcessoId] = useState()
     const [etapaId, setEtapaId] = useState()
-    const [etapa, setEtapa] = useState()
+
     const [nome, setNome] = useState()
     const [pMax, setPmax] = useState()
     const [pMin, setPmin] = useState()
@@ -36,7 +36,6 @@ const CadastroParametro = (props) => {
     const [controlado, setControlado] = useState(true)
     const etapasOps = useSelector(state => state.options.etapas)
     const processosOps = useSelector(state => state.options.processos)
-    const materiasPrimaOps = useSelector(state => state.options.materiasPrima)
     const dispatch = useDispatch()
 
 
@@ -44,7 +43,6 @@ const CadastroParametro = (props) => {
 
     const selectedProcesso = (processoId) => {
         setProcessoId(processoId)
-        setEtapas(etapasOps.filter(etapa => etapa.processoId === Number(processoId)))
     }
 
    
@@ -74,12 +72,12 @@ const CadastroParametro = (props) => {
                 <Form>
                     <Form.Row>
                         <Col>
-                            <GenericSelect title={"Processo"} displayType={"nome"} returnType={"id"} default={"Escolha um Processo"}  onChange={(value) => selectedProcesso(value.id)} selection={processoId || ''}></GenericSelect>
+                            <GenericSelect title={"Processo"} displayType={"nome"} returnType={"id"} default={"Escolha um Processo"}  onChange={(id) => selectedProcesso(id)} selection={processoId || ''}></GenericSelect>
                         </Col>
                     </Form.Row>
                     <Form.Row>
                         <Col>
-                            <GenericSelect title={"Etapa"} displayType={"nome"} returnType={"id"} default={"Escolha uma Etapa"} filter={processoId} filterField={"processoId"} onChange={(value) => setEtapaId(value.id)} selection={etapaId || ''}></GenericSelect>
+                            <GenericSelect title={"Etapa"} displayType={"nome"} returnType={"id"} default={"Escolha uma Etapa"} filter={processoId} filterField={"processoId"} onChange={(id) => setEtapaId(id)} selection={etapaId || ''}></GenericSelect>
                         </Col>
                     </Form.Row>
 

@@ -6,9 +6,9 @@ const GenericDropDown = (props) => {
     const [toggleView, setToggle] = useState(props.display);
 
     return (
-    <Dropdown>
+    <Dropdown style={{margin : 2}}>
         <Dropdown.Toggle style={{margin : props.margin}} variant="success" id="dropdown-linha">
-            {toggleView}
+            {toggleView || props.defaultDisplay }
         </Dropdown.Toggle>
         <Dropdown.Menu id='linhaDropDownItens'>
         {props.itens.map((item,index)=>{

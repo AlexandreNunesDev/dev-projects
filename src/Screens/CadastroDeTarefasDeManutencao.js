@@ -38,7 +38,7 @@ const CadastroDeTarefasDeManutencao = (props) => {
                 <Form>
                     <Form.Row>
                         <Col>
-                            <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(processo) => { setProcessoId(processo.id) }} ></GenericSelect>
+                            <GenericSelect returnType={"id"} title={"Processo"} default={"Escolha um Processo"} ops={processos} onChange={(id) => { setProcessoId(id) }} ></GenericSelect>
                         </Col>
                     </Form.Row>
                     <Form.Row>
