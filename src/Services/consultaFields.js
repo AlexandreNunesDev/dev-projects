@@ -41,7 +41,7 @@ const farolAnalise = (analise) => {
 export function formatationRules(routeName) {
     switch (routeName) {
         case "analise":
-            return [null, null, null, null, null, null,null,null, farolAnalise]
+            return [null, null, null, null, null, null,null,null,  null,farolAnalise]
         default:
             return [null, null, null, null, null, null, null]
     }
