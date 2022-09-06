@@ -89,7 +89,6 @@ const buildMsg = (type, response, msgType) => {
         case "DeleteAnalise":
             return `Analise ${textByMsgType} com sucesso`
         default:
-
             return 'Dado processado com sucesso'
 
     }

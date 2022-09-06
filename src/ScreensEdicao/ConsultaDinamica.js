@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Button, Col, Container, Form } from "react-bootstrap"
+import { Button, Col, Form } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation, useParams } from "react-router-dom"
 import DynamicFilterMenu from '../Components/DynamicFilterMenu'
@@ -105,8 +105,7 @@ const Consultas = () => {
     }
 
     return (
-
-        <Container style={{position : "relative"}}>
+        <div style={{margin : 4}}>
             <h3>Consulta de {consultaPage}</h3>
             {hasdata && <div> <Form.Row style={{ marginTop: 10 }}>
                 <Form.Group as={Col}>
@@ -128,7 +127,7 @@ const Consultas = () => {
             </Form.Row>
             </div>}
             {hasdata && <Form.Row>
-                <Button onClick={() => loadOps()}>Carregar Dados</Button>
+                <Button style={{marginLeft : 8}} onClick={() => loadOps()}>Carregar Dados</Button>
                 {totalPages > 0 && paginationButtons()}
             </Form.Row>}
             {shouldRenderDynamicMenu() ? <DynamicFilterMenu formatationRules={formatationRules(consultaPage)} ops={ops || []} onActionClick={(obj) => onEditClick(obj)} fieldValues={fieldValues} fieldsToInclude={fields} ></DynamicFilterMenu> :
@@ -139,8 +138,7 @@ const Consultas = () => {
             }
             {totalPages > 0 && paginationButtons()}
 
-
-        </Container>)
+            </div>)
 
 }
 

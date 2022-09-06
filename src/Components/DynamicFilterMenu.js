@@ -55,7 +55,7 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatat
 
 
     return <>
-        <Container style={{ border: "solid", borderColor: "gray", borderWidth: 2, marginBottom: 10, marginTop: 10 }}>
+        <div style={{ border: "solid", borderColor: "gray", borderWidth: 2, marginBottom: 10, marginTop: 10 }}>
             <h4>Filtrar por:</h4>
 
             <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -68,7 +68,7 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatat
                     </div>
                 })}
             </div>
-        </Container>
+        </div>
         <div className="table-responsive">
             <div className="tableFixHead">
 

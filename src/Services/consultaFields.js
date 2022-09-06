@@ -26,7 +26,7 @@ export function getFieldsFromRoute(routeName) {
         case "correcao":
             return ["id", "etapa", "parametro", "processo", "motivo"]
         case "adicao":
-            return ["id","material","etapa","planejado","data","realizadoEm","realizadoPor","adicionado","observacao"]
+            return ["id","material","processo","etapa","planejado","data","realizadoEm","realizadoPor","adicionado","observacao"]
         default:
             return ["volume"]
     }
@@ -160,6 +160,7 @@ let optionsGenerator = {
             updateTotalPages(response.totalPages)
             let opsCopy = response.content.map(cp => {
                 let copy = { ...cp }
+                copy.processo = copy.processoNome
                 copy.material = copy.nomeMp
                 copy.adicionado = `${copy.quantidadeRealizada} ${copy.unidade}`
                 copy.planejado = `${copy.quantidade} ${copy.unidade}`
