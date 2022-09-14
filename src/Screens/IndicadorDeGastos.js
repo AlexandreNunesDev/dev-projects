@@ -72,7 +72,7 @@ const IndicadorDeGastos = () => {
             </Form.Group>
         </Container>
 
-        <Container ref={containerRef}>
+        <Container  ref={containerRef}>
             {chartData && <AdicaoChart chartData={chartData} containerRef={containerRef}></AdicaoChart>}
         </Container>
 

@@ -24,7 +24,7 @@ export function getFieldsFromRoute(routeName) {
         case "analise":
             return ["id", "max", "min", "etapa", "data","parametro", "processo", "valor","analista","observacaoAnalise"]
         case "correcao":
-            return ["id", "etapa", "parametro", "processo", "motivo"]
+            return ["id","processo","etapa","analiseId","motivo","dataAbertura"]
         case "adicao":
             return ["id","material","processo","etapa","planejado","data","realizadoEm","realizadoPor","adicionado","observacao"]
         default:
@@ -32,6 +32,28 @@ export function getFieldsFromRoute(routeName) {
     }
 }
 
+/* private Long id;
+    private String processoNome;
+    private String etapaNome;
+    private String motivo;
+
+    private String responsavel;
+    private boolean statusOCP;
+    private boolean statusCorrecao;
+    private String observacao;
+    private String parametroNome;
+    private String unidade;
+    private Double pMax;
+    private Double pMin;
+    private String dataAbertura;
+
+    private List<AdicaoDTO> adicoesDto;
+
+    private Double volumeEtapa;
+
+    private Long analiseId;
+    private Boolean analiseStatus;
+ */
 
 const farolAnalise = (analise) => {
     return backGroundByAnaliseStatus(analise.statusAnalise)
@@ -51,6 +73,7 @@ export function formatationRules(routeName) {
 export function hasDateFilter(routeName) {
     if (routeName == "analise") return true
     if (routeName == "adicao") return true
+    if (routeName == "correcao") return true
     return false
 }
 
@@ -143,12 +166,12 @@ let optionsGenerator = {
             updateTotalPages(response.totalPages)
             let opsCopy = response.content.map(cp => {
                 let copy = { ...cp }
-                copy.max = cp.pMax
-                copy.min = cp.pMin
-                copy.parametro = cp.processoNome
+                copy.processo = cp.processoNome
                 copy.etapa = cp.etapaNome
-                copy.valor = `${cp.resultado} ${cp.unidade}`
+                copy.min = cp.pMax
+                copy.max = cp.pMin
                 return copy
+                
             })
             return opsCopy
         }
