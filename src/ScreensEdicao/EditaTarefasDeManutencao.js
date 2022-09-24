@@ -12,22 +12,23 @@ import { toastInfo } from '../Services/toastType';
 import context from 'react-bootstrap/esm/AccordionContext';
 import { useDispatch } from 'react-redux';
 import dispatchers from '../mapDispatch/mapDispathToProps';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications/dist/ToastProvider';
 import SaveDeleteButtons from '../Components/SaveDeleteButtons';
 
 const EditarTarefaDeManutencao = (props) => {
 
-
+    const location = useLocation()
     const [processoId, setProcessoId] = useState()
     const [nome, setNome] = useState('')
-
+    const [tarefa, setTarefa] = useState(location.state)
     const [frequencia, setFrequencia] = useState('')
     const [escala, setEscala] = useState()
     const [codigoDoDocumento, setCodigo] = useState('')
-    const [tarefa, setTarefa] = useState()
     const [dataPlenejada, setDataPlanejada] = useState()
     const dispatcher = useDispatch()
+    const [contadorPlanejado, setContadorPlanejado] = useState()
+    const [contadorRealizado, setContadorRealizado] = useState()
     const [processos, setProcessos] = useState()
     const history = useHistory()
     const toastManager = useToasts()
@@ -56,8 +57,8 @@ const EditarTarefaDeManutencao = (props) => {
 
 
     const salvarTarefa = () => {
-        const tarefaManutencao = {id:tarefa.id ,nome: nome, processoId: processoId, dataPlanejada : dataPlenejada, codigoDoDocumento: codigoDoDocumento, escala: escala, frequencia: frequencia }
-        ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,toastManager,"Tarefa",toastInfo,context,[dispatchers().loadTarefasDeManutencao]))
+        const tarefaManutencao = {id:tarefa.id ,nome: nome, processoId: processoId, dataPlanejada : dataPlenejada, codigoDoDocumento: codigoDoDocumento, escala: escala, frequencia: frequencia,contadorPlanejado,contadorRealizado }
+        ScqApi.EditarTarefaDeManutencao(tarefaManutencao).then(res => responseHandler(res,toastManager,"Tarefa",toastInfo))
     
 
     }
@@ -98,9 +99,16 @@ const EditarTarefaDeManutencao = (props) => {
                         <Col sm>
                             <UnidadeSelect selection={escala} type="frequenciaAnalise" title={"Unidade: "} default={"Escolha a escala"} onChange={escala => { setEscala(escala) }} />
                         </Col>
-                        <Col sm >
-                            <Form.Label>Codigo da Instrução: </Form.Label>
-                            <Form.Control type="text" value={codigoDoDocumento} onChange={event => { setCodigo(event.target.value) }} />
+                   
+                    </Form.Row>
+                    <Form.Row style={{ marginBottom: 16 }}>
+                        <Col>
+                            <Form.Label>Contador Planejado : </Form.Label>
+                            <Form.Control type="text" value={contadorPlanejado} onChange={event => setContadorPlanejado(event.target.value)} />
+                        </Col>
+                        <Col>
+                            <Form.Label>Atual Quantiade Contador : </Form.Label>
+                            <Form.Control type="text" value={contadorRealizado} onChange={event => setContadorRealizado(event.target.value)} />
                         </Col>
                     </Form.Row>
                     <SaveDeleteButtons saveClick={salvarTarefa} deleteClick={deletarTarefa}></SaveDeleteButtons>

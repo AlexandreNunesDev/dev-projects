@@ -14,7 +14,7 @@ export function getFieldsFromRoute(routeName) {
         case "troca":
             return ["id", "dataPlanejada", "ultimaTroca", "areaPlanejada", "areaRealizada", "etapa", "processo"]
         case "tarefa":
-            return ["nome", "id", "processo", "dataPlanejada", "dataRealizada"]
+            return ["nome", "id", "processo", "dataPlanejada", "dataRealizada", "areaPlanejada", "areaRealizada"]
         case "contador":
             return ["id", "processo", "valor", "dataInicial", "dataFinal"]
         case "materiaPrima":

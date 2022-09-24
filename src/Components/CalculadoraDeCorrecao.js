@@ -34,7 +34,7 @@ const CalculadoraDeCorrecao = () => {
                 return regraCopy
             })
 
-            dispatch(updadtecorrigirPara(valor))
+            dispatch(updadtecorrigirPara(valor.toFixed(2)))
             dispatch(updadteRegras(regrasToUpdate))
         } else {
             if (+valor > +analiseToSave.pMax) {
@@ -77,7 +77,7 @@ const CalculadoraDeCorrecao = () => {
     const adjustCorrecaoTarget = (valor, index) => {
         let corrigirPara = valor / regras[index].valorUnidade
         corrigirPara += +analiseToSave.resultado
-        multiplyAllUnitFactors(+(corrigirPara).toFixed(2), true)
+        multiplyAllUnitFactors(+(corrigirPara), true)
 
     }
 
@@ -110,7 +110,7 @@ const CalculadoraDeCorrecao = () => {
                                 {regras && regras.map((regra, index) => {
                                     return (<tr key={index}>
                                         <td>{regra.materiaPrima.nome}</td>
-                                        <td><Form.Control type="number" pattern="0.00" value={regra.quantidade} onChange={(event) => adjustCorrecao(event.target.value, index)} onKeyDown={event => event.key == "Enter" && adjustCorrecaoTarget(event.target.value, index)} /></td>
+                                        <td><Form.Control type="number" value={regra.quantidade} onChange={(event) => adjustCorrecao(event.target.value, index)} onKeyDown={event => event.key == "Enter" && adjustCorrecaoTarget(event.target.value, index)} /></td>
                                     </tr>)
                                 })}
                             </tbody>
