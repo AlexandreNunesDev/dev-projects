@@ -44,10 +44,23 @@ const TableBody = (props) => {
 
     const getStatus = (controle) => {
         let { areaRealizada, areaPlanejada } = controle
-        if (areaRealizada > areaPlanejada) return "ATRASADO"
-        if (areaRealizada < areaPlanejada) return "EM DIA"
-        if (areaRealizada == areaPlanejada) return "TROCAR"
+        let { dataPlanejada } = controle
+        let timeHoje = new Date().getTime()
+        let timeProximaTroca = new Date(dataPlanejada).getTime()
+        if (showAsDate) {
+            if (timeHoje > timeProximaTroca) return "ATRASADO"
+            if (timeHoje < timeProximaTroca) return "EM DIA"
+            if (timeHoje == timeProximaTroca) return "TROCAR"
+        } else {
+            if (areaRealizada > areaPlanejada) return "ATRASADO"
+            if (areaRealizada < areaPlanejada) return "EM DIA"
+            if (areaRealizada == areaPlanejada) return "TROCAR"
+        }
     }
+
+
+
+
 
 
     const getStatusColorEscale = (controle) => {
@@ -83,14 +96,21 @@ const TableBody = (props) => {
         let green = 242
         let blue = 70
         let { ultimaTroca, dataPlanejada } = controle
-        let timePassedRealizada = new Date().getTime() - new Date(ultimaTroca).getTime()
-        let timeRange = new Date(dataPlanejada).getTime() -  new Date(ultimaTroca).getTime()
+        let timeHoje = new Date().getTime()
+        let timeUltimaTroca = new Date(ultimaTroca).getTime()
+        let timeProximaTroca = new Date(dataPlanejada).getTime()
+        let timePassedRealizada = timeHoje - timeUltimaTroca
+        let timeRange = timeProximaTroca - timeUltimaTroca
+        let posicaoAtual = timePassedRealizada / timeRange
+        let colorUnit = 344 / timeRange
+        let colorVar = timePassedRealizada * colorUnit / 2
+
+        if (timeHoje >= timeProximaTroca) {
+            red = 242
+            green = green - colorVar <= 70 ? 70 : green - colorVar
+            return `rgb(${red}, ${green}, ${blue})`
+        }
         if (timePassedRealizada && timeRange) {
-            let posicaoAtual = timePassedRealizada / timeRange
-            let colorUnit = 344 / timeRange
-            let colorVar = timePassedRealizada * colorUnit / 2
-
-
             if (posicaoAtual < 0.5) {
                 red = red + colorVar >= 242 ? 242 : red + colorVar
             }
@@ -133,8 +153,8 @@ const TableBody = (props) => {
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
                 <td className="align-middle">{troca.etapaNome}</td>
-                <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div><div>{troca.areaRealizada}</div></td>
-                <td className="align-middle">{showAsDate && <div>{`${FormatDate(dataPlanejada)}`}</div>}<div>{troca.areaPlanejada}</div></td>
+                <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div>{!showAsDate && <div>{troca.areaRealizada}</div>}</td>
+                <td className="align-middle">{showAsDate && <div>{`${FormatDate(dataPlanejada)}`}</div>}{!showAsDate && <div>{troca.areaPlanejada}</div>}</td>
                 {showAsDate && <td className="align-middle"><div>{`A cada ${troca.frequencia} ${troca.frequencia > 1 ? troca.escalaFrequencia + "s" : troca.escalaFrequencia} `}</div></td>}
                 <td className="align-middle" key={troca.id} >
                     {troca.listaMontagens.map((pair, index) => {
@@ -326,11 +346,13 @@ const Trocas = () => {
                     <Button style={{ margin: 10 }} onClick={() => history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
                 </Col>
             </Row>
-            <div className="table-responsive">
-                <Table className="table table-hover" >
-                    <TableHead showAsDate={showAsDate}></TableHead>
-                    <TableBody showAsDate={showAsDate} setTrocaToList={addTrocaIdToChoosedIdList} trocas={trocas} trocasChoosed={trocasChoosed} trocasFiltered={trocasFiltered}></TableBody>
-                </Table>
+            <div className="table-responsive" >
+                <div className="tableFixHead" >
+                    <table className="table table-hover" >
+                        <TableHead showAsDate={showAsDate}></TableHead>
+                        <TableBody showAsDate={showAsDate} setTrocaToList={addTrocaIdToChoosedIdList} trocas={trocas} trocasChoosed={trocasChoosed} trocasFiltered={trocasFiltered}></TableBody>
+                    </table>
+                </div>
             </div>
 
 
