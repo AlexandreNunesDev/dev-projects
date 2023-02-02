@@ -91,6 +91,12 @@ const TableBody = (props) => {
 
     }
 
+    const getColorByEtapaNome = (etapaNome) => {
+        const regEx = /(Enx[áa]gue)|([ÁA]gua)|(La[áa]gem)|([Ff]iltro)/gm 
+        if(!regEx.test(etapaNome))  return "cyan"
+        return null
+    }
+
     const getStatusColorEscaleByDate = (controle) => {
         let red = 70
         let green = 242
@@ -142,6 +148,8 @@ const TableBody = (props) => {
         })
     }
 
+
+
     const trocaTd = trocaToSort.map((troca, index) => {
         let check = props.trocasChoosed.find(trocaChoosed => trocaChoosed.id === troca.id)
         let dataPlanejada = String(troca.dataPlanejada).substr(0, 10)
@@ -149,10 +157,10 @@ const TableBody = (props) => {
 
         return (
 
-            <tr style={{ textAlign: "center" }} key={troca.id}>
+            <tr style={{ textAlign: "center" ,backgroundColor : getColorByEtapaNome(troca.etapaNome) }} key={troca.id}>
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
-                <td className="align-middle">{troca.etapaNome}</td>
+                <td className="align-middle"  >{troca.etapaNome}</td>
                 <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div>{!showAsDate && <div>{troca.areaRealizada}</div>}</td>
                 <td className="align-middle">{showAsDate && <div>{`${FormatDate(dataPlanejada)}`}</div>}{!showAsDate && <div>{troca.areaPlanejada}</div>}</td>
                 {showAsDate && <td className="align-middle"><div>{`A cada ${troca.frequencia} ${troca.frequencia > 1 ? troca.escalaFrequencia + "s" : troca.escalaFrequencia} `}</div></td>}
