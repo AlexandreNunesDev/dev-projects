@@ -93,8 +93,8 @@ const TableBody = (props) => {
 
     const getColorByEtapaNome = (etapaNome) => {
         const regEx = /(Enx[áa]gue)|([ÁA]gua)|(La[áa]gem)|([Ff]iltro)/gm 
-        if(!regEx.test(etapaNome))  return "cyan"
-        return null
+        if(!regEx.test(etapaNome))  return ({ textAlign: "center" ,color : "white" , backgroundColor : "rgb(0, 79, 176)"})
+        return ({ textAlign: "center"})
     }
 
     const getStatusColorEscaleByDate = (controle) => {
@@ -157,7 +157,7 @@ const TableBody = (props) => {
 
         return (
 
-            <tr style={{ textAlign: "center" ,backgroundColor : getColorByEtapaNome(troca.etapaNome) }} key={troca.id}>
+            <tr style={getColorByEtapaNome(troca.etapaNome)} key={troca.id}>
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
                 <td className="align-middle"  >{troca.etapaNome}</td>
