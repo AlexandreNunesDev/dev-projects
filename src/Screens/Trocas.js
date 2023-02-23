@@ -48,13 +48,11 @@ const TableBody = (props) => {
         let timeHoje = new Date().getTime()
         let timeProximaTroca = new Date(dataPlanejada).getTime()
         if (showAsDate) {
-            if (timeHoje > timeProximaTroca) return "ATRASADO"
+            if (timeHoje > timeProximaTroca) return "TROCAR"
             if (timeHoje < timeProximaTroca) return "EM DIA"
-            if (timeHoje == timeProximaTroca) return "TROCAR"
         } else {
-            if (areaRealizada > areaPlanejada) return "ATRASADO"
-            if (areaRealizada < areaPlanejada) return "EM DIA"
-            if (areaRealizada == areaPlanejada) return "TROCAR"
+            if (areaRealizada > areaPlanejada) return "TROCAR"
+            if (areaRealizada <= areaPlanejada) return "EM DIA"
         }
     }
 
@@ -63,7 +61,8 @@ const TableBody = (props) => {
 
 
 
-    const getStatusColorEscale = (controle) => {
+    const getStatusColorEscaleDynamic = (controle) => {
+        //252, 186, 3
         let red = 70
         let green = 242
         let blue = 70
@@ -74,12 +73,14 @@ const TableBody = (props) => {
             let colorVar = areaRealizada * colorUnit / 2
 
 
-            if (posicaoAtual < 0.5) {
-                red = red + colorVar >= 242 ? 242 : red + colorVar
+            if (posicaoAtual < 0.9) {
+                return `rgb(${70}, ${242}, ${70})`
+                //red = red + colorVar >= 242 ? 242 : red + colorVar
             }
-            if (posicaoAtual >= 0.5) {
-                red = 242
-                green = green - colorVar <= 70 ? 70 : green - colorVar
+            if (posicaoAtual >= 0.90) {
+                /*  red = 242
+                 green = green - colorVar <= 70 ? 70 : green - colorVar */
+                return `rgb(${252}, ${186}, ${3})`
             }
             return `rgb(${red}, ${green}, ${blue})`
         } else if (areaRealizada == 0) {
@@ -91,13 +92,34 @@ const TableBody = (props) => {
 
     }
 
-    const getColorByEtapaNome = (etapaNome) => {
-        const regEx = /(Enx[áa]gue)|([ÁA]gua)|(La[áa]gem)|([Ff]iltro)/gm 
-        if(!regEx.test(etapaNome))  return ({ textAlign: "center" ,color : "white" , backgroundColor : "rgb(0, 79, 176)"})
-        return ({ textAlign: "center"})
+
+
+
+
+    const  getStatusColorEscale = (controle) => {
+        let { areaRealizada, areaPlanejada } = controle
+        if (areaRealizada > (areaPlanejada  * 0.9))return `rgb(${252}, ${186}, ${3})`
+        if (areaRealizada < (areaPlanejada  * 0.9)) return `rgb(${70}, ${242}, ${70})`
     }
 
+
     const getStatusColorEscaleByDate = (controle) => {
+        let { dataPlanejada } = controle
+        let timeHoje = new Date().getTime()
+        let timeProximaTroca = new Date(dataPlanejada).getTime()
+        if (timeHoje > (timeProximaTroca * 0.9)) return `rgb(${252}, ${186}, ${3})`
+        if (timeHoje < (timeProximaTroca * 0.9)) return `rgb(${70}, ${242}, ${70})`
+
+
+    }
+
+    const getColorByEtapaNome = (etapaNome) => {
+        const regEx = /(Enx[áa]gue)|([ÁA]gua)|(La[áa]gem)|([Ff]iltro)/gm
+        if (!regEx.test(etapaNome)) return ({ textAlign: "center", color: "white", backgroundColor: "rgb(0, 79, 176)" })
+        return ({ textAlign: "center" })
+    }
+
+    const getStatusColorEscaleByDateDynamic = (controle) => {
         let red = 70
         let green = 242
         let blue = 70
@@ -112,17 +134,19 @@ const TableBody = (props) => {
         let colorVar = timePassedRealizada * colorUnit / 2
 
         if (timeHoje >= timeProximaTroca) {
-            red = 242
-            green = green - colorVar <= 70 ? 70 : green - colorVar
+            /* red = 242
+            green = green - colorVar <= 70 ? 70 : green - colorVar */
             return `rgb(${red}, ${green}, ${blue})`
         }
         if (timePassedRealizada && timeRange) {
-            if (posicaoAtual < 0.5) {
-                red = red + colorVar >= 242 ? 242 : red + colorVar
+            if (posicaoAtual < 0.9) {
+                //red = red + colorVar >= 242 ? 242 : red + colorVar
+                return `rgb(${70}, ${242}, ${70})`
             }
-            if (posicaoAtual >= 0.5) {
-                red = 242
-                green = green - colorVar <= 70 ? 70 : green - colorVar
+            if (posicaoAtual >= 0.9) {
+                /*  red = 242
+                 green = green - colorVar <= 70 ? 70 : green - colorVar */
+                return `rgb(${252}, ${186}, ${3})`
             }
             return `rgb(${red}, ${green}, ${blue})`
         } else if (timePassedRealizada == 0) {
