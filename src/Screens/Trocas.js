@@ -10,7 +10,7 @@ import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
 import { withMenuBar } from "../Hocs/withMenuBar";
 import { setBuildingOmp, setProcessoId, setTrocasFilterType, UpdateTarefasFiltered, UpdateTrocasChoosed, UpdateTrocasFiltered } from "../Reducers/ompReducer";
-
+import {AiOutlineHistory} from 'react-icons/ai'
 
 const TableHead = (props) => {
     let { showAsDate } = props
@@ -40,6 +40,7 @@ const FormatDate = (data) => {
 }
 
 const TableBody = (props) => {
+    const history = useHistory()
     let { showAsDate } = props
 
     const getStatus = (controle) => {
@@ -184,7 +185,7 @@ const TableBody = (props) => {
             <tr style={getColorByEtapaNome(troca.etapaNome)} key={troca.id}>
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
-                <td className="align-middle"  >{troca.etapaNome}</td>
+                <td className="align-middle"  >{troca.etapaNome}<AiOutlineHistory className="delete" onClick={() => history.push("/verHistoricoTrocas", {trocaId : troca.id}) } /></td>
                 <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div>{!showAsDate && <div>{troca.areaRealizada}</div>}</td>
                 <td className="align-middle">{showAsDate && <div>{`${FormatDate(dataPlanejada)}`}</div>}{!showAsDate && <div>{troca.areaPlanejada}</div>}</td>
                 {showAsDate && <td className="align-middle"><div>{`A cada ${troca.frequencia} ${troca.frequencia > 1 ? troca.escalaFrequencia + "s" : troca.escalaFrequencia} `}</div></td>}

@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
-const URL_TEST = "https://scqapi.com/"  /*https://scqapi.com//*/
+const URL_TEST = "http://localhost:8080/"  /*https://localhost:8080//*/
 const URL = "https://scqapi.com/"
 
 const http = axios.create({
@@ -38,7 +38,7 @@ http.interceptors.request.use(async config => {
 
 const ScqApi = {
 
-
+   
     ListaProcessos: () => {
         return http.get("processos")
     },
@@ -446,6 +446,14 @@ const ScqApi = {
     },
     deleteContador: (id) => {
         return http.delete(`/deleteContador/${id}`)
+
+    },
+    listOmpTrocaItens: (trocaId) => {
+        return http.get(`/omp/trocas/${trocaId}`)
+
+    },
+    listOmpTarefaItens: (tarefaId) => {
+        return http.get(`/omp/tarefas/${tarefaId}`)
 
     },
     Auth: (loginForm) => {

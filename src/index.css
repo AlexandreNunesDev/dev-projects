@@ -1,0 +1,8 @@
+.delete {
+    opacity: 0;
+}
+
+.delete:hover {
+    opacity: 1;
+    /* css standard */
+}
