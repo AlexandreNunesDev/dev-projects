@@ -19,6 +19,7 @@ const HistoricoTroca = () => {
 
 
     return <Container>
+        <h3>Historico de Trocas</h3>
         <table>
             <thead>
                 <tr>
@@ -28,6 +29,7 @@ const HistoricoTroca = () => {
                     <th>Contagem Planejada</th>
                     <th>Contagem Realizada</th>
                     <th>Realizado em</th>
+                    <th>Plan/Realiz.</th>
                     <th>Status</th>
 
                 </tr>
@@ -42,6 +44,7 @@ const HistoricoTroca = () => {
                             <th>{troca.contagemPlanejada}</th>
                             <th>{troca.contagemRealizada}</th>
                             <td >{troca.isRealizado && DateAndTime(troca.realizadaEm)}</td>
+                            <td >{`${Number(troca.contagemRealizada/troca.contagemPlanejada).toFixed(2)}%`}</td>
                             <td style={{backgroundColor : !troca.isRealizado ? "RED" : "transparent" }}>{troca.isRealizado ? "Realizado ": "Nao realizado"}</td>
                         </tr>
                     )
