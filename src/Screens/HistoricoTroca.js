@@ -18,6 +18,11 @@ const HistoricoTroca = () => {
     }, [])
 
 
+    const computeEficiency = troca => {
+       return Number((troca.contagemRealizada/troca.contagemPlanejada) * 100).toFixed(2)
+    }
+
+
     return <Container>
         <h3>Historico de Trocas</h3>
         <table>
@@ -44,7 +49,7 @@ const HistoricoTroca = () => {
                             <th>{troca.contagemPlanejada}</th>
                             <th>{troca.contagemRealizada}</th>
                             <td >{troca.isRealizado && DateAndTime(troca.realizadaEm)}</td>
-                            <td >{`${Number(troca.contagemRealizada/troca.contagemPlanejada).toFixed(2)}%`}</td>
+                            <td >{`${computeEficiency(troca)}%`}</td>
                             <td style={{backgroundColor : !troca.isRealizado ? "RED" : "transparent" }}>{troca.isRealizado ? "Realizado ": "Nao realizado"}</td>
                         </tr>
                     )

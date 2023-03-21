@@ -3,8 +3,9 @@ import axios from "axios";
 
 import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
-const URL_TEST = "http://localhost:8080/"  /*https://localhost:8080//*/
+
 const URL = "https://scqapi.com/"
+const URL_TEST =  URL /* "http://localhost:8080/" */  /*https://localhost:8080//*/
 
 const http = axios.create({
     baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
