@@ -27,6 +27,7 @@
     "react-device-detect": "^1.17.0",
     "react-dom": "^16.13.1",
     "react-editable-select": "^1.0.0",
+    "react-export-table-to-excel": "^1.0.6",
     "react-icons": "^4.1.0",
     "react-number-format": "^4.4.1",
     "react-popup": "^0.10.0",

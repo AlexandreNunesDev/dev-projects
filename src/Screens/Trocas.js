@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { sort } from 'mathjs';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -10,7 +10,9 @@ import GenericDropDown from "../Components/GenericDropDown";
 import GenericSelect from "../Components/GenericSelect";
 import { withMenuBar } from "../Hocs/withMenuBar";
 import { setBuildingOmp, setProcessoId, setTrocasFilterType, UpdateTarefasFiltered, UpdateTrocasChoosed, UpdateTrocasFiltered } from "../Reducers/ompReducer";
-import {AiOutlineHistory} from 'react-icons/ai'
+import { AiOutlineHistory } from 'react-icons/ai'
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import { RiFileExcel2Fill } from 'react-icons/ri'
 
 const TableHead = (props) => {
     let { showAsDate } = props
@@ -97,10 +99,10 @@ const TableBody = (props) => {
 
 
 
-    const  getStatusColorEscale = (controle) => {
+    const getStatusColorEscale = (controle) => {
         let { areaRealizada, areaPlanejada } = controle
-        if (areaRealizada > (areaPlanejada  * 0.9))return `rgb(${252}, ${186}, ${3})`
-        if (areaRealizada < (areaPlanejada  * 0.9)) return `rgb(${70}, ${242}, ${70})`
+        if (areaRealizada > (areaPlanejada)) return `rgb(${252}, ${186}, ${3})`
+        if (areaRealizada <= (areaPlanejada)) return `rgb(${70}, ${242}, ${70})`
     }
 
 
@@ -108,8 +110,8 @@ const TableBody = (props) => {
         let { dataPlanejada } = controle
         let timeHoje = new Date().getTime()
         let timeProximaTroca = new Date(dataPlanejada).getTime()
-        if (timeHoje > (timeProximaTroca * 0.9)) return `rgb(${252}, ${186}, ${3})`
-        if (timeHoje < (timeProximaTroca * 0.9)) return `rgb(${70}, ${242}, ${70})`
+        if (timeHoje > (timeProximaTroca)) return `rgb(${252}, ${186}, ${3})`
+        if (timeHoje <= (timeProximaTroca)) return `rgb(${70}, ${242}, ${70})`
 
 
     }
@@ -185,7 +187,7 @@ const TableBody = (props) => {
             <tr style={getColorByEtapaNome(troca.etapaNome)} key={troca.id}>
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
-                <td className="align-middle"  >{troca.etapaNome}<AiOutlineHistory className="delete" onClick={() => history.push("/verHistoricoTrocas", {trocaId : troca.id}) } /></td>
+                <td className="align-middle"  >{troca.etapaNome}<AiOutlineHistory className="delete" onClick={() => history.push("/verHistoricoTrocas", { trocaId: troca.id })} /></td>
                 <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div>{!showAsDate && <div>{troca.areaRealizada}</div>}</td>
                 <td className="align-middle">{showAsDate && <div>{`${FormatDate(dataPlanejada)}`}</div>}{!showAsDate && <div>{troca.areaPlanejada}</div>}</td>
                 {showAsDate && <td className="align-middle"><div>{`A cada ${troca.frequencia} ${troca.frequencia > 1 ? troca.escalaFrequencia + "s" : troca.escalaFrequencia} `}</div></td>}
@@ -195,7 +197,7 @@ const TableBody = (props) => {
                     })}
                 </td>
                 <td className="align-middle" style={{ backgroundColor: showAsDate ? getStatusColorEscaleByDate(troca) : getStatusColorEscale(troca) }}>
-                    <Form.Label style={{ fontWeight: 'bolder' }} >{getStatus(troca)}</Form.Label>
+                    <Form.Label style={{ fontWeight: 'bolder', color: "black" }} >{getStatus(troca)}</Form.Label>
                 </td>
                 <td className="align-middle" >
                     <Form.Check checked={check || false} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
@@ -225,6 +227,7 @@ const Trocas = () => {
     const trocas = useSelector(state => state.options.trocas)
     const toastManager = useToasts()
     const history = useHistory()
+    const tableRef = useRef()
 
 
 
@@ -378,10 +381,22 @@ const Trocas = () => {
                 <Col md="auto">
                     <Button style={{ margin: 10 }} onClick={() => history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
                 </Col>
+                <Col>
+                <DownloadTableExcel
+                filename={`trocas-${filterType}`}
+                sheet="scq"
+                currentTableRef={tableRef.current}
+            >
+
+            <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
+
+            </DownloadTableExcel>
+                </Col>
             </Row>
+            
             <div className="table-responsive" >
                 <div className="tableFixHead" >
-                    <table className="table table-hover" >
+                    <table ref={tableRef} className="table table-hover" >
                         <TableHead showAsDate={showAsDate}></TableHead>
                         <TableBody showAsDate={showAsDate} setTrocaToList={addTrocaIdToChoosedIdList} trocas={trocas} trocasChoosed={trocasChoosed} trocasFiltered={trocasFiltered}></TableBody>
                     </table>

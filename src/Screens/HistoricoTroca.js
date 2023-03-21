@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react"
-import { Container } from "react-bootstrap"
+import { useEffect, useRef, useState } from "react"
+import { Button, Container } from "react-bootstrap"
+import { DownloadTableExcel } from "react-export-table-to-excel"
+import { RiFileExcel2Fill } from "react-icons/ri"
 import { useLocation } from "react-router-dom"
 import { withMenuBar } from "../Hocs/withMenuBar"
 import ScqApi from "../Http/ScqApi"
@@ -10,6 +12,7 @@ const HistoricoTroca = () => {
     const location = useLocation()
     const state = location.state
     const [trocas, setTrocas] = useState([])
+    const tableRef = useRef()
 
     useEffect(() => {
         if (state.trocaId) ScqApi.listOmpTrocaItens(state.trocaId).then(res => {
@@ -25,7 +28,15 @@ const HistoricoTroca = () => {
 
     return <Container>
         <h3>Historico de Trocas</h3>
-        <table>
+        <DownloadTableExcel
+                filename={`historico-troca`}
+                sheet="scq"
+                currentTableRef={tableRef.current}
+            >
+
+            <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
+        </DownloadTableExcel>
+        <table ref={tableRef}>
             <thead>
                 <tr>
                     <th>Id</th>

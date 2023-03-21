@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Form, Table } from "react-bootstrap";
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import { RiFileExcel2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { withToastManager } from "react-toast-notifications";
@@ -82,6 +84,7 @@ const TarefasDeManutencao = (props) => {
     const filterType = useSelector(state => state.omp.tarefasFilterType)
     const processoId = useSelector(state => state.omp.processoId)
     const history = useHistory()
+    const tableRef = useRef()
 
 
 
@@ -173,7 +176,7 @@ const TarefasDeManutencao = (props) => {
             <Container>
                 <Form.Row style={{ padding: 10 }}>
                     <Col>
-                        <Button style={{backgroundColor : buildingOmp && "ORANGE" , borderColor :  buildingOmp && "ORANGE"}} onClick={() => {
+                        <Button style={{ backgroundColor: buildingOmp && "ORANGE", borderColor: buildingOmp && "ORANGE" }} onClick={() => {
                             history.push("CadastroOmp")
                         }} >{buildingOmp ? "Editar OMP" : "Gerar OMP"}</Button>
                     </Col>
@@ -195,11 +198,21 @@ const TarefasDeManutencao = (props) => {
                     <Col md="auto">
                         <Button onClick={() => history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
                     </Col>
+                    <Col>
+                        <DownloadTableExcel
+                            filename={`tarefas-${filterType}`}
+                            sheet="scq"
+                            currentTableRef={tableRef.current}
+                        >
+
+                            <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
+                        </DownloadTableExcel>
+                    </Col>
                 </Form.Row>
 
             </Container>
             <div className="table-responsive">
-                <table >
+                <table ref={tableRef} >
                     <TableHead></TableHead>
                     <TableBody tarefas={tarefas} tarefasChoosed={tarefasChoosed} setTarefaToList={addTarefa} filteredTarefas={filteredTarefas} processoIdTarefaRef={processoId}  ></TableBody>
                 </table>
