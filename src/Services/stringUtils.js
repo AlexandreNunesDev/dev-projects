@@ -33,8 +33,13 @@ export const OnlyDate = (data) => {
   const onlyDate = inverseDate[0].split("-")
   const time = inverseDate[1]
   return `${onlyDate[2] + "-" + onlyDate[1] + "-" + onlyDate[0]}` 
-
 }
+
+export const InverseOnlyDate = (data) => {
+  const onlyDate = data.split("-")
+  return `${onlyDate[2] + "-" + onlyDate[1] + "-" + onlyDate[0]}` 
+}
+
 
 
 

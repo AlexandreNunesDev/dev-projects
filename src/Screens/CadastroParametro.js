@@ -32,6 +32,7 @@ const CadastroParametro = (props) => {
     const [unidade, setUnidade] = useState()
     const [escalaTempo, setEscalaTempo] = useState()
     const [frequenciaAnalise, setFrequenciaAnalise] = useState()
+    const [reporteDiario, setShowReporteDiario] = useState(true)
     const [showChart, setShowChart] = useState(true)
     const [controlado, setControlado] = useState(true)
     const etapasOps = useSelector(state => state.options.etapas)
@@ -51,7 +52,7 @@ const CadastroParametro = (props) => {
 
     const salvarParametro = () => {
         const { toastManager } = props;
-        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise, showChart: showChart, isHabilitado: controlado }
+        const parametro = { etapaId: etapaId, nome, pMax, pMin, formula: formula || "[V]", unidade, pMaxT, pMinT, escala: escalaTempo, frequencia: frequenciaAnalise, showChart: showChart, isHabilitado: controlado ,showReporteDiario : reporteDiario}
         ScqApi.CriarParametro(parametro).then(res => { responseHandler(res, toastManager, "Parametro", toastOk) })
     }
 
@@ -148,6 +149,10 @@ const CadastroParametro = (props) => {
                         <Form.Check style={{ marginRight: 15 }} type="checkbox" id="checkTitula">
                             <Form.Check.Input type="checkbox" checked={showChart} onChange={(event) => setShowChart(event.target.checked)} />
                             <Form.Check.Label>Exibir Gráfico ?</Form.Check.Label>
+                        </Form.Check>
+                        <Form.Check style={{ marginRight: 15 }} type="checkbox" >
+                            <Form.Check.Input type="checkbox" checked={reporteDiario} onChange={(event) => setShowReporteDiario(event.target.checked)} />
+                            <Form.Check.Label>Exibir Reporte Diario ?</Form.Check.Label>
                         </Form.Check>
 
                         <Form.Check style={{ marginRight: 15 }} type="checkbox" id="checkTitula">

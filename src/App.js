@@ -56,6 +56,7 @@ import EditarRegraDeCorrecao from './ScreensEdicao/EditarRegraDeCorrecao';
 import EditarAdicao from './ScreensEdicao/EditarAdicao';
 import EditarAnalise from './ScreensEdicao/EditarAnalise';
 import HistoricoTroca from './Screens/HistoricoTroca';
+import ReporteDiario from './Screens/ReporteDiario';
 
 
 
@@ -169,6 +170,7 @@ class App extends React.Component {
             <Route path='/HistoricoCorrecao' exact={true} component={HistoricoCorrecoes} />
             <Route path='/CadastroDeRegrasDeCorrecao' exact={true} component={CadastroDeRegraDeCorrecao} />
             <Route path='/verHistoricoTrocas' exact={true} component={HistoricoTroca} />
+            <Route path='/ReporteDiario' exact={true} component={ReporteDiario} />
           </Switch>
         </>
 
@@ -209,6 +211,7 @@ class App extends React.Component {
             <Route path='/Consultas/:consultaPage?' exact={true} component={ConsultaDinamica} />
             <Route path='/HistoricoCorrecao' exact={true} component={HistoricoCorrecoes} />
             <Route path='/CadastroDeRegrasDeCorrecao' exact={true} component={HistoricoCorrecoes} />
+            <Route path='/ReporteDiario' exact={true} component={ReporteDiario} />
           </Switch>
         </>
 

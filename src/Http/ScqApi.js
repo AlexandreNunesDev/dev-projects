@@ -5,7 +5,7 @@ import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
 
 const URL = "https://scqapi.com/"
-const URL_TEST =  URL /* "http://localhost:8080/" */  /*https://localhost:8080//*/
+const URL_TEST =  "http://localhost:8080/" /*https://localhost:8080//*/
 
 const http = axios.create({
     baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
@@ -39,6 +39,7 @@ http.interceptors.request.use(async config => {
 
 const ScqApi = {
 
+
    
     ListaProcessos: () => {
         return http.get("processos")
@@ -56,6 +57,10 @@ const ScqApi = {
     },
     LoadAnaliseChart: (dataInicial, dataFinal, parametroId) => {
         return http.get("analise/" + dataInicial + "/" + dataFinal + "/" + parametroId)
+
+    },
+    AnaliseReporte: (dataInicial, dataFinal, processoId) => {
+        return http.get("reporteAnalise/" + dataInicial + "/" + dataFinal + "/" + processoId)
 
     },
     LoadGastosChart: (dataInicial, dataFinal) => {
