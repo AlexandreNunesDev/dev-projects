@@ -18,6 +18,7 @@ const ReporteDiario = () => {
     const [dataFinal, setDataFinal] = useState()
     const [dataRef, setDataRef] = useState()
     const [reporte, setReporte] = useState()
+    
 
 
     const setDataRange = (data) => {
@@ -42,7 +43,7 @@ const ReporteDiario = () => {
     }
 
     const enviarWhatsApp = () => {
-        return reporte && <Button onClick={() => sendWhats()}>Enviar Whats App</Button>
+        return reporte && reporte != "" && <Button onClick={() => sendWhats()}>Enviar Whats App</Button>
     }
 
     const sendWhats = () => {
@@ -68,6 +69,7 @@ const ReporteDiario = () => {
         var regexReplace = new RegExp(" ", "g")
         let finalUrl = baseurl.replace(regexReplace, "%20")
         window.location = finalUrl
+        setReporte("")
     }
 
     return <>
