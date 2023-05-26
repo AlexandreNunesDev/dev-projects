@@ -107,7 +107,7 @@ const OcpsTableBody = (props) => {
     }
 
     const buildStatusButton = (ocp) => {
-        if(!ocp.iniciado) {
+        if(!ocp.iniciado && !ocp.statusOCP) {
             return getIniciarButton(ocp)
         }
         if (!ocp.statusCorrecao) {
