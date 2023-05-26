@@ -44,6 +44,9 @@ const ScqApi = {
     ListaProcessos: () => {
         return http.get("processos")
     },
+    populateRegistroDeAdicao: () => {
+        return http.put("pupulateRegistroDeAdicao")
+    },
     ListaEtapas: () => {
         return http.get("etapas")
     },
@@ -64,7 +67,7 @@ const ScqApi = {
 
     },
     LoadGastosChart: (dataInicial, dataFinal) => {
-        return http.get("materiaPrima/" + dataInicial + "/" + dataFinal)
+        return http.get("registroDeAdicao/" + dataInicial + "/" + dataFinal)
 
     },
     LoadAnaliseHistocial: (dataInicial, dataFinal) => {
@@ -78,6 +81,10 @@ const ScqApi = {
     },
     LoadOcpHistorico: (dataInicial, dataFinal, page, size) => {
         return http.get(`ocpsHistorico?page=${page}&size=${size}`, { params: { dataInicial, dataFinal } })
+
+    },
+    iniciarCorrecao: (id, responsavel) => {
+        return http.put(`ocp/iniciar/${id}/${responsavel}`)
 
     },
     LoadAdicaoHistorico: (dataInicial, dataFinal, page, size) => {

@@ -1,8 +1,11 @@
 
 import { sort } from "mathjs";
-import React, { PureComponent, useEffect, useState } from "react";
+import React, { PureComponent, useEffect, useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, Legend, Tooltip, XAxis, YAxis } from "recharts";
 import CustomChartTooltip from "./CustomChartTooltip";
+import { DownloadTableExcel } from "react-export-table-to-excel";
+import { Button } from "react-bootstrap";
+import { RiFileExcel2Fill } from "react-icons/ri";
 
 //import CustomChartTooltip from "./CustoChartTooltip";
 
@@ -14,6 +17,7 @@ function AdicaoChart({ chartData, containerRef }) {
     const [entries, setEntries] = useState()
     const [displayDetails, setDispalyDetails] = useState([])
     const [processoClicked, setProcessoClicked] = useState([])
+    const referenciaTabela = useRef(null)
 
     const renderLegend = (props) => {
         let customLegend = [{ value: "R$ total Ocp", color: "#2691fc" }, { value: "R$ total omp", color: "#8cf55f" }]
@@ -86,10 +90,17 @@ function AdicaoChart({ chartData, containerRef }) {
 
 
         <h3>Gasto totalizado por Materia Prima {processoClicked}</h3>
+        <DownloadTableExcel
+                filename={`gastos-${processoClicked}`}
+                sheet="scq"
+                currentTableRef={referenciaTabela.current}
+            >
+                <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
+            </DownloadTableExcel>
         <div className="table-responsive">
             <div className="tableFixHead">
 
-                <table>
+                <table ref={referenciaTabela}>
                     <thead>
                         <tr>
                             <th>Etapa</th>
@@ -105,8 +116,8 @@ function AdicaoChart({ chartData, containerRef }) {
                             return <tr key={index}>
                                 <td>{dtails.etapaNome}</td>
                                 <td>{dtails.nomeMateriaPrima}</td>
-                                <td>{dtails.quantidade}</td>
-                                <td>{dtails.gastoTotal}</td>
+                                <td>{Number(dtails.quantidade).toFixed(2)}</td>
+                                <td>{Number(dtails.gastoTotal).toFixed(2)}</td>
                                 <td>{dtails.isOcp ? "Correção" : "Troca"}</td>
                             </tr>
                         })}

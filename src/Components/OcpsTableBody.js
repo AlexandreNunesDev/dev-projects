@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { isMobile } from 'react-device-detect';
 import { connect, useSelector } from "react-redux";
@@ -7,6 +7,8 @@ import dispatchers from "../mapDispatch/mapDispathToProps";
 import mapToStateProps from "../mapStateProps/mapStateToProps";
 import { buildMotivo } from '../Services/ocpService';
 import { DateAndTime } from '../Services/stringUtils';
+import ScqApi from '../Http/ScqApi';
+import SingleTextPicker from './SingleTextPicker';
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -60,6 +62,9 @@ const OcpsTableBody = (props) => {
 
     const history = useHistory()
     const ocpState = useSelector(state => state.ocp)
+    const [showResponsavel,setShowResponsavel ] = useState()
+    const [responsavel,setResponsavel ] = useState()
+    const [targetOcp,setTargetOcp ] = useState()
 
 
     const editOcp = (ocp) => {
@@ -70,16 +75,31 @@ const OcpsTableBody = (props) => {
     }
 
 
+    const iniciarCorrecao = () => {
+        ScqApi.iniciarCorrecao(targetOcp.id,responsavel)
+    }
+
+   const chooseResponsavel = (ocp) => {
+        setTargetOcp(ocp)
+        setShowResponsavel(true)
+   }
+
+
+
+    const getIniciarButton = (ocp) => {
+        return <Button disabled={ocp.statusCorrecao} style={{ alignmentBaseline: "center", backgroundColor: "CYAN", borderColor: "CYAN", color: "BLACK" }} onClick={() => chooseResponsavel(ocp)}>Iniciar</Button>
+    }
+
     const getCorrectionButton = (ocp) => {
-        return <Button disabled={ocp.statusCorrecao} style={{ alignmentBaseline: "center", backgroundColor: "ORANGE", borderColor: "ORANGE", color: "BLACK" }} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button>
+        return <><div><strong>Executor: </strong> <label>{ocp.iniciado && ocp.executor}</label></div><div> <Button disabled={ocp.statusCorrecao} style={{ alignmentBaseline: "center", backgroundColor: "ORANGE", borderColor: "ORANGE", color: "BLACK" }} onClick={() => props.openCorrecaoConfirm(ocp)}>Corrigir</Button></div> </>
     }
 
     const getReanalisebutton = (ocp) => {
-        return <Button disabled={!ocp.analiseStatus} style={{ alignmentBaseline: "center", backgroundColor: "YELLOW", borderColor: "YELLOW", color: "BLACK" }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button>
+        return <><div><strong>Executor: </strong>  <label>{ocp.iniciado && ocp.executor}</label></div><div> <Button disabled={!ocp.analiseStatus} style={{ alignmentBaseline: "center", backgroundColor: "YELLOW", borderColor: "YELLOW", color: "BLACK" }} onClick={() => props.reanalisar(ocp.analiseId, ocp.id)}>Reanalisar</Button></div> </>
     }
 
     const getAproveOcpButton = (ocp) => {
-        return <Button disabled={ocp.statusOCP} style={{ alignmentBaseline: "center", backgroundColor: "GREEN", borderColor: "GREEN" }} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button>
+        return <><div><strong>Executor: </strong>  <label>{ocp.iniciado && ocp.executor}</label></div><div><Button disabled={ocp.statusOCP} style={{ alignmentBaseline: "center", backgroundColor: "GREEN", borderColor: "GREEN" }} onClick={() => props.openCredentialsConfirm(ocp)}>Aprovar</Button></div></>
     }
 
     const getEncerradaOcpButton = () => {
@@ -87,6 +107,9 @@ const OcpsTableBody = (props) => {
     }
 
     const buildStatusButton = (ocp) => {
+        if(!ocp.iniciado) {
+            return getIniciarButton(ocp)
+        }
         if (!ocp.statusCorrecao) {
             return getCorrectionButton(ocp)
         } else if (ocp.analiseStatus) {
@@ -235,6 +258,7 @@ const OcpsTableBody = (props) => {
                 {firstDateLineCounter > 0 && <tr >
                     <td className="align-middle" style={{ textAlign: "center" }} colSpan={11}>{firstDate.toLocaleDateString("pt-br")}</td>
                 </tr>}
+                <SingleTextPicker label={"Responsavel"} closeClick={() => setShowResponsavel(false)} onSaveClick={iniciarCorrecao} fieldVal={responsavel} onFieldUpdate={(val) => setResponsavel(val)} show={showResponsavel} ></SingleTextPicker>
                 {ocpTd}
             </>
         )

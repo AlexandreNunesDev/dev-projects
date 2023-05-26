@@ -13,6 +13,7 @@ import mapStateToProps from "../mapStateProps/mapStateToProps";
 import { responseHandler } from "../Services/responseHandler";
 import { toastOk } from "../Services/toastType";
 import { WebSocketContext } from "../websocket/wsProvider";
+import SingleTextPicker from '../Components/SingleTextPicker';
 
 
 
@@ -161,6 +162,7 @@ class OrdensDeCorreção extends Component {
 
                     </Table>
                 </div>
+                
                 <CredentialConfirm details={this.state.details} aproveOcp={() => this.aprovarOcp()} show={this.state.show} closeCredentialConfirm={(value) => this.setState({ show: value })}  ></CredentialConfirm>
             </>
 

@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button, Container, Form } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { updadteFieldsValues } from "../Reducers/consultaDinamicaReducer"
 import { getFormatedField } from "../Services/consultaFields"
+import { DownloadTableExcel } from "react-export-table-to-excel"
+import { RiFileExcel2Fill } from "react-icons/ri"
 
 
-const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatationRules,fieldValues }) => {
+const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatationRules,fieldValues,consultaPage }) => {
 
 
     const global = useSelector(state => state.global)
@@ -14,6 +16,7 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatat
     const [filteredOps, setFilteredOps] = useState(ops)
     const [headers, setHeaders] = useState()
     const dispatcher =  useDispatch()
+    const referencia = useRef(null)
 
     /** @param {String} objKey */
     const formatedObjKey = (objKey) => {
@@ -69,10 +72,17 @@ const DynamicFilterMenu = ({ ops = [], onActionClick, fieldsToInclude , formatat
                 })}
             </div>
         </div>
+        <DownloadTableExcel
+                filename={`consulta-${consultaPage}`}
+                sheet="scq"
+                currentTableRef={referencia.current}
+            >
+                <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
+            </DownloadTableExcel>
         <div className="table-responsive">
             <div className="tableFixHead">
 
-                {headers && <table >
+                {headers && <table ref={referencia} >
                     <thead  >
                         <tr >
                             {headers.map((objKey, index) => <th style={{ borderWidth: 0}} key={index}>{formatedObjKey(objKey)}</th>)}

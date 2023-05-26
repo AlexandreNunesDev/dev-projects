@@ -33,13 +33,13 @@ const IndicadorDeGastos = () => {
                 appearance: 'error', autoDismiss: true
             })
         } else {
-            if(processoId == ''){
-                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res => setChartData(res))
+            if (processoId == '') {
+                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res =>  setChartData(res))
             } else {
                 ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res => setChartData(res.filter(ompChartDto => ompChartDto.processId == processoId)))
             }
 
-           
+
         }
 
     }
@@ -72,7 +72,7 @@ const IndicadorDeGastos = () => {
             </Form.Group>
         </Container>
 
-        <Container  ref={containerRef}>
+        <Container ref={containerRef}>
             {chartData && <AdicaoChart chartData={chartData} containerRef={containerRef}></AdicaoChart>}
         </Container>
 

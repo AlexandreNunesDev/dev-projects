@@ -77,8 +77,8 @@ export function hasDateFilter(routeName) {
     return false
 }
 
-export function getOpsFromRoute(routeName, options, dataInicial, dataFinal, page, updateTotalPages) {
-    return optionsGenerator[routeName](options, dataInicial, dataFinal, page, updateTotalPages)
+export function getOpsFromRoute(routeName, options, dataInicial, dataFinal, page, updateTotalPages,numeroDeDados) {
+    return optionsGenerator[routeName](options, dataInicial, dataFinal, page, updateTotalPages,numeroDeDados)
 }
 
 
@@ -141,9 +141,9 @@ let optionsGenerator = {
         })
         return opsCopy
     },
-    analise: async function (options, dataInicial, dataFinal, page, updateTotalPages) {
+    analise: async function (options, dataInicial, dataFinal, page, updateTotalPages,numeroDeDados) {
         if (dataInicial && dataFinal) {
-            let response = await ScqApi.LoadHistoricoAnaliseWithPage(dataInicial, dataFinal, page, 15)
+            let response = await ScqApi.LoadHistoricoAnaliseWithPage(dataInicial, dataFinal, page, numeroDeDados)
             updateTotalPages(response.totalPages)
             let opsCopy = response.content.map(cp => {
                 let copy = { ...cp }
@@ -160,9 +160,9 @@ let optionsGenerator = {
         return []
 
     },
-    correcao: async function (options, dataInicial, dataFinal, page, updateTotalPages) {
+    correcao: async function (options, dataInicial, dataFinal, page, updateTotalPages,numeroDeDados) {
         if (dataInicial && dataFinal) {
-            let response = await ScqApi.LoadOcpHistorico(dataInicial, dataFinal, page, 15)
+            let response = await ScqApi.LoadOcpHistorico(dataInicial, dataFinal, page, numeroDeDados)
             updateTotalPages(response.totalPages)
             let opsCopy = response.content.map(cp => {
                 let copy = { ...cp }
@@ -177,9 +177,9 @@ let optionsGenerator = {
         }
         return []
     },
-    adicao: async function (options, dataInicial, dataFinal, page, updateTotalPages) {
+    adicao: async function (options, dataInicial, dataFinal, page, updateTotalPages,numeroDeDados) {
         if (dataInicial && dataFinal) {
-            let response = await ScqApi.LoadAdicaoHistorico(dataInicial, dataFinal, page, 15)
+            let response = await ScqApi.LoadAdicaoHistorico(dataInicial, dataFinal, page, numeroDeDados)
             updateTotalPages(response.totalPages)
             let opsCopy = response.content.map(cp => {
                 let copy = { ...cp }
