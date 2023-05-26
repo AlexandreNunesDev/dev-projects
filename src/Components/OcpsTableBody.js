@@ -107,18 +107,25 @@ const OcpsTableBody = (props) => {
     }
 
     const buildStatusButton = (ocp) => {
+    
         if(!ocp.iniciado && !ocp.statusOCP) {
             return getIniciarButton(ocp)
         }
         if (!ocp.statusCorrecao) {
             return getCorrectionButton(ocp)
-        } else if (ocp.analiseStatus) {
-            return getReanalisebutton(ocp)
-        } else if (!ocp.statusOCP) {
+        } 
+        if (!ocp.statusOCP) {
             return getAproveOcpButton(ocp)
-        } else {
+        } 
+        if(ocp.statusOCP) {
             return getEncerradaOcpButton()
         }
+        if (ocp.analiseStatus) {
+            return getReanalisebutton(ocp)
+        } 
+       
+       
+        
     }
 
     const filterHandler = () => {
