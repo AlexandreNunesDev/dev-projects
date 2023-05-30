@@ -18,6 +18,7 @@ const ReporteDiario = () => {
     const [dataFinal, setDataFinal] = useState()
     const [dataRef, setDataRef] = useState()
     const [reporte, setReporte] = useState()
+    const [progress,setProgress] = useState()
     
 
 
@@ -34,7 +35,10 @@ const ReporteDiario = () => {
 
 
     const carregarReporte = () => {
-        return dataInicial && dataFinal && processo && <Button onClick={() => ScqApi.AnaliseReporte(dataInicial, dataFinal, processo.id).then(res => setReporte(res))}>Carregar Reporte Diario</Button>
+        return dataInicial && dataFinal && processo && <Button onClick={() => {
+            setProgress(true)
+            ScqApi.AnaliseReporte(dataInicial, dataFinal, processo.id).then(res =>  setReporte(res))
+        } }>Carregar Reporte Diario</Button>
     }
 
     const enviarWhatsApp = () => {

@@ -8,6 +8,7 @@ import { formatIsoDate } from "../Services/stringUtils"
 import GenericSelect from "../Components/GenericSelect"
 import { useSelector } from "react-redux"
 import AdicaoChart from "../Components/AdicoesChart"
+import LoadingProgress from "../Components/LoadProgress"
 
 
 const IndicadorDeGastos = () => {
@@ -16,6 +17,7 @@ const IndicadorDeGastos = () => {
     const [dataFinal, setDataFinal] = useState(null)
     const [chartData, setChartData] = useState(null)
     const [processoId, setProcessoId] = useState('')
+    const [progress, setProgress] = useState(false)
     const processos = useSelector(state => state.options.processos)
     const toast = useToasts()
     const containerRef = useRef(null)
@@ -34,9 +36,17 @@ const IndicadorDeGastos = () => {
             })
         } else {
             if (processoId == '') {
-                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res =>  setChartData(res))
+                setProgress(true)
+                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res => {
+                    setProgress(false)
+                    setChartData(res)
+                })
             } else {
-                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res => setChartData(res.filter(ompChartDto => ompChartDto.processId == processoId)))
+                setProgress(true)
+                ScqApi.LoadGastosChart(dataInicial, dataFinal).then(res => {
+                    setProgress(true)
+                    setChartData(res.filter(ompChartDto => ompChartDto.processId == processoId))
+                })
             }
 
 
@@ -71,10 +81,11 @@ const IndicadorDeGastos = () => {
                 <Button style={{ margin: 5 }} variant="primary" onClick={() => loadChart()}>Carregar Grafico</Button>
             </Form.Group>
         </Container>
+        {progress ? <Container style={{textAlign : "center"}}><LoadingProgress></LoadingProgress></Container> :
+            <Container ref={containerRef}>
+                {chartData && <AdicaoChart chartData={chartData} containerRef={containerRef}></AdicaoChart>}
+            </Container>}
 
-        <Container ref={containerRef}>
-            {chartData && <AdicaoChart chartData={chartData} containerRef={containerRef}></AdicaoChart>}
-        </Container>
 
     </>
 
