@@ -24,13 +24,8 @@ const ReporteDiario = () => {
     const setDataRange = (data) => {
         let dataI = new Date(data)
         let dataF = new Date(data)
-        dataI.setHours(0)
-        dataI.setMinutes(0)
-        dataI.setSeconds(0)
-
-        dataF.setHours(23)
-        dataF.setMinutes(59)
-        dataF.setSeconds(59)
+        dataI.setUTCHours(0,0,0)
+        dataF.setUTCHours(23,59,59)
         setDataFinal(dataF.toISOString())
         setDataInicial(dataI.toISOString())
         setDataRef(data)
