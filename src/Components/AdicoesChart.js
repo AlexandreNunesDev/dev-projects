@@ -17,10 +17,12 @@ function AdicaoChart({ chartData, containerRef }) {
 
     const [entries, setEntries] = useState()
     const [displayDetails, setDispalyDetails] = useState([])
-    const [processoClicked, setProcessoClicked] = useState([])
+    const [processoClicked, setProcessoClicked] = useState(null)
+    const [displayTable, setDispalyTable] = useState(false)
     const [somaContagemView, setSomaContagemProcessoView] = useState()
     const [periodo, setPeriodo] = useState()
     const referenciaTabela = useRef(null)
+    const totalizadoTabela = useRef(null)
 
     const periodoDia = 86400000
 
@@ -36,6 +38,10 @@ function AdicaoChart({ chartData, containerRef }) {
                 }
             </ul>
         );
+    }
+
+    const onCarregarPeriodo = () => {
+
     }
 
     const getFormatedLabel = (processoNome) => {
@@ -55,10 +61,12 @@ function AdicaoChart({ chartData, containerRef }) {
             return -1
         })
         for (const adicaoChartDto of sorted) {
+           
             let data = {
                 "processoNome": adicaoChartDto.processoNome,
                 "totalGastosOcp": adicaoChartDto.totalGastosOcp,
                 "totalGastosOmp": adicaoChartDto.totalGastosOmp,
+                "custoPorContador":gastoPorContador(adicaoChartDto) ,
                 "adicaoDetails": adicaoChartDto.adicaoDetails,
 
             }
@@ -74,8 +82,13 @@ function AdicaoChart({ chartData, containerRef }) {
         setSomaContagemProcessoView(somacustocontagem.toFixed(4))
     }, [displayDetails])
 
-    
 
+    const gastoPorContador = (adicaoChartDto) => {
+        let gastoTotal = 0.0
+        adicaoChartDto.adicaoDetails.forEach((dtails) => gastoTotal += +dtails.contagemTotal)
+        let gastoPorContador = ((Number(adicaoChartDto.totalGastosOcp) + Number(adicaoChartDto.totalGastosOmp)) / Number(gastoTotal)).toFixed(4)
+        return gastoPorContador
+    }
 
 
     return <>
@@ -98,39 +111,46 @@ function AdicaoChart({ chartData, containerRef }) {
             <Bar fill="#8cf55f" stackId={"1"} dataKey="totalGastosOmp" >
             </Bar>
         </BarChart>
-        <div style={{ marginTop: 24 }}>
+     
+        <>   <DownloadTableExcel
+            filename={`gastos-totalizados`}
+            sheet="scq"
+            currentTableRef={totalizadoTabela.current}>
+            <Button variant="success"> Exportar Dados Grafico <RiFileExcel2Fill /> </Button>
+        </DownloadTableExcel> 
+        <table ref={totalizadoTabela}>
+            <thead>
+                <tr>
+                    <th>Processo</th>
+                    <th>Gasto Troca</th>
+                    <th>Gastos Correcao</th>
+                    <th>Gasto por contador</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {entries && entries.map((entrie, index) => {
+                    let gastoPorCont = +gastoPorContador(entrie)
+                    if(!Number.isFinite(gastoPorCont) || Number.isNaN(gastoPorCont)) gastoPorCont = 0
+                    return <tr key={index}>
+                        <td>{entrie.processoNome}</td>
+                        <td>R${Number(entrie.totalGastosOmp).toFixed(2)}</td>
+                        <td>R${Number(entrie.totalGastosOcp).toFixed(2)}</td>
+                        <td>R${gastoPorCont}</td>
+                    </tr>
+                })}
+            </tbody>
+        </table></>
+       {processoClicked && <div style={{ marginTop: 24 }}>
 
 
             <h3>Gasto totalizado por Materia Prima {processoClicked}</h3>
             <DownloadTableExcel
                 filename={`gastos-${processoClicked}`}
                 sheet="scq"
-                currentTableRef={referenciaTabela.current}
-            >
-                <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
+                currentTableRef={referenciaTabela.current}>
+                <Button variant="success"> Exportar gastos Materia Prima <RiFileExcel2Fill /> </Button>
             </DownloadTableExcel>
-
-            <Form.Group>
-
-
-                <Form.Label bold>Explodir por periodo</Form.Label>
-                <InputGroup>
-
-                    <Form.Control type="text" ></Form.Control>
-                    <Dropdown onChange={(event) => setPeriodo(event.target.value)}>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Periodo
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item>Diario</Dropdown.Item>
-                            <Dropdown.Item>Semanal</Dropdown.Item>
-                            <Dropdown.Item>Mensal</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Button onCarregarPeriodo>Carregar</Button>
-                </InputGroup>
-            </Form.Group>
-
             <div>
                 <strong>Global custo/contagem: </strong><label>R$ {somaContagemView}</label>
             </div>
@@ -164,7 +184,7 @@ function AdicaoChart({ chartData, containerRef }) {
                     </table>
                 </div>
             </div>
-        </div>
+        </div> }
 
 
     </>
