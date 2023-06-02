@@ -17,16 +17,17 @@ const ReporteDiario = () => {
     const [dataInicial, setDataInicial] = useState()
     const [dataFinal, setDataFinal] = useState()
     const [dataRef, setDataRef] = useState()
-    const [reporte, setReporte] = useState()
-    const [progress,setProgress] = useState()
-    
+    const [textReporte, setTextReporte] = useState('')
+    const [textAreaLength, setTextAreaLength] = useState(3)
+
+
 
 
     const setDataRange = (data) => {
         let dataI = new Date(data)
         let dataF = new Date(data)
-        dataI.setUTCHours(0,0,0)
-        dataF.setUTCHours(23,59,59)
+        dataI.setUTCHours(0, 0, 0)
+        dataF.setUTCHours(23, 59, 59)
         setDataFinal(dataF.toISOString())
         setDataInicial(dataI.toISOString())
         setDataRef(data)
@@ -36,48 +37,79 @@ const ReporteDiario = () => {
 
     const carregarReporte = () => {
         return dataInicial && dataFinal && processo && <Button onClick={() => {
-            setProgress(true)
-            ScqApi.AnaliseReporte(dataInicial, dataFinal, processo.id).then(res =>  setReporte(res))
-        } }>Carregar Reporte Diario</Button>
+            ScqApi.AnaliseReporte(dataInicial, dataFinal, processo.id).then(res => {
+                setTextAreaLength(res.data.length)
+                buildTextAndUrl(res)
+            })
+        }}>Carregar Reporte Diario</Button>
     }
 
     const enviarWhatsApp = () => {
-        return reporte && reporte != "" && <Button onClick={() => sendWhats()}>Enviar Whats App</Button>
+        return textReporte && textReporte != '' && <Button onClick={() => sendWhats()}>Enviar Whats App</Button>
     }
+
 
     const sendWhats = () => {
-        let baseurl = `https://api.whatsapp.com/send?text=Segue relatorio linha ${reporte.processoNome}`;
-        baseurl = baseurl.concat("%0A")
-        baseurl = baseurl.concat(`Dia: ${InverseOnlyDate(reporte.data)}`)
-        baseurl = baseurl.concat("%0A")
-        baseurl = baseurl.concat("%0A")
+        let textoFinal = ''
+        let url = "https://api.whatsapp.com/send?text="
+
+        var breakLineRegEx = new RegExp("\n", "g")
+        var spaceRegEx = new RegExp("\s", "g")
+        textoFinal = textReporte.replace(breakLineRegEx, "%0A")
+        textoFinal = textoFinal.replace(spaceRegEx, "%20")
+        url = url + textoFinal
+        window.location = url
+    }
+    const buildTextAndUrl = (reporte) => {
+
+        let message = `Segue relatorio linha ${reporte.processoNome}`;
+        message = message.concat("\n")
+        message = message.concat(`Dia: ${InverseOnlyDate(reporte.data)}`)
+        message = message.concat("\n")
+        message = message.concat("\n")
+        let shouldRender = false
         reporte.etapas.forEach(etapaReporte => {
-            baseurl = baseurl.concat(`*Etapa: ${etapaReporte.etapaNome}*%0A`)
-            etapaReporte.resultados.forEach(result => {
-                if(result.show) {
-                    let encodedUnit = encodeURIComponent(result.unidade)
-                    baseurl = baseurl.concat(` ${result.parametro}: ${result.resultado} ${encodedUnit} ${result.status}`)
-                    baseurl = baseurl.concat("%0A")
-                }
-                   
-            
-            })
-            baseurl = baseurl.concat("%0A")
+            if (etapaReporte.resultados.length > 0) {
+                message = message.concat(`*Etapa: ${etapaReporte.etapaNome}*\n`)
+                etapaReporte.resultados.forEach(result => {
+                    shouldRender = result.show
+                    if (result.show && result.status != "OK") {
+                        let encodedUnit = encodeURIComponent(result.unidade)
+                        message = message.concat(` ${result.parametro}: ${result.resultado} ${encodedUnit} ${result.status}`)
+                        message = message.concat("\n")
+                    }
+
+
+                })
+            }
+            if (shouldRender) message = message.concat("\n")
+
 
         })
-        var regexReplace = new RegExp(" ", "g")
-        let finalUrl = baseurl.replace(regexReplace, "%20")
-        window.location = finalUrl
-        setReporte("")
+
+        setTextReporte(message)
     }
+
+
+
 
     return <>
         <Container style={{ marginTop: 20 }}>
-            <GenericSelect title={"Processo"} onChange={(processo) => setProcesso(processo)} ></GenericSelect>
+            <GenericSelect title={"Processo"} onChange={(processo) => {
+                setTextReporte('')
+                setProcesso(processo)
+            }} ></GenericSelect>
             <Form.Group>
                 <Form.Label>Escolha a data:</Form.Label>
-                <Form.Control type="date" value={dataRef} onChange={(event) => setDataRange(event.target.value)}></Form.Control>
+                <Form.Control type="date" value={dataRef} onChange={(event) => {
+                    setTextReporte('')
+                    setDataRange(event.target.value)
+                }}></Form.Control>
             </Form.Group>
+            {textReporte && <Form.Group>
+                <Form.Label>Reporte:</Form.Label>
+                <Form.Control as="textarea" rows={12} value={textReporte || ''} onChange={(event) => setTextReporte(event.target.value)}></Form.Control>
+            </Form.Group>}
             {carregarReporte()}
             {enviarWhatsApp()}
         </Container>

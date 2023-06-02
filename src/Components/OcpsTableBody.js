@@ -111,6 +111,9 @@ const OcpsTableBody = (props) => {
         if(!ocp.iniciado && !ocp.statusOCP) {
             return getIniciarButton(ocp)
         }
+        if (ocp.statusCorrecao && ocp.analiseStatus) {
+            return getReanalisebutton(ocp)
+        } 
         if (!ocp.statusCorrecao) {
             return getCorrectionButton(ocp)
         } 
@@ -120,9 +123,7 @@ const OcpsTableBody = (props) => {
         if(ocp.statusOCP) {
             return getEncerradaOcpButton()
         }
-        if (ocp.analiseStatus) {
-            return getReanalisebutton(ocp)
-        } 
+       
        
        
         
