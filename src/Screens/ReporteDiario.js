@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import GenericSelect from "../Components/GenericSelect";
@@ -18,6 +18,7 @@ const ReporteDiario = () => {
     const [dataFinal, setDataFinal] = useState()
     const [dataRef, setDataRef] = useState()
     const [textReporte, setTextReporte] = useState('')
+    const [mostrarParametrosOk, setMostrarParametrosOk] = useState(false)
     const [textAreaLength, setTextAreaLength] = useState(3)
 
 
@@ -35,12 +36,19 @@ const ReporteDiario = () => {
     }
 
 
+    useEffect(() =>  dataInicial && dataFinal && processo && fetchReportDiario(),[mostrarParametrosOk])
+
+    const fetchReportDiario = () => {
+        ScqApi.AnaliseReporte(dataInicial, dataFinal, processo.id).then(res => {
+            setTextAreaLength(res.data.length)
+            buildTextAndUrl(res)
+        })
+    }
+
+
     const carregarReporte = () => {
         return dataInicial && dataFinal && processo && <Button onClick={() => {
-            ScqApi.AnaliseReporte(dataInicial, dataFinal, processo.id).then(res => {
-                setTextAreaLength(res.data.length)
-                buildTextAndUrl(res)
-            })
+            fetchReportDiario()
         }}>Carregar Reporte Diario</Button>
     }
 
@@ -67,22 +75,27 @@ const ReporteDiario = () => {
         message = message.concat(`Dia: ${InverseOnlyDate(reporte.data)}`)
         message = message.concat("\n")
         message = message.concat("\n")
-        let shouldRender = false
         reporte.etapas.forEach(etapaReporte => {
             if (etapaReporte.resultados.length > 0) {
                 message = message.concat(`*Etapa: ${etapaReporte.etapaNome}*\n`)
                 etapaReporte.resultados.forEach(result => {
-                    shouldRender = result.show
-                    if (result.show && result.status != "OK") {
-                        let encodedUnit = encodeURIComponent(result.unidade)
-                        message = message.concat(` ${result.parametro}: ${result.resultado} ${encodedUnit} ${result.status}`)
-                        message = message.concat("\n")
+                    if (!mostrarParametrosOk) {
+                        if (result.show && result.status != "OK") {
+                            message = message.concat(` ${result.parametro}: ${result.resultado} ${result.unidade} ${result.status}`)
+                            message = message.concat("\n")
+                        }
+                    } else {
+                        if (result.show) {
+                            message = message.concat(` ${result.parametro}: ${result.resultado} ${result.unidade} ${result.status}`)
+                            message = message.concat("\n")
+                        }
                     }
+
 
 
                 })
             }
-            if (shouldRender) message = message.concat("\n")
+            message = message.concat("\n")
 
 
         })
@@ -105,6 +118,14 @@ const ReporteDiario = () => {
                     setTextReporte('')
                     setDataRange(event.target.value)
                 }}></Form.Control>
+            </Form.Group>
+            <Form.Group>
+                <Form.Check label={"Mostrar parametros OK?"} checked={mostrarParametrosOk} onChange={(event) => {
+
+                    setMostrarParametrosOk(event.target.checked)
+
+
+                }}></Form.Check>
             </Form.Group>
             {textReporte && <Form.Group>
                 <Form.Label>Reporte:</Form.Label>

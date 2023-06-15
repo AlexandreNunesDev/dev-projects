@@ -38,7 +38,6 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/Home">Home</Link>
                 <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
                 <NavDropdown title="Registros" id="basic-nav-dropdown">
-                  <Link className="nav-link" to="/ReporteDiario">Reporte diario</Link>
                   <Link className="nav-link" to="/RegistroAnaliseMulti">Registro de Analise</Link>
                   <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
                   <Link className="nav-link" to="/RegistroDeContador">Registro de contador</Link>
@@ -64,7 +63,8 @@ const MenuBar = () => {
                 </NavDropdown>
 
                 <NavDropdown title="Indicadores" id="basic-nav-dropdown">
-
+                  <Link className="nav-link" to="/StatusScq">Status SCQ</Link>
+                  <Link className="nav-link" to="/ReporteDiario">Reporte diario</Link>
                   <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                   <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>
                   <Link className="nav-link" to="/IndicadorDeGastos">Indicador de Gastos</Link>
@@ -106,7 +106,6 @@ const MenuBar = () => {
               <Link className="nav-link" to="/Home">Home</Link>
               <Link className="nav-link" to={!global.isAuth ? "/Login" : "/Home"} onClick={() => global.isAuth && logUserOut()}>{!global.isAuth ? "Login" : "Logout"}</Link>
               <NavDropdown title="Registros" id="basic-nav-dropdown">
-                <Link className="nav-link" to="/ReporteDiario">Reporte diario</Link>
                 <Link className="nav-link" to="/RegistroAnaliseMulti">Registro de Analise</Link>
                 <Link className="nav-link" to="/RegistroTempo">Registro de Tempo</Link>
                 <Link className="nav-link" to="/RegistroDeContador">Registro de contador</Link>
@@ -131,6 +130,7 @@ const MenuBar = () => {
                 <Link className="nav-link" to="/Consultas/correcao">Correcoes</Link>
               </NavDropdown>
               <NavDropdown title="Indicadores" id="basic-nav-dropdown">
+                <Link className="nav-link" to="/StatusScq">Status SCQ</Link>
                 <Link className="nav-link" to="/ReporteDiario">Reporte diario</Link>
                 <Link className="nav-link" to="/IndicadorDeAnalise">Indicador de Analises</Link>
                 <Link className="nav-link" to="/IndicadorDeOmp">Indicador de Omp</Link>

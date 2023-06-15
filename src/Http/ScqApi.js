@@ -5,7 +5,7 @@ import { statusResponseHandler } from "../Services/statusService";
 import { store } from "../store";
 
 const URL = "https://scqapi.com/"
-const URL_TEST =  "https://scqapi.com/" /*https://localhost:8080//*/
+const URL_TEST =  "http://localhost:8080" /*https://localhost:8080//*/
 
 const http = axios.create({
     baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
@@ -41,6 +41,12 @@ const ScqApi = {
 
 
    
+    parametroStatus: () => {
+        return http.get("global/parametroStatus")
+    },
+    trocaStatus: () => {
+        return http.get("global/trocaStatus")
+    },
     ListaProcessos: () => {
         return http.get("processos")
     },
