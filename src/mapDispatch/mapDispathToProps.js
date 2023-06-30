@@ -43,7 +43,6 @@ const dispatchers = (dispatch) => {
         setSingleAnalise : (data) => dispatch({type : "analise/updateAnaliseToSave", payload : data}),
         setAnaliseProcessoId: () => dispatch(actions.setProcessoIdAnaliseForm),
 
-       
     }
 };
 
