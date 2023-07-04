@@ -14,6 +14,7 @@ import { clear, updateAdicoes } from '../Reducers/adicaoReducer';
 import { responseHandler } from '../Services/responseHandler';
 import { toastOk } from '../Services/toastType';
 import { WebSocketContext } from '../websocket/wsProvider';
+import { formatIsoDate } from '../Services/stringUtils';
 
 
 
@@ -38,6 +39,9 @@ const CadastroOcpLivre = (props) => {
     const [etapasOpts, setEtapas] = useState()
     const [processoId, setProcessoId] = useState()
     const [etapa, setEtapa] = useState()
+    const [showData, setShowData] = useState()
+    const [data, setData] = useState()
+    
     const adicoes = useSelector(state => state.adicaoForm.adicoes)
     const { toastManager } = props
     let unidade = ""
@@ -45,8 +49,8 @@ const CadastroOcpLivre = (props) => {
 
 
     useEffect(() => {
-        
-       if(processoId) setEtapas(etapas.filter(etapa => etapa.processoId == processoId))
+
+        if (processoId) setEtapas(etapas.filter(etapa => etapa.processoId == processoId))
     }, [processoId])
 
 
@@ -63,7 +67,7 @@ const CadastroOcpLivre = (props) => {
 
 
     const saveOcp = () => {
-        let ocp = { parametroId: null, responsavel: responsavel, observacao: observacao, analiseId: null, etapaId: etapa.id, adicoes: adicoes }
+        let ocp = { parametroId: null, responsavel: responsavel, observacao: observacao, analiseId: null, etapaId: etapa.id, adicoes: adicoes, data :data }
         ScqApi.CriarOcp(ocp).then((res) => {
             responseHandler(res, toastManager, "OrdemDeCorrecao", toastOk)
         }
@@ -88,13 +92,26 @@ const CadastroOcpLivre = (props) => {
                         <h1>Cadastro de Ordem de Correção</h1>
                         <Form style={{ marginTop: 20 }}>
                             <Form.Row>
+                                <Col style={{ marginBottom: 10 }}>
+                                    <Form.Check type="checkbox" label="Selecionar Data?" onChange={(event) => setShowData(event.target.checked)} />
+                                    <Form.Group hidden={!showData}>
+                                        <Form.Label>Data: </Form.Label>
+                                        <Form.Control
+                                            type="datetime-local"
+                                            defaultValue={data}
+                                            onChange={event => setData(formatIsoDate(event.target.value))}>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                            </Form.Row>
+                            <Form.Row>
                                 <Form.Group as={Col}>
                                     <GenericSelect title={"Processo"} returnType={"id"} default={"Escolha um Processo"} ops={processos} onChange={(value) => setProcessoId(value)} selection={processoId}></GenericSelect>
                                 </Form.Group>
                             </Form.Row>
                             <Form.Row>
                                 <Form.Group as={Col}>
-                                    <GenericSelect title={"Etapa"}  filter={processoId} filterField={"processoId"}  default={"Escolha uma Etapa"} ops={etapasOpts} onChange={(value) => setEtapa(value)} selection={etapa?.id}></GenericSelect>
+                                    <GenericSelect title={"Etapa"} filter={processoId} filterField={"processoId"} default={"Escolha uma Etapa"} ops={etapasOpts} onChange={(value) => setEtapa(value)} selection={etapa?.id}></GenericSelect>
                                 </Form.Group>
                             </Form.Row>
 

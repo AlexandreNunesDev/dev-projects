@@ -94,7 +94,7 @@ const ScqApi = {
 
     },
     LoadAdicaoHistorico: (dataInicial, dataFinal, page, size) => {
-        return http.get(`adicoesHistorico?page=${page}&size=${size}`, { params: { dataInicial, dataFinal } })
+        return http.get(`consultaRegistroDeAdicao?page=${page}&size=${size}`, { params: { dataInicial, dataFinal } })
 
     },
 
