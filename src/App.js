@@ -177,7 +177,7 @@ class App extends React.Component {
         </>
 
       )
-    } else if (this.props.global.userRole === "USER_ROLE") {
+    } else if (this.props.global.userRole === "USE_ROLE") {
       return (
 
         <>
@@ -187,32 +187,21 @@ class App extends React.Component {
             <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />
-            <Route path='/Registrar' exact={true} component={Registrar} />
-            <Route path='/RegistroAnalise' exact={true} component={RegistroAnalise} />
-            <Route path='/RegistroAnaliseMulti' exact={true} component={MultiRegistroAnalise} />
-            <Route path='/RegistroTempo' exact={true} component={RegistroDetempos} />
             <Route path='/OrdensDeCorrecao' exact={true} component={OrdensDeCorreção} />
             <Route path='/Trocas' exact={true} component={Trocas} />
             <Route path='/IndicadorDeAnalise' exact={true} component={IndicadorDeAnalise} />
             <Route path='/IndicadorDeOmp' exact={true} component={IndicadorDeOmp} />
-            <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp } />
-            <Route path='/CadastroOcpLivre' exact={true} component={CadastroOcpLivre} />
-            <Route path='/CadastroOmp' exact={true} component={CadastroOmp} />
             <Route path='/OrdensDeManutencao' exact={true} component={OrdensDeManutencao} />
             <Route path='/FinalizarOmp' exact={true} component={FinalizarOmp} />
             <Route path='/VerOmp' exact={true} component={VerOmp} />
-            <Route path='/EditarOmp' exact={true} component={EditaTarefasDeManutencao} />
-            <Route path='/EditarOcp' exact={true} component={EditarOcpAdicao} />
             <Route path='/TarefasDeManutencao' exact={true} component={TarefasDeManutencao} />
             <Route path='/ConfirmYourMail' exact={true} component={ConfirmMailPage} />
             <Route path='/algoDeuErrado' exact={true} component={AlgoDeuErrado} />
             <Route path='/ServidorError' exact={true} component={ServidorError} />
-            <Route path='/RegistroDeContador' exact={true} component={RegistroContador} />
             <Route path='/CorrecaoConfirm' exact={true} component={CorrecaoConfirm} />
             <Route path='/Analises' exact={true} component={Analises} />
             <Route path='/Consultas/:consultaPage?' exact={true} component={ConsultaDinamica} />
             <Route path='/HistoricoCorrecao' exact={true} component={HistoricoCorrecoes} />
-            <Route path='/CadastroDeRegrasDeCorrecao' exact={true} component={HistoricoCorrecoes} />
             <Route path='/ReporteDiario' exact={true} component={ReporteDiario} />
             <Route path='/StatusScq' exact={true} component={StatusSCQ} />
           </Switch>

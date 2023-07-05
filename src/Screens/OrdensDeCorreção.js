@@ -14,21 +14,24 @@ import { responseHandler } from "../Services/responseHandler";
 import { toastOk } from "../Services/toastType";
 import { WebSocketContext } from "../websocket/wsProvider";
 import SingleTextPicker from '../Components/SingleTextPicker';
+import useIsAdmin from '../hooks/useIsAdmin';
 
 
 
 
 const TableHead = (props) => {
+    const isAdmin = useIsAdmin()
+
     return (
         <thead >
             <tr>
                 <th style={{ textAlign: "center" }}>Id</th>
-                <th style={{ textAlign: "center" }}>Acao</th>
+                {isAdmin && <th style={{ textAlign: "center" }}>Acao</th>}
                 <th style={{ textAlign: "center" }}>Processo</th>
                 <th style={{ textAlign: "center" }}>Etapa</th>
                 <th style={{ textAlign: "center" }}>Motivo</th>
                 <th style={{ textAlign: "center" }}>Correção</th>
-                <th style={{ textAlign: "center" }}>Status</th>
+                {isAdmin && <th style={{ textAlign: "center" }}>Status</th>}
             </tr>
         </thead>
 

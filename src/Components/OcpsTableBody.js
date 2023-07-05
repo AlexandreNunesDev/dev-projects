@@ -9,6 +9,7 @@ import { buildMotivo } from '../Services/ocpService';
 import { DateAndTime } from '../Services/stringUtils';
 import ScqApi from '../Http/ScqApi';
 import SingleTextPicker from './SingleTextPicker';
+import useIsAdmin from '../hooks/useIsAdmin';
 
 
 const isSameDate = (actualDate, refDate) => {
@@ -35,7 +36,7 @@ const buildAdicaoDetails = (ocp) => {
                     <div className="text-nowrap"><strong>Qtd. Planejada: </strong>{`${adicao.quantidade} ${adicao.unidade} ${adicao.nomeMp}`}</div>
                     <div className="text-nowrap"><strong>Qtd. Realizado: </strong>{`${adicao.quantidadeRealizada} ${adicao.unidade} ${adicao.nomeMp}`}</div>
                     <div><strong>Responsavel: </strong> {adicao.realizadoPor}</div>
-                    <div><strong>Realizado em: </strong> {adicao.realizadoEm == " " ? adicao.realizadoEm  : DateAndTime(adicao.realizadoEm)}</div>
+                    <div><strong>Realizado em: </strong> {adicao.realizadoEm == " " ? adicao.realizadoEm : DateAndTime(adicao.realizadoEm)}</div>
                     <div className="text-nowrap"><strong>Observacao: </strong> {adicao.observacao ? adicao.observacao : ""}</div>
                 </div>
             </li>
@@ -62,9 +63,10 @@ const OcpsTableBody = (props) => {
 
     const history = useHistory()
     const ocpState = useSelector(state => state.ocp)
-    const [showResponsavel,setShowResponsavel ] = useState()
-    const [responsavel,setResponsavel ] = useState()
-    const [targetOcp,setTargetOcp ] = useState()
+    const [showResponsavel, setShowResponsavel] = useState()
+    const [responsavel, setResponsavel] = useState()
+    const [targetOcp, setTargetOcp] = useState()
+    const isAdmin = useIsAdmin()
 
 
     const editOcp = (ocp) => {
@@ -76,13 +78,13 @@ const OcpsTableBody = (props) => {
 
 
     const iniciarCorrecao = () => {
-        ScqApi.iniciarCorrecao(targetOcp.id,responsavel)
+        ScqApi.iniciarCorrecao(targetOcp.id, responsavel)
     }
 
-   const chooseResponsavel = (ocp) => {
+    const chooseResponsavel = (ocp) => {
         setTargetOcp(ocp)
         setShowResponsavel(true)
-   }
+    }
 
 
 
@@ -107,26 +109,26 @@ const OcpsTableBody = (props) => {
     }
 
     const buildStatusButton = (ocp) => {
-    
-        if(!ocp.iniciado && !ocp.statusOCP) {
+
+        if (!ocp.iniciado && !ocp.statusOCP) {
             return getIniciarButton(ocp)
         }
         if (ocp.statusCorrecao && ocp.analiseStatus) {
             return getReanalisebutton(ocp)
-        } 
+        }
         if (!ocp.statusCorrecao) {
             return getCorrectionButton(ocp)
-        } 
+        }
         if (!ocp.statusOCP) {
             return getAproveOcpButton(ocp)
-        } 
-        if(ocp.statusOCP) {
+        }
+        if (ocp.statusOCP) {
             return getEncerradaOcpButton()
         }
-       
-       
-       
-        
+
+
+
+
     }
 
     const filterHandler = () => {
@@ -222,12 +224,12 @@ const OcpsTableBody = (props) => {
 
                 <tr key={ocp.id}>
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                    <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>
+                    {isAdmin && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
                     <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                     <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome}`}</td>
                     <td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>
                     <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
-                    <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
+                    {isAdmin && <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>}
                 </tr>
             )
         } else {
@@ -239,12 +241,12 @@ const OcpsTableBody = (props) => {
                     </tr>
                     <tr>
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.id}</td>
-                        <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>
+                        {isAdmin && <td className="align-middle" style={{ textAlign: "center" }}><Button size={20} onClick={() => editOcp(ocp)}>Editar</Button></td>}
                         <td className="align-middle" style={{ textAlign: "center" }}>{ocp.processoNome}</td>
                         <td className="align-middle" style={{ textAlign: "center" }}>{`${ocp.etapaNome}`}</td>
                         <td className="align-middle" style={{ textAlign: "center" }}>{buildMotivo(ocp.motivo)}</td>
                         <td className="align-middle">{buildAdicaoDetails(ocp)}</td>
-                        <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>
+                        {isAdmin && <td className="align-middle" style={{ textAlign: "center" }} key={buttonKey}>{buildStatusButton(ocp)}</td>}
                     </tr>
                 </Fragment>
             )

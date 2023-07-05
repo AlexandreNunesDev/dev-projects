@@ -13,8 +13,11 @@ import { setBuildingOmp, setProcessoId, setTrocasFilterType, UpdateTarefasFilter
 import { AiOutlineHistory } from 'react-icons/ai'
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 import { RiFileExcel2Fill } from 'react-icons/ri'
+import useIsAdmin from '../hooks/useIsAdmin';
 
 const TableHead = (props) => {
+
+    const isAdmin = useIsAdmin()
     let { showAsDate } = props
     return (
 
@@ -28,7 +31,7 @@ const TableHead = (props) => {
                 {showAsDate && <th>Frenquencia</th>}
                 <th>Produtos</th>
                 <th>Status</th>
-                <th>Selecionar</th>
+                {isAdmin && <th>Selecionar</th>}
             </tr>
         </thead>
 
@@ -42,6 +45,7 @@ const FormatDate = (data) => {
 }
 
 const TableBody = (props) => {
+    const isAdmin = useIsAdmin()
     const history = useHistory()
     let { showAsDate } = props
 
@@ -199,10 +203,10 @@ const TableBody = (props) => {
                 <td className="align-middle" style={{ backgroundColor: showAsDate ? getStatusColorEscaleByDate(troca) : getStatusColorEscale(troca) }}>
                     <Form.Label style={{ fontWeight: 'bolder', color: "black" }} >{getStatus(troca)}</Form.Label>
                 </td>
-                <td className="align-middle" >
+                 {isAdmin && <td className="align-middle" >
                     <Form.Check checked={check || false} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
                     <Form.Label>Trocar ?</Form.Label>
-                </td>
+                </td> }
             </tr >
         )
     })
@@ -228,7 +232,7 @@ const Trocas = () => {
     const toastManager = useToasts()
     const history = useHistory()
     const tableRef = useRef()
-
+    const isAdmin = useIsAdmin()
 
 
     useEffect(() => {
@@ -352,11 +356,11 @@ const Trocas = () => {
 
             <Row className="align-items-center">
 
-                <Col md="auto">
+                {isAdmin && <Col md="auto">
                     <Button disabled={trocasChoosed.length !== 0 ? false : true} style={{ margin: 10, backgroundColor: buildingOmp && "ORANGE", borderColor: buildingOmp && "ORANGE" }} onClick={() => {
                         startEditing()
                     }}>{buildingOmp ? "Editar OMP" : "Gerar OMP"}</Button>
-                </Col>
+                </Col> }
 
                 <Col hidden={buildingOmp} style={{ paddingTop: 20 }} md="auto">
                     <GenericSelect noLabel={true} default={"--Selecione um Processo--"} selection={processoId} onChange={(processoId) => dispatch(setProcessoId(processoId.id))} title={"Processo"} displayType={"nome"} ></GenericSelect>
@@ -382,18 +386,18 @@ const Trocas = () => {
                     <Button style={{ margin: 10 }} onClick={() => history.push("/OrdensDeManutencao")}>Ver Ordens</Button>
                 </Col>
                 <Col>
-                <DownloadTableExcel
-                filename={`trocas-${filterType}`}
-                sheet="scq"
-                currentTableRef={tableRef.current}
-            >
+                    <DownloadTableExcel
+                        filename={`trocas-${filterType}`}
+                        sheet="scq"
+                        currentTableRef={tableRef.current}
+                    >
 
-            <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
+                        <Button variant="success"> Exportar <RiFileExcel2Fill /> </Button>
 
-            </DownloadTableExcel>
+                    </DownloadTableExcel>
                 </Col>
             </Row>
-            
+
             <div className="table-responsive" >
                 <div className="tableFixHead" >
                     <table ref={tableRef} className="table table-hover" >

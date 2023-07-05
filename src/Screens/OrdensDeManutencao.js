@@ -17,9 +17,12 @@ import { responseHandler } from "../Services/responseHandler";
 import { toastWarn } from "../Services/toastType";
 import { WebSocketContext } from "../websocket/wsProvider";
 import { setOmpToView, setProcessoId, UpdateFilteredOmps } from "../Reducers/ompReducer";
+import useIsAdmin from "../hooks/useIsAdmin";
 
 
 const TableHead = () => {
+
+    const isAdmin = useIsAdmin()
     return (
 
         <thead >
@@ -31,7 +34,7 @@ const TableHead = () => {
                 <th>Data Planejada</th>
                 <th>Emitido por</th>
                 <th>Status</th>
-                <th>Encerrar</th>
+                {isAdmin && <th>Encerrar</th>}
             </tr>
         </thead>
 
@@ -45,6 +48,7 @@ const FormatDate = (data) => {
 }
 
 const buttonLayout = (props, omp, statusToken) => {
+
     if (isMobile) {
         return (
             <>
@@ -90,6 +94,9 @@ const buttonLayout = (props, omp, statusToken) => {
 
 const TableBody = props => {
 
+
+    const isAdmin = useIsAdmin()
+
     const ompTd = props.omps.map((omp, index) => {
 
         let dataPlanejada = String(omp.dataPlanejada).substr(0, 10)
@@ -109,9 +116,9 @@ const TableBody = props => {
                 <td className="align-middle">
                     <Form.Label style={{ color: statusToken[1], fontWeight: 'bolder' }} >{statusToken[0]}</Form.Label>
                 </td>
-                <td className="align-middle" >
+                {isAdmin && <td className="align-middle" >
                     {buttonLayout(props, omp, statusToken)}
-                </td>
+                </td>}
             </tr>
         )
     })
