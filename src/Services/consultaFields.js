@@ -26,7 +26,7 @@ export function getFieldsFromRoute(routeName) {
         case "correcao":
             return ["id","processo","etapa","analiseId","motivo","dataAbertura"]
         case "adicao":
-            return ["id","material","processo","etapa","planejado","data","realizadoEm","realizadoPor","adicionado","observacao"]
+            return ["id","processo","etapa","responsavel","é troca" ,"quantidade","materiaPrima" ,"tipo"]
         default:
             return ["volume"]
     }
@@ -181,12 +181,11 @@ let optionsGenerator = {
         if (dataInicial && dataFinal) {
             let response = await ScqApi.LoadAdicaoHistorico(dataInicial, dataFinal, page, numeroDeDados)
             updateTotalPages(response.totalPages)
-            let opsCopy = response.content.map(cp => {
+            let opsCopy = response.map(cp => {
                 let copy = { ...cp }
-                copy.processo = copy.processoNome
-                copy.material = copy.nomeMp
-                copy.adicionado = `${copy.quantidadeRealizada} ${copy.unidade}`
-                copy.planejado = `${copy.quantidade} ${copy.unidade}`
+                copy.processo = cp.processoNome
+                copy.etapa = cp.etapaNome
+                copy.tipo = cp.isOmp ? "Troca" : "Correcao"
                 return copy
             })
             return opsCopy
