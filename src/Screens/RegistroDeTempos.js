@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import GenericSelect from "../Components/GenericSelect"
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { actions } from "../actions/actions"
+
 import { withMenuBar } from "../Hocs/withMenuBar"
 import { timefieldFactory } from "../models/fieldModels"
 import CheckoutAnalise from "../Components/CheckoutAnalise"
@@ -13,6 +13,7 @@ import dispatchers from "../mapDispatch/mapDispathToProps"
 import { withToastManager } from "react-toast-notifications/dist/ToastProvider"
 import { toastOk } from "../Services/toastType"
 import { updateAnaliseToSave } from "../Reducers/analiseReducer"
+import { loadFieldtime, timeProcessoId, updateFieldTime } from "../Reducers/timeReducers"
 
 const { Form, Row, Button, Container, Col, Table } = require("react-bootstrap")
 
@@ -59,14 +60,14 @@ const RegistroDetempos = (props) => {
         }
         tField.isMeasuring = true
 
-        dispatcher(actions.updateTimeField(tField))
+        dispatcher(updateFieldTime(tField))
     }
 
     const setFinalTime = (timeField) => {
         let tField = { ...timeField }
         tField.isMeasuring = false
         tField.finalTime = timeTick
-        dispatcher(actions.updateTimeField(tField))
+        dispatcher(updateFieldTime(tField))
     }
 
 
@@ -91,8 +92,8 @@ const RegistroDetempos = (props) => {
                 return true
             }
         }).map((parametro, index) => timefieldFactory(index + 1, parametro.etapaNome, null, null, parametro.id, false, false))
-        dispatcher(actions.loadFieldTime([cicloTimefield, ...timeFields]))
-        dispatcher(actions.setTimeProcessId(processoId))
+        dispatcher(loadFieldtime([cicloTimefield, ...timeFields]))
+        dispatcher(timeProcessoId(processoId))
 
     }
 
@@ -140,7 +141,7 @@ const RegistroDetempos = (props) => {
     }
 
     const resetClick = (index, timeField) => {
-        dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))
+        dispatcher(updateFieldTime(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))
     }
 
     const getAnaliseStatus = (resultado, parametro) => {
@@ -186,7 +187,7 @@ const RegistroDetempos = (props) => {
             <Container style={{ marginTop: 20 }}>
 
                 <Row>
-                    <GenericSelect title={"Escolha um processo"} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
+                    <GenericSelect title={"Escolha um processo"} selection={timeForm.processoId} ops={processos} returnType={"id"} displayType={"nome"} onChange={(processoId) => onProcessoIdChoose(processoId)} ></GenericSelect>
                 </Row>
                 <Row>
                     <Form.Group>
@@ -240,7 +241,7 @@ const RegistroDetempos = (props) => {
                                                 <td className="align-middle"><Form.Label>{timeField.label}</Form.Label></td>
                                                 <td className="align-middle"><Form.Control value={timeField.isMeasuring ? `${(timeTick.getTime() / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos` : `${(new Date(timeField.finalTime) / 1000).toFixed(0) - (new Date(timeField.initialTime).getTime() / 1000).toFixed(0)} segundos`}></Form.Control></td>
                                                 <td className="align-middle">{timeField.isMeasuring ? <Button style={{ backgroundColor: "ORANGE", borderColor: "ORANGE", alignmentBaseline: "center" }} onClick={() => startStopMeasureProcess(timeField, false)}>Parar</Button> : <Button style={{ borderColor: intervaloProcesso ? "BLUE" : "BLUE" }} onClick={() => startStopMeasureProcess(timeField, true)}>Iniciar</Button>}</td>
-                                                <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(actions.updateTimeField(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
+                                                <td className="align-middle"><Button style={{ backgroundColor: "RED", borderColor: "RED", alignmentBaseline: "center" }} onClick={() => dispatcher(updateFieldTime(timefieldFactory(index, timeField.label, null, null, timeField.parametroId, false)))}>Resetar</Button></td>
                                                 <td className="align-middle"><Button disabled={isFinished(timeField) ? false : true} style={{ backgroundColor: "GREEN", borderColor: "GREEN", alignmentBaseline: "center" }} onClick={() => onTimeSaveClick(timeField,index)}>Salvar</Button></td>
                                             </tr>
                                         )

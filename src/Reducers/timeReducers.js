@@ -1,32 +1,26 @@
-import produce from "immer"
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     processoId: null,
     timeFields: []
 }
+const timeReducer = createSlice({
+    name: 'timeReducer',
+    initialState,
+    reducers: {
+        updateFieldTime(state, action) {
+            const index = state.timeFields.findIndex(fieldTime => Number(fieldTime.index) === Number(action.payload.index))
+            if (index !== -1) state.timeFields[index] = action.payload
+        },
+        loadFieldtime(state, action) {
+            state.timeFields = action.payload
+        },
+        timeProcessoId(state, action) {
+            state.processoId = action.payload
+        },
 
-const loadState = () => {
-    return initialState;
-}
+    },
+})
 
-
-const timeReducer = produce(
-    (draft, action) => {
-        switch (action.type) {
-
-            case "UPDADTE_FIELDTIME":
-                const index = draft.timeFields.findIndex(fieldTime => Number(fieldTime.index) === Number(action.payload.index))
-                if (index !== -1) draft.timeFields[index] = action.payload
-                break
-            case "LOAD_FIELDTIME":
-                draft.timeFields = action.payload
-                break
-            case "TIME_PROCESSO_ID":
-                draft.processoId = action.payload
-                break
-        }
-        return
-    }, loadState()
-
-)
-export default timeReducer;
+export const { updateFieldTime, loadFieldtime, timeProcessoId } = timeReducer.actions
+export default timeReducer.reducer
