@@ -26,7 +26,7 @@ export function getFieldsFromRoute(routeName) {
         case "correcao":
             return ["id","processo","etapa","analiseId","motivo","dataAbertura"]
         case "adicao":
-            return ["id","processo","etapa","responsavel","é troca" ,"quantidade","materiaPrima" ,"tipo"]
+            return ["id","processo","etapa","responsavel","data" ,"quantidade","materiaPrima" ,"tipo"]
         default:
             return ["volume"]
     }
