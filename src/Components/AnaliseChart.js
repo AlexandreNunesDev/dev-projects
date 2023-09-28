@@ -59,7 +59,7 @@ const AnaliseChart = (props) => {
       let dataFormatada = moment(dataTime[0]).format("DD-MM-yy")
 
       let data = {
-        "id": props.data.analisesId[i], "analista": props.data.analistas[i], "data": `${dataFormatada} - ${dataTime[1]}`, "resultado": resultado[1].toFixed(2), "unidade": props.data.unidade,
+        "id": props.data.analisesId[i], "analista": props.data.analistas[i], "data": `${dataFormatada} - ${dataTime[1]}`, "resultado": Number(resultado[1]).toFixed(2), "unidade": props.data.unidade,
         "defaultData": resultado[0], "processoId": props.data.processoId, "etapaId": props.data.etapaId,
         "parametroId": props.data.parametroId, "observacoesAnalise": props.data.observacoesAnalise[i], "observacoesOcp": props.data.observacoesOcp[i]
       }
