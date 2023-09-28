@@ -54,7 +54,7 @@ const AnaliseChart = (props) => {
   useEffect(() => {
     const resultados = []
     let i = 0;
-    for (const resultado of Object.entries(props.data.resultados)) {
+    for (const resultado of props.data.resultados) {
       let dataTime = resultado[0].split("T")
       let dataFormatada = moment(dataTime[0]).format("DD-MM-yy")
 
