@@ -149,7 +149,7 @@ const CadastroOmp = (props) => {
             <Container style={{ marginTop: 20 }}>
 
                 <Row>
-                    {trocas.length !== 0 ? <h2>{`Ordem de Manutençao de Processo - ${trocasChoosed[0]?.processoNome}`}</h2> :
+                    {trocas.length !== 0 ? <h2>{`Ordem de Manutençao de Processo - ${trocasChoosed[0]?.processoNome || tarefasChoosed[0]?.processoNome}`}</h2> :
                         <h2>Ordem de Manutençao de Processo</h2>}
 
                 </Row>
