@@ -7,9 +7,6 @@ import LoadingProgress from "../Components/LoadProgress"
 import { withMenuBar } from '../Hocs/withMenuBar'
 import { clear, updadteFieldsValues, updateActualConsultaPage, updateDataFinal, updateDataInicial, updateFields, updateFilteredOps, updateNumeroDeDados, updateOps, updatePage, updateTotalPages } from "../Reducers/consultaDinamicaReducer"
 import { formatationRules, getFieldsFromRoute, getOpsFromRoute, hasDateFilter } from "../Services/consultaFields"
-import GenericSelect from "../Components/GenericSelect"
-import { DownloadTableExcel } from "react-export-table-to-excel"
-import { RiFileExcel2Fill } from "react-icons/ri"
 
 const Consultas = () => {
 
@@ -57,14 +54,16 @@ const Consultas = () => {
     }, [consultaPage, options])
 
     useEffect(() => {
-        loadOps()
+       if(historicoPage) loadOps()
     }, [historicoPage])
 
 
-    const loadOps = () => {
+
+
+    const loadOps = (nextPage) => {
         let fields = getFieldsFromRoute(consultaPage)
         dispatcher(updateFields(fields))
-        getOpsFromRoute(consultaPage, location.state?.options || options, dataInicial, dataFinal, historicoPage, setTotalPages, numeroDeDados).then(res => {
+        getOpsFromRoute(consultaPage, location.state?.options || options, dataInicial, dataFinal, nextPage || historicoPage, setTotalPages, numeroDeDados).then(res => {
             dispatcher(updateOps(res))
             dispatcher(updateFilteredOps(res))
         })
@@ -133,7 +132,10 @@ const Consultas = () => {
             </div>}
             <Form.Group>
                 <Form.Label>Numero de dados</Form.Label>
-                <Form.Control value={numeroDeDados} onChange={event => dispatcher(updateNumeroDeDados(event.target.value))}></Form.Control>
+                <Form.Control  value={numeroDeDados} onChange={event => {
+                    if(event.target.value > 100) dispatcher(updateNumeroDeDados(100))
+                    else  dispatcher(updateNumeroDeDados(event.target.value))
+            }}></Form.Control>
             </Form.Group>
             {hasdata && <Form.Row>
                 <Button style={{ marginLeft: 8 }} onClick={() => loadOps()}>Carregar Dados</Button>

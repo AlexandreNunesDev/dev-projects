@@ -19,7 +19,7 @@ const dispatchers = (dispatch) => {
         loadOcpView: data => dispatch(actions.loadOcpsView(data)) ,
         showOcpView: data => dispatch(actions.setOcpView(data)) ,
         loadPosition : (data) => dispatch({type: 'LOAD_POSITIONS' , payload : data}),
-        addProcesso : (data) => dispatch({type: 'ADD_PROCESSO' , payload : data}),
+        addProcesso : (payload) => dispatch({type: 'ADD_PROCESSO' , payload : payload}),
         addEtapa : (data) => dispatch({type: 'ADD_ETAPA' , payload : data}),
         addOcp : (data) => dispatch({type: 'ADD_OCP' , payload : data}),
         aproveOcp : (data) => dispatch(actions.aproveOcp(data)),

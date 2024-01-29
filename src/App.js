@@ -88,7 +88,7 @@ class App extends React.Component {
 
   initiate()  {
     reloadState()
-    if ((isAuthenticated(this.props.global.tokenInfo)) && (isTokenExpired(this.props.global.tokenExpiration))) {
+    if ((this.props?.global?.tokenInfo) && (isAuthenticated(this.props.global?.tokenInfo)) && (isTokenExpired(this.props.global.tokenExpiration))) {
           logout()
           this.props.setLogOut()
           this.props.history.push("/VoceFoiDesconectado")
