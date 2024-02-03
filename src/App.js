@@ -98,9 +98,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.initiate()
-    this.reloadStore = setInterval(() => {
-      optionsLoad(this.props,true)
-    },600000)
+    optionsLoad(this.props,true)
  
     }
 
