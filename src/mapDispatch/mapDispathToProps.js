@@ -4,7 +4,7 @@ import ScqApi from "../Http/ScqApi";
 const dispatchers = (dispatch) => {
     return {
         loading : (data) => dispatch({type: 'IS_LOADING' , payload : data}),
-        firstReload : (data) => dispatch({type: 'FIRST_RELOAD' , payload : data}),
+        firstReload : (data) => dispatch({type: 'globalConfig/firstReload' , payload : data}),
         loadProcessos: () => ScqApi.ListaProcessos().then(data =>  dispatch(actions.loadProcessos(data))),
         loadEtapas: () => ScqApi.ListaEtapas().then(data => dispatch(actions.loadEtapas(data))),
         loadParametros: () => ScqApi.ListaParametros().then(data => dispatch(actions.loadParametros(data))),

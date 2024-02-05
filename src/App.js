@@ -67,47 +67,44 @@ import StatusSCQ from './Screens/StatusSCQ';
 
 
 class App extends React.Component {
-  
+
   static contextType = WebSocketContext
   constructor(props) {
 
-   
+
     super(props)
 
     this.state = {
       notificacoes: [],
       user: {},
-     
-  
+
+
     }
 
   }
-  
 
 
 
-  initiate()  {
-    reloadState()
+
+  initiate() {
     if ((this.props?.global?.tokenInfo) && (isAuthenticated(this.props.global?.tokenInfo)) && (isTokenExpired(this.props.global.tokenExpiration))) {
-          logout()
-          this.props.setLogOut()
-          this.props.history.push("/VoceFoiDesconectado")
+      logout()
+      this.props.setLogOut()
+      this.props.history.push("/VoceFoiDesconectado")
     }
-}
+  }
 
 
   componentDidMount() {
     this.initiate()
-     optionsLoad(this.props,true)
+    optionsLoad(this.props, true)
+  }
 
- 
-    }
 
-   
-  
-    componentWillUnmount () {
-      clearInterval(this.reloadStore)
-    }
+
+  componentWillUnmount() {
+    clearInterval(this.reloadStore)
+  }
 
 
 
@@ -119,9 +116,9 @@ class App extends React.Component {
     if (this.props.global.userRole === "ADMIN_ROLE") {
       return (
         <>
-       
+
           <Switch>
-            <Route path='/' exact={true} component={Home}/> 
+            <Route path='/' exact={true} component={Home} />
             <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />
@@ -138,7 +135,7 @@ class App extends React.Component {
             <Route path='/CadastroEtapa' exact={true} component={CadastroEtapa} />
             <Route path='/CadastroParametro' exact={true} component={CadastroParametroNovo} />
             <Route path='/CadastroMateriaPrima' exact={true} component={CadastroMateriaPrima} />
-            <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp } />
+            <Route path='/CadastroOcp' exact={true} component={CadastroDeOcp} />
             <Route path='/CadastroOcpLivre' exact={true} component={CadastroOcpLivre} />
             <Route path='/CadastroTroca' exact={true} component={CadastroTroca} />
             <Route path='/CadastroTarefasDeManutencao' exact={true} component={CadastroDeTarefasDeManutencao} />
@@ -182,7 +179,7 @@ class App extends React.Component {
         <>
 
           <Switch>
-          <Route path='/' exact={true} component={Home}/> 
+            <Route path='/' exact={true} component={Home} />
             <Route path='/VoceFoiDesconectado' exact={true} component={VoceFoiDesconectado} />
             <Route path='/Home' exact={true} component={Home} />
             <Route path='/Login' exact={true} component={Login} />

@@ -24,6 +24,9 @@ const globalConfig = createSlice({
     loadPositions(state, action) {
       state.loadedOptions.push(action.payload)
     },
+    firstReload(state, action) {
+      state.firstReload = action.payload
+    },
     logIn(state, action) {
         state.isAuth = true
         state.tokenInfo = action.payload.token
@@ -46,5 +49,5 @@ const globalConfig = createSlice({
   },
 })
 
-export const { loadPositions,logIn,logOut, setIsConnectedSocket } = globalConfig.actions
+export const { loadPositions,logIn,logOut,firstReload, setIsConnectedSocket } = globalConfig.actions
 export default globalConfig.reducer
