@@ -98,7 +98,8 @@ class App extends React.Component {
 
   componentDidMount() {
     this.initiate()
-    optionsLoad(this.props,true)
+     optionsLoad(this.props,true)
+
  
     }
 

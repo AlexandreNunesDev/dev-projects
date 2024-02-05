@@ -4,17 +4,27 @@ export const optionsLoad = async (props, forceUpdade) => {
   if ((props.global.isAuth) && (!isTokenExpired(props.global.tokenExpiration))) {
     if (forceUpdade) {
       props.firstReload(false)
-      loadOcps(props)
-      loadProcessos(props)
-      loadEtapas(props)
-      loadParametros(props)
-      loadMateriasPrima(props)
-      loadTrocas(props)
-      loadTarefas(props)
-      loadUnidades(props)
-      loadTurnos(props)
-      loadOmps(props)
-      loadAnaliseFields(props)
+      props.loadOcps().then(a => {
+        props.loadProcessos().then(b => {
+          props.loadEtapas().then(c => {
+            props.loadParametros().then(d => {
+              props.loadMateriasPrima(e => {
+                props.loadTrocas().then(f => {
+                  props.loadTarefasDeManutencao().then(g => {
+                    props.loadUnidades().then(h => {
+                      props.loadTurnos().then(i => {
+                        props.loadOmps().then(j => {
+                          props.loadAnaliseFields()
+                        })
+                      })
+                    })
+                  })
+                })
+              })
+            })
+          })
+        })
+      })
     }
 
   }
