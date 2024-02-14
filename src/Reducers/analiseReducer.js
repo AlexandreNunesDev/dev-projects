@@ -84,6 +84,11 @@ const analiseReducer = createSlice({
         updateFilterdAnaliseHistorico(state,action) {
             state.filteredAnaliseHistorico = action.payload
         },
+        updateAnaliseField(state,action) {
+            let analiseField = action.payload
+            let indexToUpdate = state.analiseFields.findIndex(af => af.parametroId == analiseField.parametroId)
+            state.analiseFields[indexToUpdate] = analiseField
+        },
         clear(state) {
             state.analises = []
             state.filteredAnalises = []
@@ -107,5 +112,5 @@ const analiseReducer = createSlice({
     },
 })
 
-export const {updateFilterdAnaliseHistorico,updateFrequencia,updateOrdensToView,updateAnaliseToGenerateOcp,updateTotalPages,updatePage,updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields, clear } = analiseReducer.actions
+export const {updateFilterdAnaliseHistorico,updateFrequencia,updateOrdensToView,updateAnaliseToGenerateOcp,updateTotalPages,updatePage,updateFilteredAnalises,updateFiltroProcesso,updateFiltroEtapa,updateFiltroParametro, updateHistoricoDataInicial, updateHistoricoDataFinal, updateAnalises, updateProcessoId, updadteEtapaNome, updateTurno, updateParametroNome, updateAnaliseToSave, updateAnaliseFields,updateAnaliseField, clear } = analiseReducer.actions
 export default analiseReducer.reducer

@@ -14,7 +14,7 @@ import { createSlice } from '@reduxjs/toolkit'
     googlKey : 'AIzaSyAwUkhGE3_YB8cT4706OKT-xi3RpvnL014',
     portalSheetApi : 'https://sheets.googleapis.com/v4/spreadsheets/1_RVYwW2QaWfaq3Ib-SOs6jo9qbGEbqh01rHRBrS2ewY/values',
     headers : [],
-    isConectedSocket : null
+    isConectedSocket : null,
 }
 
 const globalConfig = createSlice({
@@ -26,6 +26,9 @@ const globalConfig = createSlice({
     },
     firstReload(state, action) {
       state.firstReload = action.payload
+    },
+    setSocket(state, action) {
+      state.socket = action.payload
     },
     logIn(state, action) {
         state.isAuth = true
@@ -49,5 +52,5 @@ const globalConfig = createSlice({
   },
 })
 
-export const { loadPositions,logIn,logOut,firstReload, setIsConnectedSocket } = globalConfig.actions
+export const { loadPositions,logIn,logOut,firstReload, setIsConnectedSocket,setSocket } = globalConfig.actions
 export default globalConfig.reducer

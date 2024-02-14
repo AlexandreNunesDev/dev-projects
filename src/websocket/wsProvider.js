@@ -18,56 +18,48 @@ export { WebSocketContext }
 export default ({ children }) => {
     let socket;
     let ws;
-  
-    const dispatch =  useDispatch()
+
+    const dispatch = useDispatch()
     const global = useSelector(state => state.global)
-    const history = useHistory()
 
 
 
 
-    const sendMessage = (clickedReducerFunction,action,route) => {
-        const message = clickedReducerFunction == null ? {type : 'action' , action : action,route : route } :  {type: 'function',functions : clickedReducerFunction, route : route}
-   
-     
+    const sendMessage = (clickedReducerFunction, action, route) => {
+        const message = clickedReducerFunction == null ? { type: 'action', action: action, route: route } : { type: 'function', functions: clickedReducerFunction, route: route }
+
+
         socket.publish({
             destination: '/app/dispatcher',
             body: JSON.stringify(message),
             headers: { priority: '9' },
-          });
-          
+        });
+
     }
 
 
 
 
     const onConnect = () => {
-        console.log("Sincronizado com servidor")
-        dispatch(setIsConnectedSocket(true))
-        
-   
-       
-        socket.subscribe("/reducer/return", (message) => {
+        if (global.isConectedSocket == null) {
+            dispatch(setIsConnectedSocket(true))
+            socket.subscribe("/reducer/return", (message) => {
                 const bodyMsg = JSON.parse(message.body)
-                if(bodyMsg.type === 'action'){
+                if (bodyMsg.type === 'action') {
                     const actionObj = bodyMsg.action
                     dispatch(actionObj)
-                  
                 } else {
-                    const functionsName =  bodyMsg.functions
-                    functionsName.forEach(functionName => dispatchers(dispatch)[functionName]() )
+                    const functionsName = bodyMsg.functions
+                    functionsName.forEach(functionName => dispatchers(dispatch)[functionName]())
                 }
+            })
+        }
 
-           
-           
-            
-        })
+
     }
 
-  
 
     const onDisconnect = () => {
-        console.log("socket desconectado")
         socket.deactivate()
         dispatch(logOut())
         dispatch(setIsConnectedSocket(false))
@@ -75,21 +67,20 @@ export default ({ children }) => {
 
 
 
-    if (socket == null) {
-        socket =  new Client({
-            brokerURL: process.env.NODE_ENV === "production" ? SOCKET_URL : SOCKET_URL_TEST,
+    if ((global.isAuth) && (global.isConectedSocket == null)) {
+       
+        socket = new Client({
+            brokerURL: process.env.NODE_ENV === "development" ? SOCKET_URL : SOCKET_URL_TEST,
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
             onConnect: onConnect,
             onDisconnect: onDisconnect,
-         
-            
-          });
-          if(global.isAuth) {
-            socket.activate()  
-          }
-         
+        });
+        socket.activate()
+
+
+
     }
 
 
@@ -99,7 +90,7 @@ export default ({ children }) => {
     }
 
     return (
-        <WebSocketContext.Provider value={{ws : ws}} >
+        <WebSocketContext.Provider value={{ ws: ws }} >
             {children}
         </WebSocketContext.Provider>
     )
