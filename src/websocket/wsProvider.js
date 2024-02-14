@@ -70,7 +70,7 @@ export default ({ children }) => {
     if ((global.isAuth) && (global.isConectedSocket == null)) {
        
         socket = new Client({
-            brokerURL: process.env.NODE_ENV === "development" ? SOCKET_URL : SOCKET_URL_TEST,
+            brokerURL: process.env.NODE_ENV === "production" ? SOCKET_URL : SOCKET_URL_TEST,
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
