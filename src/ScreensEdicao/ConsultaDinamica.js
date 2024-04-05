@@ -133,7 +133,7 @@ const Consultas = () => {
             <Form.Group>
                 <Form.Label>Numero de dados</Form.Label>
                 <Form.Control  value={numeroDeDados} onChange={event => {
-                    if(event.target.value > 100) dispatcher(updateNumeroDeDados(100))
+                    if(event.target.value > 1000) dispatcher(updateNumeroDeDados(1000))
                     else  dispatcher(updateNumeroDeDados(event.target.value))
             }}></Form.Control>
             </Form.Group>
