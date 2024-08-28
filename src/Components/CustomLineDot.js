@@ -13,7 +13,7 @@ export const CustomDot = (props) => {
         }
 
         return (
-            <circle cx={cx} cy={cy} r={isMobile ? 3 : 5} stroke="cyan" strokeWidth={3} fill={hasOcp ? "cyan" : "white"} />
+            <circle cx={cx} cy={cy} r={isMobile ? 3 : 5} stroke="gray" strokeWidth={3} fill={"gray"} />
         );
     
 };

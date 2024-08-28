@@ -213,7 +213,6 @@ class IndicadorDeAnalise extends Component {
                                 <Form.Group style={{ marginTop: 5 }}>
                                     <Form.Check type="checkbox" label="Modo Gerencial" onChange={(event) => this.setState({ showAnalitics: event.target.checked })} />
                                 </Form.Group>
-
                             </Col>
                         </Form.Row>
                             {this.state.fullProcessoAnaliseChartData && this.getGlobalsStats()}

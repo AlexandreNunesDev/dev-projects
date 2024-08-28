@@ -38,7 +38,7 @@ const AnaliseChart = (props) => {
           <p className="label">{`Id: ${analise.id}`}</p>
           <p className="label">{`Analista: ${analise.analista}`}</p>
           <p className="intro">{`Data: ${analise.data}`}</p>
-          <p className="intro">{`Resultado: ${analise.resultado} ${payload[0].unit}`}</p>
+          <p className="intro">{`Resultado: ${props.showAnalitics ? analise.resultado : ""} ${payload[0].unit}`}</p>
           <p className="intro">{`Obs analise: ${analise.observacoesAnalise}`}</p>
           <p className="intro">{`Obs ocp: ${analise.observacoesOcp}`}</p>
         </div>
@@ -129,13 +129,13 @@ const AnaliseChart = (props) => {
 
           data={entries}
           margin={{ top: 20, right: 30, left: 30, bottom: 0 }}>
-          <ReferenceLine y={props.data.pMax} label={props.data.pMax} stroke="red" strokeWidth={2} />
-          <ReferenceLine y={props.data.pMaxT} label={props.data.pMaxT} stroke="yellow" strokeWidth={2} />
-          <ReferenceLine y={props.data.pMinT} label={props.data.pMinT} stroke="yellow" strokeWidth={2} />
-          <ReferenceLine y={props.data.pMin} label={props.data.pMin} stroke="red" strokeWidth={2} />
+          <ReferenceLine y={props.data.pMax}  label={props.showAnalitics ?  props.data.pMax : ""} stroke="red" strokeWidth={2} />
+          <ReferenceLine y={props.data.pMaxT} label={props.showAnalitics ?  props.data.pMaxT : ""} stroke="yellow" strokeWidth={2} />
+          <ReferenceLine y={props.data.pMinT} label={props.showAnalitics ?  props.data.pMinT: ""} stroke="yellow" strokeWidth={2} />
+          <ReferenceLine y={props.data.pMin} label={props.showAnalitics ?  props.data.pMin: ""} stroke="red" strokeWidth={2} />
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis height={50} tickMargin={20} dataKey="data" interval="preserveStartEnd" />
-          <YAxis unit={props.data.unidade} type={"number"} domain={buildDomain()} tickCount={10} />
+          <YAxis unit={props.data.unidade} hide={!props.showAnalitics} type={"number"} domain={buildDomain()} tickCount={10} />
           <Tooltip position={{ y: -80 }} content={<CustomTooltip  ></CustomTooltip>} />
           <Line type="monotone" unit={props.data.unidade} activeDot={{ onClick: handleClick }} dataKey="resultado" dot={<CustomDot ocps={props.data.ocps} />} strokeWidth={1.5} stroke="cyan" />
         </LineChart>
