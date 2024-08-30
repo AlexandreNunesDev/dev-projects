@@ -126,7 +126,6 @@ const AnaliseChart = (props) => {
       <AnaliseEdit  show={show} handleClose={handleClose} showOcps={() => props.showOcpView(true)} ocps={ocps} analise={selectedAnalise} reloadChart={props.reloadChart}></AnaliseEdit>
       <div style={{ display: "flex-auto" }}>
         <LineChart width={props.containerRef.current.offsetWidth} height={250}
-
           data={entries}
           margin={{ top: 20, right: 30, left: 30, bottom: 0 }}>
           <ReferenceLine y={props.data.pMax}  label={props.showAnalitics ?  props.data.pMax : ""} stroke="red" strokeWidth={2} />
