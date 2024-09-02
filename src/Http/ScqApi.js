@@ -8,8 +8,7 @@ const URL = "https://scqapi.com/"
 const URL_TEST = URL /*https://localhost:8080//*/
 
 const http = axios.create({
-    baseURL: /* process.env.NODE_ENV === "production" ? URL : URL_TEST */'localhost:8080'
-
+    baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
 })
 
 const respInter = http.interceptors.response.use(function (response) {
