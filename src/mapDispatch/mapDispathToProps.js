@@ -7,7 +7,7 @@ const dispatchers = (dispatch) => {
         firstReload : (data) => dispatch({type: 'globalConfig/firstReload' , payload : data}),
         loadProcessos: () => ScqApi.ListaProcessos().then(data =>  dispatch(actions.loadProcessos(data))),
         loadEtapas: () => ScqApi.ListaEtapas().then(data => dispatch(actions.loadEtapas(data))),
-        loadParametros: () => ScqApi.ListaParametros().then(data => dispatch(actions.loadParametros(data))),
+        loadParametros: () => ScqApi.ListaParametrosSimple().then(data => dispatch(actions.loadParametros(data))),
         loadMateriasPrima: () => ScqApi.ListaMateriaPrimas().then(data => dispatch(actions.loadMateriasPrima(data))),
         loadTrocas: () => ScqApi.ListaTrocas().then(data => dispatch(actions.loadTrocas(data))),
         loadTarefasDeManutencao: () => ScqApi.ListaTarefasDeManutencao().then(data => dispatch(actions.loadTarefasDeManutencao(data))) ,

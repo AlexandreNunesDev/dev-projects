@@ -49,7 +49,9 @@ const CadastroDeOcpAdicao = (props) => {
 
     useEffect(() => {
         const param = parametros.filter(param => String(param.id) === String(analiseToSave.parametroId))[0]
-        const etapa = etapas.filter(etap => etap.parametrosId.includes(param.id))[0]
+        const etapa = etapas.filter(etap => {
+            return etap.parametrosId.includes(param.id)
+        })[0]
         param.unidade === "pH" ? unidade = "" : unidade = param.unidade
         setEtapa(etapa)
         setParametro(param)
@@ -117,7 +119,7 @@ const CadastroDeOcpAdicao = (props) => {
 
                                 </Form.Row>
                             }
-                            <CalculadoraDeCorrecao></CalculadoraDeCorrecao>
+                            <CalculadoraDeCorrecao ></CalculadoraDeCorrecao>
                             <AdicaoForm isCorrecaoLivre={true} deleteAdicao={deleteAdicao}></AdicaoForm>
 
                             <Form.Row>

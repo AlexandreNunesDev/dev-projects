@@ -8,7 +8,7 @@ const URL = "https://scqapi.com/"
 const URL_TEST = URL /*https://localhost:8080//*/
 
 const http = axios.create({
-    baseURL: process.env.NODE_ENV === "production" ? URL : URL_TEST
+    baseURL: /* process.env.NODE_ENV === "production" ? URL : URL_TEST */'localhost:8080'
 
 })
 
@@ -113,6 +113,9 @@ const ScqApi = {
 
     ListaParametros: () => {
         return http.get("parametros")
+    },
+    ListaParametrosSimple: () => {
+        return http.get("parametrosSimple")
     },
     ListaMateriaPrimas: () => {
         return http.get("materiaPrimas")
