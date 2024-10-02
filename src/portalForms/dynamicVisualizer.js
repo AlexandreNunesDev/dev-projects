@@ -4,7 +4,7 @@ import { Button, Col, Form, Table } from "react-bootstrap";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
-import { parseExcelDateToDate } from "../Services/stringUtils";
+import { formatIsoDate, parseExcelDateToDate } from "../Services/stringUtils";
 import ChartBuilder from "./chartBuilder";
 import './fixedTables.css';
 import { Cell, Row } from "./portalModels";
@@ -170,7 +170,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                             <Form.Label>Data Inicial</Form.Label>
                             <Form.Control
                                 type="datetime-local"
-                                defaultValue={dataInicial}
+                                defaultValue={formatIsoDate(dataInicial)}
                                 onChange={event => setDataInicial(new Date(event.target.value))}>
 
                             </Form.Control>
@@ -179,7 +179,7 @@ function DynamicVizualization({ selectedSpreadSheetUri }) {
                             <Form.Label>Data Final</Form.Label>
                             <Form.Control
                                 type="datetime-local"
-                                defaultValue={dataFinal}
+                                defaultValue={formatIsoDate(dataFinal)}
                                 onChange={event => setDataFinal(new Date(event.target.value))}>
                             </Form.Control>
                         </Form.Group>

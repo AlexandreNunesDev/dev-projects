@@ -65,7 +65,7 @@ const RegistroDeContador = () => {
                     <Form.Control
                         type="datetime-local"
                         defaultValue={dataInicial}
-                        onChange={event => setDataInicial(formatIsoDate(event.target.value))}>
+                        onChange={event => setDataInicial(new Date(event.target.value).toISOString())}>
                     </Form.Control>
                 </Form.Group>
                 <Form.Group as={Row}>
@@ -73,7 +73,7 @@ const RegistroDeContador = () => {
                     <Form.Control
                         type="datetime-local"
                         defaultValue={dataFinal}
-                        onChange={event => setDataFinal(formatIsoDate(event.target.value))}>
+                        onChange={event => setDataFinal(new Date(event.target.value).toISOString())}>
                     </Form.Control>
                 </Form.Group>
                 <Form.Check type="checkbox" id="checkControlado">
