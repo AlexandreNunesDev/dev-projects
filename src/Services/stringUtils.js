@@ -19,6 +19,12 @@ export const formatIsoDate = (date) => {
 		return day
 	}
 }
+export const formatIsoDateAddingSecs = (date) => {
+	if (date) {
+		let day = moment(date).format("YYYY-MM-DDTHH:mm:ss")
+		return day
+	}
+}
 
 export const FormatDate = (data) => {
 	const dataTokens = String(data).split("-")

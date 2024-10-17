@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ScqApi from "../Http/ScqApi";
 import AnaliseChart from "../Components/AnaliseChart";
 import { withMenuBar } from "../Hocs/withMenuBar";
-import { formatIsoDate } from "../Services/stringUtils";
+import { formatIsoDate, formatIsoDateAddingSecs } from "../Services/stringUtils";
 import { connect } from "react-redux";
 import mapToStateProps from "../mapStateProps/mapStateToProps";
 import dispatchers from "../mapDispatch/mapDispathToProps";
@@ -223,7 +223,7 @@ class IndicadorDeAnalise extends Component {
                                 <Form.Control
                                     type="datetime-local"
                                     defaultValue={this.state.dataInicial}
-                                    onChange={event => { this.setState({ dataInicial: formatIsoDate(event.target.value) }) }}>
+                                    onChange={event => { this.setState({ dataInicial: formatIsoDateAddingSecs(event.target.value) }) }}>
 
                                 </Form.Control>
                             </Form.Group>
@@ -232,7 +232,7 @@ class IndicadorDeAnalise extends Component {
                                 <Form.Control
                                     type="datetime-local"
                                     defaultValue={this.state.dataFinal}
-                                    onChange={event => { this.setState({ dataFinal: formatIsoDate(event.target.value) }) }}>
+                                    onChange={event => { this.setState({ dataFinal: formatIsoDateAddingSecs(event.target.value) }) }}>
 
                                 </Form.Control>
                             </Form.Group>
