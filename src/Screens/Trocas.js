@@ -44,6 +44,24 @@ const FormatDate = (data) => {
 
 }
 
+/**
+ * Formata um valor numérico usando o padrão
+ * onde "." separa milhares e sem casas decimais.
+ * Ex.: 50000000 => "50.000.000"
+ *
+ * @param {number|string} value - Valor a ser formatado
+ * @returns {string} Valor formatado ou string vazia se não for número válido
+ */
+function formatDecimal(value) {
+    const num = Number(value);
+    if (isNaN(num)) return "";
+
+    return num.toLocaleString("pt-BR", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    });
+}
+
 const TableBody = (props) => {
     const isAdmin = useIsAdmin()
     const history = useHistory()
@@ -126,6 +144,8 @@ const TableBody = (props) => {
         return ({ textAlign: "center" })
     }
 
+
+
     const getStatusColorEscaleByDateDynamic = (controle) => {
         let red = 70
         let green = 242
@@ -192,8 +212,8 @@ const TableBody = (props) => {
                 <td className="align-middle">{troca.id}</td>
                 <td className="align-middle">{troca.processoNome}</td>
                 <td className="align-middle"  >{troca.etapaNome}<AiOutlineHistory className="delete" onClick={() => history.push("/verHistoricoTrocas", { trocaId: troca.id })} /></td>
-                <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div>{!showAsDate && <div>{troca.areaRealizada}</div>}</td>
-                <td className="align-middle">{showAsDate && <div>{`${FormatDate(dataPlanejada)}`}</div>}{!showAsDate && <div>{troca.areaPlanejada}</div>}</td>
+                <td className="align-middle"><div>{`${FormatDate(dataRealizada)}`}</div>{!showAsDate && <div>{formatDecimal(troca.areaRealizada)}</div>}</td>
+                <td className="align-middle">{showAsDate && <div>{`${FormatDate(dataPlanejada)}`}</div>}{!showAsDate && <div>{troca.areaPlanejada ? `> ${formatDecimal(troca.areaPlanejada)}` : ""}</div>}</td>
                 {showAsDate && <td className="align-middle"><div>{`A cada ${troca.frequencia} ${troca.frequencia > 1 ? troca.escalaFrequencia + "s" : troca.escalaFrequencia} `}</div></td>}
                 <td className="align-middle" key={troca.id} >
                     {troca.listaMontagens.map((pair, index) => {
@@ -203,10 +223,10 @@ const TableBody = (props) => {
                 <td className="align-middle" style={{ backgroundColor: showAsDate ? getStatusColorEscaleByDate(troca) : getStatusColorEscale(troca) }}>
                     <Form.Label style={{ fontWeight: 'bolder', color: "black" }} >{getStatus(troca)}</Form.Label>
                 </td>
-                 {isAdmin && <td className="align-middle" >
+                {isAdmin && <td className="align-middle" >
                     <Form.Check checked={check || false} onChange={(event) => props.setTrocaToList(event.target.checked, troca)} type="checkbox" />
                     <Form.Label>Trocar ?</Form.Label>
-                </td> }
+                </td>}
             </tr >
         )
     })
@@ -360,7 +380,7 @@ const Trocas = () => {
                     <Button disabled={trocasChoosed.length !== 0 ? false : true} style={{ margin: 10, backgroundColor: buildingOmp && "ORANGE", borderColor: buildingOmp && "ORANGE" }} onClick={() => {
                         startEditing()
                     }}>{buildingOmp ? "Editar OMP" : "Gerar OMP"}</Button>
-                </Col> }
+                </Col>}
 
                 <Col hidden={buildingOmp} style={{ paddingTop: 20 }} md="auto">
                     <GenericSelect noLabel={true} default={"--Selecione um Processo--"} selection={processoId} onChange={(processoId) => dispatch(setProcessoId(processoId.id))} title={"Processo"} displayType={"nome"} ></GenericSelect>

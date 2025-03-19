@@ -4,11 +4,10 @@ import { Button, Container, Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import GenericSelect from "../Components/GenericSelect";
 import { withMenuBar } from "../Hocs/withMenuBar";
+import ScqApi from '../Http/ScqApi';
 import dispatchers from "../mapDispatch/mapDispathToProps";
 import mapToStateProps from "../mapStateProps/mapStateToProps";
-import { reverse } from 'underscore.string';
-import { DateAndTime, InverseOnlyDate, OnlyDate } from '../Services/stringUtils';
-import ScqApi from '../Http/ScqApi';
+import { InverseOnlyDate } from '../Services/stringUtils';
 
 
 const ReporteDiario = () => {
@@ -19,7 +18,6 @@ const ReporteDiario = () => {
     const [dataRef, setDataRef] = useState()
     const [textReporte, setTextReporte] = useState('')
     const [mostrarParametrosOk, setMostrarParametrosOk] = useState(false)
-    const [textAreaLength, setTextAreaLength] = useState(3)
 
 
 
@@ -40,7 +38,6 @@ const ReporteDiario = () => {
 
     const fetchReportDiario = () => {
         ScqApi.AnaliseReporte(dataInicial, dataFinal, processo.id).then(res => {
-            setTextAreaLength(res.data.length)
             buildTextAndUrl(res)
         })
     }
