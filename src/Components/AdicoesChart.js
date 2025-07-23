@@ -14,7 +14,6 @@ import GenericSelect from "./GenericSelect";
 
 
 function AdicaoChart({ chartData, containerRef }) {
-
     const [entries, setEntries] = useState()
     const [displayDetails, setDispalyDetails] = useState([])
     const [processoClicked, setProcessoClicked] = useState(null)
@@ -23,9 +22,10 @@ function AdicaoChart({ chartData, containerRef }) {
     const [periodo, setPeriodo] = useState()
     const referenciaTabela = useRef(null)
     const totalizadoTabela = useRef(null)
-
+    
     const periodoDia = 86400000
-
+    
+    
     const renderLegend = (props) => {
         let customLegend = [{ value: "R$ total Ocp", color: "#2691fc" }, { value: "R$ total omp", color: "#8cf55f" }]
 
@@ -61,7 +61,7 @@ function AdicaoChart({ chartData, containerRef }) {
             return -1
         })
         for (const adicaoChartDto of sorted) {
-           
+           if(!adicaoChartDto.processoNome) continue
             let data = {
                 "processoNome": adicaoChartDto.processoNome,
                 "totalGastosOcp": adicaoChartDto.totalGastosOcp,
@@ -90,7 +90,7 @@ function AdicaoChart({ chartData, containerRef }) {
         return gastoPorContador
     }
 
-
+if(!containerRef) return null
     return <>
 
         <BarChart width={containerRef.current.offsetWidth} onClick={(clickObj) => {
